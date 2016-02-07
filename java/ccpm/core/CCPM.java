@@ -57,7 +57,7 @@ public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.1.1710.0A";
+	public static final String version = "0.1.1710.0";
 	public static final String dependencies = "required-after:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
@@ -90,7 +90,7 @@ public class CCPM {
 		
 		PollutionConfig.load(event.getModConfigurationDirectory().getAbsolutePath());
 		
-		ModVersionChecker.addRequest(getClass(), "https://www.dropbox.com/s/7z7wiu2168roe7z/ccpmVersion.txt?dl=1");
+		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/version.txt");
 		
 		
 		ModMetadata meta = event.getModMetadata();
