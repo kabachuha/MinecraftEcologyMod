@@ -50,9 +50,11 @@ public class WorldHandler {
 				ChunkPollution cp[] = pm.chunksPollution.getCP();
 				
 				List<ChunkPollution> lCp = new LinkedList<ChunkPollution>(Arrays.asList(cp));
-				
-				lCp.addAll(preChunks);
-				
+				for(ChunkPollution c: preChunks)
+				{
+					if(!lCp.contains(c))
+					lCp.add(c);
+				}
 				pm.chunksPollution.setCP(lCp.toArray(new ChunkPollution[lCp.size()]));
 				
 				//Clear the preChunks list

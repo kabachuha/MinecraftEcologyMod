@@ -5,8 +5,10 @@ import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.utils.PollutionUtils;
 import ccpm.utils.config.CCPMConfig;
 import cpw.mods.fml.common.FMLLog;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import scala.collection.parallel.ParIterableLike.Copy;
 
 public class WorldProcessingThread extends Thread {
 
@@ -30,6 +32,12 @@ public class WorldProcessingThread extends Thread {
 	{
 		while(true)
 		{
+			if(!WorldHandler.isLoaded)
+				continue;
+			
+			//if(!PlayerHandler.firstPlayerJoinedWorld)
+			//	continue;
+			
 			FMLLog.info("Starting processing chunks");
 			if(pm.isSaving)
 			{
@@ -37,6 +45,10 @@ public class WorldProcessingThread extends Thread {
 				continue;
 			}
 			ChunkPollution[] cp = pm.chunksPollution.getCP();
+			cp = cp.clone();
+			
+			if(world == null || world.isRemote)
+				continue;
 			
 			if(cp!=null && cp.length>0)
 			{
@@ -49,8 +61,9 @@ public class WorldProcessingThread extends Thread {
 			for(int i = 0; i<cp.length; i++)
 			{
 			      Chunk chunk = world.getChunkFromChunkCoords(cp[i].getX(), cp[i].getZ());
+
 			      
-			      if(chunk.isChunkLoaded)
+			      if(chunk != null && chunk.isChunkLoaded)
 			      {
 			    	  PollutionUtils.increasePollution(PollutionUtils.processChunk(chunk), chunk);
 			    	  PollutionUtils.doPollutionEffects(chunk, PollutionUtils.getChunkPollution(chunk));

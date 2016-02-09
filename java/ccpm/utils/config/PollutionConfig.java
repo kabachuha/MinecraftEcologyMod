@@ -21,6 +21,7 @@ public class PollutionConfig {
 	
 	public static void load(String dir)
 	{
+		FMLLog.info("[CCPM]Loading pollution config");
            String json = null;
 
 			try
@@ -60,7 +61,7 @@ public class PollutionConfig {
 				cfg = new Gson().fromJson(json, PollutionProp.class);
 			}
 		
-	
+			FMLLog.info("[CCPM]Loaded "+cfg.tiles.length+" tilez");
 	}
 	
 	

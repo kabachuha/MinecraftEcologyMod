@@ -2,6 +2,7 @@ package ccpm.utils;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -115,8 +116,8 @@ public class PollutionUtils {
 		if(c==null)
 			return 0;
 		
-		Map<ChunkPosition, TileEntity> tileMapClone = new HashMap<ChunkPosition, TileEntity>();
-		tileMapClone.putAll(c.chunkTileEntityMap);
+		Map<ChunkPosition, TileEntity> tileMapClone = new LinkedHashMap<ChunkPosition, TileEntity>(c.chunkTileEntityMap);
+		
 		Iterator iter = tileMapClone.values().iterator();
 		
 		float ret = 0;
@@ -125,13 +126,16 @@ public class PollutionUtils {
 		//{
 			while(iter.hasNext())
 			{
-				
+				FMLLog.info("CKP CKP CKP "+c.xPosition*16+","+c.zPosition*16);
 				TileEntity tile = (TileEntity) iter.next();
 				
 				//if(o instanceof TileEntity)
 				//{
 					//TileEntity tile = (TileEntity)o;
 					
+					if(tile == null || tile.isInvalid() || !tile.hasWorldObj())
+						continue;
+					//FMLLog.info("***CKP CKP CKP***");
 					if(tile instanceof ITilePollutionProducer)
 					{
 						ret = ret + (((ITilePollutionProducer)tile).getPollutionProdution() * 60);
@@ -161,6 +165,7 @@ public class PollutionUtils {
 							}
 							else
 							{
+								FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+tiles[i]+" pollution");
 								ret = ret + (tiles[i].getPollution() * 60);
 							}
 							
@@ -168,8 +173,8 @@ public class PollutionUtils {
 				}
 				
 				//iter.remove();
-
-		
+		if(ret>0)
+		FMLLog.info("Chunk at"+c.xPosition+","+c.zPosition+" produces "+ret);
 		return ret;
 	}
 	
@@ -178,22 +183,37 @@ public class PollutionUtils {
 	public static void doPollutionEffects(Chunk chunk, float pollution)
 	{
 		if(pollution>=100)
+		if(chunk.worldObj.rand.nextInt(50) == 5)
 		if(pollution % 5 == 0)
 		{
 			if(!chunk.worldObj.isRemote)
 	    	 {
+				
 	    		 if(chunk.isChunkLoaded)
 	    		 {
 	    			 int p = (int) (pollution/5);
+	    			 int ch = 0;
 	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition).isChunkLoaded)
-	    			 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition));
+	    			 {
+	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition));
+	    				 ch++;
+	    			 }
 	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition).isChunkLoaded)
-	    			 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition));
+	    			 {
+	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition));
+	    				 ch++;
+	    			 }
 	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1).isChunkLoaded)
-	    			 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1));
+	    			 {
+	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1));
+	    				 ch++;
+	    			 }
 	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1).isChunkLoaded)
-	    			 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1));
-	    			 PollutionUtils.increasePollution(-(p*4), chunk);
+	    			 {
+	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1));
+	    				 ch++;
+	    			 }
+	    			 PollutionUtils.increasePollution(-(p*ch), chunk);
 	    		 }
 	    	 }
 		}
@@ -300,5 +320,5 @@ public class PollutionUtils {
 		return stack.getTagCompound();
 	}
 	
-	
+
 }

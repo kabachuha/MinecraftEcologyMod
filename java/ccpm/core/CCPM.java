@@ -44,6 +44,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.item.Item;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
@@ -102,9 +104,9 @@ public class CCPM {
 		meta.name = NAME;
 		meta.credits = "Author: Artem226";
 		
-		
-		smog = new PotionSmog(MiscUtils.extendPotionArray(1), false, new Color(61, 54 , 54).getRGB());
-
+		MiscUtils.extendPotionArray(1);
+		smog = new PotionSmog(Potion.potionTypes.length-1, false, new Color(61, 54 , 54).getRGB());
+		FMLLog.info("[CCPM] Potion smog id is "+smog.id);
 		wasteland = new Wasteland(CCPMConfig.wasteId);
 		
 		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(wasteland, 14));
@@ -121,7 +123,7 @@ public class CCPM {
 		MinecraftForge.EVENT_BUS.register(new ChunkHandler());
 		//FMLCommonHandler.instance().bus().register(new ChunkHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
-		//FMLCommonHandler.instance().bus().register(new PlayerHandler());
+		FMLCommonHandler.instance().bus().register(new PlayerHandler());
 		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
 		
@@ -132,6 +134,7 @@ public class CCPM {
 		GameRegistry.registerTileEntity(TileEnergyCellThaumium.class, "TECT");
 	    
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
+		FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());
 		
 		//FMLCommonHandler.instance().
 		if(proxy!=null)

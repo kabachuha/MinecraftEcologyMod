@@ -13,13 +13,13 @@ import net.minecraftforge.common.util.EnumHelper;
 
 public class RespiratorBase extends ItemArmor implements IRespirator {
 
-	public static final ArmorMaterial respiratorMatter = EnumHelper.addArmorMaterial("respMat", 10, new int[]{2,0,0,0}, 16);
+	public static final ArmorMaterial respiratorMatter = EnumHelper.addArmorMaterial("respMat", 5, new int[]{2,0,0,0}, 16);
 	
 	public RespiratorBase(String unlocalizedName, ArmorMaterial material) 
 	{
 		super(material,0,0);
 		this.setUnlocalizedName(unlocalizedName);
-		this.setTextureName(CCPM.MODID+":respirator");
+		this.setTextureName("ccpm:repsirator");
 	}
 
 	@Override
