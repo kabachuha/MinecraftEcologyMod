@@ -1,6 +1,7 @@
 package ccpm.utils;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -126,7 +127,7 @@ public class PollutionUtils {
 		//{
 			while(iter.hasNext())
 			{
-				FMLLog.info("CKP CKP CKP "+c.xPosition*16+","+c.zPosition*16);
+				//FMLLog.info("CKP CKP CKP "+c.xPosition*16+","+c.zPosition*16);
 				TileEntity tile = (TileEntity) iter.next();
 				
 				//if(o instanceof TileEntity)
@@ -145,28 +146,36 @@ public class PollutionUtils {
 					NBTTagCompound nbt = new NBTTagCompound();
 					
 					tile.writeToNBT(nbt);
+					FMLLog.info(nbt.toString());
 					
 					String id = nbt.getString("id");
 					
-					if(id!=null || id !="")
+					if(id.length() > 0)
 					{
+						FMLLog.info("CKP CKP CKP");
 						Tilez[] tiles= PollutionConfig.cfg.getTiles();
-						for(int i = 0; i < tiles.length; i++)
-						if(id == tiles[i].getName())
+						if(tiles == null||tiles.length == 0)
+						{
+							FMLLog.warning("No tiles in cfg!!!");
+						}
+						
+						Hashtable<String, Float> th = PollutionConfig.toHashNoModid();
+						
+						if(th.containsKey(id))
 							if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
 							{
 								if(BCIntegration.IsHasWork(tile))
 								{
 									if(BCIntegration.isWorking(tile))
-										ret = ret + (tiles[i].getPollution() * 60);
+										ret = ret + th.get(id) * 60;
 								}
 								else
-									ret = ret + (tiles[i].getPollution() * 60);
+									ret = ret + th.get(id) * 60;
 							}
 							else
 							{
-								FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+tiles[i]+" pollution");
-								ret = ret + (tiles[i].getPollution() * 60);
+								FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
+								ret = ret + th.get(id) * 60;
 							}
 							
 					}

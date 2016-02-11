@@ -19,7 +19,7 @@ public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfu
 		
 		boolean ret = true;
 		
-		for(int i = 0; i <= amount; i++)
+		for(int i = 0; i <= amount / 100; i++)
 		{
 			ret = ret && AspectSourceHelper.drainEssentia(user, Aspect.ENERGY, ForgeDirection.UNKNOWN, 30);
 		}

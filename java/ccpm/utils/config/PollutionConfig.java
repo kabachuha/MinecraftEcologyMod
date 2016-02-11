@@ -2,12 +2,14 @@ package ccpm.utils.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 
 import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
 
 import ccpm.ecosystem.PollutionManager.ChunksPollution;
+import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import cpw.mods.fml.common.FMLLog;
 
 public class PollutionConfig {
@@ -34,7 +36,7 @@ public class PollutionConfig {
 				}
 				if(!file.exists())
 				{
-					ConfigDownloader.download(file, "https://www.dropbox.com/s/4x5s9mpt888phxq/PollutionProp.json?dl=1");
+					ConfigDownloader.download(file, "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/PollutionConfig.json");
 				}
 				
 				if(file.canRead())
@@ -62,9 +64,25 @@ public class PollutionConfig {
 			}
 		
 			FMLLog.info("[CCPM]Loaded "+cfg.tiles.length+" tilez");
+			for(Tilez t : cfg.tiles)
+			{
+				FMLLog.info(t.getName()+" "+t.pollution);
+			}
 	}
 	
-	
+	public static Hashtable<String, Float> toHashNoModid()
+	{
+		Hashtable<String, Float> ret = new Hashtable<String, Float>();
+		
+		Tilez[] tiles = cfg.getTiles();
+		
+		for(Tilez t:tiles)
+		{
+			ret.put(t.name, t.getPollution());
+		}
+		return ret;
+		
+	}
 	
 	
 	

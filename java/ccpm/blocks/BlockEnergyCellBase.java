@@ -42,7 +42,7 @@ public class BlockEnergyCellBase extends Block implements ITileEntityProvider {
 
 	@Override
 	public TileEntity createNewTileEntity(World w, int m) {
-		if(Loader.isModLoaded("Thaumcraft") && m == 1)
+		if(Loader.isModLoaded("thaumcraft") && m == 1)
 		{
 			return new TileEnergyCellThaumium("ccpmCellThaum", 0);
 		}
@@ -82,4 +82,7 @@ public class BlockEnergyCellBase extends Block implements ITileEntityProvider {
 			icons[1] = reg.registerIcon("ccpm:ccpmEnergyCellThaumium");
 			icons[2] = reg.registerIcon("ccpm:ccpmEnergyCellMana");
     }
+	
+	
+	
 }

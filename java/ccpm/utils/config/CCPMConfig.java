@@ -12,6 +12,8 @@ public class CCPMConfig implements IDummyConfig {
 	//public static int smogId = 77;
 	public static int smogPoll = 50000;
 	public static int wasteId = 30;
+	public static float filterRed = 100;
+	public static boolean fstab = true;
 	
 	public CCPMConfig()
 	{
@@ -26,6 +28,8 @@ public class CCPMConfig implements IDummyConfig {
         //smogId = cfg.getInt("potionSmogId", "POTIONS", 77, 0, Int.MaxValue(), "");
         smogPoll= cfg.getInt("pollutionSmog", "POLLUTION", 50000, 0, Int.MaxValue(), "");
         wasteId = cfg.getInt("wastelandId", "BIOMES", 30, 0, Int.MaxValue(), "Id of the wasteland biome");
+        filterRed = cfg.getFloat("filterRedution", "MACHINES", 100, Float.MIN_VALUE, Float.MAX_VALUE, "Amount of the air filter's pollution redution");
+        fstab = cfg.getBoolean("filterStabalise", "THAUMCRAFT", true, "Can machines stabalises infusion?");
 	}
 
 }

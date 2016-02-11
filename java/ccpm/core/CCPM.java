@@ -9,7 +9,10 @@ import DummyCore.Items.ItemRegistry;
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.ModVersionChecker;
 import ccpm.biomes.Wasteland;
+import ccpm.blocks.BlockAnalyser;
 import ccpm.blocks.BlockEnergyCellBase;
+import ccpm.blocks.BlockFilter;
+import ccpm.blocks.ItemBlockCell;
 import ccpm.commands.CommandGetPollution;
 import ccpm.commands.CommandGetRegTiles;
 import ccpm.commands.CommandIncPollution;
@@ -25,6 +28,8 @@ import ccpm.render.RenderRespirator;
 import ccpm.tiles.TileEnergyCellMana;
 import ccpm.tiles.TileEnergyCellRf;
 import ccpm.tiles.TileEnergyCellThaumium;
+import ccpm.tiles.TileEntityAnalyser;
+import ccpm.tiles.TileEntityFilter;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -66,7 +71,11 @@ public class CCPM {
 	
 	Block cell = new BlockEnergyCellBase();
 	
+	Block an = new BlockAnalyser();
 	
+	Block filter = new BlockFilter();
+	
+
 	@Instance(MODID)
 	public static CCPM instance;
 	
@@ -127,11 +136,17 @@ public class CCPM {
 		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
 		
-		BlocksRegistry.registerBlock(cell, "ccpm.energycell", getClass(), null);
+		
+		
+		BlocksRegistry.registerBlock(cell, "ccpm.energycell", getClass(), ItemBlockCell.class);
+		BlocksRegistry.registerBlock(an, an.getUnlocalizedName(), getClass(), null);
+		BlocksRegistry.registerBlock(filter, filter.getUnlocalizedName(), getClass(), null);
 		
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
 		GameRegistry.registerTileEntity(TileEnergyCellRf.class, "TECR");
 		GameRegistry.registerTileEntity(TileEnergyCellThaumium.class, "TECT");
+		GameRegistry.registerTileEntity(TileEntityFilter.class, "TEF");
+		GameRegistry.registerTileEntity(TileEntityAnalyser.class, "TEA");
 	    
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
 		FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());

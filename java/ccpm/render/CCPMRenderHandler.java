@@ -36,9 +36,9 @@ public class CCPMRenderHandler {
 		if(isPlayerInSmog(Minecraft.getMinecraft().thePlayer))
 		{
 			//FMLLog.info("Coloring fog");
-			event.red = 61;
-			event.green = 54;
-			event.blue = 54;
+			event.red = 0.61F;
+			event.green = 0.54F;
+			event.blue = 0.54F;
 		}
 	}
 	
@@ -50,7 +50,7 @@ public class CCPMRenderHandler {
 		if(isPlayerInSmog(Minecraft.getMinecraft().thePlayer))
 		{
 			//FMLLog.info("Rendering fog");
-			GL11.glFogf(GL11.GL_FOG_START, 1.2F); // 0.7
+			GL11.glFogf(GL11.GL_FOG_START, 1.5F); // 0.7
 			GL11.glFogf(GL11.GL_FOG_END, 3.5F);
 		}
 	}
