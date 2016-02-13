@@ -41,6 +41,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -69,11 +70,11 @@ public class CCPM {
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
 	
-	Block cell = new BlockEnergyCellBase();
+	public static Block cell = new BlockEnergyCellBase();
 	
-	Block an = new BlockAnalyser();
+	public static Block an = new BlockAnalyser();
 	
-	Block filter = new BlockFilter();
+	public static Block filter = new BlockFilter();
 	
 
 	@Instance(MODID)
@@ -157,13 +158,19 @@ public class CCPM {
 			//proxy.registerItemRenders();
 			//proxy.registerRenderHandler();
 		}
+		
+		if(Loader.isModLoaded("Thaumcraft") || Loader.isModLoaded("thaumcraft"))
+			FMLInterModComms.sendMessage("Thaumcraft", "biomeBlacklist", cfg.wasteId+":0");
 	}
 	
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
+		FMLLog.info("[CCPM]Post initialisation");
 		if(instance != this)
 			instance = this;
+		
+		RecipeRegistry.init();
 	}
 	
 	@EventHandler
@@ -171,7 +178,7 @@ public class CCPM {
 	{
 		event.registerServerCommand(new CommandGetPollution());
 		event.registerServerCommand(new CommandTestWand());
-		//event.registerServerCommand(new CommandGetRegTiles());
+		event.registerServerCommand(new CommandGetRegTiles());
 		event.registerServerCommand(new CommandIncPollution());
 	}
 

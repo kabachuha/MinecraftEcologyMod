@@ -47,7 +47,7 @@ public class CommandGetRegTiles extends CommandBase {
 		
 
 		
-		Map<Class, String> map = ReflectionHelper.getPrivateValue(TileEntity.class, null, "classToNameMap");
+		Map<String, Class> map = ReflectionHelper.getPrivateValue(TileEntity.class, null, 1);
 
 		
 		
@@ -57,7 +57,7 @@ public class CommandGetRegTiles extends CommandBase {
 			return;
 		}
 		
-		Iterator<String> iter = map.values().iterator();
+		Iterator<String> iter = map.keySet().iterator();
 		
 		if(iter == null)
 		{

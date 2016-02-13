@@ -3,13 +3,13 @@ death.attack.pollution=has killed by pollution
 
 item.ccpmRespirator.name=Respirator
 
-tile.ccpm.energycell.name=Energy cell
+ccpm.energycell.name=Energy cell
 
-tile.ccpm.energycell.rf.name=Redstone flux energy cell
+ccpm.energycell.rf.name=Redstone flux energy cell
 
-tile.ccpm.energycell.th.name=Thaumium energy cell
+ccpm.energycell.th.name=Thaumium energy cell
 
-tile.ccpm.energycell.ma.name=Mana energy cell
+ccpm.energycell.ma.name=Mana energy cell
 
 tile.ccpm.filter.name=Filter
 

@@ -14,6 +14,8 @@ public class CCPMConfig implements IDummyConfig {
 	public static int wasteId = 30;
 	public static float filterRed = 100;
 	public static boolean fstab = true;
+	public static boolean useNode = true;
+	public static boolean useSano = false;
 	
 	public CCPMConfig()
 	{
@@ -30,6 +32,8 @@ public class CCPMConfig implements IDummyConfig {
         wasteId = cfg.getInt("wastelandId", "BIOMES", 30, 0, Int.MaxValue(), "Id of the wasteland biome");
         filterRed = cfg.getFloat("filterRedution", "MACHINES", 100, Float.MIN_VALUE, Float.MAX_VALUE, "Amount of the air filter's pollution redution");
         fstab = cfg.getBoolean("filterStabalise", "THAUMCRAFT", true, "Can machines stabalises infusion?");
+        useNode = cfg.getBoolean("useNode", "THAUMCRAFT", true, "Use jar node to craft the energy cell?");
+        useSano = cfg.getBoolean("useSano", "THAUMCRAFT", false, "Use the filter Sano aspect to work?");
 	}
 
 }

@@ -146,13 +146,13 @@ public class PollutionUtils {
 					NBTTagCompound nbt = new NBTTagCompound();
 					
 					tile.writeToNBT(nbt);
-					FMLLog.info(nbt.toString());
+					//FMLLog.info(nbt.toString());
 					
 					String id = nbt.getString("id");
 					
 					if(id.length() > 0)
 					{
-						FMLLog.info("CKP CKP CKP");
+						//FMLLog.info("CKP CKP CKP");
 						Tilez[] tiles= PollutionConfig.cfg.getTiles();
 						if(tiles == null||tiles.length == 0)
 						{
@@ -174,7 +174,7 @@ public class PollutionUtils {
 							}
 							else
 							{
-								FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
+								//FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
 								ret = ret + th.get(id) * 60;
 							}
 							
@@ -182,8 +182,8 @@ public class PollutionUtils {
 				}
 				
 				//iter.remove();
-		if(ret>0)
-		FMLLog.info("Chunk at"+c.xPosition+","+c.zPosition+" produces "+ret);
+		//if(ret>0)
+		//FMLLog.info("Chunk at"+c.xPosition+","+c.zPosition+" produces "+ret);
 		return ret;
 	}
 	

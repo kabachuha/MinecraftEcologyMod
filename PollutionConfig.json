@@ -1,1 +1,40 @@
-{  "version": "1.0.1710.1",  "tiles": [    {      "modid": "Minecraft",      "name": "Furnace",      "pollution": 16.0    },    {      "modid": "Minecraft",      "name": "Chest",      "pollution": 44.0    },    {      "modid": "ggg",      "name": "hhh",      "pollution": 22.0    },    {      "modid": "maxapopa",      "name": "Cauldron",      "pollution": 888.0    }  ]}
+{
+  "version": "1.1.1710.0",
+  "tiles": [
+    {
+      "modid": "EnderIO",
+      "name": "blockStirlingGeneratorTileEntity",
+      "pollution": 6.0
+    },
+    {
+      "modid": "EnderIO",
+      "name": "blockAlloySmelterTileEntity",
+      "pollution": 2.0
+    },
+    {
+      "modid": "Thaumcraft",
+      "name": "TileAlchemyFurnace",
+      "pollution": 4.0
+    },
+    {
+      "modid": "Minecraft",
+      "name": "Cauldron",
+      "pollution": 3.0
+    },
+    {
+      "modid": "Thaumcraft",
+      "name": "TileArcaneFurnace",
+      "pollution": 5.0
+    },
+    {
+      "modid": "EnderIO",
+      "name": "blockCombustionGeneratorTileEntity",
+      "pollution": 4.0
+    },
+    {
+      "modid": "Minecraft",
+      "name": "Furnace",
+      "pollution": 6.0
+    }
+  ]
+}
