@@ -2,6 +2,7 @@ package ccpm.core;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import DummyCore.Blocks.BlocksRegistry;
 import DummyCore.Core.Core;
@@ -24,7 +25,8 @@ import ccpm.items.RespiratorBase;
 import ccpm.network.proxy.CommonProxy;
 import ccpm.potions.PotionSmog;
 import ccpm.render.CCPMRenderHandler;
-import ccpm.render.RenderRespirator;
+import ccpm.render.RespHud;
+//import ccpm.render.RenderRespirator;
 import ccpm.tiles.TileEnergyCellMana;
 import ccpm.tiles.TileEnergyCellRf;
 import ccpm.tiles.TileEnergyCellThaumium;
@@ -32,20 +34,6 @@ import ccpm.tiles.TileEntityAnalyser;
 import ccpm.tiles.TileEntityFilter;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
@@ -59,6 +47,20 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.Mod.InstanceFactory;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = CCPM.MODID, name = CCPM.NAME, version = CCPM.version, dependencies = CCPM.dependencies)
 public class CCPM {
@@ -75,6 +77,7 @@ public class CCPM {
 	public static Block an = new BlockAnalyser();
 	
 	public static Block filter = new BlockFilter();
+	
 	
 
 	@Instance(MODID)
@@ -93,6 +96,8 @@ public class CCPM {
 	 * URL to my GitHub 
 	 */
 	public static final String githubURL = "https://github.com/Artem226";
+	
+	public static Logger log = Logger.getLogger("EcologyMod");
 	
 	@EventHandler
 	public void preLoad(FMLPreInitializationEvent event)
@@ -114,9 +119,9 @@ public class CCPM {
 		meta.name = NAME;
 		meta.credits = "Author: Artem226";
 		
-		MiscUtils.extendPotionArray(1);
-		smog = new PotionSmog(Potion.potionTypes.length-1, false, new Color(61, 54 , 54).getRGB());
-		FMLLog.info("[CCPM] Potion smog id is "+smog.id);
+		//MiscUtils.extendPotionArray(1);
+		smog = new PotionSmog(/*Potion.potionTypes.length-1, false, new Color(61, 54 , 54).getRGB()*/);
+		log.info("Potion smog id is "+smog.id);
 		wasteland = new Wasteland(CCPMConfig.wasteId);
 		
 		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(wasteland, 14));
@@ -127,13 +132,13 @@ public class CCPM {
 	{
 		if(instance != this)
 			instance = this;
-		FMLLog.info("[CCPM]Initialising");
+		log.info("Initialising");
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
 		//FMLCommonHandler.instance().bus().register(new WorldHandler());
 		MinecraftForge.EVENT_BUS.register(new ChunkHandler());
 		//FMLCommonHandler.instance().bus().register(new ChunkHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
-		FMLCommonHandler.instance().bus().register(new PlayerHandler());
+		//FMLCommonHandler.instance().bus().register(new PlayerHandler());
 		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
 		
@@ -150,15 +155,15 @@ public class CCPM {
 		GameRegistry.registerTileEntity(TileEntityAnalyser.class, "TEA");
 	    
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
-		FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());
+		//FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());
 		
 		//FMLCommonHandler.instance().
 		if(proxy!=null)
 		{
 			//proxy.registerItemRenders();
-			//proxy.registerRenderHandler();
+			proxy.registerRenderHandler();
 		}
-		
+		MiscUtils.addHUDElement(new RespHud());
 		if(Loader.isModLoaded("Thaumcraft") || Loader.isModLoaded("thaumcraft"))
 			FMLInterModComms.sendMessage("Thaumcraft", "biomeBlacklist", cfg.wasteId+":0");
 	}
@@ -166,7 +171,7 @@ public class CCPM {
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event)
 	{
-		FMLLog.info("[CCPM]Post initialisation");
+		log.info("Post initialisation");
 		if(instance != this)
 			instance = this;
 		
@@ -185,8 +190,8 @@ public class CCPM {
 	//Function to tell you where you have to report errors
 	public static void addToEx()
 	{
-		FMLLog.warning("[CCPM]Please, report this to the author's(Artem226) GitHub!!!");
-		FMLLog.bigWarning(githubURL);
-		FMLLog.info("[CCPM]Please, don't forget to include crash report/log");
+		log.warning("Please, report this to the author's(Artem226) GitHub!!!");
+		log.warning(githubURL);
+		log.info("Please, don't forget to include crash report/log");
 	}
 }

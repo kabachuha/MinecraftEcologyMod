@@ -1,10 +1,9 @@
 package ccpm.tiles;
 
+import DummyCore.Utils.Coord3D;
+import DummyCore.Utils.Lightning;
+import DummyCore.Utils.MathUtils;
 import ccpm.api.ICCPMEnergySource;
-import dan200.computercraft.api.lua.ILuaContext;
-import dan200.computercraft.api.lua.LuaException;
-import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -12,7 +11,8 @@ import li.cil.oc.api.network.ManagedPeripheral;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.common.Optional;
+import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.common.*;
 
 @Optional.InterfaceList({
     @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers"),
@@ -23,6 +23,7 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
 	int energy = 0;
 	public String name;
 	static int maxEnergy = 1000000;
+	
 	
 	public TileEnergyCellBasic(String name, int maxEnergy) {
 		super();
@@ -93,5 +94,6 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
         nbt.setInteger("energy", this.energy);
 
     }
+
 	
 }

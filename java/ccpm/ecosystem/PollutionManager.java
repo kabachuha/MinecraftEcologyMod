@@ -15,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -30,7 +29,7 @@ public class PollutionManager {
 		this.chunksPollution.world = w.getWorldInfo().getWorldName();
 		wor = w;
 		instance = this;
-		FMLLog.info("[CCPM]Initialising Pollution Manager");
+		CCPM.log.info("Initialising Pollution Manager");
 	}
 
 	
@@ -40,7 +39,7 @@ public class PollutionManager {
 	public void save()
 	{
 		isSaving = true;
-		FMLLog.info("Saving Pollution Manager");
+		CCPM.log.info("Saving Pollution Manager");
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
 		String json = gson.toJson(chunksPollution, ChunksPollution.class);
@@ -68,7 +67,7 @@ public class PollutionManager {
 			
 			if(file.canWrite())
 			{
-				FMLLog.info("[CCPM]Saving Pollution Manager's data to file: "+file.getAbsolutePath()+"//"+file.getName());
+				CCPM.log.info("[CCPM]Saving Pollution Manager's data to file: "+file.getAbsolutePath()+"//"+file.getName());
 				FileUtils.writeStringToFile(file, json);
 			}
 			else
@@ -78,7 +77,7 @@ public class PollutionManager {
 		}
 		catch (IOException e)
 		{
-			FMLLog.bigWarning("[CCPM]Unable to write "+ json.toString() +" to file!");
+			CCPM.log.warning("[CCPM]Unable to write "+ json.toString() +" to file!");
 			e.printStackTrace();
 		}
 		}
@@ -90,7 +89,7 @@ public class PollutionManager {
 	{
 		String json = null;
 		
-		FMLLog.info("Loading Pollution Manager");
+		CCPM.log.info("Loading Pollution Manager");
 		
         File fi = wor.getSaveHandler().getWorldDirectory();
 		
@@ -114,7 +113,7 @@ public class PollutionManager {
 				
 				if(file.canRead())
 				{
-					FMLLog.info("Reading pollution manager data from file "+file.getAbsolutePath()+"//"+file.getName());
+					CCPM.log.info("Reading pollution manager data from file "+file.getAbsolutePath()+"//"+file.getName());
 					json = FileUtils.readFileToString(file);
 				}
 				else
@@ -124,7 +123,7 @@ public class PollutionManager {
 			}
 			catch (IOException e)
 			{
-				FMLLog.bigWarning("[CCPM]Unable to read file PollutionMap.json!");
+				CCPM.log.warning("[CCPM]Unable to read file PollutionMap.json!");
 				json = null;
 				e.printStackTrace();
 			}
@@ -137,12 +136,12 @@ public class PollutionManager {
 			//#UPD Yay! It works!
 			if(/*json != null && */json.length() > 3)
 			{
-				FMLLog.info("Deserializing chunks pollution data from JSON");
+				CCPM.log.info("Deserializing chunks pollution data from JSON");
 				chunksPollution = new Gson().fromJson(json, ChunksPollution.class);
 			}
 			else
 			{
-				FMLLog.warning("No pollution manager's data has found in file. It's normal, if world is loading first time, but if it isn't, please, report to author!("+CCPM.githubURL+")");
+				CCPM.log.warning("No pollution manager's data has found in file. It's normal, if world is loading first time, but if it isn't, please, report to author!("+CCPM.githubURL+")");
 				chunksPollution = new ChunksPollution();
 				chunksPollution.setWorld(wor.getWorldInfo().getWorldName());
 				chunksPollution.setCP(new ChunkPollution[0]);

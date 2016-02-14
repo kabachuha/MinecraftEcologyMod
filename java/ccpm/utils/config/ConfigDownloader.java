@@ -9,8 +9,9 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
+import ccpm.core.CCPM;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
 
 public class ConfigDownloader {
 
@@ -24,11 +25,11 @@ public class ConfigDownloader {
 	{
 		
 		StringBuffer buffer = null;
-		FMLLog.log(Level.INFO, "[CCPM]Starting downloading: "+file.getName()+" from:" + URL);
+		CCPM.log.info("Starting downloading: "+file.getName()+" from:" + URL);
 		 try 
 		 {
 		      URL url = new URL(URL);
-		      FMLLog.log(Level.INFO, "{CCPM]Connecting to: "+URL);
+		      CCPM.log.info("Connecting to: "+URL);
 		      BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 		      String inputLine;
 		      buffer = new StringBuffer();
@@ -49,8 +50,8 @@ public class ConfigDownloader {
 		
 		 if(buffer != null)
 		 {
-			 FMLLog.fine("[CCPM]Data successfully recieved!");
-			 FMLLog.fine("[CCPM]Trying to write data in file "+file.getName());
+			 CCPM.log.fine("[CCPM]Data successfully recieved!");
+			 CCPM.log.fine("[CCPM]Trying to write data in file "+file.getName());
 			 
 			 try
 			 {
@@ -65,7 +66,7 @@ public class ConfigDownloader {
 			 }
 			 
 			 
-			 FMLLog.fine("[CCPM]File: "+file.getName()+" from: "+URL+" downloaded, created and writed successfully!");
+			 CCPM.log.fine("[CCPM]File: "+file.getName()+" from: "+URL+" downloaded, created and writed successfully!");
 		 }
 		 
 		

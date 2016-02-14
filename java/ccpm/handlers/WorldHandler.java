@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -35,7 +36,7 @@ public class WorldHandler {
 	{
 		World w = event.world;
 
-		if(w !=null && !w.isRemote && w.provider.dimensionId == 0 && !isLoaded)
+		if(w !=null && !w.isRemote && w.provider.getDimensionId() == 0 && !isLoaded)
 		{
 			pm = new PollutionManager(w);
 			
@@ -46,7 +47,7 @@ public class WorldHandler {
 			//Add all chunks loaded before world
 			if(!preChunks.isEmpty())
 			{
-				FMLLog.info("[CCPM] Adding chunks loaded before Pollution Manager's initialization");
+				CCPM.log.info("Adding chunks loaded before Pollution Manager's initialization");
 				ChunkPollution cp[] = pm.chunksPollution.getCP();
 				
 				List<ChunkPollution> lCp = new LinkedList<ChunkPollution>(Arrays.asList(cp));
@@ -73,7 +74,7 @@ public class WorldHandler {
 	{
 		World w = event.world;
 
-		if(w !=null && !w.isRemote && w.provider.dimensionId == 0)
+		if(w !=null && !w.isRemote && w.provider.getDimensionId() == 0)
 		{
             if(pm != null && pm.chunksPollution != null && pm.chunksPollution.getCP()!=null && pm.chunksPollution.getCP().length>0)
             	pm.save();
@@ -85,7 +86,7 @@ public class WorldHandler {
 	{
 		World w = event.world;
 
-		if(w !=null && !w.isRemote && w.provider.dimensionId == 0)
+		if(w !=null && !w.isRemote && w.provider.getDimensionId() == 0)
 		{
 			isLoaded=false;
 			if(thread != null && thread.isAlive())

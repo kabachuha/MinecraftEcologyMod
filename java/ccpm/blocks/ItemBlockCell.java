@@ -2,12 +2,11 @@ package ccpm.blocks;
 
 import java.util.List;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 
 public class ItemBlockCell extends ItemBlock {
 
@@ -47,8 +46,7 @@ public class ItemBlockCell extends ItemBlock {
 		list.add("Thus is an energy cell from ecology mod."); 
 		list.add("Place thus under the machine from ecology mod");
 		list.add("to use thus as energy source.");
-		if(bool)
-		{
+				
 		if(meta == 0)
 			list.add("This cell uses rf to work");
 		
@@ -62,6 +60,6 @@ public class ItemBlockCell extends ItemBlock {
 		{
 			list.add("You may attach thus to your computer from OC");
 		}
-		}
+		
 	}
 }

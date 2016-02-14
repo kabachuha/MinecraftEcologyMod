@@ -9,12 +9,12 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 import DummyCore.Utils.ReflectionProvider;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import ccpm.core.CCPM;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 @Deprecated
 public class CommandGetRegTiles extends CommandBase {
@@ -47,13 +47,13 @@ public class CommandGetRegTiles extends CommandBase {
 		
 
 		
-		Map<String, Class> map = ReflectionHelper.getPrivateValue(TileEntity.class, null, 1);
+		Map<String, Class <? extends TileEntity>> map = ReflectionHelper.getPrivateValue(TileEntity.class, null, 1);
 
 		
 		
 		if(map == null)
 		{
-			FMLLog.info("Map is null!");
+			CCPM.log.warning("Map is null!");
 			return;
 		}
 		
@@ -61,7 +61,7 @@ public class CommandGetRegTiles extends CommandBase {
 		
 		if(iter == null)
 		{
-			FMLLog.bigWarning("Iterator is null!");
+			CCPM.log.warning("Iterator is null!");
 			return;
 		}
 		
@@ -86,7 +86,7 @@ public class CommandGetRegTiles extends CommandBase {
 		
 		if(file.isDirectory())
 		{
-			FMLLog.bigWarning("File TilesNames.txt is a directory! Please, delete it!");
+			CCPM.log.warning("File TilesNames.txt is a directory! Please, delete it!");
 			return;
 		}
 		
@@ -95,7 +95,7 @@ public class CommandGetRegTiles extends CommandBase {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				FMLLog.bigWarning("Unable to create file TilesNames.txt");
+				CCPM.log.warning("Unable to create file TilesNames.txt");
 				e.printStackTrace();
 				return;
 			}
@@ -103,11 +103,11 @@ public class CommandGetRegTiles extends CommandBase {
 		
 		if(file.canWrite())
 		{
-			FMLLog.info("Writing registred tiles names to : "+file.getAbsolutePath());
+			CCPM.log.info("Writing registred tiles names to : "+file.getAbsolutePath());
 			try {
 				FileUtils.writeStringToFile(file, sb.toString());
 			} catch (IOException e) {
-				FMLLog.bigWarning("Unable to create file TilesNames.txt");
+				CCPM.log.warning("Unable to create file TilesNames.txt");
 				e.printStackTrace();
 				return;
 			}

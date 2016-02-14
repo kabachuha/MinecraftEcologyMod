@@ -8,9 +8,9 @@ import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
 
+import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager.ChunksPollution;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
-import cpw.mods.fml.common.FMLLog;
 
 public class PollutionConfig {
 
@@ -23,7 +23,7 @@ public class PollutionConfig {
 	
 	public static void load(String dir)
 	{
-		FMLLog.info("[CCPM]Loading pollution config");
+		CCPM.log.info("Loading pollution config");
            String json = null;
 
 			try
@@ -50,7 +50,7 @@ public class PollutionConfig {
 			 }
 			 catch (IOException e)
 			 {
-			    FMLLog.bigWarning("[CCPM]Unable to read file PollutionConfig.json!");
+			    CCPM.log.warning("Unable to read file PollutionConfig.json!");
 			 	json = null;
 			 	e.printStackTrace();
 			 }
@@ -63,10 +63,10 @@ public class PollutionConfig {
 				cfg = new Gson().fromJson(json, PollutionProp.class);
 			}
 		
-			FMLLog.info("[CCPM]Loaded "+cfg.tiles.length+" tilez");
+			CCPM.log.info("Loaded "+cfg.tiles.length+" tilez");
 			for(Tilez t : cfg.tiles)
 			{
-				FMLLog.info(t.getName()+" "+t.pollution);
+				CCPM.log.info(t.getName()+" "+t.pollution);
 			}
 	}
 	

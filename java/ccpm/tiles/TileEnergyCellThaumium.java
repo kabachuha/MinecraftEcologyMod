@@ -1,8 +1,10 @@
 package ccpm.tiles;
 
+import ccpm.utils.config.CCPMConfig;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectSourceHelper;
@@ -21,14 +23,14 @@ public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfu
 		
 		for(int i = 0; i <= amount / 100; i++)
 		{
-			ret = ret && AspectSourceHelper.drainEssentia(user, Aspect.ENERGY, ForgeDirection.UNKNOWN, 30);
+			ret = ret && AspectSourceHelper.drainEssentia(user, Aspect.ENERGY, null, 30);
 		}
 		
 		return ret;
 	}
 
 	@Override
-	public boolean canStabaliseInfusion(World world, int x, int y, int z) {
+	public boolean canStabaliseInfusion(World world, BlockPos p) {
 		return true;
 	}
 

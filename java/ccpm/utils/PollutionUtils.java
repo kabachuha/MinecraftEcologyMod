@@ -16,13 +16,11 @@ import ccpm.handlers.WorldHandler;
 import ccpm.integration.buildcraft.BCIntegration;
 import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.ChunkPosition;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -44,18 +42,18 @@ public class PollutionUtils {
 		if(chunk == null)
 			return;
 		
-		if(chunk.worldObj == null || chunk.worldObj.isRemote || chunk.worldObj.provider.dimensionId !=0)
+		if(chunk.getWorld() == null || chunk.getWorld().isRemote || chunk.getWorld().provider.getDimensionId() !=0)
 			return;
 		
 		if(WorldHandler.instance == null)
 		{
-			FMLLog.bigWarning("[CCPM]World handler isn't initialized!!!");
+			CCPM.log.warning("World handler isn't initialized!!!");
 			CCPM.addToEx();
 			return;
 		}
 		if(WorldHandler.instance.pm == null)
 		{
-			FMLLog.bigWarning("[CCPM]Pollution Manager isn't initialized!!!");
+			CCPM.log.warning("[CCPM]Pollution Manager isn't initialized!!!");
 			CCPM.addToEx();
 			return;
 		}
@@ -117,7 +115,7 @@ public class PollutionUtils {
 		if(c==null)
 			return 0;
 		
-		Map<ChunkPosition, TileEntity> tileMapClone = new LinkedHashMap<ChunkPosition, TileEntity>(c.chunkTileEntityMap);
+		Map<BlockPos, TileEntity> tileMapClone = new LinkedHashMap<BlockPos, TileEntity>(c.getTileEntityMap());
 		
 		Iterator iter = tileMapClone.values().iterator();
 		
@@ -156,23 +154,23 @@ public class PollutionUtils {
 						Tilez[] tiles= PollutionConfig.cfg.getTiles();
 						if(tiles == null||tiles.length == 0)
 						{
-							FMLLog.warning("No tiles in cfg!!!");
+							CCPM.log.warning("No tiles in cfg!!!");
 						}
 						
 						Hashtable<String, Float> th = PollutionConfig.toHashNoModid();
 						
 						if(th.containsKey(id))
-							if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
-							{
-								if(BCIntegration.IsHasWork(tile))
-								{
-									if(BCIntegration.isWorking(tile))
-										ret = ret + th.get(id) * 60;
-								}
-								else
-									ret = ret + th.get(id) * 60;
-							}
-							else
+							//if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
+							//{
+							//	if(BCIntegration.IsHasWork(tile))
+							//	{
+							//		if(BCIntegration.isWorking(tile))
+							//			ret = ret + th.get(id) * 60;
+							//	}
+							//	else
+							//		ret = ret + th.get(id) * 60;
+							//}
+							//else
 							{
 								//FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
 								ret = ret + th.get(id) * 60;
@@ -192,34 +190,34 @@ public class PollutionUtils {
 	public static void doPollutionEffects(Chunk chunk, float pollution)
 	{
 		if(pollution>=100)
-		if(chunk.worldObj.rand.nextInt(50) == 5)
+		if(chunk.getWorld().rand.nextInt(50) == 5)
 		if(pollution % 5 == 0)
 		{
-			if(!chunk.worldObj.isRemote)
+			if(!chunk.getWorld().isRemote)
 	    	 {
 				
-	    		 if(chunk.isChunkLoaded)
+	    		 if(chunk.isLoaded())
 	    		 {
 	    			 int p = (int) (pollution/5);
 	    			 int ch = 0;
-	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition).isChunkLoaded)
+	    			 if(chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition).isLoaded())
 	    			 {
-	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition));
+	    				 PollutionUtils.increasePollution(p, chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition-1, chunk.zPosition));
 	    				 ch++;
 	    			 }
-	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition).isChunkLoaded)
+	    			 if(chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition).isLoaded())
 	    			 {
-	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition));
+	    				 PollutionUtils.increasePollution(p, chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition+1, chunk.zPosition));
 	    				 ch++;
 	    			 }
-	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1).isChunkLoaded)
+	    			 if(chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1).isLoaded())
 	    			 {
-	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1));
+	    				 PollutionUtils.increasePollution(p, chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition-1));
 	    				 ch++;
 	    			 }
-	    			 if(chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1).isChunkLoaded)
+	    			 if(chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1).isLoaded())
 	    			 {
-	    				 PollutionUtils.increasePollution(p, chunk.worldObj.getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1));
+	    				 PollutionUtils.increasePollution(p, chunk.getWorld().getChunkFromChunkCoords(chunk.xPosition, chunk.zPosition+1));
 	    				 ch++;
 	    			 }
 	    			 PollutionUtils.increasePollution(-(p*ch), chunk);
@@ -231,13 +229,13 @@ public class PollutionUtils {
 		
 	     if(pollution >= 100000)
 	     {
-	    	 if(!chunk.worldObj.isRemote)
+	    	 if(!chunk.getWorld().isRemote)
 	    	 {
-	    		 if(chunk.isChunkLoaded)
+	    		 if(chunk.isLoaded())
 	    		 {
-	    			 int x = chunk.xPosition * 16 + chunk.worldObj.rand.nextInt(16);
-	    			 int z = chunk.zPosition * 16 + chunk.worldObj.rand.nextInt(16);
-	    			 MiscUtils.changeBiome(chunk.worldObj, CCPM.wasteland, x, z);
+	    			 int x = chunk.xPosition * 16 + chunk.getWorld().rand.nextInt(16);
+	    			 int z = chunk.zPosition * 16 + chunk.getWorld().rand.nextInt(16);
+	    			 MiscUtils.changeBiome(chunk.getWorld(), CCPM.wasteland, x, z);
 	    		 }
 	    	 }
 	     }
@@ -256,49 +254,49 @@ public class PollutionUtils {
 		
 		if(!WorldHandler.isLoaded)
 		{
-			FMLLog.bigWarning("World handler's stuff isn't loaded!");
+			CCPM.log.warning("World handler's stuff isn't loaded!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
-		if(chunk.worldObj.isRemote)
+		if(chunk.getWorld().isRemote)
 		{
-			FMLLog.bigWarning("Function getChunkPollution called on Client side!");
+			CCPM.log.warning("Function getChunkPollution called on Client side!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
-		if(chunk.worldObj.provider.dimensionId != 0)
+		if(chunk.getWorld().provider.getDimensionId() != 0)
 		{
-			FMLLog.bigWarning("This chunk isn't in overworld dimention(0)!");
+			CCPM.log.warning("This chunk isn't in overworld dimention(0)!");
 			//CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm == null)
 		{
-			FMLLog.bigWarning("Pollution Manager isn't initialized!!");
+			CCPM.log.warning("Pollution Manager isn't initialized!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm.chunksPollution == null)
 		{
-			FMLLog.bigWarning("Chunks pollution isn't initialized!!");
+			CCPM.log.warning("Chunks pollution isn't initialized!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm.chunksPollution.getCP() == null)
 		{
-			FMLLog.bigWarning("CP isn't initialized!!");
+			CCPM.log.warning("CP isn't initialized!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm.chunksPollution.getCP().length == 0)
 		{
-			FMLLog.bigWarning("There are no chunks in Pollution Manager!!");
+			CCPM.log.warning("There are no chunks in Pollution Manager!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
@@ -321,6 +319,11 @@ public class PollutionUtils {
 		return getChunkPollution(w.getChunkFromChunkCoords(chunkPosX, chunkPosZ));
 	}
 	
+	public static float getChunkPollution(World w, BlockPos pos)
+	{
+		return getChunkPollution(w.getChunkFromBlockCoords(pos));
+	}
+	
 	public static NBTTagCompound getNbt(ItemStack stack)
 	{
 		if(!stack.hasTagCompound())
@@ -328,6 +331,10 @@ public class PollutionUtils {
 		
 		return stack.getTagCompound();
 	}
+
+
+
+
 	
 
 }

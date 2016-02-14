@@ -1,10 +1,10 @@
 package ccpm.handlers;
 
+import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.utils.PollutionUtils;
 import ccpm.utils.config.CCPMConfig;
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -24,7 +24,7 @@ public class WorldProcessingThread extends Thread {
 	      this.setPriority(MIN_PRIORITY);
 	      world = w;
 	      pm = poma;
-	      FMLLog.info("Initialising World Processing Thread");
+	      CCPM.log.info("Initialising World Processing Thread");
 	}
 
 	@Override
@@ -38,10 +38,10 @@ public class WorldProcessingThread extends Thread {
 			//if(!PlayerHandler.firstPlayerJoinedWorld)
 			//	continue;
 			
-			FMLLog.info("Starting processing chunks");
+			CCPM.log.info("Starting processing chunks");
 			if(pm.isSaving)
 			{
-				FMLLog.info("Unable to process chunks while PM is saving");
+				CCPM.log.info("Unable to process chunks while PM is saving");
 				continue;
 			}
 			ChunkPollution[] cp = pm.chunksPollution.getCP();
@@ -52,10 +52,10 @@ public class WorldProcessingThread extends Thread {
 			
 			if(cp!=null && cp.length>0)
 			{
-			FMLLog.info(cp.length+" chunks will be processed");
+			CCPM.log.info(cp.length+" chunks will be processed");
 			if(pm.isSaving)
 			{
-				FMLLog.info("Unable to process chunks while PM is saving");
+				CCPM.log.warning("Unable to process chunks while PM is saving");
 				continue;
 			}
 			for(int i = 0; i<cp.length; i++)
@@ -63,7 +63,7 @@ public class WorldProcessingThread extends Thread {
 			      Chunk chunk = world.getChunkFromChunkCoords(cp[i].getX(), cp[i].getZ());
 
 			      
-			      if(chunk != null && chunk.isChunkLoaded)
+			      if(chunk != null && chunk.isLoaded())
 			      {
 			    	  PollutionUtils.increasePollution(PollutionUtils.processChunk(chunk), chunk);
 			    	  PollutionUtils.doPollutionEffects(chunk, PollutionUtils.getChunkPollution(chunk));
@@ -71,14 +71,14 @@ public class WorldProcessingThread extends Thread {
 			}
 			}
 			
-			FMLLog.info("Chunks processed, sleeping for "+CCPMConfig.processingDelay+" milliseconds");
+			CCPM.log.info("Chunks processed, sleeping for "+CCPMConfig.processingDelay+" milliseconds");
 			try
 			{
 				this.sleep(CCPMConfig.processingDelay);
 			}
 			catch (InterruptedException e)
 			{
-				FMLLog.info("World processing thread has interrupted!");
+				CCPM.log.info("World processing thread has interrupted!");
 				return;
 			}
 		}

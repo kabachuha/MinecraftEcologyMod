@@ -11,13 +11,10 @@ import ccpm.utils.PollutionUtils;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -59,9 +56,9 @@ public class PlayerHandler {
 			if(/*player.addedToChunk && */!player.isDead)
 			{
 				
-				Chunk chunk = player.worldObj.getChunkFromBlockCoords((int)player.posX, (int)player.posZ);
+				Chunk chunk = player.worldObj.getChunkFromBlockCoords(player.getPosition());
 				
-				if(chunk == null || !chunk.isChunkLoaded)
+				if(chunk == null || !chunk.isLoaded())
 					return;
 				
 				PollutionManager pm = WorldHandler.instance.pm;
@@ -79,6 +76,8 @@ public class PlayerHandler {
 						//List<ItemStack> ci = pe.getCurativeItems();
 						//ci.clear();
 						//pe.setCurativeItems(ci);
+					
+						if(player.worldObj.canSeeSky(player.getPosition()) || player.worldObj.canSeeSky(player.getPosition().east())||player.worldObj.canSeeSky(player.getPosition().west())||player.worldObj.canSeeSky(player.getPosition().north())||player.worldObj.canSeeSky(player.getPosition().south()))
 						player.addPotionEffect(/*pe*/new PotionEffect(CCPM.smog.id, 120, 1));
 					//}
 				}
@@ -96,19 +95,19 @@ public class PlayerHandler {
 					{
 					   player.attackEntityFrom(CCPMApi.damageSourcePollution, 1);
 					
-					if(player.worldObj.rand.nextInt(10) == 5)
+					if(player.worldObj.rand.nextInt(5) == 0)
 					{
-						player.addPotionEffect(new PotionEffect(Potion.poison.id, 10, 1));
-						if(player.worldObj.rand.nextInt(10) == 5)
+						player.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 1));
+						if(player.worldObj.rand.nextInt(8) == 0)
 						{
 							player.addPotionEffect(new PotionEffect(Potion.blindness.id, 20,1));
-							if(player.worldObj.rand.nextInt(10) == 5)
+							if(player.worldObj.rand.nextInt(6) == 0)
 							{
 								player.addPotionEffect(new PotionEffect(Potion.hunger.id, 100,1));
-								if(player.worldObj.rand.nextInt(10) == 5)
+								if(player.worldObj.rand.nextInt(10) == 0)
 								{
 									player.addPotionEffect(new PotionEffect(Potion.wither.id, 120, 2));
-									if(player.worldObj.rand.nextInt(10) == 5)
+									if(player.worldObj.rand.nextInt(4) == 0)
 									{
 										player.attackEntityFrom(CCPMApi.damageSourcePollution, 10F);
 									}
@@ -143,7 +142,7 @@ public class PlayerHandler {
 			if(!nbt.hasKey("ccpmTest"))
 				return;
 			
-			TileEntity tile = event.world.getTileEntity(event.x, event.y, event.z);
+			TileEntity tile = event.world.getTileEntity(event.pos);
 			
 			if(tile == null || tile.isInvalid())
 				return;
@@ -182,8 +181,8 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onItemExpite(ItemExpireEvent event)
 	{
-		if(WorldHandler.isLoaded && event.entityItem!=null && !event.entityItem.worldObj.isRemote && event.entityItem.worldObj.provider.dimensionId == 0)
-		PollutionUtils.increasePollution(10*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords((int)event.entityItem.posX, (int)event.entityItem.posZ));
+		if(WorldHandler.isLoaded && event.entityItem!=null && !event.entityItem.worldObj.isRemote && event.entityItem.worldObj.provider.getDimensionId() == 0)
+		PollutionUtils.increasePollution(10*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords(event.entityItem.getPosition()));
 	}
 	
 	public static boolean firstPlayerJoinedWorld = false;
@@ -198,7 +197,7 @@ public class PlayerHandler {
 			
 			if(event.entity instanceof EntityPlayer)
 			{
-				FMLLog.info("First Player joined game!");
+				CCPM.log.info("First Player joined game!");
 				firstPlayerJoinedWorld = true;
 			}
 		}

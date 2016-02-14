@@ -5,20 +5,18 @@ import org.lwjgl.opengl.GL11;
 import DummyCore.Utils.DrawUtils;
 import ccpm.api.IRespirator;
 import ccpm.core.CCPM;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CCPMRenderHandler {
 	
@@ -62,7 +60,7 @@ public class CCPMRenderHandler {
 	{
 		return p.isPotionActive(CCPM.smog);
 	}
-	
+	/*
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void renderHud(RenderGameOverlayEvent.Pre event)
@@ -110,4 +108,5 @@ public class CCPMRenderHandler {
 		}
 	}
 	}
+	*/
 }

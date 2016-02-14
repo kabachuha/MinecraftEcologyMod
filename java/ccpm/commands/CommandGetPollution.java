@@ -25,11 +25,11 @@ public class CommandGetPollution extends CommandBase {
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(args == null || args.length == 0 || !args[0].equals("gen"))
 		{
-			sender.addChatMessage(new ChatComponentText("This chunk pollution is"+PollutionUtils.getChunkPollution(sender.getEntityWorld().getChunkFromBlockCoords(sender.getPlayerCoordinates().posX, sender.getPlayerCoordinates().posZ))));
+			sender.addChatMessage(new ChatComponentText("This chunk pollution is"+PollutionUtils.getChunkPollution(sender.getEntityWorld().getChunkFromBlockCoords(sender.getPosition()))));
 		}
 		else
 		{
-			sender.addChatMessage(new ChatComponentText("This chunk pollution generation is "+PollutionUtils.processChunk(sender.getEntityWorld().getChunkFromBlockCoords(sender.getPlayerCoordinates().posX, sender.getPlayerCoordinates().posZ))));
+			sender.addChatMessage(new ChatComponentText("This chunk pollution generation is "+PollutionUtils.getChunkPollution(sender.getEntityWorld().getChunkFromBlockCoords(sender.getPosition()))));
 		}
 	}
 

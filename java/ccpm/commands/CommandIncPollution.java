@@ -29,7 +29,7 @@ public class CommandIncPollution extends CommandBase {
 			return;
 		}
 		
-		PollutionUtils.increasePollution(Float.parseFloat(args[0]), sender.getEntityWorld().getChunkFromBlockCoords(sender.getPlayerCoordinates().posX, sender.getPlayerCoordinates().posZ));
+		PollutionUtils.increasePollution(Float.parseFloat(args[0]), sender.getEntityWorld().getChunkFromBlockCoords(sender.getPosition()));
 	}
 
 }

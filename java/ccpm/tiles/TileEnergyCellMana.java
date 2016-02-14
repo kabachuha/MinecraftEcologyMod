@@ -1,15 +1,15 @@
 package ccpm.tiles;
 
 import net.minecraft.tileentity.TileEntity;
-import vazkii.botania.api.mana.IManaReceiver;
 
-public class TileEnergyCellMana extends TileEnergyCellBasic implements IManaReceiver {
+@Deprecated
+public class TileEnergyCellMana extends TileEnergyCellBasic/* implements IManaReceiver */{
 
 	public TileEnergyCellMana(String name, int maxEnergy) {
 		super(name, maxEnergy);
 	}
 
-	@Override
+	//@Override
 	public int getCurrentMana() {
 		return this.getEnergy();
 	}
@@ -25,17 +25,17 @@ public class TileEnergyCellMana extends TileEnergyCellBasic implements IManaRece
 		return true;
 	}
 
-	@Override
+	//@Override
 	public boolean isFull() {
 		return this.energy < this.maxEnergy;
 	}
 
-	@Override
+	//@Override
 	public void recieveMana(int mana) {
 		energy = Math.min(maxEnergy, energy+mana);
 	}
 
-	@Override
+	//@Override
 	public boolean canRecieveManaFromBursts() {
 		return !isFull();
 	}

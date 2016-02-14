@@ -2,7 +2,9 @@ package ccpm.biomes;
 
 import java.awt.Color;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class Wasteland extends BiomeGenBase {
@@ -16,8 +18,8 @@ public class Wasteland extends BiomeGenBase {
 		this.spawnableCreatureList.clear();
 		this.flowers.clear();
 		this.theBiomeDecorator.treesPerChunk = -999;
-		this.topBlock = Blocks.dirt;
-		this.fillerBlock = Blocks.dirt;
+		this.topBlock = (IBlockState) Blocks.dirt;
+		this.fillerBlock = (IBlockState) Blocks.dirt;
 		this.setHeight(height_Default);
 		this.spawnableWaterCreatureList.clear();
 		this.temperature = 100;
@@ -30,13 +32,13 @@ public class Wasteland extends BiomeGenBase {
 	}
 
 	@Override
-	public int getBiomeGrassColor(int x, int y, int z)
+	public int getGrassColorAtPos(BlockPos p)
 	{
 		return wastelandColor;
 	}
 	
 	@Override
-	public int getBiomeFoliageColor(int x, int y, int z)
+	public int getFoliageColorAtPos(BlockPos p)
 	{
 		return wastelandColor;
 	}

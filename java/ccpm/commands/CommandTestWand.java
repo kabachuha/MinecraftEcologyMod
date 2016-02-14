@@ -2,6 +2,7 @@ package ccpm.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,13 @@ public class CommandTestWand extends CommandBase {
 	public void processCommand(ICommandSender sender, String[] args) {
         sender.addChatMessage(new ChatComponentText( "Feel the power of DEBUG!"));
         //sender.addChatMessage(new ChatComponentText("X="+sender.getPlayerCoordinates().posX+ " Z="+sender.getPlayerCoordinates().posZ));
-        EntityPlayer player = this.getCommandSenderAsPlayer(sender);
+        EntityPlayer player;
+		try {
+			player = this.getCommandSenderAsPlayer(sender);
+		} catch (PlayerNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
         if(player == null)
         	return;
         

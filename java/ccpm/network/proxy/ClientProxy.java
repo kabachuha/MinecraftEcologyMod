@@ -2,11 +2,12 @@ package ccpm.network.proxy;
 
 import ccpm.core.CCPM;
 import ccpm.render.CCPMRenderHandler;
-import ccpm.render.RenderRespirator;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
+import ccpm.render.RenderCell;
+import ccpm.tiles.TileEnergyCellRf;
+import ccpm.tiles.TileEnergyCellThaumium;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy {
 
@@ -17,12 +18,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerItemRenders()
 	{
-		MinecraftForgeClient.registerItemRenderer(CCPM.respirator, new RenderRespirator());
+		//MinecraftForgeClient.registerItemRenderer(CCPM.respirator, new RenderRespirator());
 	}
 	
 	@Override
 	public void registerRenderHandler()
 	{
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellRf.class, new RenderCell());
 		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellThaumium.class, new RenderCell());
 	}
 }

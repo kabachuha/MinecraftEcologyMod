@@ -2,7 +2,7 @@ package ccpm.tiles;
 
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 public class TileEnergyCellRf extends TileEnergyCellBasic implements IEnergyReceiver {
 
@@ -11,7 +11,7 @@ public class TileEnergyCellRf extends TileEnergyCellBasic implements IEnergyRece
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 		return true;
 	}
 
@@ -27,7 +27,7 @@ public class TileEnergyCellRf extends TileEnergyCellBasic implements IEnergyRece
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		
 		energy = Math.min(maxEnergy, energy+maxReceive);
 		
@@ -39,12 +39,12 @@ public class TileEnergyCellRf extends TileEnergyCellBasic implements IEnergyRece
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(EnumFacing from) {
 		return this.energy;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(EnumFacing from) {
 		return this.maxEnergy;
 	}
 

@@ -5,6 +5,9 @@ import java.util.List;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import DummyCore.Client.Icon;
+import DummyCore.Client.IconRegister;
+import DummyCore.Utils.IOldItem;
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.ReflectionProvider;
 import ccpm.api.IRespirator;
@@ -17,23 +20,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.EnumHelper;
-import thaumcraft.api.IGoggles;
-import thaumcraft.api.IRepairable;
-import thaumcraft.api.IRunicArmor;
-import thaumcraft.api.nodes.IRevealer;
-import vazkii.botania.api.mana.IManaDiscountArmor;
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.*;
+import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.items.IGoggles;
+import thaumcraft.api.items.IRepairable;
+import thaumcraft.api.items.IRevealer;
+import thaumcraft.api.items.IRunicArmor;
+import thaumcraft.api.items.IVisDiscountGear;
 
-@Optional.InterfaceList({@Optional.Interface(iface = "thaumcraft.api.IRepairable", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.IGoggles", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.IRunicArmor", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.nodes.IRevealer", modid = "Thaumcraft"),@Optional.Interface(iface = "vazkii.botania.api.mana.IManaDiscountArmor", modid = "Botania")})
-public class RespiratorBase extends ItemArmor implements IRespirator, IRepairable, IGoggles, IRunicArmor, IManaDiscountArmor, IRevealer {
 
-	public static final ArmorMaterial respiratorMatter = EnumHelper.addArmorMaterial("respMat", 5, new int[]{2,0,0,0}, 16);
+@Optional.InterfaceList({@Optional.Interface(iface = "thaumcraft.api.items.IRepairable", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.items.IGoggles", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.items.IRunicArmor", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.items.IRevealer", modid = "Thaumcraft"),@Optional.Interface(iface = "thaumcraft.api.items.IVisDiscountGear", modid = "Thaumcraft")})
+public class RespiratorBase extends ItemArmor implements IRespirator, IRepairable, IGoggles, IRunicArmor, IRevealer, IOldItem, IVisDiscountGear {
+
+	Icon i =null;
+	
+	public static final ArmorMaterial respiratorMatter = EnumHelper.addArmorMaterial("respMat","respMat", 5, new int[]{2,0,0,0}, 16);
 	
 	public RespiratorBase(String unlocalizedName, ArmorMaterial material) 
 	{
 		super(material,0,0);
 		this.setUnlocalizedName(unlocalizedName);
-		this.setTextureName("ccpm:repsirator");
+		//("ccpm:repsirator");
 	}
 
 	@Override
@@ -66,19 +73,6 @@ public class RespiratorBase extends ItemArmor implements IRespirator, IRepairabl
 		return false;
 	}
 	
-	public static boolean isManned(ItemStack item)
-	{
-		if(!item.hasTagCompound())
-			return false;
-		
-		NBTTagCompound nbt = item.getTagCompound();
-		
-		if(nbt.hasKey("mana"))
-			if(nbt.getBoolean("mana"))
-				return true;
-		
-		return false;
-	}
 	
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) 
@@ -100,18 +94,53 @@ public class RespiratorBase extends ItemArmor implements IRespirator, IRepairabl
 		return 0;
 	}
 
-	@Override
-	@Optional.Method(modid = "Botania")
-	public float getDiscount(ItemStack stack, int slot, EntityPlayer player) {
 	
-		return isManned(stack) ? 0.1F : 0F;
-	}
 
 	@Override
 	@Optional.Method(modid = "Thaumcraft")
 	public boolean showNodes(ItemStack itemstack, EntityLivingBase player) {
 		
 		return isRev(itemstack);
+	}
+
+	@Override
+	public int getVisDiscount(ItemStack stack, EntityPlayer player, Aspect aspect) {
+		return isRev(stack) ? 8 : 0;
+	}
+
+	@Override
+	public Icon getIconFromDamage(int meta) {
+		return i;
+	}
+
+	@Override
+	public Icon getIconFromItemStack(ItemStack stk) {
+		return i;
+	}
+
+	@Override
+	public void registerIcons(IconRegister reg) {
+		i = reg.registerItemIcon("ccpm:repsirator");
+	}
+
+	@Override
+	public int getRenderPasses(ItemStack stk) {
+		return 0;
+	}
+
+	@Override
+	public Icon getIconFromItemStackAndRenderPass(ItemStack stk, int pass) {
+		return i;
+	}
+
+	@Override
+	public boolean recreateIcon(ItemStack stk) {
+		return false;
+	}
+
+	@Override
+	public boolean render3D(ItemStack stk) {
+		return false;
 	}
 	
 }
