@@ -1,5 +1,7 @@
 package ccpm.tiles;
 
+import ccpm.core.CCPM;
+import ccpm.integration.thaumcraft.TCUtils;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -8,6 +10,7 @@ import net.minecraft.world.World;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectSourceHelper;
+import thaumcraft.api.aura.AuraHelper;
 import thaumcraft.api.crafting.IInfusionStabiliser;
 
 public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfusionStabiliser {
@@ -23,9 +26,15 @@ public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfu
 		
 		for(int i = 0; i <= amount / 100; i++)
 		{
-			ret = ret && AspectSourceHelper.drainEssentia(user, Aspect.ENERGY, null, 30);
+			ret = ret && TCUtils.drainEssentia(user, Aspect.ENERGY, null, 30,1);
 		}
 		
+		//int i = AuraHelper.drainAuraAvailable(getWorld(), getPos(), Aspect.AIR, amount/100);
+		
+		//AuraHelper.pollute(getWorld(), getPos(), amount, true);
+		
+		//return i >= amount / 100;
+		//CCPM.log.info("Essentia drained "+(ret ? "successfully" : "unsuccessfully"));
 		return ret;
 	}
 

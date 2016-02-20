@@ -2,11 +2,21 @@ package ccpm.blocks;
 
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockCell extends ItemBlock {
 
@@ -39,6 +49,7 @@ public class ItemBlockCell extends ItemBlock {
 		return "ccpm.energycell";
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		int meta = stack.getItemDamage();
@@ -46,7 +57,9 @@ public class ItemBlockCell extends ItemBlock {
 		list.add("Thus is an energy cell from ecology mod."); 
 		list.add("Place thus under the machine from ecology mod");
 		list.add("to use thus as energy source.");
-				
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+		{
 		if(meta == 0)
 			list.add("This cell uses rf to work");
 		
@@ -58,8 +71,13 @@ public class ItemBlockCell extends ItemBlock {
 		
 		if(Loader.isModLoaded("OpenComputers"))
 		{
-			list.add("You may attach thus to your computer from OC");
+			list.add("You can attach thus to your computer from OC");
 		}
-		
+		}
+		else
+		{
+			list.add("");
+			list.add("<Press LShift to show more info>");
+		}
 	}
 }

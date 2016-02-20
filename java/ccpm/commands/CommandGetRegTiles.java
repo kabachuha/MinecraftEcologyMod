@@ -53,7 +53,7 @@ public class CommandGetRegTiles extends CommandBase {
 		
 		if(map == null)
 		{
-			CCPM.log.warning("Map is null!");
+			CCPM.log.warn("Map is null!");
 			return;
 		}
 		
@@ -61,7 +61,7 @@ public class CommandGetRegTiles extends CommandBase {
 		
 		if(iter == null)
 		{
-			CCPM.log.warning("Iterator is null!");
+			CCPM.log.warn("Iterator is null!");
 			return;
 		}
 		
@@ -86,7 +86,7 @@ public class CommandGetRegTiles extends CommandBase {
 		
 		if(file.isDirectory())
 		{
-			CCPM.log.warning("File TilesNames.txt is a directory! Please, delete it!");
+			CCPM.log.warn("File TilesNames.txt is a directory! Please, delete it!");
 			return;
 		}
 		
@@ -95,7 +95,7 @@ public class CommandGetRegTiles extends CommandBase {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				CCPM.log.warning("Unable to create file TilesNames.txt");
+				CCPM.log.warn("Unable to create file TilesNames.txt");
 				e.printStackTrace();
 				return;
 			}
@@ -107,7 +107,7 @@ public class CommandGetRegTiles extends CommandBase {
 			try {
 				FileUtils.writeStringToFile(file, sb.toString());
 			} catch (IOException e) {
-				CCPM.log.warning("Unable to create file TilesNames.txt");
+				CCPM.log.warn("Unable to create file TilesNames.txt");
 				e.printStackTrace();
 				return;
 			}

@@ -77,7 +77,7 @@ public class PollutionManager {
 		}
 		catch (IOException e)
 		{
-			CCPM.log.warning("[CCPM]Unable to write "+ json.toString() +" to file!");
+			CCPM.log.warn("[CCPM]Unable to write "+ json.toString() +" to file!");
 			e.printStackTrace();
 		}
 		}
@@ -123,7 +123,7 @@ public class PollutionManager {
 			}
 			catch (IOException e)
 			{
-				CCPM.log.warning("[CCPM]Unable to read file PollutionMap.json!");
+				CCPM.log.warn("[CCPM]Unable to read file PollutionMap.json!");
 				json = null;
 				e.printStackTrace();
 			}
@@ -141,7 +141,7 @@ public class PollutionManager {
 			}
 			else
 			{
-				CCPM.log.warning("No pollution manager's data has found in file. It's normal, if world is loading first time, but if it isn't, please, report to author!("+CCPM.githubURL+")");
+				CCPM.log.warn("No pollution manager's data has found in file. It's normal, if world is loading first time, but if it isn't, please, report to author!("+CCPM.githubURL+")");
 				chunksPollution = new ChunksPollution();
 				chunksPollution.setWorld(wor.getWorldInfo().getWorldName());
 				chunksPollution.setCP(new ChunkPollution[0]);

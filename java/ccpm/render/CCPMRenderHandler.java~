@@ -11,7 +11,6 @@ import ccpm.api.IRespirator;
 import ccpm.core.CCPM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,13 +27,14 @@ public class CCPMRenderHandler {
 	public static final ResourceLocation respTexture = new ResourceLocation(CCPM.MODID+":textures/hud/respHud.png");
 
 	public CCPMRenderHandler() {
+		// TODO Auto-generated constructor stub
 	}
+	Map<Boolean,Color> wtf = new HashMap<Boolean,Color>();
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void fogColor(EntityViewRenderEvent.FogColors event)
 	{
-		//System.out.println("red"+event.red+"green"+event.green+"blue"+event.blue);
 		if(isPlayerInSmog(Minecraft.getMinecraft().thePlayer))
 		{
 			//FMLLog.info("Coloring fog");
@@ -44,29 +43,20 @@ public class CCPMRenderHandler {
 			event.blue = 0.54F;
 		}
 	}
-	private boolean b = false;
+	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
 	{
+		
 		if(isPlayerInSmog(Minecraft.getMinecraft().thePlayer))
 		{
 			//FMLLog.info("Rendering fog");
-			GlStateManager.setFogStart(3.4F); // 0.7
-			GlStateManager.setFogEnd(4.5F);
-			if(!b)
-				b = true;
-		}
-		else
-		{
-			if(b)
-			{
-				GlStateManager.setFogDensity(1);
-				//GL11.glFogi(GL11.GL_FOG_MODE, 2048);
-				b=false;
-			}
+			GL11.glFogf(GL11.GL_FOG_START, 2.8F); // 0.7
+			GL11.glFogf(GL11.GL_FOG_END, 3.5F);
 		}
 	}
+	
 	
 	
 	

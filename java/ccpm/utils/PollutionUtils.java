@@ -47,13 +47,13 @@ public class PollutionUtils {
 		
 		if(WorldHandler.instance == null)
 		{
-			CCPM.log.warning("World handler isn't initialized!!!");
+			CCPM.log.warn("World handler isn't initialized!!!");
 			CCPM.addToEx();
 			return;
 		}
 		if(WorldHandler.instance.pm == null)
 		{
-			CCPM.log.warning("[CCPM]Pollution Manager isn't initialized!!!");
+			CCPM.log.warn("[CCPM]Pollution Manager isn't initialized!!!");
 			CCPM.addToEx();
 			return;
 		}
@@ -154,7 +154,7 @@ public class PollutionUtils {
 						Tilez[] tiles= PollutionConfig.cfg.getTiles();
 						if(tiles == null||tiles.length == 0)
 						{
-							CCPM.log.warning("No tiles in cfg!!!");
+							CCPM.log.warn("No tiles in cfg!!!");
 						}
 						
 						Hashtable<String, Float> th = PollutionConfig.toHashNoModid();
@@ -254,49 +254,49 @@ public class PollutionUtils {
 		
 		if(!WorldHandler.isLoaded)
 		{
-			CCPM.log.warning("World handler's stuff isn't loaded!");
+			CCPM.log.warn("World handler's stuff isn't loaded!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(chunk.getWorld().isRemote)
 		{
-			CCPM.log.warning("Function getChunkPollution called on Client side!");
+			CCPM.log.warn("Function getChunkPollution called on Client side!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(chunk.getWorld().provider.getDimensionId() != 0)
 		{
-			CCPM.log.warning("This chunk isn't in overworld dimention(0)!");
+			CCPM.log.warn("This chunk isn't in overworld dimention(0)!");
 			//CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm == null)
 		{
-			CCPM.log.warning("Pollution Manager isn't initialized!!");
+			CCPM.log.warn("Pollution Manager isn't initialized!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm.chunksPollution == null)
 		{
-			CCPM.log.warning("Chunks pollution isn't initialized!!");
+			CCPM.log.warn("Chunks pollution isn't initialized!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm.chunksPollution.getCP() == null)
 		{
-			CCPM.log.warning("CP isn't initialized!!");
+			CCPM.log.warn("CP isn't initialized!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}
 		
 		if(pm.chunksPollution.getCP().length == 0)
 		{
-			CCPM.log.warning("There are no chunks in Pollution Manager!!");
+			CCPM.log.warn("There are no chunks in Pollution Manager!!");
 			CCPM.addToEx();
 			return Float.MIN_VALUE;
 		}

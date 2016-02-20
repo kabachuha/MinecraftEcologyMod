@@ -27,12 +27,11 @@ import thaumcraft.api.items.ItemsTC;
 public class RecipeRegistry {
 
 	public RecipeRegistry() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void init()
 	{
-		CCPM.log.info("[CCPM]Registring recipes");
+		CCPM.log.info("Registring recipes");
 		ItemStack redbl = new ItemStack(Blocks.redstone_block);
 		ItemStack ironb = new ItemStack(Blocks.iron_block);
 		ItemStack goldb = new ItemStack(Blocks.gold_block);
@@ -66,7 +65,7 @@ public class RecipeRegistry {
 	public static void thaum()
 	{
 		CCPM.log.info("Adding thaumcraft support");
-		ResearchCategories.registerCategory((String)CATID, null, (ResourceLocation)iconLoc, (ResourceLocation)new ResourceLocation("thaumcraft", "textures/gui/gui_researchback.png"), (ResourceLocation) back);
+		ResearchCategories.registerCategory((String)CATID, null, (ResourceLocation)iconLoc, (ResourceLocation)new ResourceLocation("thaumcraft", "textures/gui/gui_research_back_1.jpg"), (ResourceLocation) back);
 		
 		ThaumcraftApi.registerObjectTag(new ItemStack(CCPM.respirator,1,OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.PROTECT, 6).add(Aspect.AIR, 16).add(Aspect.SENSES, 8).add(Aspect.LIFE, 8).add(Aspect.CRYSTAL, 9).add(Aspect.METAL, 20).add(Aspect.MECHANISM, 9).add(Aspect.EXCHANGE, 7));
 		
@@ -77,10 +76,16 @@ public class RecipeRegistry {
 		ResearchItem ri = new ResearchItem("CCPMCELL", CATID, new AspectList().add(Aspect.ENERGY, 32).add(Aspect.AURA, 16).add(Aspect.MECHANISM, 8), 0, 0, 1, new ItemStack(CCPM.cell,1,1));
 		
 		ItemStack thb = new ItemStack(BlocksTC.metal,1,0);
-		ItemStack blg = new ItemStack(Blocks.gold_block);
+		//ItemStack blg = new ItemStack(Blocks.gold_block);
+		String blg = "blockGold";
 		ItemStack main = new ItemStack(Blocks.redstone_block);
 		
-		InfusionRecipe cellrec = ThaumcraftApi.addInfusionCraftingRecipe("CCPMCELL", new ItemStack(CCPM.cell,1,1), 3, new AspectList().add(Aspect.ENERGY, 128).add(Aspect.ORDER, 64).add(Aspect.CRYSTAL, 32).add(Aspect.AURA, 8).add(Aspect.MECHANISM, 64), main, new ItemStack[]{thb,blg,thb,blg,thb,blg,thb,blg});
+		if(Loader.isModLoaded("thaumicbases")||Loader.isModLoaded("Thaumic Bases"))
+		{
+			thb = new ItemStack(GameRegistry.findBlock("thaumicbases", "thauminiteBlock"));
+		}
+		
+		InfusionRecipe cellrec = ThaumcraftApi.addInfusionCraftingRecipe("CCPMCELL", new ItemStack(CCPM.cell,1,1), 3, new AspectList().add(Aspect.ENERGY, 128).add(Aspect.ORDER, 64).add(Aspect.CRYSTAL, 32).add(Aspect.AURA, 8).add(Aspect.MECHANISM, 64), main, new Object[]{thb,blg,thb,blg,thb,blg,thb,blg});
 		
 		ri.setParents("INFUSION");
 		ri.setPages(new ResearchPage("ccpm.cell"), new ResearchPage(cellrec));
@@ -95,7 +100,7 @@ public class RecipeRegistry {
 		rii.setSpecial();
 		rii.setParents("CCPMCELL");
 		
-		InfusionRecipe respinf = ThaumcraftApi.addInfusionCraftingRecipe("CCPMREV", new Object[]{"revealing", new NBTTagInt(1)}, 5, new AspectList().add(Aspect.SENSES, 32).add(Aspect.AURA, 16).add(Aspect.PROTECT, 16).add(Aspect.AIR, 64), new ItemStack(CCPM.respirator,1,OreDictionary.WILDCARD_VALUE), new ItemStack[]{new ItemStack(ItemsTC.goggles,1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.slime_ball), new ItemStack(CCPM.cell,1,1)});
+		InfusionRecipe respinf = ThaumcraftApi.addInfusionCraftingRecipe("CCPMREV", new Object[]{"revealing", new NBTTagInt(1)}, 5, new AspectList().add(Aspect.SENSES, 32).add(Aspect.AURA, 16).add(Aspect.PROTECT, 16).add(Aspect.AIR, 64), new ItemStack(CCPM.respirator,1,OreDictionary.WILDCARD_VALUE), new ItemStack[]{new ItemStack(ItemsTC.goggles,1, OreDictionary.WILDCARD_VALUE), new ItemStack(Blocks.slime_block), new ItemStack(CCPM.cell,1,1)});
 		
 		rii.setPages(new ResearchPage("ccpm.resp"), new ResearchPage(respinf));
 		

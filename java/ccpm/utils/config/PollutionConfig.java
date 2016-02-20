@@ -36,7 +36,7 @@ public class PollutionConfig {
 				}
 				if(!file.exists())
 				{
-					ConfigDownloader.download(file, "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/PollutionConfig.json");
+					ConfigDownloader.download(file, "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json");
 				}
 				
 				if(file.canRead())
@@ -50,7 +50,7 @@ public class PollutionConfig {
 			 }
 			 catch (IOException e)
 			 {
-			    CCPM.log.warning("Unable to read file PollutionConfig.json!");
+			    CCPM.log.warn("Unable to read file PollutionConfig.json!");
 			 	json = null;
 			 	e.printStackTrace();
 			 }

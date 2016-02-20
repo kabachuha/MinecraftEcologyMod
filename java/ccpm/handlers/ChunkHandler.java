@@ -61,7 +61,7 @@ public class ChunkHandler {
 				{
 					if(WorldHandler.instance.pm.chunksPollution.getCP(i).getPollution() > 200000)
 					{
-						event.world.setBlockState(event.pos, (IBlockState) Blocks.deadbush, 2);
+						event.world.setBlockState(event.pos, Blocks.deadbush.getDefaultState(), 2);
 						event.setResult(Result.DENY);
 						//event.setCanceled(true);
 						break;

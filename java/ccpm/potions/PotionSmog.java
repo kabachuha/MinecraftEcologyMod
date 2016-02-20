@@ -8,7 +8,8 @@ import net.minecraft.util.ResourceLocation;
 public class PotionSmog extends Potion {
 
 	public PotionSmog() {
-		super(null, false, Wasteland.wastelandColor);
+		//TODO Add icon
+		super(new ResourceLocation("ccpm:textures/respirator"), false, Wasteland.wastelandColor);
 		this.setEffectiveness(0.25D);
 		this.setPotionName("potion.smog");
 	}

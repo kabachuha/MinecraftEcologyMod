@@ -55,18 +55,28 @@ public class WorldProcessingThread extends Thread {
 			CCPM.log.info(cp.length+" chunks will be processed");
 			if(pm.isSaving)
 			{
-				CCPM.log.warning("Unable to process chunks while PM is saving");
+				CCPM.log.warn("Unable to process chunks while PM is saving");
 				continue;
 			}
 			for(int i = 0; i<cp.length; i++)
 			{
+				if(!world.getChunkProvider().chunkExists(cp[i].getX(), cp[i].getZ()))
+					continue;
+				
 			      Chunk chunk = world.getChunkFromChunkCoords(cp[i].getX(), cp[i].getZ());
 
 			      
-			      if(chunk != null && chunk.isLoaded())
+			      if(chunk != null && chunk.isLoaded() && !chunk.isEmpty())
 			      {
+			    	  try{
 			    	  PollutionUtils.increasePollution(PollutionUtils.processChunk(chunk), chunk);
 			    	  PollutionUtils.doPollutionEffects(chunk, PollutionUtils.getChunkPollution(chunk));
+			    	  }catch(Throwable th)
+			    	  {
+			    		  CCPM.log.warn("Exeption "+th.getMessage()+" occured during processing clunk at {"+chunk.xPosition+","+chunk.zPosition+"}");
+			    		  th.printStackTrace();
+			    		  continue;
+			    	  }
 			      }
 			}
 			}

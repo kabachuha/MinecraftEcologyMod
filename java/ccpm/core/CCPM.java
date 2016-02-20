@@ -2,7 +2,14 @@ package ccpm.core;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.logging.Logger;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.UnmodifiableIterator;
+import com.ibm.icu.util.BytesTrie.Iterator;
 
 import DummyCore.Blocks.BlocksRegistry;
 import DummyCore.Core.Core;
@@ -18,6 +25,7 @@ import ccpm.commands.CommandGetPollution;
 import ccpm.commands.CommandGetRegTiles;
 import ccpm.commands.CommandIncPollution;
 import ccpm.commands.CommandTestWand;
+import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
@@ -34,6 +42,7 @@ import ccpm.tiles.TileEntityAnalyser;
 import ccpm.tiles.TileEntityFilter;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
+import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
@@ -57,6 +66,8 @@ import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -97,7 +108,7 @@ public class CCPM {
 	 */
 	public static final String githubURL = "https://github.com/Artem226";
 	
-	public static Logger log = Logger.getLogger("EcologyMod");
+	public static Logger log = LogManager.getLogger(NAME);
 	
 	@EventHandler
 	public void preLoad(FMLPreInitializationEvent event)
@@ -107,7 +118,7 @@ public class CCPM {
 		
 		PollutionConfig.load(event.getModConfigurationDirectory().getAbsolutePath());
 		
-		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/version.txt");
+		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/version.txt");
 		
 		
 		ModMetadata meta = event.getModMetadata();
@@ -124,7 +135,7 @@ public class CCPM {
 		log.info("Potion smog id is "+smog.id);
 		wasteland = new Wasteland(CCPMConfig.wasteId);
 		
-		BiomeManager.addBiome(BiomeType.WARM, new BiomeEntry(wasteland, 14));
+		BiomeManager.addBiome(BiomeType.DESERT, new BiomeEntry(wasteland, 14));
 	}
 	
 	@EventHandler
@@ -190,8 +201,60 @@ public class CCPM {
 	//Function to tell you where you have to report errors
 	public static void addToEx()
 	{
-		log.warning("Please, report this to the author's(Artem226) GitHub!!!");
-		log.warning(githubURL);
+		log.warn("Please, report this to the author's(Artem226) GitHub!!!");
+		log.warn(githubURL);
 		log.info("Please, don't forget to include crash report/log");
 	}
+	
+	@EventHandler
+	public void imc(IMCEvent event)
+	{
+		UnmodifiableIterator<IMCMessage> iter = event.getMessages().iterator();
+		
+		while (iter.hasNext())
+		{
+			FMLInterModComms.IMCMessage message = (FMLInterModComms.IMCMessage) iter.next();
+			if(message.key.equals("addPollutionTile"))
+			if(message.isStringMessage())
+			{
+				String s[] = message.getStringValue().split(":");
+				String modid = "";
+				String name = "";
+				float  pollution = Float.NaN;
+				if(s!=null && s.length == 2)
+				{
+					name = s[0];
+					try{
+					pollution = Float.parseFloat(s[1]);
+					}catch(NumberFormatException ex){ pollution = Float.NaN;}
+					modid = message.getSender();
+				}
+				
+				if(modid.length()> 1 && name.length() > 1 && pollution !=Float.NaN)
+				{
+					Tilez tile = new Tilez();
+					
+					tile.setModid(modid);
+					tile.setName(name);
+					tile.setPollution(pollution);
+					
+					List<Tilez> tiles = new LinkedList<Tilez>(Arrays.asList(PollutionConfig.cfg.getTiles()));
+					
+					if(!tiles.contains(tile))
+					{
+						tiles.add(tile);
+					}
+					
+					PollutionConfig.cfg.setTiles(tiles.toArray(new Tilez[tiles.size()]));
+					log.info("Mod "+modid+" adding a tile with id {"+name+"} to configuration and sets it's pollution prodution to "+pollution);
+				}
+				else
+				{
+					log.warn("Mod "+message.getSender()+" is unable to add a tile to config with IMC");
+				}
+				
+			}
+		}
+	}
+	
 }

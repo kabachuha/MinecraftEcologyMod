@@ -6,6 +6,7 @@ import DummyCore.Utils.IHUDElement;
 import DummyCore.Utils.TessellatorWrapper;
 import ccpm.api.IRespirator;
 import ccpm.core.CCPM;
+import ccpm.items.RespiratorBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,7 +64,6 @@ public class RespHud implements IHUDElement {
 		TessellatorWrapper tess = TessellatorWrapper.instance;
 		//Bind the texture
 		DrawUtils.bindTexture(respTexture.getResourceDomain(), respTexture.getResourcePath());
-		
 		tess.startDrawingQuads();
 		
 		tess.addVertexWithUV(0, h, -90D, 0, 1);
@@ -73,6 +73,12 @@ public class RespHud implements IHUDElement {
 		tess.addVertexWithUV(w, 0, -90D, 1, 0);
 		
 		tess.addVertexWithUV(0, 0, -90D, 0, 0);
+		
+		if(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4).getItem() instanceof RespiratorBase)
+		{
+			if(((RespiratorBase)Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4).getItem()).isRev(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4)))
+				tess.setColorRGBA_F(1, 0, 1, Minecraft.getMinecraft().theWorld.rand.nextFloat());
+		}
 		
 		tess.draw();
 	}

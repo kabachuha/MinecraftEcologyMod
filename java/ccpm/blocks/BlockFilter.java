@@ -1,5 +1,6 @@
 package ccpm.blocks;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -22,7 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.actors.threadpool.Arrays;
+
 
 public class BlockFilter extends Block implements ITileEntityProvider, IOldCubicBlock {
 

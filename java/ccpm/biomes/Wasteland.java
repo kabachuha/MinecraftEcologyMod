@@ -18,8 +18,8 @@ public class Wasteland extends BiomeGenBase {
 		this.spawnableCreatureList.clear();
 		this.flowers.clear();
 		this.theBiomeDecorator.treesPerChunk = -999;
-		this.topBlock = (IBlockState) Blocks.dirt;
-		this.fillerBlock = (IBlockState) Blocks.dirt;
+		this.topBlock = Blocks.dirt.getDefaultState();
+		this.fillerBlock = Blocks.dirt.getDefaultState();
 		this.setHeight(height_Default);
 		this.spawnableWaterCreatureList.clear();
 		this.temperature = 100;

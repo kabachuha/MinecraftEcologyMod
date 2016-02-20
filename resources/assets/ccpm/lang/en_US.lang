@@ -16,3 +16,13 @@ tile.ccpm.filter.name=Filter
 tile.ccpm.analyser.name=Air analyser
 
 potion.smog=Smog
+
+tc.research_name.CCPMREV=Respirator of Revealing
+tc.research_text.CCPMREV=Air and aura filter
+
+tc.research_name.CCPMCELL=Thaumium cell
+tc.research_name.CCPMCELL=Energy converter
+
+ccpm.cell=You have researched how to use thaumic essentia to power machines from Ecology mod!<LINE>This energy cell may be used only by machines from Ecology mod!
+
+ccpm.resp=TODO
