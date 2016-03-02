@@ -14,6 +14,8 @@ public class CCPMConfig implements IDummyConfig {
 	public static int wasteId = 30;
 	public static float filterRed = 100;
 	public static boolean fstab = true;
+	public static float waterPoll = 80000;
+	public static int pollutionMultiplier = 1;
 	//public static boolean useNode = true;
 	//public static boolean useSano = false;
 	
@@ -34,6 +36,8 @@ public class CCPMConfig implements IDummyConfig {
         fstab = cfg.getBoolean("filterStabalise", "THAUMCRAFT", true, "Can machines stabalises infusion?");
         //useNode = cfg.getBoolean("useNode", "THAUMCRAFT", true, "Use jar node to craft the energy cell?");
        // useSano = cfg.getBoolean("useSano", "THAUMCRAFT", false, "Use the filter Sano aspect instead of Potentia to work?");
+        waterPoll = cfg.getFloat("waterPollution", "POLLUTION", 80000, 0, Float.MAX_VALUE, "Amount of pollution then water starts to be polluted");
+        pollutionMultiplier = cfg.getInt("pollutionMultiplier", "POLLUTION", 1, 1, Int.MaxValue(), "Multiplier of pollution prodution");
 	}
 
 }

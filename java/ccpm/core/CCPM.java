@@ -13,6 +13,7 @@ import com.ibm.icu.util.BytesTrie.Iterator;
 
 import DummyCore.Blocks.BlocksRegistry;
 import DummyCore.Core.Core;
+import DummyCore.Core.CoreInitialiser;
 import DummyCore.Items.ItemRegistry;
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.ModVersionChecker;
@@ -26,6 +27,9 @@ import ccpm.commands.CommandGetRegTiles;
 import ccpm.commands.CommandIncPollution;
 import ccpm.commands.CommandTestWand;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
+import ccpm.fluids.CCPMFluids;
+import ccpm.fluids.FluidPW;
+import ccpm.fluids.FluidPollution;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
@@ -78,7 +82,7 @@ public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.1.1710.0";
+	public static final String version = "0.1.189.7A";
 	public static final String dependencies = "required-after:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
@@ -88,6 +92,10 @@ public class CCPM {
 	public static Block an = new BlockAnalyser();
 	
 	public static Block filter = new BlockFilter();
+	
+	public static Block pollFlu = new FluidPollution();
+	
+	public static Block pw = new FluidPW();
 	
 	
 
@@ -106,7 +114,7 @@ public class CCPM {
 	/*
 	 * URL to my GitHub 
 	 */
-	public static final String githubURL = "https://github.com/Artem226";
+	public static final String githubURL = "https://github.com/Artem226/MinecraftEcologyMod/issues";
 	
 	public static Logger log = LogManager.getLogger(NAME);
 	
@@ -119,6 +127,7 @@ public class CCPM {
 		PollutionConfig.load(event.getModConfigurationDirectory().getAbsolutePath());
 		
 		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/version.txt");
+		
 		
 		
 		ModMetadata meta = event.getModMetadata();
@@ -146,18 +155,22 @@ public class CCPM {
 		log.info("Initialising");
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
 		//FMLCommonHandler.instance().bus().register(new WorldHandler());
-		MinecraftForge.EVENT_BUS.register(new ChunkHandler());
+		ChunkHandler ch = new ChunkHandler();
+		MinecraftForge.EVENT_BUS.register(ch);
 		//FMLCommonHandler.instance().bus().register(new ChunkHandler());
 		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
 		//FMLCommonHandler.instance().bus().register(new PlayerHandler());
+		MinecraftForge.TERRAIN_GEN_BUS.register(ch);
 		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
 		
-		
+		CCPMFluids.init();
 		
 		BlocksRegistry.registerBlock(cell, "ccpm.energycell", getClass(), ItemBlockCell.class);
 		BlocksRegistry.registerBlock(an, an.getUnlocalizedName(), getClass(), null);
 		BlocksRegistry.registerBlock(filter, filter.getUnlocalizedName(), getClass(), null);
+		BlocksRegistry.registerBlock(pollFlu, CCPMFluids.concentratedPollution.getUnlocalizedName(), getClass(), null);
+		BlocksRegistry.registerBlock(pw, CCPMFluids.pollutedWater.getUnlocalizedName(), getClass(), null);
 		
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
 		GameRegistry.registerTileEntity(TileEnergyCellRf.class, "TECR");
@@ -172,7 +185,7 @@ public class CCPM {
 		if(proxy!=null)
 		{
 			//proxy.registerItemRenders();
-			proxy.registerRenderHandler();
+			//proxy.registerRenderHandler();
 		}
 		MiscUtils.addHUDElement(new RespHud());
 		if(Loader.isModLoaded("Thaumcraft") || Loader.isModLoaded("thaumcraft"))

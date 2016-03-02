@@ -18,12 +18,16 @@ import net.minecraftforge.fml.common.*;
     @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers"),
     @Optional.Interface(iface = "li.cil.oc.api.network.ManagedPeripheral", modid = "OpenComputers")
 })
-public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource, SimpleComponent, ManagedPeripheral {
+public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource, SimpleComponent, ManagedPeripheral, ITickable {
 
 	int energy = 0;
 	public String name;
 	static int maxEnergy = 1000000;
 	
+	public Lightning light1;
+	public Lightning light2;
+	public Lightning light3;
+	public Lightning light4;
 	
 	public TileEnergyCellBasic(String name, int maxEnergy) {
 		super();
@@ -94,6 +98,20 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
         nbt.setInteger("energy", this.energy);
 
     }
+    int ticks;
+	@Override
+	public void update() {
+		ticks++;
+		
+		if((ticks % 20) == 0)
+		{
+			light1 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 1,0,0);
+			light2 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 1,1,1);
+			light3 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 0,1,0);
+			light4 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 0,0,1);
+		}
+		
+	}
 
 	
 }

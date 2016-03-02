@@ -24,6 +24,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderHandler()
 	{
+		CCPM.log.info("Registering tile entity special renders.");
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellRf.class, new RenderCell());
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellThaumium.class, new RenderCell());

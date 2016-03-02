@@ -9,6 +9,8 @@ import DummyCore.Utils.DrawUtils;
 import DummyCore.Utils.Lightning;
 import DummyCore.Utils.MathUtils;
 import DummyCore.Utils.TessellatorWrapper;
+import ccpm.core.CCPM;
+import ccpm.tiles.TileEnergyCellBasic;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -21,28 +23,31 @@ import net.minecraft.tileentity.TileEntity;
 
 public class RenderCell extends TileEntitySpecialRenderer {
 
+	@Override
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	
 
-	Lightning light1;
-	Lightning light2;
-	Lightning light3;
-	Lightning light4;
+	/*
 	
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage)
 	{
-		if(partialTicks % 20 == 0)
-		{
-		light1 = new Lightning(te.getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50), 0.3F, 1,0,0);
-		light2 = new Lightning(te.getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50), 0.3F, 1,1,1);
-		light3 = new Lightning(te.getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50), 0.3F, 0,1,0);
-		light4 = new Lightning(te.getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50,MathUtils.randomDouble(te.getWorld().rand)/50), 0.3F, 0,0,1);
-		}
+		CCPM.log.debug("Rend");
+		if(!(te instanceof TileEnergyCellBasic))return;
+		TileEnergyCellBasic teb = (TileEnergyCellBasic) te;
+		Lightning light1 = teb.light1;
+		Lightning light2 = teb.light2;
+		Lightning light3 = teb.light3;
+		Lightning light4 = teb.light4;
 		if(light1!=null && light2 != null && light3!=null&& light4!=null)
 		{
 		GlStateManager.pushMatrix();
-		
+		CCPM.log.debug("Rendering lightning");
 		light1.render(x+0.5D, y+0.5D, z+0.5D, partialTicks);
 		light2.render(x+0.5D, y+0.5D, z+0.5D, partialTicks);
 		light3.render(x+0.5D, y+0.5D, z+0.5D, partialTicks);
@@ -51,6 +56,7 @@ public class RenderCell extends TileEntitySpecialRenderer {
 		GlStateManager.popMatrix();
 		}
 	}
+	*/
 /*
 	class MMC extends ModelBase
 	{

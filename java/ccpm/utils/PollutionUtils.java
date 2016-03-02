@@ -14,6 +14,7 @@ import ccpm.ecosystem.PollutionManager;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.handlers.WorldHandler;
 import ccpm.integration.buildcraft.BCIntegration;
+import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 
@@ -173,7 +174,7 @@ public class PollutionUtils {
 							//else
 							{
 								//FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
-								ret = ret + th.get(id) * 60;
+								ret = ret + th.get(id) * CCPMConfig.pollutionMultiplier;
 							}
 							
 					}
@@ -240,6 +241,16 @@ public class PollutionUtils {
 	    	 }
 	     }
 	     
+	     //Global warming! Aaaaaahhh!
+	     if(pollution >= 10000)
+	     {
+	    	 if(!chunk.getWorld().isRemote)
+	    	 if(chunk.isLoaded())
+	    	 for(int i = chunk.xPosition*16; i<=chunk.xPosition*16+16; i++)
+	    		 for(int j = chunk.zPosition*16; j<=chunk.zPosition*16+16; j++)
+	    	 chunk.getWorld().getBiomeGenForCoords(new BlockPos(i, 16, j)).temperature+=0.01F;
+	     }
+	    	 
 	     //TODO Add more effects
 	}
 	

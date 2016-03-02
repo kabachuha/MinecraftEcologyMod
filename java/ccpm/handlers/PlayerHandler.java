@@ -7,12 +7,20 @@ import ccpm.api.IRespirator;
 import ccpm.api.ITilePollutionProducer;
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager;
+import ccpm.fluids.CCPMFluids;
 import ccpm.utils.PollutionUtils;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraft.item.ItemStack;
@@ -20,13 +28,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderItemInFrameEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class PlayerHandler {
@@ -182,7 +195,7 @@ public class PlayerHandler {
 	public void onItemExpite(ItemExpireEvent event)
 	{
 		if(WorldHandler.isLoaded && event.entityItem!=null && !event.entityItem.worldObj.isRemote && event.entityItem.worldObj.provider.getDimensionId() == 0)
-		PollutionUtils.increasePollution(10*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords(event.entityItem.getPosition()));
+		PollutionUtils.increasePollution(2*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords(event.entityItem.getPosition()));
 	}
 	
 	public static boolean firstPlayerJoinedWorld = false;
@@ -190,15 +203,65 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onPlayerJoinGame(EntityJoinWorldEvent event)
 	{
-		if(!firstPlayerJoinedWorld)
-		{
+		
+		
 			if(event.world == null || event.world.isRemote || event.entity == null)
 				return;
 			
 			if(event.entity instanceof EntityPlayer)
 			{
+				if(!firstPlayerJoinedWorld)
+				{
 				CCPM.log.info("First Player joined game!");
+				
+			
 				firstPlayerJoinedWorld = true;
+				}
+				
+				ChatComponentText cct1 = new ChatComponentText(CCPM.NAME+" is alpha version now. It may contain a lot of bugs! Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
+				cct1.setChatStyle(cct1.getChatStyle().setColor(EnumChatFormatting.RED));
+				
+				ChatComponentText cct2 = new ChatComponentText(CCPM.NAME+" is beta version now. It may contain few bugs. Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
+				cct2.setChatStyle(cct2.getChatStyle().setColor(EnumChatFormatting.BLUE));
+						
+				if(CCPM.version.endsWith("A"))
+					((EntityPlayer)event.entity).addChatMessage(cct1);
+				if(CCPM.version.endsWith("B"))
+					((EntityPlayer)event.entity).addChatMessage(cct2);
+			}
+		
+		
+	}
+	
+	@SubscribeEvent
+	public void fillBucketEvent(FillBucketEvent event)
+	{
+		if(event.target.typeOfHit != MovingObjectType.BLOCK)
+			return;
+		BlockPos bp = new BlockPos(event.target.hitVec);
+		IBlockState state = event.world.getBlockState(bp);
+		Fluid f = FluidRegistry.lookupFluidForBlock(state.getBlock());
+		
+		if(f.isGaseous())
+			return;
+		
+		if(f == FluidRegistry.WATER)
+		{
+			if(!event.world.isRemote)
+			{
+				if((Integer)state.getValue(BlockLiquid.LEVEL) == 0)
+				{
+					if(PollutionUtils.getChunkPollution(event.world, bp) >= CCPMConfig.waterPoll)
+					{
+						ItemStack ret = FluidContainerRegistry.fillFluidContainer(new FluidStack(CCPMFluids.pollutedWater, FluidContainerRegistry.BUCKET_VOLUME), event.current);
+						
+						if(ret != null)
+						{
+							event.result = ret;
+							event.setResult(Result.ALLOW);
+						}
+					}
+				}
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package ccpm.handlers;
 
+import ccpm.api.events.CCPMPlantGrowEvent;
+import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.utils.PollutionUtils;
 import net.minecraft.block.state.IBlockState;
@@ -75,6 +77,12 @@ public class ChunkHandler {
 				}
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void growCheck(CCPMPlantGrowEvent event)
+	{
+		CCPM.log.info("Grow event called!!!");
 	}
 
 }
