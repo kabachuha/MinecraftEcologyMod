@@ -3,6 +3,7 @@ package ccpm.tiles;
 import DummyCore.Utils.Coord3D;
 import DummyCore.Utils.Lightning;
 import DummyCore.Utils.MathUtils;
+import DummyCore.Utils.MiscUtils;
 import ccpm.api.ICCPMEnergySource;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -23,11 +24,6 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
 	int energy = 0;
 	public String name;
 	static int maxEnergy = 1000000;
-	
-	public Lightning light1;
-	public Lightning light2;
-	public Lightning light3;
-	public Lightning light4;
 	
 	public TileEnergyCellBasic(String name, int maxEnergy) {
 		super();
@@ -98,18 +94,18 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
         nbt.setInteger("energy", this.energy);
 
     }
-    int ticks;
+    int sticks = -1;
 	@Override
 	public void update() {
-		ticks++;
 		
-		if((ticks % 20) == 0)
+		if(sticks <= 0)
 		{
-			light1 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 1,0,0);
-			light2 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 1,1,1);
-			light3 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 0,1,0);
-			light4 = new Lightning(getWorld().rand, new Coord3D(0,0,0), new Coord3D(MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50,MathUtils.randomDouble(getWorld().rand)/50), 0.3F, 0,0,1);
+			NBTTagCompound nbt = new NBTTagCompound();
+			writeToNBT(nbt);
+			MiscUtils.syncTileEntity(nbt, 0);
 		}
+		else
+			--sticks;
 		
 	}
 

@@ -1,5 +1,6 @@
 package ccpm.core;
 
+import DummyCore.Utils.OreDictUtils;
 import ccpm.utils.config.CCPMConfig;
 
 import net.minecraft.enchantment.Enchantment;
@@ -10,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.research.ResearchCategories;
@@ -31,27 +33,49 @@ public class RecipeRegistry {
 
 	public static void init()
 	{
+		oreDictSetup();
 		CCPM.log.info("Registring recipes");
 		ItemStack redbl = new ItemStack(Blocks.redstone_block);
 		ItemStack ironb = new ItemStack(Blocks.iron_block);
 		ItemStack goldb = new ItemStack(Blocks.gold_block);
+		
 
-		GameRegistry.addRecipe(new ItemStack(CCPM.cell,1,0),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.cell,1,0),new Object[]{
 		    "IGI",
 		    "GRG",
 		    "IGI",
-		    'I',ironb, 'G', goldb, 'R', redbl);
+		    'I',"blockIron", 'G', "blockGold", 'R', "blockRedstone"}));
+		
+		
 		
 		ItemStack glass = new ItemStack(Blocks.glass_pane);
 		ItemStack helm = new ItemStack(Items.leather_helmet,1,OreDictionary.WILDCARD_VALUE);
 		ItemStack wool = new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE);
 		ItemStack leath = new ItemStack(Items.leather);
 		
-		GameRegistry.addRecipe(new ItemStack(CCPM.respirator),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.respirator), new Object[]{
 			    "LHL",
 			    "G G",
 			    "LWL",
-			    'L', leath, 'G', glass, 'W', wool, 'H', helm);
+			    'L', leath, 'G', "paneGlass", 'W', wool, 'H', helm}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.filter), new Object[]{
+			    "ILI",
+			    "LRL",
+			    "ILI",
+			    'L', leath, 'I', "blockIron", 'R', "blockRedstone"}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.an), new Object[]{
+			    "GMG",
+			    "MRM",
+			    "GMG",
+			    'G', "blockGold", 'M', mushroom, 'R', "blockRedstone"}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.baf), new Object[]{
+			    "DFD",
+			    "FSF",
+			    "DFD",
+			    'D', "blockDiamond", 'F', new ItemStack(CCPM.filter), 'S', new ItemStack(Blocks.sea_lantern)}));
 		
 		if(Loader.isModLoaded("Thaumcraft")||Loader.isModLoaded("thaumcraft"))
 			thaum();
@@ -105,6 +129,45 @@ public class RecipeRegistry {
 		rii.setPages(new ResearchPage("ccpm.resp"), new ResearchPage(respinf));
 		
 		rii.registerResearchItem();
+		
+		ResearchItem advThaum = new ResearchItem("CCPMADVTHAUM", CATID, new AspectList(new ItemStack(ItemsTC.primordialPearl,1)), 3, 9, -6, new ItemStack(ItemsTC.primordialPearl));
+		advThaum.setParents("CCPMCELL","CCPMREV");
+		advThaum.setRound();
+		advThaum.setSpecial();
+		
+		AspectList al = new AspectList();
+		
+		for(Aspect a : Aspect.getPrimalAspects())
+		{
+			al.add(a, 64);
+		}
+		
+		al.add(Aspect.AURA, 32);
+		al.add(Aspect.CRYSTAL, 64);
+		al.add(Aspect.DARKNESS, 32);
+		al.add(Aspect.ELDRITCH, 48);
+		al.add(Aspect.ENERGY, 128);
+		al.add(Aspect.EXCHANGE, 48);
+		al.add(Aspect.MECHANISM, 64);
+		
+		ItemStack eye = new ItemStack(ItemsTC.eldritchEye);
+		ItemStack gear = new ItemStack(ItemsTC.gear,1,2);
+		ItemStack matrix = new ItemStack(BlocksTC.infusionMatrix);
+		ItemStack totem = new ItemStack(BlocksTC.auraTotem,1,0);
+		ItemStack bv = new ItemStack(BlocksTC.metal,1,1);
+		ItemStack eldr = new ItemStack(BlocksTC.nodeStabilizer);
+		
+		
+		InfusionRecipe advRec = ThaumcraftApi.addInfusionCraftingRecipe("CCPMADVTHAUM", new ItemStack(CCPM.advThaum), 5, al, new ItemStack(ItemsTC.primordialPearl), new Object[]{eye,matrix,bv,matrix,totem,matrix,gear,matrix,eldr,matrix});
+		
+		advThaum.setPages(new ResearchPage("ccpm.advThaum"), new ResearchPage(advRec));
+		
+		advThaum.registerResearchItem();
+		
+		ThaumcraftApi.addWarpToResearch("CCPMADVTHAUM", 16);
+		ThaumcraftApi.addWarpToItem(new ItemStack(CCPM.advThaum), 16);
+		
+		ThaumcraftApi.registerObjectTag(new ItemStack(CCPM.advThaum), al);
 	}
 	
 	public static void botan()
@@ -118,4 +181,16 @@ public class RecipeRegistry {
 	public static final String CATID = "CCPM";
 	
 	public static final ResourceLocation iconLoc = new ResourceLocation(CCPM.MODID+":textures/items/repsirator.png");
+	
+	public static String mushroom = "blockMushroom";
+	
+	public static void oreDictSetup()
+	{
+		CCPM.log.info("Registering OreDictionary entries");
+		if(!OreDictionary.doesOreNameExist(mushroom))
+		{
+			OreDictionary.registerOre(mushroom, Blocks.brown_mushroom_block);
+			OreDictionary.registerOre(mushroom, Blocks.red_mushroom_block);
+		}
+	}
 }

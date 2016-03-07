@@ -50,8 +50,8 @@ public class ConfigDownloader {
 		
 		 if(buffer != null)
 		 {
-			 CCPM.log.info("[CCPM]Data successfully recieved!");
-			 CCPM.log.info("[CCPM]Trying to write data in file "+file.getName());
+			 CCPM.log.info("Data successfully recieved!");
+			 CCPM.log.info("Trying to write data in file "+file.getName());
 			 
 			 try
 			 {
@@ -66,7 +66,7 @@ public class ConfigDownloader {
 			 }
 			 
 			 
-			 CCPM.log.info("[CCPM]File: "+file.getName()+" from: "+URL+" downloaded, created and writed successfully!");
+			 CCPM.log.info("File: "+file.getName()+" from: "+URL+" downloaded, created and writed successfully!");
 		 }
 		 
 		

@@ -78,7 +78,7 @@ public class PollutionUtils {
 			 ChunkPollution cpoll = new ChunkPollution();
 			 cpoll.setX(chunk.xPosition);
 			 cpoll.setZ(chunk.zPosition);
-			 cpoll.setPollution(amount);
+			 cpoll.setPollution(amount >=0 ? amount : 0);
 			 cp[0] = cpoll;
 		 }
 		 
@@ -89,7 +89,7 @@ public class PollutionUtils {
 			if(chunk.xPosition == c.getX() && chunk.zPosition == c.getZ())
 			{
 				hasAlready = true;
-				c.setPollution(c.getPollution() + amount);
+				c.setPollution((c.getPollution() + amount) >= 0 ? c.getPollution()+amount : 0);
 				break;
 			}
 		}
@@ -100,7 +100,7 @@ public class PollutionUtils {
 			ChunkPollution ccp = new ChunkPollution();
 			 ccp.setX(chunk.xPosition);
 			 ccp.setZ(chunk.zPosition);
-			 ccp.setPollution(amount);
+			 ccp.setPollution(amount >= 0 ? amount : 0);
 			 for(int i = 0; i <= cp.length-1; i++)
 			 {
 				 newCP[i] = cp[i];

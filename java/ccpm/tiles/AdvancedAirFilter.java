@@ -3,11 +3,15 @@ package ccpm.tiles;
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.TileStatTracker;
 import ccpm.api.ICCPMEnergySource;
+import ccpm.api.IHasProgress;
 import ccpm.fluids.CCPMFluids;
 import ccpm.utils.PollutionUtils;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -16,18 +20,22 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.FishingHooks.FishableCategory;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import thaumcraft.api.crafting.IInfusionStabiliser;
 
-public class AdvancedAirFilter extends TileEntity implements /*IInventory, */IInfusionStabiliser, IFluidHandler, ITickable {
+public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedInventory, IInfusionStabiliser, IFluidHandler, ITickable, IHasProgress{
 
 	FluidTank tank = new FluidTank(CCPMFluids.concentratedPollution, 0, 1000);
 	
@@ -93,6 +101,7 @@ public class AdvancedAirFilter extends TileEntity implements /*IInventory, */IIn
 	public void update()
 	{
 		++ticks;
+		/*
 		if(sticks == 0)
 		{
 			if(tracker!=null)
@@ -104,7 +113,7 @@ public class AdvancedAirFilter extends TileEntity implements /*IInventory, */IIn
 		}
 		else
 			--sticks;
-		
+		*/
 		
 		if(ticks>=20)
 			ticks = 0;
@@ -125,6 +134,19 @@ public class AdvancedAirFilter extends TileEntity implements /*IInventory, */IIn
 						PollutionUtils.increasePollution(-60, getWorld().getChunkFromBlockCoords(getPos()));
 						
 						tank.fill(new FluidStack(CCPMFluids.concentratedPollution, 100), true);
+						
+						if(getWorld().rand.nextInt(10)==1)
+						{
+							if(rubbish == null || rubbish.stackSize==0)
+							{
+								if(getWorld().rand.nextInt(10) == 1)
+								{
+									rubbish = new ItemStack(Blocks.web,1);
+								}
+								else
+									rubbish = new ItemStack(Items.string,1);
+							}
+						}
 					}
 				}
 			}
@@ -183,4 +205,178 @@ public class AdvancedAirFilter extends TileEntity implements /*IInventory, */IIn
 			if(pkt.getTileEntityType() == -10)
 				this.readFromNBT(pkt.getNbtCompound());
     }
+
+
+
+	@Override
+	public int getProgress() {
+		return progress;
+	}
+
+
+
+	@Override
+	public int getMaxProgress() {
+		return maxProgress;
+	}
+
+
+
+	@Override
+	public String getName() {
+		return "container.adv.air";
+	}
+
+	ItemStack rubbish;
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+
+
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(StatCollector.translateToLocal(getName()));
+	}
+
+
+
+	@Override
+	public int getSizeInventory() {
+		return 1;
+	}
+
+
+
+	@Override
+	public ItemStack getStackInSlot(int index) {
+		return index == 0 ? rubbish : null;
+	}
+
+
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		if(index == 0 && count > 0)
+		{
+		rubbish.splitStack(count);
+		return rubbish;
+		}
+		return null;
+	}
+
+
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		if(index == 0)
+		{
+		ItemStack ret = rubbish.copy();
+		rubbish = null;
+		return ret;
+		}
+		return null;
+	}
+
+
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		if(index == 0)
+		rubbish = stack;
+		
+	}
+
+
+
+	@Override
+	public int getInventoryStackLimit() {
+		return 1;
+	}
+
+
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return true;
+	}
+
+
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		
+		return false;
+	}
+
+
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+
+	@Override
+	public void clear() {
+		rubbish = null;
+		
+	}
+
+
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side) {
+		return new int[]{0};
+	}
+
+
+
+	@Override
+	public boolean canInsertItem(int index, ItemStack itemStackIn, EnumFacing direction) {
+		return false;
+	}
+
+
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
+		return !CCPMConfig.hardcoreFilter;
+	}
 }

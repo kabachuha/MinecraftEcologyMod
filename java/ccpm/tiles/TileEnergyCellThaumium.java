@@ -22,20 +22,15 @@ public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfu
 	@Override
 	public boolean useEnergy(int amount, TileEntity user) {
 		
-		boolean ret = true;
+		//boolean ret = true;
 		
-		for(int i = 0; i <= amount / 100; i++)
-		{
-			ret = ret && TCUtils.drainEssentia(user, Aspect.ENERGY, null, 30,1);
-		}
+		int i = AuraHelper.drainAuraAvailable(getWorld(), getPos(), Aspect.AIR, amount/100);
 		
-		//int i = AuraHelper.drainAuraAvailable(getWorld(), getPos(), Aspect.AIR, amount/100);
+		AuraHelper.pollute(getWorld(), getPos(), amount/100, true);
 		
-		//AuraHelper.pollute(getWorld(), getPos(), amount, true);
-		
-		//return i >= amount / 100;
+		return i >= amount / 100;
 		//CCPM.log.info("Essentia drained "+(ret ? "successfully" : "unsuccessfully"));
-		return ret;
+		//return ret;
 	}
 
 	@Override

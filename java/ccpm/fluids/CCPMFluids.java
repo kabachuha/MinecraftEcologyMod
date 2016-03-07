@@ -15,7 +15,7 @@ public class CCPMFluids {
 	
 	public static void init(/*Block poll, Block wat*/)
 	{
-		CCPM.log.info("Regiistering fluids(gases)");
+		CCPM.log.info("Registering fluids(gases)");
 		concentratedPollution = new Fluid("pollution", new ResourceLocation("ccpm:fluids/pollution_still"), new ResourceLocation("ccpm:fluids/pollution_flow"));
 		concentratedPollution.setGaseous(true);
 		concentratedPollution.setDensity(-600);

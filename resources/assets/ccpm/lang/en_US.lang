@@ -11,6 +11,10 @@ ccpm.energycell.th.name=Thaumium energy cell
 
 ccpm.energycell.ma.name=Mana energy cell
 
+tc.research_category.CCPM=Ecology Mod
+
+tile.ccpm.block.adv.filter.name=Advanced air filter
+
 tile.ccpm.filter.name=Filter
 
 tile.ccpm.analyser.name=Air analyser
@@ -23,6 +27,10 @@ tc.research_text.CCPMREV=Air and aura filter
 tc.research_name.CCPMCELL=Thaumium cell
 tc.research_name.CCPMCELL=Energy converter
 
-ccpm.cell=You have researched how to use thaumic essentia to power machines from Ecology mod!<LINE>This energy cell may be used only by machines from Ecology mod!
+ccpm.cell=You have researched how to use thaumic aura to power machines from Ecology mod! This machine uses aer aspect from aura.<LINE>This energy cell may be used only by machines from Ecology mod!
 
-ccpm.resp=TODO
+ccpm.resp=You have been suffered by a polluted air a lot of time. That disturbed you then you searched for aura nodes because you have not been able to wear Goggles and respirator at the same time. <BR>But the research of infusion has given you a new powers to affect non-magical things with magic. You now can infuse the respirator with Goggles to combine their abilities together! But because the respirator isn't magical item you have to increase cost and instability. 
+
+pollution=Pollution
+
+polluted.water=Polluted water

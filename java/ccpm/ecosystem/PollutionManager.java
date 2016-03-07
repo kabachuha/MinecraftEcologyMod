@@ -67,7 +67,7 @@ public class PollutionManager {
 			
 			if(file.canWrite())
 			{
-				CCPM.log.info("[CCPM]Saving Pollution Manager's data to file: "+file.getAbsolutePath()+"//"+file.getName());
+				CCPM.log.info("Saving Pollution Manager's data to file: "+file.getAbsolutePath()+"//"+file.getName());
 				FileUtils.writeStringToFile(file, json);
 			}
 			else
@@ -77,7 +77,7 @@ public class PollutionManager {
 		}
 		catch (IOException e)
 		{
-			CCPM.log.warn("[CCPM]Unable to write "+ json.toString() +" to file!");
+			CCPM.log.warn("Unable to write "+ json.toString() +" to file!");
 			e.printStackTrace();
 		}
 		}
@@ -123,7 +123,7 @@ public class PollutionManager {
 			}
 			catch (IOException e)
 			{
-				CCPM.log.warn("[CCPM]Unable to read file PollutionMap.json!");
+				CCPM.log.warn("Unable to read file PollutionMap.json!");
 				json = null;
 				e.printStackTrace();
 			}

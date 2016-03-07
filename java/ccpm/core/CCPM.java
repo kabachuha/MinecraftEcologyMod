@@ -18,9 +18,12 @@ import DummyCore.Items.ItemRegistry;
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.ModVersionChecker;
 import ccpm.biomes.Wasteland;
+import ccpm.blocks.BlockAdvFilter;
+import ccpm.blocks.BlockAdvThaum;
 import ccpm.blocks.BlockAnalyser;
 import ccpm.blocks.BlockEnergyCellBase;
 import ccpm.blocks.BlockFilter;
+import ccpm.blocks.ItemAdThaum;
 import ccpm.blocks.ItemBlockCell;
 import ccpm.commands.CommandGetPollution;
 import ccpm.commands.CommandGetRegTiles;
@@ -30,14 +33,18 @@ import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.fluids.CCPMFluids;
 import ccpm.fluids.FluidPW;
 import ccpm.fluids.FluidPollution;
+import ccpm.gui.CCPMGuis;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
+import ccpm.items.PWBucket;
 import ccpm.items.RespiratorBase;
 import ccpm.network.proxy.CommonProxy;
 import ccpm.potions.PotionSmog;
 import ccpm.render.CCPMRenderHandler;
 import ccpm.render.RespHud;
+import ccpm.tiles.AdvancedAirFilter;
+import ccpm.tiles.TileAdvThaum;
 //import ccpm.render.RenderRespirator;
 import ccpm.tiles.TileEnergyCellMana;
 import ccpm.tiles.TileEnergyCellRf;
@@ -50,7 +57,9 @@ import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.server.MinecraftServer;
@@ -60,6 +69,7 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -87,17 +97,21 @@ public class CCPM {
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
 	
+	public static Item buckPw;
+	
 	public static Block cell = new BlockEnergyCellBase();
 	
 	public static Block an = new BlockAnalyser();
 	
 	public static Block filter = new BlockFilter();
 	
-	public static Block pollFlu = new FluidPollution();
+	public static Block pollFlu;
 	
-	public static Block pw = new FluidPW();
+	public static Block pw;
 	
+	public static Block baf = new BlockAdvFilter();
 	
+	public static Block advThaum = new BlockAdvThaum();
 
 	@Instance(MODID)
 	public static CCPM instance;
@@ -118,12 +132,16 @@ public class CCPM {
 	
 	public static Logger log = LogManager.getLogger(NAME);
 	
+	public static String cfgpath = "";
+	
 	@EventHandler
 	public void preLoad(FMLPreInitializationEvent event)
 	{
 		instance = this;
 		Core.registerModAbsolute(getClass(), NAME, event.getModConfigurationDirectory().getAbsolutePath(), cfg);
 		
+		cfgpath=event.getModConfigurationDirectory().getAbsolutePath();
+		log.info("Configuration directory is "+cfgpath);
 		PollutionConfig.load(event.getModConfigurationDirectory().getAbsolutePath());
 		
 		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/version.txt");
@@ -166,17 +184,32 @@ public class CCPM {
 		
 		CCPMFluids.init();
 		
+		pollFlu  = new FluidPollution();
+		
+		pw = new FluidPW();
+		
+		
+		
 		BlocksRegistry.registerBlock(cell, "ccpm.energycell", getClass(), ItemBlockCell.class);
 		BlocksRegistry.registerBlock(an, an.getUnlocalizedName(), getClass(), null);
 		BlocksRegistry.registerBlock(filter, filter.getUnlocalizedName(), getClass(), null);
 		BlocksRegistry.registerBlock(pollFlu, CCPMFluids.concentratedPollution.getUnlocalizedName(), getClass(), null);
 		BlocksRegistry.registerBlock(pw, CCPMFluids.pollutedWater.getUnlocalizedName(), getClass(), null);
+		BlocksRegistry.registerBlock(baf, "ccpm.block.adv.filter", getClass(), null);
+		BlocksRegistry.registerBlock(advThaum, advThaum.getUnlocalizedName(), getClass(), ItemAdThaum.class);
 		
+		buckPw = new PWBucket();
+		
+		ItemRegistry.registerItem(buckPw, "ccpm.itemBucketPw", getClass());
+		
+		FluidContainerRegistry.registerFluidContainer(CCPMFluids.pollutedWater, new ItemStack(buckPw), new ItemStack(Items.bucket));
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
 		GameRegistry.registerTileEntity(TileEnergyCellRf.class, "TECR");
 		GameRegistry.registerTileEntity(TileEnergyCellThaumium.class, "TECT");
 		GameRegistry.registerTileEntity(TileEntityFilter.class, "TEF");
 		GameRegistry.registerTileEntity(TileEntityAnalyser.class, "TEA");
+		GameRegistry.registerTileEntity(AdvancedAirFilter.class, "TEAAF");
+		GameRegistry.registerTileEntity(TileAdvThaum.class, "TEADVTHAUM");
 	    
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
 		//FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());
@@ -184,8 +217,8 @@ public class CCPM {
 		//FMLCommonHandler.instance().
 		if(proxy!=null)
 		{
-			//proxy.registerItemRenders();
-			//proxy.registerRenderHandler();
+			proxy.registerItemRenders();
+			proxy.registerRenderHandler();
 		}
 		MiscUtils.addHUDElement(new RespHud());
 		if(Loader.isModLoaded("Thaumcraft") || Loader.isModLoaded("thaumcraft"))
@@ -200,6 +233,8 @@ public class CCPM {
 			instance = this;
 		
 		RecipeRegistry.init();
+		
+		CCPMGuis.init();
 	}
 	
 	@EventHandler

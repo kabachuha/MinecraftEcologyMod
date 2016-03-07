@@ -242,6 +242,9 @@ public class PlayerHandler {
 		IBlockState state = event.world.getBlockState(bp);
 		Fluid f = FluidRegistry.lookupFluidForBlock(state.getBlock());
 		
+		if(f == null)
+			return;
+		
 		if(f.isGaseous())
 			return;
 		

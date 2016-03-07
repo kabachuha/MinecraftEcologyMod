@@ -18,6 +18,7 @@ public class CCPMConfig implements IDummyConfig {
 	public static int pollutionMultiplier = 1;
 	//public static boolean useNode = true;
 	//public static boolean useSano = false;
+	public static boolean hardcoreFilter = true;
 	
 	public CCPMConfig()
 	{
@@ -38,6 +39,7 @@ public class CCPMConfig implements IDummyConfig {
        // useSano = cfg.getBoolean("useSano", "THAUMCRAFT", false, "Use the filter Sano aspect instead of Potentia to work?");
         waterPoll = cfg.getFloat("waterPollution", "POLLUTION", 80000, 0, Float.MAX_VALUE, "Amount of pollution then water starts to be polluted");
         pollutionMultiplier = cfg.getInt("pollutionMultiplier", "POLLUTION", 1, 1, Int.MaxValue(), "Multiplier of pollution prodution");
+        hardcoreFilter = cfg.getBoolean("hardcoreFilter", "MACHINES", true, "Can't rubbish be removed from filter with machines");
 	}
 
 }

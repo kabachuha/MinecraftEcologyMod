@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager.ChunksPollution;
@@ -87,7 +88,53 @@ public class PollutionConfig {
 	
 	
 	
-	
+	public static void serializeAndSave(String dir)
+	{
+		CCPM.log.info("Starting serializing and saving PollutionConfig to "+dir);
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		
+		String json = gson.toJson(cfg, PollutionProp.class);
+		
+		File fi = new File(dir);
+		
+		if(fi != null)
+		{
+
+			try
+			{
+				String pth = fi.getAbsolutePath()+"//PollutionConfig.json";
+				
+				fi = new File(pth);
+				
+				if(fi.isDirectory())
+				{
+					throw new IOException("File PollutionConfig.json is a directory! Please, delete it and reload world!");
+				}
+				if(!fi.exists())
+				{
+					fi.createNewFile();
+				}
+				
+				if(fi.canWrite())
+				{
+					CCPM.log.info("Writing json to file...");
+					FileUtils.writeStringToFile(fi, json);
+					CCPM.log.info("Pollution configuration saved to "+pth);
+				}
+				else
+				{
+					throw new IOException();
+				}
+			}
+			catch (IOException e)
+			{
+				CCPM.log.warn("Unable to write "+ json.toString() +" to file!");
+				e.printStackTrace();
+			}
+			
+		}
+	}
 	
 	
 	
