@@ -21,8 +21,10 @@ import ccpm.biomes.Wasteland;
 import ccpm.blocks.BlockAdvFilter;
 import ccpm.blocks.BlockAdvThaum;
 import ccpm.blocks.BlockAnalyser;
+import ccpm.blocks.BlockCompressor;
 import ccpm.blocks.BlockEnergyCellBase;
 import ccpm.blocks.BlockFilter;
+import ccpm.blocks.BlockPollutionBricks;
 import ccpm.blocks.ItemAdThaum;
 import ccpm.blocks.ItemBlockCell;
 import ccpm.commands.CommandGetPollution;
@@ -34,17 +36,22 @@ import ccpm.fluids.CCPMFluids;
 import ccpm.fluids.FluidPW;
 import ccpm.fluids.FluidPollution;
 import ccpm.gui.CCPMGuis;
+import ccpm.handlers.CCPMFuelHandler;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
 import ccpm.items.PWBucket;
+import ccpm.items.PistonArray;
+import ccpm.items.PollutedArmor;
 import ccpm.items.RespiratorBase;
+import ccpm.items.SrapBrick;
 import ccpm.network.proxy.CommonProxy;
 import ccpm.potions.PotionSmog;
 import ccpm.render.CCPMRenderHandler;
 import ccpm.render.RespHud;
 import ccpm.tiles.AdvancedAirFilter;
 import ccpm.tiles.TileAdvThaum;
+import ccpm.tiles.TileCompressor;
 //import ccpm.render.RenderRespirator;
 import ccpm.tiles.TileEnergyCellMana;
 import ccpm.tiles.TileEnergyCellRf;
@@ -99,6 +106,8 @@ public class CCPM {
 	
 	public static Item buckPw;
 	
+	public static Item pollutionBrick = new SrapBrick();
+	
 	public static Block cell = new BlockEnergyCellBase();
 	
 	public static Block an = new BlockAnalyser();
@@ -112,7 +121,15 @@ public class CCPM {
 	public static Block baf = new BlockAdvFilter();
 	
 	public static Block advThaum = new BlockAdvThaum();
+	
+	public static Item pistons = new PistonArray();
+	
+	public static Block pollutionBricks = new BlockPollutionBricks();
+	
+	public static Item[] pollArmor = new Item[]{new PollutedArmor(PollutedArmor.pollution,0,"ccpm.pollhelm").setTextureName("ccpm:Helmet"), new PollutedArmor(PollutedArmor.pollution,1,"ccpm.pollchest").setTextureName("ccpm:chest"), new PollutedArmor(PollutedArmor.pollution,2,"ccpm.polllegs").setTextureName("ccpm:leg"), new PollutedArmor(PollutedArmor.pollution,3,"ccpm.pollboots").setTextureName("ccpm:boots")};
 
+	public static Block compressor = new BlockCompressor();
+	
 	@Instance(MODID)
 	public static CCPM instance;
 	
@@ -181,6 +198,13 @@ public class CCPM {
 		MinecraftForge.TERRAIN_GEN_BUS.register(ch);
 		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
+		ItemRegistry.registerItem(pistons, "ccpm.pistons", getClass());
+		ItemRegistry.registerItem(pollutionBrick, "pollutionBrick", getClass());
+		
+		ItemRegistry.registerItem(pollArmor[0], pollArmor[0].getUnlocalizedName(), getClass());
+		ItemRegistry.registerItem(pollArmor[1], pollArmor[1].getUnlocalizedName(), getClass());
+		ItemRegistry.registerItem(pollArmor[2], pollArmor[2].getUnlocalizedName(), getClass());
+		ItemRegistry.registerItem(pollArmor[3], pollArmor[3].getUnlocalizedName(), getClass());
 		
 		CCPMFluids.init();
 		
@@ -197,6 +221,8 @@ public class CCPM {
 		BlocksRegistry.registerBlock(pw, CCPMFluids.pollutedWater.getUnlocalizedName(), getClass(), null);
 		BlocksRegistry.registerBlock(baf, "ccpm.block.adv.filter", getClass(), null);
 		BlocksRegistry.registerBlock(advThaum, advThaum.getUnlocalizedName(), getClass(), ItemAdThaum.class);
+		BlocksRegistry.registerBlock(pollutionBricks, pollutionBricks.getUnlocalizedName(), getClass(), null);
+		BlocksRegistry.registerBlock(compressor, compressor.getUnlocalizedName(), getClass(), null);
 		
 		buckPw = new PWBucket();
 		
@@ -210,6 +236,7 @@ public class CCPM {
 		GameRegistry.registerTileEntity(TileEntityAnalyser.class, "TEA");
 		GameRegistry.registerTileEntity(AdvancedAirFilter.class, "TEAAF");
 		GameRegistry.registerTileEntity(TileAdvThaum.class, "TEADVTHAUM");
+		GameRegistry.registerTileEntity(TileCompressor.class, "TECCPMCOMPRESSOR");
 	    
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
 		//FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());
@@ -223,6 +250,8 @@ public class CCPM {
 		MiscUtils.addHUDElement(new RespHud());
 		if(Loader.isModLoaded("Thaumcraft") || Loader.isModLoaded("thaumcraft"))
 			FMLInterModComms.sendMessage("Thaumcraft", "biomeBlacklist", cfg.wasteId+":0");
+		
+		GameRegistry.registerFuelHandler(new CCPMFuelHandler());
 	}
 	
 	@EventHandler

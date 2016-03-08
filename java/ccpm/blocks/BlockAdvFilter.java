@@ -47,6 +47,6 @@ public class BlockAdvFilter extends BlockFilter {
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitx, float hitY, float hitZ)
 	{
 		MiscUtils.openGui(worldIn, pos.getX(), pos.getY(), pos.getZ(), playerIn, CCPMGuis.guiAdvID);
-		return false;
+		return true;
 	}
 }

@@ -107,7 +107,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 			if(tracker!=null)
 			if(!getWorld().isRemote && tracker.tileNeedsSyncing())
 			{
-				MiscUtils.sendPacketToAllAround(getWorld(), getDescriptionPacket(), getPos().getX(), getPos().getY(), getPos().getZ(), getWorld().provider.getDimensionId(), 32);
+				MiscUtils.syncTileEntity(getTileData(), -10);
 			}
 			sticks=60;
 		}
@@ -181,6 +181,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	{
 		super.writeToNBT(nbt);
 		tank.writeToNBT(nbt);
+		MiscUtils.saveInventory(this, nbt);
 	}
 	
 	@Override
@@ -188,6 +189,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	{
 		super.readFromNBT(nbt);
 		tank = tank.readFromNBT(nbt);
+		MiscUtils.loadInventory(this, nbt);
 	}
 	
 	@Override

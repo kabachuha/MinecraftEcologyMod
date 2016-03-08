@@ -46,7 +46,30 @@ public class RecipeRegistry {
 		    "IGI",
 		    'I',"blockIron", 'G', "blockGold", 'R', "blockRedstone"}));
 		
+		ItemStack pollutionBrick = new ItemStack(CCPM.pollutionBrick);
+		ItemStack pollutionBricks = new ItemStack(CCPM.pollutionBricks);
 		
+		GameRegistry.addShapedRecipe(pollutionBricks, 
+			"BB",
+			"BB", 'B',pollutionBrick);
+		
+		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[0]), 
+			"PPP",
+			"PHP",'P',pollutionBricks,'H',new ItemStack(Items.iron_helmet));
+		
+		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[1]), 
+				"P P",
+				"PCP",
+				"PPP",'P',pollutionBricks,'C',new ItemStack(Items.iron_chestplate));
+		
+		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[2]), 
+				"PPP",
+				"PLP",
+				"P P",'P',pollutionBricks,'L',new ItemStack(Items.iron_leggings));
+		
+		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[3]), 
+				"PPP",
+				"PBP",'P',pollutionBricks,'B',new ItemStack(Items.iron_boots));
 		
 		ItemStack glass = new ItemStack(Blocks.glass_pane);
 		ItemStack helm = new ItemStack(Items.leather_helmet,1,OreDictionary.WILDCARD_VALUE);
@@ -76,6 +99,14 @@ public class RecipeRegistry {
 			    "FSF",
 			    "DFD",
 			    'D', "blockDiamond", 'F', new ItemStack(CCPM.filter), 'S', new ItemStack(Blocks.sea_lantern)}));
+		
+		GameRegistry.addShapelessRecipe(new ItemStack(CCPM.pistons), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.compressor), new Object[]{
+			    "RPR",
+			    "POP",
+			    "RPR",
+			    'R', "blockRedstone", 'O', new ItemStack(Blocks.obsidian), 'P', new ItemStack(CCPM.pistons)}));
 		
 		if(Loader.isModLoaded("Thaumcraft")||Loader.isModLoaded("thaumcraft"))
 			thaum();
@@ -192,5 +223,19 @@ public class RecipeRegistry {
 			OreDictionary.registerOre(mushroom, Blocks.brown_mushroom_block);
 			OreDictionary.registerOre(mushroom, Blocks.red_mushroom_block);
 		}
+		
+		OreDictionary.registerOre("ingotBrick", CCPM.pollutionBrick);
+		OreDictionary.registerOre("ingotBrickNether", CCPM.pollutionBrick);
+		
+		if(!OreDictionary.doesOreNameExist("blockBrick"))
+		{
+			OreDictionary.registerOre("blockBrick", Blocks.brick_block);
+			OreDictionary.registerOre("blockBrick", Blocks.nether_brick);
+			OreDictionary.registerOre("blockBrick", Blocks.stonebrick);
+		}
+		
+		OreDictionary.registerOre("blockBrick", CCPM.pollutionBricks);
 	}
+	
+	
 }

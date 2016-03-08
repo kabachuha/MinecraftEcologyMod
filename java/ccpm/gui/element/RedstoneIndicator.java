@@ -1,6 +1,8 @@
 package ccpm.gui.element;
 
 import DummyCore.Client.GuiElement;
+import DummyCore.Utils.DrawUtils;
+import DummyCore.Utils.TessellatorWrapper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,7 +28,8 @@ public class RedstoneIndicator extends GuiElement {
 
 	@Override
 	public void draw(int posX, int posY, int mouseX, int mouseY) {
-		this.drawTexturedModalRect(posX, posY, 0, 0, 16, 16);
+		DrawUtils.drawTexturedModalRect(posX, posY, 0, 0, 16, 16, 0);
+		
 	}
 
 	@Override
