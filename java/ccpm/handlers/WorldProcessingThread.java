@@ -17,7 +17,7 @@ public class WorldProcessingThread extends Thread {
 	
 	public WorldProcessingThread(World w, PollutionManager poma)
 	{
-		super("[CCPM]WorldProcessingThread for world "+w.getWorldInfo().getWorldName());
+		super("WorldProcessingThread for world "+w.getWorldInfo().getWorldName());
 		//To shut down with Minecraft
 	      this.setDaemon(true);
 	      //Working in background
@@ -81,14 +81,14 @@ public class WorldProcessingThread extends Thread {
 			}
 			}
 			
-			CCPM.log.info("Chunks processed, sleeping for "+CCPMConfig.processingDelay+" milliseconds");
+			CCPM.log.info("Chunks have been processed, thread will be sleeping for "+CCPMConfig.processingDelay+" milliseconds");
 			try
 			{
 				this.sleep(CCPMConfig.processingDelay);
 			}
 			catch (InterruptedException e)
 			{
-				CCPM.log.info("World processing thread has interrupted!");
+				CCPM.log.info("World processing thread has been interrupted!");
 				return;
 			}
 		}

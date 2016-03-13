@@ -1,4 +1,4 @@
-death.attack.pollution=has killed by pollution
+death.attack.pollution=has been killed by pollution
 
 
 item.ccpmRespirator.name=Respirator
@@ -13,7 +13,7 @@ ccpm.energycell.ma.name=Mana energy cell
 
 tc.research_category.CCPM=Ecology Mod
 
-tile.ccpm.block.adv.filter.name=Advanced air filter
+tile.ccpm.advfilter.name=Advanced air filter
 
 tile.ccpm.filter.name=Filter
 
@@ -25,7 +25,10 @@ tc.research_name.CCPMREV=Respirator of Revealing
 tc.research_text.CCPMREV=Air and aura filter
 
 tc.research_name.CCPMCELL=Thaumium cell
-tc.research_name.CCPMCELL=Energy converter
+tc.research_text.CCPMCELL=(Quite)Equal trade
+
+tc.research_name.CCPMADVTHAUM=Advanced thaumium cell
+tc.research_text.CCPMADVTHAUM=No aura pollution
 
 ccpm.cell=You have researched how to use thaumic aura to power machines from Ecology mod! This machine uses aer aspect from aura.<LINE>This energy cell may be used only by machines from Ecology mod!
 
@@ -33,4 +36,32 @@ ccpm.resp=You have been suffered by a polluted air a lot of time. That disturbed
 
 pollution=Pollution
 
+fluid.pollution=Concentrated pollution
+
 polluted.water=Polluted water
+
+fluid.polluted.water=Polluted water
+
+item.ccpm.brick.name=CCPB
+
+tile.ccpm.bricks.pollution.name=CCPB Block
+
+item.array.pistons.name=Array of pistons
+
+tile.ccpm.energycell.thaum.name=Advanced thaumic energy cell
+
+item.ccpm.pollhelm.name=CCPB Helmet
+
+item.ccpm.pollchest.name=CCPB Chestplate
+
+item.ccpm.polllegs.name=CCPB Leggings
+
+item.ccpm.pollboots.name=CCPB Boots
+
+tile.ccpm.compressor.name=Compressor
+
+item.ccpm.buck.pw.name=Polluted water bucket
+
+tile.liquid_ccpm_pollution.name=Concentrated pollution
+
+tile.liquid_ccpm_pw.name=Polluted water

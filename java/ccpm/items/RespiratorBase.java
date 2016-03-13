@@ -15,6 +15,7 @@ import ccpm.core.CCPM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -143,4 +144,8 @@ public class RespiratorBase extends ItemArmor implements IRespirator, IRepairabl
 		return false;
 	}
 	
+	public EnumRarity getRarity(ItemStack stk)
+	{
+		return EnumRarity.UNCOMMON;
+	}
 }

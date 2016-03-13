@@ -42,6 +42,7 @@ public class ElemFluTank extends GuiElement {
 	@Override
 	public void draw(int posX, int posY, int mouseX, int mouseY) {
 		DrawUtils.drawTexturedModalRect(posX, posY, 0, 0, 18, 54, 0);
+		DrawUtils.drawTexturedModalRect(posX, posY+53, 0, 71, 18, 1,0);
 		if(fluid!=null)
 		{
 			if(fluid.amount >0) 

@@ -12,7 +12,7 @@ public abstract class CCPMApi {
 
 
 
-	public static DamageSource damageSourcePollution = new DamageSource("pollution").setDamageIsAbsolute();
+	public static DamageSource damageSourcePollution = new DamageSource("pollution").setDamageBypassesArmor();
 	
 	public static boolean postEvent(World worldIn, BlockPos pos, IBlockState state, boolean isClient)
 	{

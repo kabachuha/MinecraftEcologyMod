@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 public class PistonArray extends Item implements IOldItem {
 
 	public PistonArray() {
+		super();
+		this.setUnlocalizedName("array.pistons");
 	}
 
 	Icon icon;

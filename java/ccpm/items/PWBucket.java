@@ -16,6 +16,7 @@ public class PWBucket extends ItemBucket implements IOldItem{
 
 	public PWBucket() {
 		super(CCPM.pw);
+		this.setUnlocalizedName("ccpm.buck.pw");
 	}
 
 	Icon icon;

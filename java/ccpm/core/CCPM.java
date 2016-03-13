@@ -27,9 +27,11 @@ import ccpm.blocks.BlockFilter;
 import ccpm.blocks.BlockPollutionBricks;
 import ccpm.blocks.ItemAdThaum;
 import ccpm.blocks.ItemBlockCell;
+import ccpm.commands.CommandAddTile;
 import ccpm.commands.CommandGetPollution;
 import ccpm.commands.CommandGetRegTiles;
 import ccpm.commands.CommandIncPollution;
+import ccpm.commands.CommandSaveConfiguration;
 import ccpm.commands.CommandTestWand;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.fluids.CCPMFluids;
@@ -142,7 +144,7 @@ public class CCPM {
 	
 	public static Wasteland wasteland;
 	
-	/*
+	/**
 	 * URL to my GitHub 
 	 */
 	public static final String githubURL = "https://github.com/Artem226/MinecraftEcologyMod/issues";
@@ -180,6 +182,15 @@ public class CCPM {
 		wasteland = new Wasteland(CCPMConfig.wasteId);
 		
 		BiomeManager.addBiome(BiomeType.DESERT, new BiomeEntry(wasteland, 14));
+		
+		CCPMFluids.init();
+		
+		pollFlu  = new FluidPollution();
+		
+		pw = new FluidPW();
+		
+		BlocksRegistry.registerBlock(pollFlu, "liquid_ccpm_pollution", getClass(), null);
+		BlocksRegistry.registerBlock(pw, "liquid_ccpm_pw", getClass(), null);
 	}
 	
 	@EventHandler
@@ -198,7 +209,7 @@ public class CCPM {
 		MinecraftForge.TERRAIN_GEN_BUS.register(ch);
 		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
-		ItemRegistry.registerItem(pistons, "ccpm.pistons", getClass());
+		ItemRegistry.registerItem(pistons, "pistons", getClass());
 		ItemRegistry.registerItem(pollutionBrick, "pollutionBrick", getClass());
 		
 		ItemRegistry.registerItem(pollArmor[0], pollArmor[0].getUnlocalizedName(), getClass());
@@ -206,27 +217,22 @@ public class CCPM {
 		ItemRegistry.registerItem(pollArmor[2], pollArmor[2].getUnlocalizedName(), getClass());
 		ItemRegistry.registerItem(pollArmor[3], pollArmor[3].getUnlocalizedName(), getClass());
 		
-		CCPMFluids.init();
-		
-		pollFlu  = new FluidPollution();
-		
-		pw = new FluidPW();
 		
 		
 		
-		BlocksRegistry.registerBlock(cell, "ccpm.energycell", getClass(), ItemBlockCell.class);
-		BlocksRegistry.registerBlock(an, an.getUnlocalizedName(), getClass(), null);
-		BlocksRegistry.registerBlock(filter, filter.getUnlocalizedName(), getClass(), null);
-		BlocksRegistry.registerBlock(pollFlu, CCPMFluids.concentratedPollution.getUnlocalizedName(), getClass(), null);
-		BlocksRegistry.registerBlock(pw, CCPMFluids.pollutedWater.getUnlocalizedName(), getClass(), null);
-		BlocksRegistry.registerBlock(baf, "ccpm.block.adv.filter", getClass(), null);
-		BlocksRegistry.registerBlock(advThaum, advThaum.getUnlocalizedName(), getClass(), ItemAdThaum.class);
-		BlocksRegistry.registerBlock(pollutionBricks, pollutionBricks.getUnlocalizedName(), getClass(), null);
-		BlocksRegistry.registerBlock(compressor, compressor.getUnlocalizedName(), getClass(), null);
+		
+		BlocksRegistry.registerBlock(cell, "energycell", getClass(), ItemBlockCell.class);
+		BlocksRegistry.registerBlock(an, "analyser", getClass(), null);
+		BlocksRegistry.registerBlock(filter, "filter", getClass(), null);
+		
+		BlocksRegistry.registerBlock(baf, "adv_filter", getClass(), null);
+		BlocksRegistry.registerBlock(advThaum, "adv_thaum_cell", getClass(), ItemAdThaum.class);
+		BlocksRegistry.registerBlock(pollutionBricks, "pollution_bricks", getClass(), null);
+		BlocksRegistry.registerBlock(compressor, "compressor", getClass(), null);
 		
 		buckPw = new PWBucket();
 		
-		ItemRegistry.registerItem(buckPw, "ccpm.itemBucketPw", getClass());
+		ItemRegistry.registerItem(buckPw, "itemBucketPw", getClass());
 		
 		FluidContainerRegistry.registerFluidContainer(CCPMFluids.pollutedWater, new ItemStack(buckPw), new ItemStack(Items.bucket));
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
@@ -273,6 +279,8 @@ public class CCPM {
 		event.registerServerCommand(new CommandTestWand());
 		event.registerServerCommand(new CommandGetRegTiles());
 		event.registerServerCommand(new CommandIncPollution());
+		event.registerServerCommand(new CommandAddTile());
+		event.registerServerCommand(new CommandSaveConfiguration());
 	}
 
 	//Function to tell you where you have to report errors

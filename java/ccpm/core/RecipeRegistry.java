@@ -7,6 +7,8 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -128,19 +130,25 @@ public class RecipeRegistry {
 		ThaumcraftApi.registerObjectTag(new ItemStack(CCPM.cell, 1 , 0), new AspectList().add(Aspect.MECHANISM, 16).add(Aspect.ENERGY, 128).add(Aspect.METAL, 64));
 		ThaumcraftApi.registerObjectTag(new ItemStack(CCPM.cell, 1 , 1), new AspectList().add(Aspect.AURA, 16).add(Aspect.ENERGY, 128).add(Aspect.METAL, 64).add(Aspect.ORDER, 64));
 		
+		ThaumcraftApi.registerObjectTag("materialCCPB", new AspectList().add(Aspect.ENTROPY, 8).add(Aspect.FLUX, 6).add(Aspect.DEATH, 8));
+		
+		ThaumcraftApi.addLootBagItem(new ItemStack(CCPM.pollutionBrick), 25, 0,1,2);
+		
 		ResearchItem ri = new ResearchItem("CCPMCELL", CATID, new AspectList().add(Aspect.ENERGY, 32).add(Aspect.AURA, 16).add(Aspect.MECHANISM, 8), 0, 0, 1, new ItemStack(CCPM.cell,1,1));
 		
 		ItemStack thb = new ItemStack(BlocksTC.metal,1,0);
 		//ItemStack blg = new ItemStack(Blocks.gold_block);
 		String blg = "blockGold";
-		ItemStack main = new ItemStack(Blocks.redstone_block);
+		ItemStack main = new ItemStack(ItemsTC.alumentum);
+		ItemStack focus = new ItemStack(ItemsTC.focusEqualTrade);
+		ItemStack totem = new ItemStack(BlocksTC.auraTotem,1,1);
 		
 		if(Loader.isModLoaded("thaumicbases")||Loader.isModLoaded("Thaumic Bases"))
 		{
 			thb = new ItemStack(GameRegistry.findBlock("thaumicbases", "thauminiteBlock"));
 		}
 		
-		InfusionRecipe cellrec = ThaumcraftApi.addInfusionCraftingRecipe("CCPMCELL", new ItemStack(CCPM.cell,1,1), 3, new AspectList().add(Aspect.ENERGY, 128).add(Aspect.ORDER, 64).add(Aspect.CRYSTAL, 32).add(Aspect.AURA, 8).add(Aspect.MECHANISM, 64), main, new Object[]{thb,blg,thb,blg,thb,blg,thb,blg});
+		InfusionRecipe cellrec = ThaumcraftApi.addInfusionCraftingRecipe("CCPMCELL", new ItemStack(CCPM.cell,1,1), 3, new AspectList().add(Aspect.ENERGY, 128).add(Aspect.ORDER, 64).add(Aspect.CRYSTAL, 32).add(Aspect.AURA, 8).add(Aspect.MECHANISM, 64), main, new Object[]{focus,thb,blg,totem,thb,blg,thb,blg,totem,thb,blg,focus});
 		
 		ri.setParents("INFUSION");
 		ri.setPages(new ResearchPage("ccpm.cell"), new ResearchPage(cellrec));
@@ -161,7 +169,7 @@ public class RecipeRegistry {
 		
 		rii.registerResearchItem();
 		
-		ResearchItem advThaum = new ResearchItem("CCPMADVTHAUM", CATID, new AspectList(new ItemStack(ItemsTC.primordialPearl,1)), 3, 9, -6, new ItemStack(ItemsTC.primordialPearl));
+		ResearchItem advThaum = new ResearchItem("CCPMADVTHAUM", CATID, new AspectList(new ItemStack(ItemsTC.primordialPearl,1)), 3, 9, -6, new ItemStack(CCPM.advThaum));
 		advThaum.setParents("CCPMCELL","CCPMREV");
 		advThaum.setRound();
 		advThaum.setSpecial();
@@ -184,7 +192,7 @@ public class RecipeRegistry {
 		ItemStack eye = new ItemStack(ItemsTC.eldritchEye);
 		ItemStack gear = new ItemStack(ItemsTC.gear,1,2);
 		ItemStack matrix = new ItemStack(BlocksTC.infusionMatrix);
-		ItemStack totem = new ItemStack(BlocksTC.auraTotem,1,0);
+		totem = new ItemStack(BlocksTC.auraTotem,1,1);
 		ItemStack bv = new ItemStack(BlocksTC.metal,1,1);
 		ItemStack eldr = new ItemStack(BlocksTC.nodeStabilizer);
 		
@@ -235,7 +243,15 @@ public class RecipeRegistry {
 		}
 		
 		OreDictionary.registerOre("blockBrick", CCPM.pollutionBricks);
+		
+		OreDictionary.registerOre("materialCCPB", CCPM.pollutionBrick);
+		
+		OreDictionary.registerOre("blockCCPB", CCPM.pollutionBricks);
 	}
 	
+	public static void setupChests()
+	{
+		
+	}
 	
 }

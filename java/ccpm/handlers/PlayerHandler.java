@@ -14,6 +14,8 @@ import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.Fluid;
@@ -23,22 +25,26 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderItemInFrameEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
@@ -195,7 +201,7 @@ public class PlayerHandler {
 	public void onItemExpite(ItemExpireEvent event)
 	{
 		if(WorldHandler.isLoaded && event.entityItem!=null && !event.entityItem.worldObj.isRemote && event.entityItem.worldObj.provider.getDimensionId() == 0)
-		PollutionUtils.increasePollution(2*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords(event.entityItem.getPosition()));
+		PollutionUtils.increasePollution((event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[0] || event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[1] || event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[2] || event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[3] || event.entityItem.getEntityItem().getItem() == CCPM.pollutionBrick || event.entityItem.getEntityItem().getItem() == CCPM.buckPw || event.entityItem.getEntityItem().getItem() == Item.getItemFromBlock(CCPM.pollutionBricks)) ? 1000*event.entityItem.getEntityItem().stackSize : 2*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords(event.entityItem.getPosition()));
 	}
 	
 	public static boolean firstPlayerJoinedWorld = false;
@@ -203,8 +209,6 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onPlayerJoinGame(EntityJoinWorldEvent event)
 	{
-		
-		
 			if(event.world == null || event.world.isRemote || event.entity == null)
 				return;
 			
@@ -266,6 +270,84 @@ public class PlayerHandler {
 					}
 				}
 			}
+		}
+	}
+	
+	
+	@SubscribeEvent
+	public void onPlayerAttacked(LivingAttackEvent event)
+	{
+		if(event.source == null || event.entity == null || event.ammount <= 0)
+			return;
+		
+		if(event.source.isUnblockable())
+			return;
+		
+		
+		ItemStack armor[] = new ItemStack[]{event.entityLiving.getEquipmentInSlot(4),event.entityLiving.getEquipmentInSlot(3), event.entityLiving.getEquipmentInSlot(2), event.entityLiving.getEquipmentInSlot(1)};
+		
+		int multiplier = 0;
+		
+		for(int i = 0; i<4; i++)
+		{
+			if(armor[i] != null)
+			{
+				if(armor[i].getItem()==CCPM.pollArmor[i])
+				{
+					++multiplier;
+				}
+			}
+		}
+		
+		if(multiplier == 0)return;
+		
+		List<Entity> elb = event.entity.worldObj.getEntitiesWithinAABBExcludingEntity(event.entity, AxisAlignedBB.fromBounds(event.entity.posX-(3*multiplier), event.entity.posY-(3*multiplier), event.entity.posZ-(3*multiplier), event.entity.posX+(3*multiplier), event.entity.posY+(3*multiplier), event.entity.posZ+(3*multiplier)));
+		
+		if(elb == null || elb.size() <= 0)
+			return;
+		
+		BlockPos pos = event.entity.getPosition();
+		
+		
+		for(Entity e : elb)
+		{
+			if(e instanceof EntityLivingBase)
+			{
+				EntityLivingBase el = (EntityLivingBase)e;
+				if(e instanceof EntityPlayer)
+				{
+				if(event.entityLiving.getEquipmentInSlot(4) == null||!(event.entityLiving.getEquipmentInSlot(4).getItem() instanceof IRespirator)||!((IRespirator)event.entityLiving.getEquipmentInSlot(4).getItem()).isFiltering((EntityPlayer)event.entityLiving, event.entityLiving.getEquipmentInSlot(4)))
+				{
+				el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
+				
+				el.addPotionEffect(new PotionEffect(Potion.poison.id,10*multiplier, multiplier));
+				}
+				}
+				else
+				{
+					el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
+					
+					el.addPotionEffect(new PotionEffect(Potion.poison.id,10*multiplier, multiplier));
+				}
+				
+				event.entity.getEntityWorld().playSoundAtEntity(event.entity, "random.fizz", multiplier*2, 2.6F + (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.8F);
+				
+				for(int i = -2; i <= 2; i++)
+					for(int j = -2; j <=2; j++)
+						for(int k = -2; k <=2; k++)
+						{
+							event.entity.getEntityWorld().spawnParticle(event.entity.getEntityWorld().rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + event.entity.getEntityWorld().rand.nextFloat()) - 0.5D, (double)((float)k - event.entity.getEntityWorld().rand.nextFloat() - 1.0F), (double)((float)j + event.entity.getEntityWorld().rand.nextFloat()) - 0.5D, new int[0]);
+						}
+				
+				PollutionUtils.increasePollution(event.ammount*multiplier, event.entity.getEntityWorld().getChunkFromBlockCoords(pos));
+			}
+		}
+		
+		
+		if(event.entity.worldObj.rand.nextInt(Math.round(100/multiplier)) == 1)
+		{
+			PollutionUtils.increasePollution(multiplier*100, event.entity.getEntityWorld().getChunkFromBlockCoords(pos));
+			event.setCanceled(true);
 		}
 	}
 }

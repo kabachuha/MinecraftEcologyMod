@@ -62,7 +62,7 @@ public class CCPMClassTransformer implements IClassTransformer {
 		if(reader.getInterfaces().length == 0)
 			return bytes;
 		
-		log.info("Working on class "+name);
+		//log.info("Working on class "+name);
 		//log.info("Has interfaces!");
 		
 		boolean b = false;
@@ -115,13 +115,12 @@ public class CCPMClassTransformer implements IClassTransformer {
 					toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
 					toInject.add(new VarInsnNode(Opcodes.ILOAD, 4));
 					toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(CCPMApi.class), "postEvent", "(Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;Z)Z", false));
-					toInject.add(new VarInsnNode(Opcodes.ISTORE, 5));
-					toInject.add(new FrameNode(Opcodes.F_NEW | Opcodes.F_SAME, 0, null, 0, null));
-					toInject.add(new VarInsnNode(Opcodes.ILOAD, 5));
 					toInject.add(new JumpInsnNode(Opcodes.IFNE, ln));
+					toInject.add(new LabelNode());
 					toInject.add(new InsnNode(Opcodes.ICONST_0));
 					toInject.add(new InsnNode(Opcodes.IRETURN));
 					toInject.add(ln);
+					toInject.add(new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
 					//
 					
 					

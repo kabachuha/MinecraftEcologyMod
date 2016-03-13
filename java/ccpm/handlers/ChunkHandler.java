@@ -1,17 +1,22 @@
 package ccpm.handlers;
 
+import DummyCore.Utils.ReflectionProvider;
 import ccpm.api.events.CCPMPlantGrowEvent;
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.utils.PollutionUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class ChunkHandler {
 
@@ -83,6 +88,21 @@ public class ChunkHandler {
 	public void growCheck(CCPMPlantGrowEvent event)
 	{
 		CCPM.log.info("Grow event called!!!");
+	}
+	
+	
+	@SubscribeEvent
+	public void onExplosion(ExplosionEvent event)
+	{
+		if(event.explosion != null && event.world != null && !event.world.isRemote)
+		{
+			Chunk c = event.world.getChunkFromBlockCoords(new BlockPos(event.explosion.getPosition()));
+			
+			float size = ReflectionHelper.getPrivateValue(Explosion.class, event.explosion, 8);
+			
+			if(c!=null &c.isLoaded())
+				PollutionUtils.increasePollution(size * 10, c);
+		}
 	}
 
 }

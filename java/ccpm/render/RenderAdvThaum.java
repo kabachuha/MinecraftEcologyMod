@@ -24,7 +24,7 @@ public class RenderAdvThaum extends TileEntitySpecialRenderer {
 	ResourceLocation B1 = new ResourceLocation("ccpm:textures/blocks/B1.png");
 	ResourceLocation C1 = new ResourceLocation("ccpm:textures/blocks/C1.png");
 	ResourceLocation Core = new ResourceLocation("ccpm:textures/blocks/Core.png");
-	ResourceLocation beams = new ResourceLocation("textures/entity/enderdragon/dragon_exploding.png");
+	//ResourceLocation beams = new ResourceLocation("textures/entity/enderdragon/dragon_exploding.png");
 	
 	Lightning light1;
 	Lightning light2;
@@ -85,9 +85,7 @@ public class RenderAdvThaum extends TileEntitySpecialRenderer {
 		
 		if(light1!=null && light2 !=null && light3!=null && light4 !=null)
 		{
-			GlStateManager.pushMatrix();
 			renderLightnings(x+0.5, y+0.5, z+0.5, partialTicks);
-			GlStateManager.popMatrix();
 		}
 		
 		RenderHelper.enableStandardItemLighting();
@@ -173,10 +171,18 @@ public class RenderAdvThaum extends TileEntitySpecialRenderer {
 	
 	void renderLightnings(double x, double y, double z, float partialTicks)
 	{
+		GlStateManager.pushMatrix();
 		light1.render(x, y, z, partialTicks);
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
 		light2.render(x, y, z, partialTicks);
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
 		light3.render(x, y, z, partialTicks);
+		GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
 		light4.render(x, y, z, partialTicks);
+		GlStateManager.popMatrix();
 	}
 
 	

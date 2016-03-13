@@ -4,6 +4,7 @@ import DummyCore.Client.Icon;
 import DummyCore.Client.IconRegister;
 import DummyCore.Utils.IOldItem;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -76,6 +77,11 @@ public class PollutedArmor extends ItemArmor implements IOldItem, IRepairable {
 	
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
     {
-    	return slot == 2 ? "ccpm:textures/armor/pollArmor1.png" : "ccpm:textures/armor/pollArmor2.png";
+    	return slot == 2 ? "ccpm:textures/armor/pollArmor2.png" : "ccpm:textures/armor/pollArmor1.png";
     }
+	
+	public EnumRarity getRarity(ItemStack stk)
+	{
+		return EnumRarity.RARE;
+	}
 }

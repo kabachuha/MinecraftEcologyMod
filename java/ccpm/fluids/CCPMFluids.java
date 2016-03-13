@@ -21,7 +21,7 @@ public class CCPMFluids {
 		concentratedPollution.setDensity(-600);
 		concentratedPollution.setTemperature(600);
 		concentratedPollution.setLuminosity(16);
-		concentratedPollution.setRarity(EnumRarity.UNCOMMON);
+		concentratedPollution.setRarity(EnumRarity.RARE);
 		concentratedPollution.setUnlocalizedName("concentrated.pollution");
 		//concentratedPollution.setBlock(poll);
 		
