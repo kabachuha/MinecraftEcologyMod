@@ -13,6 +13,7 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 public class BlockPollutionBricks extends Block implements IOldCubicBlock {
@@ -76,4 +77,9 @@ public class BlockPollutionBricks extends Block implements IOldCubicBlock {
 		return RenderAccessLibrary.RENDER_ID_CUBE;
 	}
 
+	@Override
+	public boolean isBeaconBase(IBlockAccess world, BlockPos pos, BlockPos beacon)
+	{
+		return true;
+	}
 }

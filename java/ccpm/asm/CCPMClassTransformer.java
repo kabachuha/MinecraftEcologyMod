@@ -29,6 +29,7 @@ import org.objectweb.asm.ClassWriter;
 
 import DummyCore.Utils.ASMManager;
 import ccpm.api.CCPMApi;
+import net.minecraft.block.BlockFire;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -38,7 +39,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import scala.annotation.meta.companionMethod;
 
 public class CCPMClassTransformer implements IClassTransformer {
-	private Logger log = LogManager.getLogger("EcologyMod|ASM");
+	private static Logger log = LogManager.getLogger("EcologyMod|ASM");
 	public CCPMClassTransformer() {
 		log.info("Constructing CCPMClassTransformer");
 	}
@@ -57,6 +58,11 @@ public class CCPMClassTransformer implements IClassTransformer {
 			return bytes;
 		}
 		//
+		
+		if(name == Type.getInternalName(BlockFire.class) || name == BlockFire.class.getName())
+			return patchFire(name, transformedName, bytes);
+		
+		
 		if(reader.getInterfaces() == null)
 			return bytes;
 		if(reader.getInterfaces().length == 0)
@@ -68,7 +74,7 @@ public class CCPMClassTransformer implements IClassTransformer {
 		boolean b = false;
 		for(String i : reader.getInterfaces())
 		{
-			log.info(i);
+		//	log.info(i);
 			if(i.equals(Type.getInternalName(IGrowable.class)))
 			{
 				b = true;
@@ -77,9 +83,20 @@ public class CCPMClassTransformer implements IClassTransformer {
 			}
 		}
 		
-		if(!b)
-			return bytes;
+		if(b)
+			return patchIGrowable(name, transformedName, bytes);
 
+		
+		
+		
+		return bytes;
+	}
+	
+	
+	
+	public static byte[] patchIGrowable(String name, String transformedName, byte[] bytes)
+	{
+		ClassReader reader  = new ClassReader(bytes);
 		log.info("Starting transforming ["+name+"]");
 		log.info("Class starting bytes lenght is"+bytes.length);
 		ClassNode clazz = new ClassNode();
@@ -95,7 +112,7 @@ public class CCPMClassTransformer implements IClassTransformer {
 		boolean isp = false;
 		for(MethodNode method : clazz.methods)
 		{
-			log.debug(method.name);
+			//log.debug(method.name);
 			try {
 				if(method.name.equals("func_176473_a"))
 				{
@@ -125,7 +142,7 @@ public class CCPMClassTransformer implements IClassTransformer {
 					
 					
 					il.insertBefore(first, toInject);
-					il.resetLabels();
+					//il.resetLabels();
 					log.info("Method canGrow patched!");
 					isp = true;
 				}
@@ -138,7 +155,7 @@ public class CCPMClassTransformer implements IClassTransformer {
 		
 		if(!isp)
 		{
-			log.error("Method isn't patched correct!");
+			log.error("Method canGrow isn't patched correct! Minecraft is unable to work correctly!");
 			FMLCommonHandler.instance().exitJava(-1, true);
 			return bytes;
 		}
@@ -151,4 +168,57 @@ public class CCPMClassTransformer implements IClassTransformer {
 		return writer.toByteArray();
 	}
 
+	
+	public static byte[] patchFire(String name, String transformedName, byte[] bytes)
+	{
+		ClassReader reader  = new ClassReader(bytes);
+		log.info("Starting transforming ["+name+"]");
+		log.info("Class starting bytes lenght is"+bytes.length);
+		ClassNode clazz = new ClassNode();
+		
+		reader.accept(clazz, ClassReader.EXPAND_FRAMES);
+		
+		boolean isp = false;
+		
+		for(MethodNode method : clazz.methods)
+		{
+			if(method.name.equals("updateTick"))
+			{
+				log.info("Patching method [updateTick("+method.name+")] in "+name);
+				InsnList il = method.instructions;
+				
+				AbstractInsnNode first = il.getFirst();
+				
+				InsnList toInject = new InsnList();
+				
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 3));
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 4));
+				
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(CCPMApi.class), "postFireTick", "(Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V(Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", false));
+				
+				il.insertBefore(first, toInject);
+				
+				log.info("Method updateTick patched!");
+				isp = true;
+			}
+			
+		}
+		
+		if(!isp)
+		{
+			log.error("Method updateTick isn't patched correct! Minecraft is unable to work correctly!");
+			FMLCommonHandler.instance().exitJava(-1, true);
+			return bytes;
+		}
+		
+		ClassWriter writer = new ClassWriter(0);
+		
+		clazz.accept(writer);
+		log.info(transformedName+" patched!");
+		log.info("Class current bytes lenght is "+writer.toByteArray().length);
+		return writer.toByteArray();
+	}
+	
 }

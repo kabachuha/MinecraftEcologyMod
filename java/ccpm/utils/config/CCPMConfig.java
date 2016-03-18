@@ -22,6 +22,10 @@ public class CCPMConfig implements IDummyConfig {
 	
 	public static boolean needStructure = true;
 	
+	public static boolean mobsScared = false;
+	
+	public static boolean advThaumReqPearl = true;
+	
 	public CCPMConfig()
 	{
 		
@@ -31,7 +35,7 @@ public class CCPMConfig implements IDummyConfig {
 	public void load(Configuration config) {
 		cfg = config;
 		processingDelay = cfg.getInt("chunkProcessingDelay", "CORE", 60000, 0, Int.MaxValue(), "Delay(milliseconds) of the world handler processing thread");
-        noPlanting = cfg.getInt("pollutionDieTrees", "POLLUTION", 200000, 0, Int.MaxValue(), "Pollution level to unable plantn trees outside");
+        noPlanting = cfg.getInt("pollutionDieTrees", "POLLUTION", 200000, 0, Int.MaxValue(), "Pollution level to disable planting trees outside");
         //smogId = cfg.getInt("potionSmogId", "POTIONS", 77, 0, Int.MaxValue(), "");
         smogPoll= cfg.getInt("pollutionSmog", "POLLUTION", 50000, 0, Int.MaxValue(), "");
         wasteId = cfg.getInt("wastelandId", "BIOMES", 30, 0, Int.MaxValue(), "Id of the wasteland biome");
@@ -44,6 +48,9 @@ public class CCPMConfig implements IDummyConfig {
         hardcoreFilter = cfg.getBoolean("hardcoreFilter", "MACHINES", true, "Can't rubbish be removed from filter by machines?");
         needStructure = cfg.getBoolean("compressorNeedStructure", "MACHINES", true, "Need a compressor structure from iron to work?");
         
+        mobsScared = cfg.getBoolean("mobsScared", "POLLUTION", false, "Are mobs scared by pollution too?");
+        
+        advThaumReqPearl = cfg.getBoolean("advThaumReqPearl", "THAUMCRAFT", true, "Does advanced thaumic energy cell requires primordial pearl to craft? If not it will require the nether star.");
 	}
 
 }

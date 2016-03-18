@@ -47,7 +47,7 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 	
 	public int progress = 0;
 	
-	public static int maxProgress = 1000;
+	public static int maxProgress = 100;
 	
 	private TileStatTracker track;
 	
@@ -100,7 +100,28 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 			}
 		
 		if(!isWorking)
+		{
 			progress = 0;
+		}
+		else
+		{
+			World w = getWorld();
+			Random rand = w.rand;
+			for(int i = -2; i <= 2; i++)
+				for(int j = -2; j <=2; j++)
+					for(int k = -2; k <=2; k++)
+					{
+						if(rand.nextBoolean())
+						w.spawnParticle(rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
+						if(rand.nextBoolean())
+						w.spawnParticle(EnumParticleTypes.REDSTONE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
+						if(rand.nextBoolean())
+						w.spawnParticle(EnumParticleTypes.FLAME, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
+						if(rand.nextBoolean())
+						if(rand.nextBoolean())
+						w.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
+					}
+		}
 		
 		if(isPowered())
 		{
@@ -112,22 +133,14 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 				
 				if(!isWorking)
 				if(!CCPMConfig.needStructure || isStructureBuilt())
-				if(hasEnoughPollution(10000))
+				if(hasEnoughPollution(1000))
 				isWorking = true;
 				
 				
 				if(isWorking)
 				{
 				
-				for(int i = -2; i <= 2; i++)
-					for(int j = -2; j <=2; j++)
-						for(int k = -2; k <=2; k++)
-						{
-							w.spawnParticle(rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-							w.spawnParticle(EnumParticleTypes.REDSTONE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-							w.spawnParticle(EnumParticleTypes.FLAME, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-							w.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-						}
+				
 				
 				if(useEnergy())
 				{
@@ -142,7 +155,7 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 					progress = 0;
 					if(output == null)
 					{
-						ItemStack stack = new ItemStack(CCPM.pollutionBrick);
+						ItemStack stack = new ItemStack(CCPM.miscIngredient,1,1);
 						output = stack;
 					}
 					else

@@ -1,6 +1,7 @@
 package ccpm.handlers;
 
 import DummyCore.Utils.ReflectionProvider;
+import ccpm.api.events.CCPMFireTickEvent;
 import ccpm.api.events.CCPMPlantGrowEvent;
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
@@ -90,6 +91,13 @@ public class ChunkHandler {
 		CCPM.log.info("Grow event called!!!");
 	}
 	
+	@SubscribeEvent
+	public void fireTick(CCPMFireTickEvent event)
+	{
+		//if (event.world.getGameRules().getBoolean("doFireTick")){}else return;
+		
+		CCPM.log.debug("Something is burning!!!");
+	}
 	
 	@SubscribeEvent
 	public void onExplosion(ExplosionEvent event)

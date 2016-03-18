@@ -17,7 +17,7 @@ import ccpm.integration.buildcraft.BCIntegration;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
-
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -325,9 +325,19 @@ public class PollutionUtils {
 	    return Float.MIN_VALUE;
 	}
 	
-	public static float getChunkPollution(World w, int chunkPosX, int chunkPosZ)
+	public static float getChunkPollution(World w, double posX, double posZ)
 	{
-		return getChunkPollution(w.getChunkFromChunkCoords(chunkPosX, chunkPosZ));
+		return getChunkPollution(w.getChunkFromChunkCoords((int)posX, (int)posZ));
+	}
+	
+	public static float getChunkPollution(World w, int posX, int posZ)
+	{
+		return getChunkPollution(w.getChunkFromChunkCoords(posX, posZ));
+	}
+	
+	public static float getChunkPollution(Entity en)
+	{
+		return getChunkPollution(en.getEntityWorld(), en.posX/16, en.posZ/16);
 	}
 	
 	public static float getChunkPollution(World w, BlockPos pos)

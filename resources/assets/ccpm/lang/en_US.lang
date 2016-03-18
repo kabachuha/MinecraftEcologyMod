@@ -27,6 +27,9 @@ tc.research_text.CCPMREV=Air and aura filter
 tc.research_name.CCPMCELL=Thaumium cell
 tc.research_text.CCPMCELL=(Quite)Equal trade
 
+tc.research_name.CCPMCCPB=Better than iron...
+tc.research_text.CCPMCCPB=...but worse than diamond
+
 tc.research_name.CCPMADVTHAUM=Advanced thaumium cell
 tc.research_text.CCPMADVTHAUM=No aura pollution
 
@@ -65,3 +68,5 @@ item.ccpm.buck.pw.name=Polluted water bucket
 tile.liquid_ccpm_pollution.name=Concentrated pollution
 
 tile.liquid_ccpm_pw.name=Polluted water
+
+item.ccpm.sword.name=CCPB Sword

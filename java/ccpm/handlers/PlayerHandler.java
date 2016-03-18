@@ -1,6 +1,7 @@
 package ccpm.handlers;
 
 import java.util.List;
+import java.util.Random;
 
 import ccpm.api.CCPMApi;
 import ccpm.api.IRespirator;
@@ -15,7 +16,13 @@ import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.Fluid;
@@ -25,6 +32,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -45,6 +54,8 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
@@ -273,7 +284,7 @@ public class PlayerHandler {
 		}
 	}
 	
-	
+	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingAttackEvent event)
 	{
@@ -316,7 +327,7 @@ public class PlayerHandler {
 				EntityLivingBase el = (EntityLivingBase)e;
 				if(e instanceof EntityPlayer)
 				{
-				if(event.entityLiving.getEquipmentInSlot(4) == null||!(event.entityLiving.getEquipmentInSlot(4).getItem() instanceof IRespirator)||!((IRespirator)event.entityLiving.getEquipmentInSlot(4).getItem()).isFiltering((EntityPlayer)event.entityLiving, event.entityLiving.getEquipmentInSlot(4)))
+				if(el.getEquipmentInSlot(4) == null||!(el.getEquipmentInSlot(4).getItem() instanceof IRespirator)||!((IRespirator)el.getEquipmentInSlot(4).getItem()).isFiltering((EntityPlayer)el, el.getEquipmentInSlot(4)))
 				{
 				el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
 				
@@ -348,6 +359,62 @@ public class PlayerHandler {
 		{
 			PollutionUtils.increasePollution(multiplier*100, event.entity.getEntityWorld().getChunkFromBlockCoords(pos));
 			event.setCanceled(true);
+		}
+	}
+	
+	@SideOnly(Side.SERVER)
+	@SubscribeEvent
+	public void livingTick(LivingUpdateEvent event)
+	{
+		if(event.entity==null)
+			return;
+		if(event.entity instanceof EntityPlayer || event.entity instanceof IProjectile)
+			return;
+		
+		if(event.entityLiving instanceof EntityCreature){}else return;
+		
+		EntityCreature en = (EntityCreature)event.entityLiving;
+		
+		if(!CCPMConfig.mobsScared)
+		if(en instanceof IMob)
+			return;
+		
+		if(en.worldObj.getWorldTime() % 20 == 0)
+		if(PollutionUtils.getChunkPollution(en) >= CCPMConfig.noPlanting/2)
+		if(wtf(en.getRNG(), PollutionUtils.getChunkPollution(en)))
+		en.tasks.addTask(1, new EntityAIPanic(en, 2));
+	}
+	
+	private boolean wtf(Random rand, double in)
+	{
+		double d = Math.log10(in);
+		if(d == Double.NaN || d == Double.POSITIVE_INFINITY || d == Double.NEGATIVE_INFINITY)
+		return false;
+		
+		int d1 = (int) Math.round(d);
+		
+		if(d1 >=10)
+			d1=10;
+		
+		if(d1 < 0)
+			d1 = 0;
+		
+		int i = rand.nextInt(20-d1);
+		
+		return i==1;
+	}
+	
+	@SideOnly(Side.SERVER)
+	@SubscribeEvent
+	public void checkSpawn(CheckSpawn event)
+	{
+		if(event.entity!=null)
+		if(event.entityLiving instanceof IAnimals)
+		{
+			if(PollutionUtils.getChunkPollution(event.world, new BlockPos(event.x,event.y,event.z))>=CCPMConfig.smogPoll)
+			{
+				event.setResult(Result.DENY);
+			}
 		}
 	}
 }

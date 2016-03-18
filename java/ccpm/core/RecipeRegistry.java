@@ -1,6 +1,9 @@
 package ccpm.core;
 
+import java.awt.Color;
+
 import DummyCore.Utils.OreDictUtils;
+import ccpm.integration.thaumcraft.Wands;
 import ccpm.utils.config.CCPMConfig;
 
 import net.minecraft.enchantment.Enchantment;
@@ -14,6 +17,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.research.ResearchCategories;
@@ -26,6 +30,8 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.blocks.BlocksTC;
 import thaumcraft.api.crafting.InfusionRecipe;
+import thaumcraft.api.golems.EnumGolemTrait;
+import thaumcraft.api.golems.parts.GolemMaterial;
 import thaumcraft.api.items.ItemsTC;
 
 public class RecipeRegistry {
@@ -37,19 +43,36 @@ public class RecipeRegistry {
 	{
 		oreDictSetup();
 		CCPM.log.info("Registring recipes");
+		
+		ItemStack pollutionBrick = new ItemStack(CCPM.pollutionBrick);
+		ItemStack pollutionBricks = new ItemStack(CCPM.pollutionBricks);
+		ItemStack ccpbDust = new ItemStack(CCPM.miscIngredient,1,0);
+		ItemStack ccpbTinyDust = new ItemStack(CCPM.miscIngredient,1,1);
+		ItemStack ccpbNugget = new ItemStack(CCPM.miscIngredient,1,2);
+		
+		
+		GameRegistry.addSmelting(ccpbDust, pollutionBrick, 20);
+		GameRegistry.addSmelting(ccpbTinyDust, ccpbNugget, 10);
+		
 		ItemStack redbl = new ItemStack(Blocks.redstone_block);
 		ItemStack ironb = new ItemStack(Blocks.iron_block);
 		ItemStack goldb = new ItemStack(Blocks.gold_block);
 		
-
+		GameRegistry.addRecipe(new ShapelessOreRecipe(pollutionBrick, "nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(CCPM.miscIngredient,9,2), "materialCCPB"));
+		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ccpbDust, "tinyDustCCPB", "tinyDustCCPB","tinyDustCCPB","tinyDustCCPB","tinyDustCCPB","tinyDustCCPB","tinyDustCCPB","tinyDustCCPB","tinyDustCCPB"));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ccpbDust, "dustTinyCCPB", "dustTinyCCPB","dustTinyCCPB","dustTinyCCPB","dustTinyCCPB","dustTinyCCPB","dustTinyCCPB","dustTinyCCPB","dustTinyCCPB"));
+		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(CCPM.miscIngredient,9,1),"dustCCPB"));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.cell,1,0),new Object[]{
 		    "IGI",
 		    "GRG",
 		    "IGI",
 		    'I',"blockIron", 'G', "blockGold", 'R', "blockRedstone"}));
 		
-		ItemStack pollutionBrick = new ItemStack(CCPM.pollutionBrick);
-		ItemStack pollutionBricks = new ItemStack(CCPM.pollutionBricks);
+		
 		
 		GameRegistry.addShapedRecipe(pollutionBricks, 
 			"BB",
@@ -121,7 +144,15 @@ public class RecipeRegistry {
 	
 	public static void thaum()
 	{
+		ItemStack pollutionBrick = new ItemStack(CCPM.pollutionBrick);
+		ItemStack pollutionBricks = new ItemStack(CCPM.pollutionBricks);
+		ItemStack ccpbDust = new ItemStack(CCPM.miscIngredient,1,0);
+		
 		CCPM.log.info("Adding thaumcraft support");
+		
+		ThaumcraftApi.addSmeltingBonus("dustCCPB", new ItemStack(CCPM.miscIngredient,0,2));
+		ThaumcraftApi.addSmeltingBonus("dustCCPB", new ItemStack(CCPM.miscIngredient,0,1));
+		
 		ResearchCategories.registerCategory((String)CATID, null, (ResourceLocation)iconLoc, (ResourceLocation)new ResourceLocation("thaumcraft", "textures/gui/gui_research_back_1.jpg"), (ResourceLocation) back);
 		
 		ThaumcraftApi.registerObjectTag(new ItemStack(CCPM.respirator,1,OreDictionary.WILDCARD_VALUE), new AspectList().add(Aspect.PROTECT, 6).add(Aspect.AIR, 16).add(Aspect.SENSES, 8).add(Aspect.LIFE, 8).add(Aspect.CRYSTAL, 9).add(Aspect.METAL, 20).add(Aspect.MECHANISM, 9).add(Aspect.EXCHANGE, 7));
@@ -207,6 +238,58 @@ public class RecipeRegistry {
 		ThaumcraftApi.addWarpToItem(new ItemStack(CCPM.advThaum), 16);
 		
 		ThaumcraftApi.registerObjectTag(new ItemStack(CCPM.advThaum), al);
+		
+		
+		ResearchItem ccpbUsing = new ResearchItem("CCPMCCPB", CATID, new AspectList().add(Aspect.CRAFT, 8).add(Aspect.FLUX, 16).add(Aspect.ENTROPY, 9).add(Aspect.METAL, 28), -3, -3, 3, new ItemStack(CCPM.pollutionBrick));
+		
+		ccpbUsing.setPages(new ResearchPage("ccpm.ccpb"));
+		
+		ccpbUsing.setSpecial();
+		ccpbUsing.registerResearchItem();
+		
+		ThaumcraftApi.addWarpToResearch("CCPMCCPB", 1);
+		
+		GolemMaterial.register(new GolemMaterial("CCPB", new String[]{"CCPMCCPB"}, new ResourceLocation("ccpm:textures/entity/golem/mat_pollution.png"), new Color(82, 96, 65).getRGB(), 15, 7, 3, new ItemStack(CCPM.pollutionBricks), new ItemStack(CCPM.pistons), new EnumGolemTrait[]{EnumGolemTrait.BLASTPROOF, EnumGolemTrait.FIREPROOF, EnumGolemTrait.LIGHT}));
+		
+		Wands.init();
+		
+		ResearchItem ccpbWand = new ResearchItem("ROD_CCPB", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28), -6, -6, 3, new ItemStack(CCPM.miscIngredient,1,4));
+		
+		InfusionRecipe ccpbWandCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_CCPB", new ItemStack(CCPM.miscIngredient,1,4), 3, new AspectList().add(Aspect.FLUX, 6).add(Aspect.ENERGY, 64).add(Aspect.AURA, 32).add(Aspect.CRAFT, 80), pollutionBricks, new Object[]{"materialCCPB", "blockCCPB", "dustCCPB", "tinyCCPB", "tinyDustCCPB", "nuggetCCPB", new ItemStack(ItemsTC.salisMundus)});
+		
+		
+		ccpbWand.setPages(new ResearchPage("ccpm.ccpb.wand"), new ResearchPage(ccpbWandCrafting));
+		
+		ccpbWand.registerResearchItem();
+		
+ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28).add(Aspect.EXCHANGE, 16), -8, -4, 3, new ItemStack(CCPM.miscIngredient,1,5));
+		
+		InfusionRecipe ccpbWandInvCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_CCPB", new ItemStack(CCPM.miscIngredient,1,5), 4, new AspectList().add(Aspect.EXCHANGE, 64).add(Aspect.ENERGY, 64), new ItemStack(CCPM.miscIngredient,1,4), new Object[]{"materialCCPB", "blockCCPB", new ItemStack(ItemsTC.salisMundus), new ItemStack(ItemsTC.bucketPure), new ItemStack(CCPM.filter)});
+		
+		
+		ccpbWandInv.setPages(new ResearchPage("ccpm.ccpb.wand.inv"), new ResearchPage(ccpbWandInvCrafting));
+		
+		ccpbWandInv.registerResearchItem();
+		
+		
+		ResearchItem ccpbStaff = new ResearchItem("ROD_STAFF_CCPB", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28), -8, 8, 3, new ItemStack(CCPM.miscIngredient,1,6));
+		
+		InfusionRecipe ccpbStaffCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_STAFF_CCPB", new ItemStack(CCPM.miscIngredient,1,6), 5, new AspectList().add(Aspect.ENERGY, 128).add(Aspect.AURA, 32), pollutionBricks, new Object[]{new ItemStack(CCPM.miscIngredient,1,4), new ItemStack(CCPM.miscIngredient,1,4)});
+		
+		
+		ccpbStaff.setPages(new ResearchPage("ccpm.ccpb.staff"), new ResearchPage(ccpbStaffCrafting));
+		
+		ccpbStaff.registerResearchItem();
+		
+		
+		ResearchItem ccpbStaffInv = new ResearchItem("ROD_STAFF_CCPB_INVERTED", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28), -6, 8, 3, new ItemStack(CCPM.miscIngredient,1,7));
+		
+		InfusionRecipe ccpbStaffInvCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_STAFF_CCPB_INVERTED", new ItemStack(CCPM.miscIngredient,1,7), 6, new AspectList().add(Aspect.ENERGY, 256).add(Aspect.AURA, 64), pollutionBricks, new Object[]{new ItemStack(CCPM.miscIngredient,1,5), new ItemStack(CCPM.miscIngredient,1,5)});
+		
+		
+		ccpbStaffInv.setPages(new ResearchPage("ccpm.ccpb.staff.inv"), new ResearchPage(ccpbStaffInvCrafting));
+		
+		ccpbStaffInv.registerResearchItem();
 	}
 	
 	public static void botan()
@@ -247,6 +330,14 @@ public class RecipeRegistry {
 		OreDictionary.registerOre("materialCCPB", CCPM.pollutionBrick);
 		
 		OreDictionary.registerOre("blockCCPB", CCPM.pollutionBricks);
+		
+		OreDictionary.registerOre("dustCCPB", new ItemStack(CCPM.miscIngredient,1,0));
+		
+		OreDictionary.registerOre("tinyDustCCPB", new ItemStack(CCPM.miscIngredient,1,1));
+		
+		OreDictionary.registerOre("dustTinyCCPB", new ItemStack(CCPM.miscIngredient,1,1));
+		
+		OreDictionary.registerOre("nuggetCCPB", new ItemStack(CCPM.miscIngredient,1,2));
 	}
 	
 	public static void setupChests()

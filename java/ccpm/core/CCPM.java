@@ -17,6 +17,7 @@ import DummyCore.Core.CoreInitialiser;
 import DummyCore.Items.ItemRegistry;
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.ModVersionChecker;
+import ccpm.achivements.CCPMAchivements;
 import ccpm.biomes.Wasteland;
 import ccpm.blocks.BlockAdvFilter;
 import ccpm.blocks.BlockAdvThaum;
@@ -45,6 +46,8 @@ import ccpm.handlers.WorldHandler;
 import ccpm.items.PWBucket;
 import ccpm.items.PistonArray;
 import ccpm.items.PollutedArmor;
+import ccpm.items.PollutedMisc;
+import ccpm.items.PollutedSword;
 import ccpm.items.RespiratorBase;
 import ccpm.items.SrapBrick;
 import ccpm.network.proxy.CommonProxy;
@@ -126,11 +129,19 @@ public class CCPM {
 	
 	public static Item pistons = new PistonArray();
 	
+	public static Item sword = new PollutedSword();
+	
 	public static Block pollutionBricks = new BlockPollutionBricks();
 	
 	public static Item[] pollArmor = new Item[]{new PollutedArmor(PollutedArmor.pollution,0,"ccpm.pollhelm").setTextureName("ccpm:Helmet"), new PollutedArmor(PollutedArmor.pollution,1,"ccpm.pollchest").setTextureName("ccpm:chest"), new PollutedArmor(PollutedArmor.pollution,2,"ccpm.polllegs").setTextureName("ccpm:leg"), new PollutedArmor(PollutedArmor.pollution,3,"ccpm.pollboots").setTextureName("ccpm:boots")};
 
 	public static Block compressor = new BlockCompressor();
+	
+	/**
+		ccpb_dust, ccpb_tiny_dust, ccpb_nugget, ccpb_wand_cap, ccpb_wand_rod, ccpb_wand_rod_inverted, ccpb_wand_staff, ccpb_wand_staff_inverted
+	
+	*/
+	public static Item miscIngredient = new PollutedMisc("ccpb_dust", "ccpb_tiny_dust", "ccpb_nugget", "ccpm_wand_cap", "ccpb_wand_rod", "ccpb_wand_rod_inverted", "ccpb_wand_staff", "ccpb_wand_staff_inverted");
 	
 	@Instance(MODID)
 	public static CCPM instance;
@@ -217,9 +228,9 @@ public class CCPM {
 		ItemRegistry.registerItem(pollArmor[2], pollArmor[2].getUnlocalizedName(), getClass());
 		ItemRegistry.registerItem(pollArmor[3], pollArmor[3].getUnlocalizedName(), getClass());
 		
+		ItemRegistry.registerItem(sword, "ccpmSword", getClass());
 		
-		
-		
+		ItemRegistry.registerItem(miscIngredient, "ccpmIngr", getClass());
 		
 		BlocksRegistry.registerBlock(cell, "energycell", getClass(), ItemBlockCell.class);
 		BlocksRegistry.registerBlock(an, "analyser", getClass(), null);
@@ -270,6 +281,8 @@ public class CCPM {
 		RecipeRegistry.init();
 		
 		CCPMGuis.init();
+		
+		CCPMAchivements.init();
 	}
 	
 	@EventHandler
