@@ -11,15 +11,20 @@ import DummyCore.Utils.IOldCubicBlock;
 import DummyCore.Utils.MiscUtils;
 import ccpm.gui.CCPMGuis;
 import ccpm.tiles.TileCompressor;
+import ccpm.utils.config.CCPMConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -105,7 +110,50 @@ public class BlockCompressor extends Block implements IOldCubicBlock, ITileEntit
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitx, float hitY, float hitZ)
 	{
+		if(playerIn.isSneaking())return false;
+		
+		if(!CCPMConfig.needStructure || isStructureBuilt(pos,worldIn, playerIn))
 		MiscUtils.openGui(worldIn, pos.getX(), pos.getY(), pos.getZ(), playerIn, CCPMGuis.guiCompressorID);
 		return true;
+	}
+	
+	
+	
+	private boolean checkIron(BlockPos pos, World w, EntityPlayer p)
+	{
+		if(w.getBlockState(pos) == Blocks.iron_block.getDefaultState())
+		{
+			return true;
+		}
+		else
+		{
+			ChatComponentText cct = new ChatComponentText("Iron block is missing at "+pos.toString()+"!");
+			cct.setChatStyle(cct.getChatStyle().setColor(EnumChatFormatting.RED));
+			if(CCPMConfig.needStructure)
+			p.addChatMessage(cct);
+			return false;
+		}
+	}
+	
+	private boolean isStructureBuilt(BlockPos p, World w, EntityPlayer ep)
+	{
+		boolean ret = true;
+		
+		ret = ret && checkIron(p.add(1, 1, 1),w,ep);//+
+		ret = ret && checkIron(p.add(1, -1, 1),w,ep);//+
+		ret = ret && checkIron(p.add(-1, 1, -1),w,ep);//+
+		ret = ret && checkIron(p.add(-1, -1, -1),w,ep);//+
+		ret = ret && checkIron(p.add(1, -1, -1),w,ep);//+
+		ret = ret && checkIron(p.add(1, 1, -1),w,ep);//+
+		ret = ret && checkIron(p.add(-1, 1, 1),w,ep);//+
+		ret = ret && checkIron(p.add(-1, -1, 1),w,ep);//+
+		
+		if(CCPMConfig.needStructure)
+		if(!ret)
+		{
+			ep.addChatMessage(new ChatComponentText("Structure isn't completed!"));
+		}
+		
+		return ret;
 	}
 }

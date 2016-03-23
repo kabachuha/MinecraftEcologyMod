@@ -141,7 +141,7 @@ public class CCPM {
 		ccpb_dust, ccpb_tiny_dust, ccpb_nugget, ccpb_wand_cap, ccpb_wand_rod, ccpb_wand_rod_inverted, ccpb_wand_staff, ccpb_wand_staff_inverted
 	
 	*/
-	public static Item miscIngredient = new PollutedMisc("ccpb_dust", "ccpb_tiny_dust", "ccpb_nugget", "ccpm_wand_cap", "ccpb_wand_rod", "ccpb_wand_rod_inverted", "ccpb_wand_staff", "ccpb_wand_staff_inverted");
+	public static Item miscIngredient = new PollutedMisc("ccpb_dust", "ccpb_tiny_dust", "ccpb_nugget", "ccpb_wand_cap", "ccpb_wand_rod", "ccpb_wand_rod_inverted", "ccpb_wand_staff", "ccpb_wand_staff_inverted");
 	
 	@Instance(MODID)
 	public static CCPM instance;
@@ -192,7 +192,7 @@ public class CCPM {
 		log.info("Potion smog id is "+smog.id);
 		wasteland = new Wasteland(CCPMConfig.wasteId);
 		
-		BiomeManager.addBiome(BiomeType.DESERT, new BiomeEntry(wasteland, 14));
+		BiomeManager.addBiome(BiomeType.DESERT, new BiomeEntry(wasteland, 1));
 		
 		CCPMFluids.init();
 		

@@ -255,7 +255,9 @@ public class RecipeRegistry {
 		
 		ResearchItem ccpbWand = new ResearchItem("ROD_CCPB", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28), -6, -6, 3, new ItemStack(CCPM.miscIngredient,1,4));
 		
-		InfusionRecipe ccpbWandCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_CCPB", new ItemStack(CCPM.miscIngredient,1,4), 3, new AspectList().add(Aspect.FLUX, 6).add(Aspect.ENERGY, 64).add(Aspect.AURA, 32).add(Aspect.CRAFT, 80), pollutionBricks, new Object[]{"materialCCPB", "blockCCPB", "dustCCPB", "tinyCCPB", "tinyDustCCPB", "nuggetCCPB", new ItemStack(ItemsTC.salisMundus)});
+		ccpbWand.setParents("CCPMCCPB");
+		
+		InfusionRecipe ccpbWandCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_CCPB", new ItemStack(CCPM.miscIngredient,1,4), 3, new AspectList().add(Aspect.FLUX, 6).add(Aspect.ENERGY, 64).add(Aspect.AURA, 32).add(Aspect.CRAFT, 80), pollutionBricks, new Object[]{"materialCCPB", "blockCCPB", "dustCCPB", "tinyDustCCPB", "nuggetCCPB", new ItemStack(ItemsTC.salisMundus)});
 		
 		
 		ccpbWand.setPages(new ResearchPage("ccpm.ccpb.wand"), new ResearchPage(ccpbWandCrafting));
@@ -264,6 +266,8 @@ public class RecipeRegistry {
 		
 ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28).add(Aspect.EXCHANGE, 16), -8, -4, 3, new ItemStack(CCPM.miscIngredient,1,5));
 		
+	ccpbWandInv.setParents("ROD_CCPB");
+
 		InfusionRecipe ccpbWandInvCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_CCPB", new ItemStack(CCPM.miscIngredient,1,5), 4, new AspectList().add(Aspect.EXCHANGE, 64).add(Aspect.ENERGY, 64), new ItemStack(CCPM.miscIngredient,1,4), new Object[]{"materialCCPB", "blockCCPB", new ItemStack(ItemsTC.salisMundus), new ItemStack(ItemsTC.bucketPure), new ItemStack(CCPM.filter)});
 		
 		
@@ -273,6 +277,8 @@ ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new Aspe
 		
 		
 		ResearchItem ccpbStaff = new ResearchItem("ROD_STAFF_CCPB", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28), -8, 8, 3, new ItemStack(CCPM.miscIngredient,1,6));
+		
+		ccpbStaff.setParents("ROD_CCPB");
 		
 		InfusionRecipe ccpbStaffCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_STAFF_CCPB", new ItemStack(CCPM.miscIngredient,1,6), 5, new AspectList().add(Aspect.ENERGY, 128).add(Aspect.AURA, 32), pollutionBricks, new Object[]{new ItemStack(CCPM.miscIngredient,1,4), new ItemStack(CCPM.miscIngredient,1,4)});
 		
@@ -284,12 +290,25 @@ ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new Aspe
 		
 		ResearchItem ccpbStaffInv = new ResearchItem("ROD_STAFF_CCPB_INVERTED", CATID, new AspectList().add(Aspect.FLUX, 16).add(Aspect.AURA, 9).add(Aspect.ENERGY, 28), -6, 8, 3, new ItemStack(CCPM.miscIngredient,1,7));
 		
+		ccpbStaffInv.setParents("ROD_CCPB_INVERTED", "ROD_STAFF_CCPB");
+		
 		InfusionRecipe ccpbStaffInvCrafting = ThaumcraftApi.addInfusionCraftingRecipe("ROD_STAFF_CCPB_INVERTED", new ItemStack(CCPM.miscIngredient,1,7), 6, new AspectList().add(Aspect.ENERGY, 256).add(Aspect.AURA, 64), pollutionBricks, new Object[]{new ItemStack(CCPM.miscIngredient,1,5), new ItemStack(CCPM.miscIngredient,1,5)});
 		
 		
 		ccpbStaffInv.setPages(new ResearchPage("ccpm.ccpb.staff.inv"), new ResearchPage(ccpbStaffInvCrafting));
 		
 		ccpbStaffInv.registerResearchItem();
+		
+		
+		ResearchItem ccpbCap = new ResearchItem("CAP_CCPB", CATID, new AspectList().add(Aspect.AURA, 8).add(Aspect.FLUX, 16).add(Aspect.ENTROPY, 9).add(Aspect.ENERGY, 16), -5, -6, 3, new ItemStack(CCPM.miscIngredient,1,3));
+		
+		ccpbCap.setParents("CCPMCCPB");
+		
+		InfusionRecipe capRec = ThaumcraftApi.addInfusionCraftingRecipe("CAP_CCPB", new ItemStack(CCPM.miscIngredient,1,3), 3, new AspectList().add(Aspect.ENERGY, 64).add(Aspect.AURA, 16).add(Aspect.FLUX, 16), pollutionBricks, new Object[]{"materialCCPB", "nuggetCCPB","materialCCPB", "nuggetCCPB","materialCCPB", "dustCCPB", new ItemStack(ItemsTC.salisMundus),new ItemStack(ItemsTC.salisMundus),new ItemStack(ItemsTC.salisMundus),new ItemStack(ItemsTC.salisMundus)});
+		
+		ccpbCap.setPages(new ResearchPage("ccpm.ccpb.cap"), new ResearchPage(capRec));
+		
+		ccpbCap.registerResearchItem();
 	}
 	
 	public static void botan()

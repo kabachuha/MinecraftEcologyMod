@@ -21,8 +21,8 @@ public class Wands {
 		CCPB_ROD = new WandRod("CCPB", 300, new ItemStack(CCPM.miscIngredient,1,4), 3, new WandRodPollutedOnUpdate(), new ResourceLocation("ccpm:textures/blocks/bricks_pollution"));
 		CCPB_ROD_INVERTED = new WandRod("CCPB_INVERTED", 320, new ItemStack(CCPM.miscIngredient,1,5), 3, new WandRodPollutedInvertedOnUpdate(), new ResourceLocation("ccpm:textures/items/wand/ccpb_mat_inverted"));
 		
-		STAFF_CCPB_ROD = new WandRod("STAFF_CCPB", 320, new ItemStack(CCPM.miscIngredient,1,4), 3, new WandRodPollutedOnUpdate(), new ResourceLocation("ccpm:textures/blocks/bricks_pollution"));
-		STAFF_CCPB_ROD_INVERTED = new WandRod("STAFF_CCPB_INVERTED", 340, new ItemStack(CCPM.miscIngredient,1,5), 3, new WandRodPollutedInvertedOnUpdate(), new ResourceLocation("ccpm:textures/items/wand/ccpb_mat_inverted"));
+		STAFF_CCPB_ROD = new WandRod("STAFF_CCPB", 320, new ItemStack(CCPM.miscIngredient,1,6), 3, new WandRodPollutedOnUpdate(), new ResourceLocation("ccpm:textures/blocks/bricks_pollution"));
+		STAFF_CCPB_ROD_INVERTED = new WandRod("STAFF_CCPB_INVERTED", 340, new ItemStack(CCPM.miscIngredient,1,7), 3, new WandRodPollutedInvertedOnUpdate(), new ResourceLocation("ccpm:textures/items/wand/ccpb_mat_inverted"));
 		
 		STAFF_CCPB_ROD.setStaff(true);
 		STAFF_CCPB_ROD_INVERTED.setStaff(true);

@@ -18,6 +18,7 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -46,11 +47,15 @@ public class BlockFilter extends Block implements ITileEntityProvider, IOldCubic
 	}
 	
 	Icon i = null;
+	Icon bot;
 	
 	@Override
     @SideOnly(Side.CLIENT)
     public Icon getIcon(int i, int j)
     {
+		if(i == EnumFacing.DOWN.getIndex())
+			return bot;
+		
 		return this.i;
     }
 	
@@ -59,6 +64,7 @@ public class BlockFilter extends Block implements ITileEntityProvider, IOldCubic
     public void registerBlockIcons(IconRegister reg)
     {		
 		i = reg.registerBlockIcon("ccpm:filter");
+		bot = reg.registerBlockIcon("ccpm:compressor_bottom");
     }
 
 	@Override
@@ -106,7 +112,7 @@ public class BlockFilter extends Block implements ITileEntityProvider, IOldCubic
 			for(int j = -2; j <=2; j++)
 				for(int k = -2; k <=2; k++)
 				{
-					if (rand.nextInt(8) == 0)
+					if (rand.nextInt(16) == 0)
 	                {
 						worldIn.spawnParticle(rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
 	                }

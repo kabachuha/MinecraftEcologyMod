@@ -52,8 +52,8 @@ public class CCPMRenderHandler {
 		if(isPlayerInSmog(Minecraft.getMinecraft().thePlayer))
 		{
 			//FMLLog.info("Rendering fog");
-			GlStateManager.setFogStart(3.4F); // 0.7
-			GlStateManager.setFogEnd(4.5F);
+			GlStateManager.setFogStart(6.4F+Minecraft.getMinecraft().theWorld.rand.nextFloat()/100); // 0.7
+			GlStateManager.setFogEnd(9.5F+Minecraft.getMinecraft().theWorld.rand.nextFloat()/100);
 			if(!b)
 				b = true;
 		}
@@ -62,7 +62,6 @@ public class CCPMRenderHandler {
 			if(b)
 			{
 				GlStateManager.setFogDensity(1);
-				//GL11.glFogi(GL11.GL_FOG_MODE, 2048);
 				b=false;
 			}
 		}

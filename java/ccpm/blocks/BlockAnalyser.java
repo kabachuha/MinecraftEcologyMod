@@ -17,6 +17,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,6 +46,7 @@ public class BlockAnalyser extends Block implements ITileEntityProvider, IOldCub
 		}
 		
 		Icon i = null;
+		Icon bot;
 		
 		
 		@Override
@@ -52,16 +54,23 @@ public class BlockAnalyser extends Block implements ITileEntityProvider, IOldCub
 	    public void registerBlockIcons(IconRegister reg)
 	    {		
 			i = reg.registerBlockIcon("ccpm:analyser");
+			bot = reg.registerBlockIcon("ccpm:compressor_bottom");
 	    }
 
 		@Override
 		@SideOnly(Side.CLIENT)
 		public Icon getIcon(int side, int meta) {
+			if(side == EnumFacing.DOWN.getIndex())
+				return bot;
+			
 			return this.i;
 		}
 
 		@Override
 		public Icon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+			if(side == EnumFacing.DOWN.getIndex())
+				return bot;
+			
 			return i;
 		}
 

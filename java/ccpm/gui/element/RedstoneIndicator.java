@@ -28,7 +28,7 @@ public class RedstoneIndicator extends GuiElement {
 
 	@Override
 	public void draw(int posX, int posY, int mouseX, int mouseY) {
-		DrawUtils.drawTexturedModalRect(posX, posY, 0, 0, 16, 16, 0);
+		DrawUtils.drawTexturedModalRect(posX, posY, 0, 0, 16, 16, 1);
 		
 	}
 

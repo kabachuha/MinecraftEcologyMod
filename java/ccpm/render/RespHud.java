@@ -66,13 +66,13 @@ public class RespHud implements IHUDElement {
 		DrawUtils.bindTexture(respTexture.getResourceDomain(), respTexture.getResourcePath());
 		tess.startDrawingQuads();
 		
-		tess.addVertexWithUV(0, h, 0, 0, 1);
+		tess.addVertexWithUV(0, h, 32, 0, 1);
 		
-		tess.addVertexWithUV(w, h, 0, 1, 1);
+		tess.addVertexWithUV(w, h, 32, 1, 1);
 		
-		tess.addVertexWithUV(w, 0, 0, 1, 0);
+		tess.addVertexWithUV(w, 0, 32, 1, 0);
 		
-		tess.addVertexWithUV(0, 0, 0, 0, 0);
+		tess.addVertexWithUV(0, 0, 32, 0, 0);
 		
 		if(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4).getItem() instanceof RespiratorBase)
 		{
@@ -86,7 +86,7 @@ public class RespHud implements IHUDElement {
 	@Override
 	public boolean displayInGUIs() {
 
-		return true;
+		return false;
 	}
 
 }

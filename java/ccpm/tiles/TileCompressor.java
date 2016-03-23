@@ -107,19 +107,20 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 		{
 			World w = getWorld();
 			Random rand = w.rand;
+			if(rand.nextBoolean())
 			for(int i = -2; i <= 2; i++)
 				for(int j = -2; j <=2; j++)
 					for(int k = -2; k <=2; k++)
 					{
-						if(rand.nextBoolean())
+						if(rand.nextInt(10)==0)
 						w.spawnParticle(rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-						if(rand.nextBoolean())
+						if(rand.nextInt(10)==0)
 						w.spawnParticle(EnumParticleTypes.REDSTONE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-						if(rand.nextBoolean())
+						if(rand.nextInt(10)==0)
 						w.spawnParticle(EnumParticleTypes.FLAME, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
-						if(rand.nextBoolean())
-						if(rand.nextBoolean())
-						w.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
+						//if(rand.nextBoolean())
+						//if(rand.nextBoolean())
+						//w.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + rand.nextFloat()) - 0.5D, (double)((float)k - rand.nextFloat() - 1.0F), (double)((float)j + rand.nextFloat()) - 0.5D, new int[0]);
 					}
 		}
 		
@@ -145,6 +146,13 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 				if(useEnergy())
 				{
 					tank.drain(10, true);
+					
+					if(rand.nextBoolean())
+					getWorld().playSoundEffect(getPos().getX()+0.5D, getPos().getY()+0.5D, getPos().getZ()+0.5D, "random.fizz", 8, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+					if(rand.nextBoolean())
+					getWorld().playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "tile.piston.out", 0.5F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
+					if(rand.nextBoolean())
+					getWorld().playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "tile.piston.in", 0.5F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
 					
 					++progress;
 				}

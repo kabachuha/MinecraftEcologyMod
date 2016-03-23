@@ -1,5 +1,6 @@
 package ccpm.blocks;
 
+import DummyCore.Client.Icon;
 import DummyCore.Client.IconRegister;
 import DummyCore.Utils.BlockStateMetadata;
 import DummyCore.Utils.MiscUtils;
@@ -31,6 +32,7 @@ public class BlockAdvFilter extends BlockFilter {
 	}
 
 	
+	
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new AdvancedAirFilter();
@@ -41,6 +43,7 @@ public class BlockAdvFilter extends BlockFilter {
     public void registerBlockIcons(IconRegister reg)
     {		
 		i = reg.registerBlockIcon("ccpm:advfilterw");
+		bot = reg.registerBlockIcon("ccpm:compressor_bottom");
     }
 	
 	@Override
