@@ -14,9 +14,9 @@ public class GuiCompressor extends GuiCommon {
 	public GuiCompressor(Container c, TileEntity tile) {
 		super(c, tile);
 		
-		this.elementList.add(new ElemFluTank(this.guiLeft+this.xSize/2-64, this.guiTop+this.ySize/8-27, (IFluidHandler)tile, 0));
-		this.elementList.add(new RedstoneIndicator(this.xSize-18, this.guiTop-2, tile));
-		this.elementList.add(new ProgressBar(this.guiLeft+this.xSize/2-32, this.guiTop+this.ySize/8-8, (IHasProgress)tile));
+		this.elementList.add(new ElemFluTank(this.guiLeft+this.xSize/2-64, this.guiTop+this.ySize/8-8, (IFluidHandler)tile, 0));
+		this.elementList.add(new RedstoneIndicator(this.xSize-22, this.guiTop-8, tile));
+		this.elementList.add(new ProgressBar(this.guiLeft+this.xSize/2-26, this.guiTop+this.ySize/8-4, (IHasProgress)tile));
 	}
 
 }

@@ -28,7 +28,7 @@ public class TileAdvThaum extends TileEnergyCellBasic implements IInfusionStabil
 		
 		for(int i = 0; i<=amount/100; i++)
 		{
-			ret = ret && TCUtils.drainEssentia(user, Aspect.AIR, null, 30, 8) && TCUtils.drainEssentia(user, Aspect.ENERGY, null, 30, 8);
+			ret = ret && user.getWorld().rand.nextBoolean() ? TCUtils.drainEssentia(user, Aspect.AIR, null, 30, 8) && TCUtils.drainEssentia(user, Aspect.ENERGY, null, 30, 8) : true;
 		}
 		
 		return ret;

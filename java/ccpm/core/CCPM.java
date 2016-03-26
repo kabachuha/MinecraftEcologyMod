@@ -202,6 +202,10 @@ public class CCPM {
 		
 		BlocksRegistry.registerBlock(pollFlu, "liquid_ccpm_pollution", getClass(), null);
 		BlocksRegistry.registerBlock(pw, "liquid_ccpm_pw", getClass(), null);
+		
+		proxy.registerFluidModels();
+		
+		FMLInterModComms.sendMessage("Waila", "register", "ccpm.integration.waila.WailaDataProvider.reg");
 	}
 	
 	@EventHandler

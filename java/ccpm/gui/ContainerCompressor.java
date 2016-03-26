@@ -15,7 +15,7 @@ public class ContainerCompressor extends ContainerInventory {
 	@Override
 	public void setupSlots() {
 		
-		this.addSlotToContainer(new Slot(inv, 0, pInvOffsetX+64, pInvOffsetZ+32));
+		this.addSlotToContainer(new Slot(inv, 0, pInvOffsetX+80, pInvOffsetZ+32));
 		
 		this.setupPlayerInventory();
 	}

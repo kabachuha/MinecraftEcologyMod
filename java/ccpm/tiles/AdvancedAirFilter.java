@@ -91,7 +91,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 
 	public int progress = 0;
 	
-	public static int maxProgress = 1200;
+	public static int maxProgress = 200;
 	
 	private int sticks = 0;
 	

@@ -78,6 +78,11 @@ public class RecipeRegistry {
 			"BB",
 			"BB", 'B',pollutionBrick);
 		
+		GameRegistry.addShapedRecipe(new ItemStack(CCPM.sword), 
+				" P ",
+				"PSP",
+				"TBT",'P',pollutionBricks,'S',new ItemStack(Items.diamond_sword), 'T', new ItemStack(Blocks.tnt), 'B', new ItemStack(Items.blaze_rod));
+		
 		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[0]), 
 			"PPP",
 			"PHP",'P',pollutionBricks,'H',new ItemStack(Items.iron_helmet));
@@ -111,7 +116,7 @@ public class RecipeRegistry {
 			    "ILI",
 			    "LRL",
 			    "ILI",
-			    'L', leath, 'I', "blockIron", 'R', "blockRedstone"}));
+			    'L', "treeLeaves", 'I', "blockIron", 'R', "blockRedstone"}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.an), new Object[]{
 			    "GMG",

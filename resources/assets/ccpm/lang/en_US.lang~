@@ -65,8 +65,6 @@ tile.ccpm.compressor.name=Compressor
 
 item.ccpm.buck.pw.name=Polluted water bucket
 
-fluid.concentrated.pollution=Concentrated pollution
-
 tile.liquid_ccpm_pollution.name=Concentrated pollution
 
 tile.liquid_ccpm_pw.name=Polluted water

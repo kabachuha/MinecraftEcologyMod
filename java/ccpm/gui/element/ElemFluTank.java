@@ -1,6 +1,9 @@
+
 package ccpm.gui.element;
 
 import DummyCore.Client.GuiElement;
+import DummyCore.Client.Icon;
+import DummyCore.Client.IconRegister;
 import DummyCore.Utils.DrawUtils;
 import DummyCore.Utils.MathUtils;
 import net.minecraft.client.Minecraft;
@@ -41,14 +44,20 @@ public class ElemFluTank extends GuiElement {
 
 	@Override
 	public void draw(int posX, int posY, int mouseX, int mouseY) {
-		DrawUtils.drawTexturedModalRect(posX, posY, 0, 0, 18, 54, 1);
+		//DrawUtils.drawTexturedModalRect(posX, posY, 0, 0, 18, 54, 1);
+		this.drawTexturedModalRect(posX, posY, 0, 0, 18, 54);
+		this.drawTexturedModalRect(posX, posY+53, 0, 71, 18, 1);
+		
 		if(fluid!=null)
 		{
 			if(fluid.amount >0) 
 			{
-				DrawUtils.bindTexture(fluid.getFluid().getStill().getResourceDomain(), fluid.getFluid().getStill().getResourcePath());
+				
 				int scale = MathUtils.pixelatedTextureSize(fluid.amount, capacity, 52);
-				DrawUtils.drawTexturedModalRect(posX+1, posY+1+(52-scale), 0, 0, 16, scale, 2);
+			//	DrawUtils.drawTexturedModalRect(posX+1, posY+1+(52-scale), 0, 0, 16, scale, 2);
+				
+				DrawUtils.bindTexture(fluid.getFluid().getStill().getResourceDomain(), fluid.getFluid().getStill().getResourcePath());
+				DrawUtils.drawTexturedModalRect(posX+1, posY+1+(52-scale),0,0, 16, scale, 1);
 			}
 		}
 	}

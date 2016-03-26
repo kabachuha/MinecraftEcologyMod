@@ -20,8 +20,8 @@ public class GuiAdvFilter extends GuiCommon {
 
 	public GuiAdvFilter(Container c, TileEntity tile) {
 		super(c, tile);
-		this.elementList.add(new ElemFluTank(this.xSize/2+16, this.ySize/8-27, (IFluidHandler)tile, 0));
-		this.elementList.add(new RedstoneIndicator(this.xSize-18, this.guiTop-2, tile));
+		this.elementList.add(new ElemFluTank(this.xSize/2+16, this.ySize/8-9, (IFluidHandler)tile, 0));
+		this.elementList.add(new RedstoneIndicator(this.xSize-22, this.guiTop-8, tile));
 		this.elementList.add(new ProgressBar(this.xSize/2-12, this.ySize/8-8, (IHasProgress)tile));
 	}
 
