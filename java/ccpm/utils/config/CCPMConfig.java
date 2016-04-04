@@ -26,6 +26,8 @@ public class CCPMConfig implements IDummyConfig {
 	
 	public static boolean advThaumReqPearl = true;
 	
+	public static boolean enableThaum = true;
+	
 	public CCPMConfig()
 	{
 		
@@ -40,6 +42,7 @@ public class CCPMConfig implements IDummyConfig {
         smogPoll= cfg.getInt("pollutionSmog", "POLLUTION", 50000, 0, Int.MaxValue(), "");
         wasteId = cfg.getInt("wastelandId", "BIOMES", 30, 0, Int.MaxValue(), "Id of the wasteland biome");
         filterRed = cfg.getFloat("filterRedution", "MACHINES", 100, Float.MIN_VALUE, Float.MAX_VALUE, "Amount of the air filter's pollution redution");
+        enableThaum = cfg.getBoolean("enableThaumcraftIntegration", "THAUMCRAFT", true, "Enable Thaumcraft integration?");
         fstab = cfg.getBoolean("filterStabalise", "THAUMCRAFT", true, "Can machines stabalises infusion?");
         //useNode = cfg.getBoolean("useNode", "THAUMCRAFT", true, "Use jar node to craft the energy cell?");
        // useSano = cfg.getBoolean("useSano", "THAUMCRAFT", false, "Use the filter Sano aspect instead of Potentia to work?");

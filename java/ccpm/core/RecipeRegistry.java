@@ -138,7 +138,7 @@ public class RecipeRegistry {
 			    "RPR",
 			    'R', "blockRedstone", 'O', new ItemStack(Blocks.obsidian), 'P', new ItemStack(CCPM.pistons)}));
 		
-		if(Loader.isModLoaded("Thaumcraft")||Loader.isModLoaded("thaumcraft"))
+		if(Loader.isModLoaded("Thaumcraft")&&CCPM.cfg.enableThaum)
 			thaum();
 		
 		//if(Loader.isModLoaded("Botania"))

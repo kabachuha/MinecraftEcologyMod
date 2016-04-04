@@ -35,6 +35,41 @@
       "modid": "Minecraft",
       "name": "Furnace",
       "pollution": 6.0
+    },
+    {
+      "modid": "neotech",
+      "name": "furnaceGenerator",
+      "pollution": 8.0
+    },
+    {
+      "modid": "neotech",
+      "name": "fluidGenerator",
+      "pollution": 3.0
+    },
+    {
+      "modid": "thaumcraft",
+      "name": "TileInfusionMatrix",
+      "pollution": 0.001
+    },
+    {
+      "modid": "thaumcraft",
+      "name": "TileSmelter",
+      "pollution": 4.0
+    },
+    {
+      "modid": "thaumcraft",
+      "name": "TileSmelter",
+      "pollution": 4.0
+    },
+    {
+      "modid": "thaumicbases",
+      "name": "tb.campfire",
+      "pollution": 3.0
+    },
+    {
+      "modid": "tconstruct",
+      "name": "tconstruct.smeltery_controller",
+      "pollution": 16.0
     }
   ]
 }

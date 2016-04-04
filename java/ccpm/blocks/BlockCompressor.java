@@ -156,4 +156,6 @@ public class BlockCompressor extends Block implements IOldCubicBlock, ITileEntit
 		
 		return ret;
 	}
+	
+	
 }

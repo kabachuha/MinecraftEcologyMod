@@ -32,6 +32,7 @@ import ccpm.commands.CommandAddTile;
 import ccpm.commands.CommandGetPollution;
 import ccpm.commands.CommandGetRegTiles;
 import ccpm.commands.CommandIncPollution;
+import ccpm.commands.CommandRemoveTile;
 import ccpm.commands.CommandSaveConfiguration;
 import ccpm.commands.CommandTestWand;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
@@ -105,7 +106,7 @@ public class CCPM {
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
 	public static final String version = "0.1.189.7A";
-	public static final String dependencies = "required-after:DummyCore;";
+	public static final String dependencies = "required-before:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
 	
@@ -168,11 +169,12 @@ public class CCPM {
 	public void preLoad(FMLPreInitializationEvent event)
 	{
 		instance = this;
-		Core.registerModAbsolute(getClass(), NAME, event.getModConfigurationDirectory().getAbsolutePath(), cfg);
-		
 		cfgpath=event.getModConfigurationDirectory().getAbsolutePath();
+		Core.registerModAbsolute(getClass(), NAME, cfgpath, cfg);
+		
+		
 		log.info("Configuration directory is "+cfgpath);
-		PollutionConfig.load(event.getModConfigurationDirectory().getAbsolutePath());
+		PollutionConfig.load(cfgpath);
 		
 		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/version.txt");
 		
@@ -247,7 +249,8 @@ public class CCPM {
 		
 		buckPw = new PWBucket();
 		
-		ItemRegistry.registerItem(buckPw, "itemBucketPw", getClass());
+		//I won't use it now, because there are the Universal Bucket from Minecraft Forge
+		//ItemRegistry.registerItem(buckPw, "itemBucketPw", getClass());
 		
 		FluidContainerRegistry.registerFluidContainer(CCPMFluids.pollutedWater, new ItemStack(buckPw), new ItemStack(Items.bucket));
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
@@ -298,6 +301,7 @@ public class CCPM {
 		event.registerServerCommand(new CommandIncPollution());
 		event.registerServerCommand(new CommandAddTile());
 		event.registerServerCommand(new CommandSaveConfiguration());
+		event.registerServerCommand(new CommandRemoveTile());
 	}
 
 	//Function to tell you where you have to report errors
@@ -352,7 +356,7 @@ public class CCPM {
 				}
 				else
 				{
-					log.warn("Mod "+message.getSender()+" is unable to add a tile to config with IMC");
+					log.warn("Mod "+message.getSender()+" is unable to add a tile to config with IMC!");
 				}
 				
 			}

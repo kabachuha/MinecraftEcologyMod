@@ -2,7 +2,9 @@ package ccpm.utils.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
@@ -26,7 +28,7 @@ public class PollutionConfig {
 	{
 		CCPM.log.info("Loading pollution config");
            String json = null;
-
+           
 			try
 			{
 				File file = new File(dir+"//PollutionConfig.json");
@@ -82,11 +84,47 @@ public class PollutionConfig {
 			ret.put(t.name, t.getPollution());
 		}
 		return ret;
-		
 	}
 	
+	public static Hashtable<String, Tilez> toHashByName()
+	{
+		Hashtable<String, Tilez> ret = new Hashtable<String, Tilez>();
+		
+		Tilez[] tiles = cfg.getTiles();
+		
+		for(Tilez t:tiles)
+		{
+			ret.put(t.name, t);
+		}
+		return ret;
+	}
 	
+	public static Hashtable<String, Tilez> toHashByModid()
+	{
+		Hashtable<String, Tilez> ret = new Hashtable<String, Tilez>();
+		
+		Tilez[] tiles = cfg.getTiles();
+		
+		for(Tilez t:tiles)
+		{
+			ret.put(t.getModid(), t);
+		}
+		return ret;
+	}
 	
+	public static List<String> modidList()
+	{
+		List<String> ret = new ArrayList<String>();
+		
+		Tilez[] tiles = cfg.getTiles();
+		
+		for(Tilez t:tiles)
+		{
+			if(!ret.contains(t.getModid()))
+			ret.add(t.getModid());
+		}
+		return ret;
+	}
 	
 	public static void serializeAndSave(String dir)
 	{

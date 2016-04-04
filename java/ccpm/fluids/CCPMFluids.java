@@ -33,5 +33,7 @@ public class CCPMFluids {
 		
 		FluidRegistry.registerFluid(concentratedPollution);
 		FluidRegistry.registerFluid(pollutedWater);
+		FluidRegistry.addBucketForFluid(concentratedPollution);
+		FluidRegistry.addBucketForFluid(pollutedWater);
 	}
 }

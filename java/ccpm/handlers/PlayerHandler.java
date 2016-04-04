@@ -25,10 +25,14 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -46,6 +50,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.chunk.Chunk;
@@ -238,7 +243,19 @@ public class PlayerHandler {
 				
 				ChatComponentText cct2 = new ChatComponentText(CCPM.NAME+" is beta version now. It may contain few bugs. Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
 				cct2.setChatStyle(cct2.getChatStyle().setColor(EnumChatFormatting.BLUE));
-						
+					
+				StringBuilder sb = new StringBuilder();
+				
+				for(String c : PollutionConfig.modidList())
+				{
+					sb.append(c);
+					sb.append(", ");
+				}
+				
+				ChatComponentText supMods = new ChatComponentText(CCPM.NAME+" now supports these mods: "+sb.toString());
+				
+				((EntityPlayer)event.entity).addChatMessage(supMods);
+				
 				if(CCPM.version.endsWith("A"))
 					((EntityPlayer)event.entity).addChatMessage(cct1);
 				if(CCPM.version.endsWith("B"))
@@ -251,6 +268,7 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void fillBucketEvent(FillBucketEvent event)
 	{
+		
 		if(event.target.typeOfHit != MovingObjectType.BLOCK)
 			return;
 		BlockPos bp = new BlockPos(event.target.hitVec);
@@ -385,7 +403,7 @@ public class PlayerHandler {
 		en.tasks.addTask(1, new EntityAIPanic(en, 2));
 	}
 	
-	private boolean wtf(Random rand, double in)
+	private static boolean wtf(Random rand, double in)
 	{
 		double d = Math.log10(in);
 		if(d == Double.NaN || d == Double.POSITIVE_INFINITY || d == Double.NEGATIVE_INFINITY)
@@ -416,5 +434,42 @@ public class PlayerHandler {
 				event.setResult(Result.DENY);
 			}
 		}
+	}
+	
+	@SideOnly(Side.SERVER)
+	@SubscribeEvent
+	public void onBlockBreak(BlockEvent.BreakEvent event)
+	{
+		if(event.world == null || event.state == null)return;
+		
+		if(event.world.isRemote)return;
+		
+		if(event.state == CCPM.compressor.getDefaultState() || event.state == CCPM.baf.getDefaultState())
+		{
+			TileEntity te = event.world.getTileEntity(event.pos);
+			
+			if(te == null) return;
+			
+			if(te instanceof IFluidHandler)
+			{
+				FluidTankInfo[] fti = ((IFluidHandler)te).getTankInfo(EnumFacing.UP);
+				
+				for(FluidTankInfo f : fti)
+				{
+					if(f.fluid.amount == 0)continue;
+					FluidEvent.FluidSpilledEvent fse = new FluidEvent.FluidSpilledEvent(f.fluid, event.world, event.pos);
+					FluidEvent.fireEvent(fse);
+				}
+			}
+		}
+	}
+	
+	
+	@SideOnly(Side.SERVER)
+	@SubscribeEvent
+	public void onFluidSpilled(FluidEvent.FluidSpilledEvent event)
+	{
+		if(event.fluid != null && event.fluid.amount > 0 && event.fluid.getFluid() == CCPMFluids.concentratedPollution)
+			PollutionUtils.increasePollution(event.fluid.amount*100, event.world.getChunkFromBlockCoords(event.pos));
 	}
 }
