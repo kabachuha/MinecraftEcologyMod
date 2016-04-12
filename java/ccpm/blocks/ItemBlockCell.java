@@ -64,7 +64,7 @@ public class ItemBlockCell extends ItemBlock {
 			list.add("This cell uses rf to work");
 		
 		if(meta == 1)
-			list.add("This cell uses potentia essentia from jars(like infusion) to work");
+			list.add("This cell uses aer essentia from aura to work, but pollutes them");
 		
 		if(meta == 2)
 			list.add("This cell uses mana to work");

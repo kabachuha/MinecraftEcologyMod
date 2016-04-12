@@ -7,6 +7,7 @@ import DummyCore.Utils.TessellatorWrapper;
 import ccpm.api.IRespirator;
 import ccpm.core.CCPM;
 import ccpm.items.RespiratorBase;
+import ccpm.utils.config.CCPMConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +51,7 @@ public class RespHud implements IHUDElement {
 		
 		if(resp.renderHud())
 		{
-			return true;
+			return CCPMConfig.enableHUD;
 		}
 		}
 		return false;
@@ -66,13 +67,15 @@ public class RespHud implements IHUDElement {
 		DrawUtils.bindTexture(respTexture.getResourceDomain(), respTexture.getResourcePath());
 		tess.startDrawingQuads();
 		
-		tess.addVertexWithUV(0, h, 32, 0, 1);
+		int z = 128;
 		
-		tess.addVertexWithUV(w, h, 32, 1, 1);
+		tess.addVertexWithUV(0, h, z, 0, 1);
 		
-		tess.addVertexWithUV(w, 0, 32, 1, 0);
+		tess.addVertexWithUV(w, h, z, 1, 1);
 		
-		tess.addVertexWithUV(0, 0, 32, 0, 0);
+		tess.addVertexWithUV(w, 0, z, 1, 0);
+		
+		tess.addVertexWithUV(0, 0, z, 0, 0);
 		
 		if(Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4) != null && Minecraft.getMinecraft().thePlayer.getEquipmentInSlot(4).getItem() instanceof RespiratorBase)
 		{

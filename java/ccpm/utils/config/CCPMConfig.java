@@ -1,5 +1,7 @@
 package ccpm.utils.config;
 
+import java.util.Locale;
+
 import DummyCore.Utils.IDummyConfig;
 import net.minecraftforge.common.config.Configuration;
 import scala.Int;
@@ -28,6 +30,8 @@ public class CCPMConfig implements IDummyConfig {
 	
 	public static boolean enableThaum = true;
 	
+	public static boolean enableHUD = true;
+	
 	public CCPMConfig()
 	{
 		
@@ -54,6 +58,8 @@ public class CCPMConfig implements IDummyConfig {
         mobsScared = cfg.getBoolean("mobsScared", "POLLUTION", false, "Are mobs scared by pollution too?");
         
         advThaumReqPearl = cfg.getBoolean("advThaumReqPearl", "THAUMCRAFT", true, "Does advanced thaumic energy cell requires primordial pearl to craft? If not it will require the nether star.");
+        
+        enableHUD = cfg.getBoolean("enableRespiratorHUD", "GRAPHICS", true, "Enable respirator HUD?");
 	}
 
 }
