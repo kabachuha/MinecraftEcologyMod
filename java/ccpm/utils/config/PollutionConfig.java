@@ -28,18 +28,18 @@ public class PollutionConfig {
 	{
 		CCPM.log.info("Loading pollution config");
            String json = null;
-           
+           boolean shouldUpdate = true;
+           File file = new File(dir+"//PollutionConfig.json");
 			try
 			{
-				File file = new File(dir+"//PollutionConfig.json");
-				
 				if(file.isDirectory())
 				{
 					throw new IOException("File PollutionConfig.json is a directory! Please, delete it and reload Minecraft!");
 				}
 				if(!file.exists())
 				{
-					ConfigDownloader.download(file, "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json");
+					ConfigDownloader.download(file, CCPMConfig.cfgURL);
+					shouldUpdate = false;
 				}
 				
 				if(file.canRead())
@@ -65,7 +65,13 @@ public class PollutionConfig {
 			{
 				cfg = new Gson().fromJson(json, PollutionProp.class);
 			}
-		
+			
+			if(shouldUpdate)
+				if(ConfigDownloader.updateConfig(CCPMConfig.cfgURL, cfg))
+				{
+					ConfigDownloader.download(file, CCPMConfig.cfgURL);
+				}
+			
 			CCPM.log.info("Loaded "+cfg.tiles.length+" tilez");
 			for(Tilez t : cfg.tiles)
 			{

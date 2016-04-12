@@ -32,6 +32,7 @@ public class CCPMConfig implements IDummyConfig {
 	
 	public static boolean enableHUD = true;
 	
+	public static String cfgURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json";
 	public CCPMConfig()
 	{
 		
@@ -60,6 +61,8 @@ public class CCPMConfig implements IDummyConfig {
         advThaumReqPearl = cfg.getBoolean("advThaumReqPearl", "THAUMCRAFT", true, "Does advanced thaumic energy cell requires primordial pearl to craft? If not it will require the nether star.");
         
         enableHUD = cfg.getBoolean("enableRespiratorHUD", "GRAPHICS", true, "Enable respirator HUD?");
+        
+        cfgURL = cfg.getString("cfgURL", "CORE", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json", "URL to get Pollution Config");
 	}
 
 }

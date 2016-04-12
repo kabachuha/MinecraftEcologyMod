@@ -105,7 +105,7 @@ public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.1.189.7A";
+	public static final String version = "0.1.189.8A";
 	public static final String dependencies = "required-before:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
@@ -188,6 +188,7 @@ public class CCPM {
 		meta.modId = MODID;
 		meta.name = NAME;
 		meta.credits = "Author: Artem226";
+		meta.url = "http://minecraft.curseforge.com/projects/ecology-mod";
 		
 		//MiscUtils.extendPotionArray(1);
 		smog = new PotionSmog(/*Potion.potionTypes.length-1, false, new Color(61, 54 , 54).getRGB()*/);
