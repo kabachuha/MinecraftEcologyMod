@@ -35,7 +35,7 @@ tc.research_text.CCPMADVTHAUM=No aura pollution
 
 ccpm.cell=You have researched how to use thaumic aura to power machines from Ecology mod! This machine uses aer aspect from aura.<LINE>This energy cell may be used only by machines from Ecology mod!
 
-ccpm.resp=You have been suffered by a polluted air a lot of time. That disturbed you when you searched for aura nodes because you have not been able to wear Goggles and respirator at the same time. <BR>But the research of infusion has given you a new powers to affect non-magical things with magic. You now can infuse the respirator with Goggles to combine their abilities together! But because the respirator isn't magical item you have to increase cost and instability. 
+ccpm.resp=You have been suffered by a polluted air a lot of time. That disturbed you when you searched for aura nodes because you have not been able to wear Goggles and respirator at the same time. <BR>But the research of infusion has given you a new powers to affect non-magical things with magic. You now can infuse the respirator with Goggles to combine their abilities together! But because the respirator isn't a magical item you have to increase costs and instability. 
 
 pollution=Pollution
 
@@ -93,15 +93,15 @@ ccpm.item.ingredient.ccpb_wand_staff_inverted.name=Inverted CCPB Staff core
 
 golem.material.ccpb=CCPB
 
-ccpm.ccpb=When you got your first pile of CCPB dust you started looking for using this material is thaumaturgy. <BR> You found that this material has a brick-like structure that allows you to build golems from them. <BR> Also this material has some magical abilities.
+ccpm.ccpb=When you got your first pile of CCPB dust you started looking for using this material is thaumaturgy. <BR> You found that this material has a brick-like structure that allows you to build golems from them. <BR> Also, this material has some magical abilities.
 
-ccpm.ccpb.wand=You have been interested in CCPB's magical abilities and you made a wand rod from it. <BR> This wand rod has not a large vis storage but have a ability to regenerate some vis. <BR> However you found a quite bad property - when this wand charges it pollutes all around: air and aura. 
+ccpm.ccpb.wand=You have been interested in CCPB's magical abilities and you made a wand rod from it. <BR> This wand rod has not a large vis storage, but have an ability to regenerate some vis. <BR> However you found a quite bad property - when this wand charges it pollutes all around: air and aura. 
 
-ccpm.ccpb.wand.inv=Fortunately you found a way to invert the wand's pollution ability just infusing it by air filter and purifying liquid! Now the wand won't pollute anything but will reduce pollution and convert them to vis. However wand won't affect aura.
+ccpm.ccpb.wand.inv=Fortunately, you found a way to invert the wand's pollution ability just infusing it with air filter and purifying liquid! Now the wand won't pollute anything but will reduce pollution and convert them to the vis. However wand won't affect aura.
 
 ccpm.ccpb.staff=You research how to double CCPB wand's capacity! But only capacity.
 
-ccpm.ccpb.staff.inv=Now you can double capacity of inverted CCPB wand too!
+ccpm.ccpb.staff.inv=Now you can double the capacity of inverted CCPB wand too!
 
 tc.research_name.ROD_CCPB=CCPB Wand rod
 tc.research_text.ROD_CCPB=Is it just a dirty stick?
@@ -113,7 +113,7 @@ tc.research_name.ROD_STAFF_CCPB=CCPB Staff core
 tc.research_text.ROD_STAFF_CCPB=A big dirty stick!
 
 tc.research_name.ROD_STAFF_CCPB_INVERTED=Inverted CCPB Staff core
-tc.research_text.ROD_STAFF_CCPB_INVERTED=Have you any pollution? Then we comes to you!
+tc.research_text.ROD_STAFF_CCPB_INVERTED=Do you have any pollution? Then we comes to you!
 
 tc.research_name.CAP_CCPB=CCPB Wand cap
 tc.research_text.CAP_CCPB=Why?

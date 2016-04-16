@@ -58,7 +58,7 @@ public class ItemBlockCell extends ItemBlock {
 		{
 		list.add("This is an energy cell from ecology mod."); 
 		list.add("Place it under the machine from ecology mod");
-		list.add("to use as an energy source.");
+		list.add("to use as energy source.");
 		
 		if(meta == 0)
 			list.add("This cell uses rf to work");

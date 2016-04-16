@@ -12,6 +12,7 @@ import ccpm.api.ITilePollutionProducer;
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
+import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
 import ccpm.integration.buildcraft.BCIntegration;
 import ccpm.utils.config.CCPMConfig;
@@ -307,8 +308,11 @@ public class PollutionUtils {
 		
 		if(pm.chunksPollution.getCP().length == 0)
 		{
+			if(PlayerHandler.firstPlayerJoinedWorld)
+			{
 			CCPM.log.warn("There are no chunks in Pollution Manager!!");
 			CCPM.addToEx();
+			}
 			return Float.MIN_VALUE;
 		}
 	    

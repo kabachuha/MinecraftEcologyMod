@@ -39,7 +39,6 @@ import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.fluids.CCPMFluids;
 import ccpm.fluids.FluidPW;
 import ccpm.fluids.FluidPollution;
-import ccpm.gui.CCPMGuis;
 import ccpm.handlers.CCPMFuelHandler;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
@@ -98,6 +97,7 @@ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = CCPM.MODID, name = CCPM.NAME, version = CCPM.version, dependencies = CCPM.dependencies)
@@ -105,7 +105,7 @@ public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.1.189.8A";
+	public static final String version = "0.1.189.9A";
 	public static final String dependencies = "required-before:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
@@ -206,26 +206,6 @@ public class CCPM {
 		BlocksRegistry.registerBlock(pollFlu, "liquid_ccpm_pollution", getClass(), null);
 		BlocksRegistry.registerBlock(pw, "liquid_ccpm_pw", getClass(), null);
 		
-		proxy.registerFluidModels();
-		
-		FMLInterModComms.sendMessage("Waila", "register", "ccpm.integration.waila.WailaDataProvider.reg");
-	}
-	
-	@EventHandler
-	public void load(FMLInitializationEvent event)
-	{
-		if(instance != this)
-			instance = this;
-		log.info("Initialising");
-		MinecraftForge.EVENT_BUS.register(new WorldHandler());
-		//FMLCommonHandler.instance().bus().register(new WorldHandler());
-		ChunkHandler ch = new ChunkHandler();
-		MinecraftForge.EVENT_BUS.register(ch);
-		//FMLCommonHandler.instance().bus().register(new ChunkHandler());
-		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
-		//FMLCommonHandler.instance().bus().register(new PlayerHandler());
-		MinecraftForge.TERRAIN_GEN_BUS.register(ch);
-		
 		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
 		ItemRegistry.registerItem(pistons, "pistons", getClass());
 		ItemRegistry.registerItem(pollutionBrick, "pollutionBrick", getClass());
@@ -253,7 +233,7 @@ public class CCPM {
 		//I won't use it now, because there are the Universal Bucket from Minecraft Forge
 		//ItemRegistry.registerItem(buckPw, "itemBucketPw", getClass());
 		
-		FluidContainerRegistry.registerFluidContainer(CCPMFluids.pollutedWater, new ItemStack(buckPw), new ItemStack(Items.bucket));
+		//FluidContainerRegistry.registerFluidContainer(CCPMFluids.pollutedWater, new ItemStack(buckPw), new ItemStack(Items.bucket));
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
 		GameRegistry.registerTileEntity(TileEnergyCellRf.class, "TECR");
 		GameRegistry.registerTileEntity(TileEnergyCellThaumium.class, "TECT");
@@ -262,8 +242,27 @@ public class CCPM {
 		GameRegistry.registerTileEntity(AdvancedAirFilter.class, "TEAAF");
 		GameRegistry.registerTileEntity(TileAdvThaum.class, "TEADVTHAUM");
 		GameRegistry.registerTileEntity(TileCompressor.class, "TECCPMCOMPRESSOR");
+		
+		proxy.registerFluidModels();
+	}
+	
+	@EventHandler
+	public void load(FMLInitializationEvent event)
+	{
+		if(instance != this)
+			instance = this;
+		log.info("Initialising");
+		
+		
+		MinecraftForge.EVENT_BUS.register(new WorldHandler());
+		//FMLCommonHandler.instance().bus().register(new WorldHandler());
+		ChunkHandler ch = new ChunkHandler();
+		MinecraftForge.EVENT_BUS.register(ch);
+		//FMLCommonHandler.instance().bus().register(new ChunkHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerHandler());
+		//FMLCommonHandler.instance().bus().register(new PlayerHandler());
+		MinecraftForge.TERRAIN_GEN_BUS.register(ch);
 	    
-		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
 		//FMLCommonHandler.instance().bus().register(new CCPMRenderHandler());
 		
 		//FMLCommonHandler.instance().
@@ -271,10 +270,15 @@ public class CCPM {
 		{
 			proxy.registerItemRenders();
 			proxy.registerRenderHandler();
+			NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
 		}
-		MiscUtils.addHUDElement(new RespHud());
-		if(Loader.isModLoaded("Thaumcraft") || Loader.isModLoaded("thaumcraft"))
+
+		if(Loader.isModLoaded("Thaumcraft"))
 			FMLInterModComms.sendMessage("Thaumcraft", "biomeBlacklist", cfg.wasteId+":0");
+		
+		FMLInterModComms.sendMessage("Waila", "register", "ccpm.integration.waila.WailaDataProvider.reg");
+		
+		RecipeRegistry.init();
 		
 		GameRegistry.registerFuelHandler(new CCPMFuelHandler());
 	}
@@ -286,9 +290,8 @@ public class CCPM {
 		if(instance != this)
 			instance = this;
 		
-		RecipeRegistry.init();
-		
-		CCPMGuis.init();
+		if(Loader.isModLoaded("Thaumcraft")&&CCPM.cfg.enableThaum)
+			RecipeRegistry.thaum();
 		
 		CCPMAchivements.init();
 	}

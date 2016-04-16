@@ -32,6 +32,10 @@ public class CCPMConfig implements IDummyConfig {
 	
 	public static boolean enableHUD = true;
 	
+	public static int guiCompressorId = 0x1488;
+	
+	public static int guiAdvFilterId = 0x1489;
+	
 	public static String cfgURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json";
 	public CCPMConfig()
 	{
@@ -63,6 +67,10 @@ public class CCPMConfig implements IDummyConfig {
         enableHUD = cfg.getBoolean("enableRespiratorHUD", "GRAPHICS", true, "Enable respirator HUD?");
         
         cfgURL = cfg.getString("cfgURL", "CORE", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json", "URL to get Pollution Config");
+    
+        guiCompressorId = cfg.getInt("guiCompressorId", "GUI", 0x1488, 0, Int.MaxValue(), "Id of the compressor's gui");
+        
+        guiAdvFilterId = cfg.getInt("guiAdvFilterId", "GUI", 0x1489, 0 , Int.MaxValue(), "Id of the advanced filter's gui");
 	}
 
 }

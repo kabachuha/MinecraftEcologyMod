@@ -92,7 +92,9 @@ public class ConfigDownloader {
 		      while ((inputLine = in.readLine()) != null) 
 		      {
 		        buffer.append(inputLine);
+		        buffer.append('\n');
 		      }
+		      buffer.deleteCharAt(buffer.length()-1);
 		      in.close();
 		  }
 		  catch (Exception e)

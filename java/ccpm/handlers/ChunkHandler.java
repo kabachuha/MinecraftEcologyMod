@@ -85,19 +85,6 @@ public class ChunkHandler {
 		}
 	}
 	
-	@SubscribeEvent
-	public void growCheck(CCPMPlantGrowEvent event)
-	{
-		CCPM.log.info("Grow event called!!!");
-	}
-	
-	@SubscribeEvent
-	public void fireTick(CCPMFireTickEvent event)
-	{
-		//if (event.world.getGameRules().getBoolean("doFireTick")){}else return;
-		
-		CCPM.log.debug("Something is burning!!!");
-	}
 	
 	@SubscribeEvent
 	public void onExplosion(ExplosionEvent event)

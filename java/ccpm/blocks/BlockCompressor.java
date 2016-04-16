@@ -9,7 +9,7 @@ import DummyCore.Client.RenderAccessLibrary;
 import DummyCore.Utils.BlockStateMetadata;
 import DummyCore.Utils.IOldCubicBlock;
 import DummyCore.Utils.MiscUtils;
-import ccpm.gui.CCPMGuis;
+import ccpm.core.CCPM;
 import ccpm.tiles.TileCompressor;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.block.Block;
@@ -113,7 +113,7 @@ public class BlockCompressor extends Block implements IOldCubicBlock, ITileEntit
 		if(playerIn.isSneaking())return false;
 		
 		if(!CCPMConfig.needStructure || isStructureBuilt(pos,worldIn, playerIn))
-		MiscUtils.openGui(worldIn, pos.getX(), pos.getY(), pos.getZ(), playerIn, CCPMGuis.guiCompressorID);
+			playerIn.openGui(CCPM.instance, CCPMConfig.guiCompressorId, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 	
@@ -131,6 +131,10 @@ public class BlockCompressor extends Block implements IOldCubicBlock, ITileEntit
 			cct.setChatStyle(cct.getChatStyle().setColor(EnumChatFormatting.RED));
 			if(CCPMConfig.needStructure)
 			p.addChatMessage(cct);
+			
+			if(!w.isRemote)
+				w.newExplosion(p, pos.getX()+0.5F, pos.getY()+0.5F, pos.getZ()+0.5F, 0.1F, true, true);
+			
 			return false;
 		}
 	}

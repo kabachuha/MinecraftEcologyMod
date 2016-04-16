@@ -302,10 +302,11 @@ public class PlayerHandler {
 		}
 	}
 	
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingAttackEvent event)
 	{
+		if(event.entity.worldObj.isRemote)return;
+		
 		if(event.source == null || event.entity == null || event.ammount <= 0)
 			return;
 		
@@ -380,12 +381,14 @@ public class PlayerHandler {
 		}
 	}
 	
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void livingTick(LivingUpdateEvent event)
 	{
 		if(event.entity==null)
 			return;
+		
+		if(event.entity.worldObj.isRemote)return;
+		
 		if(event.entity instanceof EntityPlayer || event.entity instanceof IProjectile)
 			return;
 		
@@ -422,11 +425,11 @@ public class PlayerHandler {
 		return i==1;
 	}
 	
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void checkSpawn(CheckSpawn event)
 	{
 		if(event.entity!=null)
+		if(!event.world.isRemote)
 		if(event.entityLiving instanceof IAnimals)
 		{
 			if(PollutionUtils.getChunkPollution(event.world, new BlockPos(event.x,event.y,event.z))>=CCPMConfig.smogPoll)
@@ -436,7 +439,6 @@ public class PlayerHandler {
 		}
 	}
 	
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event)
 	{

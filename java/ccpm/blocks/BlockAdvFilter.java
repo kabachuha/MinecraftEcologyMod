@@ -4,8 +4,9 @@ import DummyCore.Client.Icon;
 import DummyCore.Client.IconRegister;
 import DummyCore.Utils.BlockStateMetadata;
 import DummyCore.Utils.MiscUtils;
-import ccpm.gui.CCPMGuis;
+import ccpm.core.CCPM;
 import ccpm.tiles.AdvancedAirFilter;
+import ccpm.utils.config.CCPMConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -49,7 +50,7 @@ public class BlockAdvFilter extends BlockFilter {
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitx, float hitY, float hitZ)
 	{
-		MiscUtils.openGui(worldIn, pos.getX(), pos.getY(), pos.getZ(), playerIn, CCPMGuis.guiAdvID);
+		playerIn.openGui(CCPM.instance, CCPMConfig.guiAdvFilterId, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 }
