@@ -3,6 +3,8 @@ death.attack.pollution.player=%1$s was killed by pollution whilst fighting %2$s
 
 item.ccpmRespirator.name=Respirator
 
+item.portable.analyzer.name=Portable Analyzer
+
 ccpm.energycell.name=Energy cell
 
 ccpm.energycell.rf.name=Redstone flux energy cell

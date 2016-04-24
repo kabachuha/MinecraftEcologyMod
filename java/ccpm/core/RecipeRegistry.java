@@ -137,6 +137,12 @@ public class RecipeRegistry {
 			    "POP",
 			    "RPR",
 			    'R', "blockRedstone", 'O', new ItemStack(Blocks.obsidian), 'P', new ItemStack(CCPM.pistons)}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.portableAnalyzer), new Object[]{
+			    "  A",
+			    "CP ",
+			    "LC ",
+			    'C', "energyCell", 'L', "logWood", 'P', new ItemStack(CCPM.pistons), 'A', new ItemStack(CCPM.an)}));
 		//if(Loader.isModLoaded("Botania"))
 		//	botan();
 	}
@@ -358,6 +364,10 @@ ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new Aspe
 		OreDictionary.registerOre("dustTinyCCPB", new ItemStack(CCPM.miscIngredient,1,1));
 		
 		OreDictionary.registerOre("nuggetCCPB", new ItemStack(CCPM.miscIngredient,1,2));
+		
+		OreDictionary.registerOre("energyCell", new ItemStack(CCPM.cell,1,OreDictionary.WILDCARD_VALUE));
+		
+		OreDictionary.registerOre("energyCell", CCPM.advThaum);
 	}
 	
 	public static void setupChests()

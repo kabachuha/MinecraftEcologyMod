@@ -12,6 +12,7 @@ import ccpm.render.CCPMRenderHandler;
 import ccpm.render.RenderAdvThaum;
 import ccpm.render.RenderCell;
 import ccpm.render.RenderItemAdvThaum;
+import ccpm.render.RenderPortableAnalyzer;
 import ccpm.render.RespHud;
 import ccpm.tiles.AdvancedAirFilter;
 import ccpm.tiles.TileAdvThaum;
@@ -50,6 +51,7 @@ public class ClientProxy extends CommonProxy {
 	{
 		//MinecraftForgeClient.registerItemRenderer(CCPM.respirator, new RenderRespirator());
 		RenderAccessLibrary.registerItemRenderingHandler(Item.getItemFromBlock(CCPM.advThaum), new RenderItemAdvThaum());
+		RenderAccessLibrary.registerItemRenderingHandler(CCPM.portableAnalyzer, new RenderPortableAnalyzer());
 	}
 	
 	@Override
@@ -58,6 +60,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
 		
 		MiscUtils.addHUDElement(new RespHud());
+		
+		//MiscUtils.addHUDElement(new PortableAnalyzerHud());
 		
 		CCPM.log.info("Registering tile entity special renders.");
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellRf.class, new RenderCell());

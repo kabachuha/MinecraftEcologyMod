@@ -51,6 +51,7 @@ public class TileEntityAnalyser extends TileEntity implements SimpleComponent, I
 			
 			if(source.useEnergy(10000, this))
 			{
+				worldObj.playSoundEffect(getPos().getX(), getPos().getY(), getPos().getZ(), "mob.wither.idle", 7, 0.8F + worldObj.rand.nextFloat() * 0.3F);
 				return new Object[]{PollutionUtils.getChunkPollution(worldObj,this.getPos())};
 			}
 			else

@@ -467,7 +467,6 @@ public class PlayerHandler {
 	}
 	
 	
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onFluidSpilled(FluidEvent.FluidSpilledEvent event)
 	{

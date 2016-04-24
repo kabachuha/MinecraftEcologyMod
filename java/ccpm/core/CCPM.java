@@ -48,6 +48,7 @@ import ccpm.items.PistonArray;
 import ccpm.items.PollutedArmor;
 import ccpm.items.PollutedMisc;
 import ccpm.items.PollutedSword;
+import ccpm.items.PortableAnalyzer;
 import ccpm.items.RespiratorBase;
 import ccpm.items.SrapBrick;
 import ccpm.network.proxy.CommonProxy;
@@ -105,7 +106,7 @@ public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.1.189.9A";
+	public static final String version = "0.2.189.0A";
 	public static final String dependencies = "required-before:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
@@ -131,6 +132,8 @@ public class CCPM {
 	public static Item pistons = new PistonArray();
 	
 	public static Item sword = new PollutedSword();
+	
+	public static Item portableAnalyzer = new PortableAnalyzer();
 	
 	public static Block pollutionBricks = new BlockPollutionBricks();
 	
@@ -218,6 +221,8 @@ public class CCPM {
 		ItemRegistry.registerItem(sword, "ccpmSword", getClass());
 		
 		ItemRegistry.registerItem(miscIngredient, "ccpmIngr", getClass());
+		
+		ItemRegistry.registerItem(portableAnalyzer, "itemPortAnalyser", getClass());
 		
 		BlocksRegistry.registerBlock(cell, "energycell", getClass(), ItemBlockCell.class);
 		BlocksRegistry.registerBlock(an, "analyser", getClass(), null);

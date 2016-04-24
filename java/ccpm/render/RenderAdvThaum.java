@@ -68,7 +68,7 @@ public class RenderAdvThaum extends TileEntitySpecialRenderer {
 		
 		//GlStateManager.translate(x+0.5D, y+0.5D+(movement/10), z+0.5D);
 		
-		//GlStateManager.rotate((Minecraft.getMinecraft().theWorld.getWorldTime()%45)*8 + partialTicks, 0, 1, 0);
+		GlStateManager.rotate((Minecraft.getMinecraft().theWorld.getWorldTime()%45)*8 + partialTicks, 0, 1, 0);
 		
 		DrawUtils.bindTexture(Core.getResourceDomain(), Core.getResourcePath());
 		

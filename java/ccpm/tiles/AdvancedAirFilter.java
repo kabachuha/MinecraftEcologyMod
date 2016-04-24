@@ -125,6 +125,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 			{
 				if(useEnergy())
 				{
+					worldObj.playSoundEffect(getPos().getX(), getPos().getY(), getPos().getZ(), "mob.enderdragon.wings", 5.0F, 0.8F + worldObj.rand.nextFloat() * 0.3F);
 					PollutionUtils.increasePollution(-0.05F, getWorld().getChunkFromBlockCoords(getPos()));
 					++progress;
 					
