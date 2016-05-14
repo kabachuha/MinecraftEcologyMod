@@ -1,5 +1,5 @@
 {
-  "version": "1.0.189.0",
+  "version": "1.0.189.1",
   "tiles": [
     {
       "modid": "EnderIO",
@@ -70,6 +70,51 @@
       "modid": "tconstruct",
       "name": "tconstruct.smeltery_controller",
       "pollution": 16.0
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "tile.engineStone",
+      "pollution": 8.5
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "tile.engineIron",
+      "pollution": 11.5
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.builders.Quarry",
+      "pollution": 35.0
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.builders.Filler",
+      "pollution": 14.0
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.builders.Builder",
+      "pollution": 16.0
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.factory.MiningWell",
+      "pollution": 10.0
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.factory.AutoWorkbench",
+      "pollution": 0.5
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.factory.Pump",
+      "pollution": 2.5
+    },
+    {
+      "modid": "BuildCraft",
+      "name": "buildcraft.factory.Refinery",
+      "pollution": 4.5
     }
   ]
 }
