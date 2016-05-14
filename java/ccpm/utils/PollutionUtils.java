@@ -25,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.Loader;
 
 public class PollutionUtils {
 
@@ -162,17 +163,17 @@ public class PollutionUtils {
 						Hashtable<String, Float> th = PollutionConfig.toHashNoModid();
 						
 						if(th.containsKey(id))
-							//if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
-							//{
-							//	if(BCIntegration.IsHasWork(tile))
-							//	{
-							//		if(BCIntegration.isWorking(tile))
-							//			ret = ret + th.get(id) * 60;
-							//	}
-							//	else
-							//		ret = ret + th.get(id) * 60;
-							//}
-							//else
+							if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
+							{
+								if(BCIntegration.IsHasWork(tile))
+								{
+									if(BCIntegration.isWorking(tile))
+										ret = ret + th.get(id) * 60;
+								}
+								else
+									ret = ret + th.get(id) * 60;
+							}
+							else
 							{
 								//FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
 								ret = ret + th.get(id) * CCPMConfig.pollutionMultiplier;

@@ -8,7 +8,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd Core.png
+map_Kd /home/artem226/Документы/Core.png
 
 newmtl None_B1.png
 Ns 0
@@ -17,7 +17,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd B1.png
+map_Kd /home/artem226/Документы/B1.png
 
 newmtl None_C1.png
 Ns 0
@@ -26,4 +26,4 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd C1.png
+map_Kd /home/artem226/Документы/C1.png

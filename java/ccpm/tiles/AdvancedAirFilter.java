@@ -2,6 +2,7 @@ package ccpm.tiles;
 
 import DummyCore.Utils.MiscUtils;
 import DummyCore.Utils.TileStatTracker;
+import buildcraft.api.tiles.IControllable;
 import ccpm.api.ICCPMEnergySource;
 import ccpm.api.IHasProgress;
 import ccpm.fluids.CCPMFluids;
@@ -35,7 +36,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import thaumcraft.api.crafting.IInfusionStabiliser;
 
-public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedInventory, IInfusionStabiliser, IFluidHandler, ITickable, IHasProgress{
+public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedInventory, IInfusionStabiliser, IFluidHandler, ITickable, IHasProgress, IControllable{
 
 	FluidTank tank = new FluidTank(CCPMFluids.concentratedPollution, 0, 1000);
 	
@@ -97,6 +98,8 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	
 	int ticks = 0;
 	
+	Mode curMode = Mode.Unknown;
+	
 	@Override
 	public void update()
 	{
@@ -118,7 +121,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 		if(ticks>=20)
 			ticks = 0;
 		
-		if(isPowered())
+		if((isPowered() && curMode == Mode.Unknown) || curMode == Mode.On || curMode == Mode.Loop)
 		{
 			if(!getWorld().isRemote)
 			if(getWorld().provider.getDimensionId() == 0)
@@ -135,6 +138,9 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 						PollutionUtils.increasePollution(-60, getWorld().getChunkFromBlockCoords(getPos()));
 						
 						tank.fill(new FluidStack(CCPMFluids.concentratedPollution, 100), true);
+						
+						if(curMode == Mode.On)
+							curMode = Mode.Off;
 						
 						if(getWorld().rand.nextInt(10)==1)
 						{
@@ -381,5 +387,26 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	@Override
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
 		return !CCPMConfig.hardcoreFilter;
+	}
+
+
+
+	@Override
+	public Mode getControlMode() {
+		return curMode;
+	}
+
+
+
+	@Override
+	public void setControlMode(Mode mode) {
+		curMode=mode;
+	}
+
+
+
+	@Override
+	public boolean acceptsControlMode(Mode mode) {
+		return true;
 	}
 }

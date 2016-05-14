@@ -43,6 +43,7 @@ import ccpm.handlers.CCPMFuelHandler;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
+import ccpm.integration.buildcraft.BCIntegration;
 import ccpm.items.PWBucket;
 import ccpm.items.PistonArray;
 import ccpm.items.PollutedArmor;
@@ -106,7 +107,7 @@ public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.2.189.0A";
+	public static final String version = "0.2.189.1A";
 	public static final String dependencies = "required-before:DummyCore;";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
@@ -298,6 +299,13 @@ public class CCPM {
 		if(Loader.isModLoaded("Thaumcraft")&&CCPM.cfg.enableThaum)
 			RecipeRegistry.thaum();
 		
+		if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
+		{
+			BCIntegration.regFuels();
+			
+			BCIntegration.regRecipes();
+		}
+		
 		CCPMAchivements.init();
 	}
 	
@@ -316,7 +324,7 @@ public class CCPM {
 	//Function to tell you where you have to report errors
 	public static void addToEx()
 	{
-		log.warn("Please, report this to the author's(Artem226) GitHub!!!");
+		log.warn("Please, report this to the author's(Artem226) GitHub repository!!!");
 		log.warn(githubURL);
 		log.info("Please, don't forget to include crash report/log");
 	}
