@@ -1,25 +1,18 @@
 package ccpm.tiles;
 
 import ccpm.core.CCPM;
-import ccpm.integration.thaumcraft.TCUtils;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import thaumcraft.api.ThaumcraftApiHelper;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectSourceHelper;
-import thaumcraft.api.aura.AuraHelper;
-import thaumcraft.api.crafting.IInfusionStabiliser;
 
-public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfusionStabiliser {
+public class TileEnergyCellThaumium extends TileEnergyCellBasic/* implements IInfusionStabiliser */{
 
 	public TileEnergyCellThaumium(String name, int maxEnergy) {
 		super(name, maxEnergy);
 	}
 
-	@Override
+/*	@Override
 	public boolean useEnergy(int amount, TileEntity user) {
 		
 		//boolean ret = true;
@@ -37,5 +30,5 @@ public class TileEnergyCellThaumium extends TileEnergyCellBasic implements IInfu
 	public boolean canStabaliseInfusion(World world, BlockPos p) {
 		return true;
 	}
-
+*/
 }

@@ -2,7 +2,6 @@ package ccpm.core;
 
 import java.awt.Color;
 
-import DummyCore.Utils.OreDictUtils;
 import ccpm.integration.thaumcraft.Wands;
 import ccpm.utils.config.CCPMConfig;
 
@@ -10,29 +9,15 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import thaumcraft.api.ThaumcraftApi;
-import thaumcraft.api.ThaumcraftApiHelper;
-import thaumcraft.api.research.ResearchCategories;
-import thaumcraft.api.research.ResearchItem;
-import thaumcraft.api.research.ResearchPage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagInt;
-import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.blocks.BlocksTC;
-import thaumcraft.api.crafting.InfusionRecipe;
-import thaumcraft.api.golems.EnumGolemTrait;
-import thaumcraft.api.golems.parts.GolemMaterial;
-import thaumcraft.api.items.ItemsTC;
 
 public class RecipeRegistry {
 
@@ -54,9 +39,9 @@ public class RecipeRegistry {
 		GameRegistry.addSmelting(ccpbDust, pollutionBrick, 20);
 		GameRegistry.addSmelting(ccpbTinyDust, ccpbNugget, 10);
 		
-		ItemStack redbl = new ItemStack(Blocks.redstone_block);
-		ItemStack ironb = new ItemStack(Blocks.iron_block);
-		ItemStack goldb = new ItemStack(Blocks.gold_block);
+		ItemStack redbl = new ItemStack(Blocks.REDSTONE_BLOCK);
+		ItemStack ironb = new ItemStack(Blocks.IRON_BLOCK);
+		ItemStack goldb = new ItemStack(Blocks.GOLD_BLOCK);
 		
 		GameRegistry.addRecipe(new ShapelessOreRecipe(pollutionBrick, "nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB","nuggetCCPB"));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(CCPM.miscIngredient,9,2), "materialCCPB"));
@@ -81,30 +66,30 @@ public class RecipeRegistry {
 		GameRegistry.addShapedRecipe(new ItemStack(CCPM.sword), 
 				" P ",
 				"PSP",
-				"TBT",'P',pollutionBricks,'S',new ItemStack(Items.diamond_sword), 'T', new ItemStack(Blocks.tnt), 'B', new ItemStack(Items.blaze_rod));
+				"TBT",'P',pollutionBricks,'S',new ItemStack(Items.DIAMOND_SWORD), 'T', new ItemStack(Blocks.TNT), 'B', new ItemStack(Items.BLAZE_ROD));
 		
 		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[0]), 
 			"PPP",
-			"PHP",'P',pollutionBricks,'H',new ItemStack(Items.iron_helmet));
+			"PHP",'P',pollutionBricks,'H',new ItemStack(Items.IRON_HELMET));
 		
 		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[1]), 
 				"P P",
 				"PCP",
-				"PPP",'P',pollutionBricks,'C',new ItemStack(Items.iron_chestplate));
+				"PPP",'P',pollutionBricks,'C',new ItemStack(Items.IRON_CHESTPLATE));
 		
 		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[2]), 
 				"PPP",
 				"PLP",
-				"P P",'P',pollutionBricks,'L',new ItemStack(Items.iron_leggings));
+				"P P",'P',pollutionBricks,'L',new ItemStack(Items.IRON_LEGGINGS));
 		
 		GameRegistry.addShapedRecipe(new ItemStack(CCPM.pollArmor[3]), 
 				"PPP",
-				"PBP",'P',pollutionBricks,'B',new ItemStack(Items.iron_boots));
+				"PBP",'P',pollutionBricks,'B',new ItemStack(Items.IRON_BOOTS));
 		
-		ItemStack glass = new ItemStack(Blocks.glass_pane);
-		ItemStack helm = new ItemStack(Items.leather_helmet,1,OreDictionary.WILDCARD_VALUE);
-		ItemStack wool = new ItemStack(Blocks.wool,1,OreDictionary.WILDCARD_VALUE);
-		ItemStack leath = new ItemStack(Items.leather);
+		ItemStack glass = new ItemStack(Blocks.GLASS_PANE);
+		ItemStack helm = new ItemStack(Items.LEATHER_HELMET,1,OreDictionary.WILDCARD_VALUE);
+		ItemStack wool = new ItemStack(Blocks.WOOL,1,OreDictionary.WILDCARD_VALUE);
+		ItemStack leath = new ItemStack(Items.LEATHER);
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.respirator), new Object[]{
 			    "LHL",
@@ -128,15 +113,15 @@ public class RecipeRegistry {
 			    "DFD",
 			    "FSF",
 			    "DFD",
-			    'D', "blockDiamond", 'F', new ItemStack(CCPM.filter), 'S', new ItemStack(Blocks.sea_lantern)}));
+			    'D', "blockDiamond", 'F', new ItemStack(CCPM.filter), 'S', new ItemStack(Blocks.SEA_LANTERN)}));
 		
-		GameRegistry.addShapelessRecipe(new ItemStack(CCPM.pistons), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston), new ItemStack(Blocks.piston));
+		GameRegistry.addShapelessRecipe(new ItemStack(CCPM.pistons), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON), new ItemStack(Blocks.PISTON));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.compressor), new Object[]{
 			    "RPR",
 			    "POP",
 			    "RPR",
-			    'R', "blockRedstone", 'O', new ItemStack(Blocks.obsidian), 'P', new ItemStack(CCPM.pistons)}));
+			    'R', "blockRedstone", 'O', new ItemStack(Blocks.OBSIDIAN), 'P', new ItemStack(CCPM.pistons)}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(CCPM.portableAnalyzer), new Object[]{
 			    "  A",
@@ -149,6 +134,8 @@ public class RecipeRegistry {
 	
 	public static final ResourceLocation back = new ResourceLocation("thaumcraft","textures/gui/gui_research_back_over.png");
 	
+	//TODO Return the thaumcraft support
+	/*
 	public static void thaum()
 	{
 		ItemStack pollutionBrick = new ItemStack(CCPM.pollutionBrick);
@@ -317,6 +304,7 @@ ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new Aspe
 		
 		ccpbCap.registerResearchItem();
 	}
+	*/
 	
 	public static void botan()
 	{
@@ -337,8 +325,8 @@ ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new Aspe
 		CCPM.log.info("Registering OreDictionary entries");
 		if(!OreDictionary.doesOreNameExist(mushroom))
 		{
-			OreDictionary.registerOre(mushroom, Blocks.brown_mushroom_block);
-			OreDictionary.registerOre(mushroom, Blocks.red_mushroom_block);
+			OreDictionary.registerOre(mushroom, Blocks.BROWN_MUSHROOM_BLOCK);
+			OreDictionary.registerOre(mushroom, Blocks.RED_MUSHROOM_BLOCK);
 		}
 		
 		OreDictionary.registerOre("ingotBrick", CCPM.pollutionBrick);
@@ -346,9 +334,9 @@ ResearchItem ccpbWandInv = new ResearchItem("ROD_CCPB_INVERTED", CATID, new Aspe
 		
 		if(!OreDictionary.doesOreNameExist("blockBrick"))
 		{
-			OreDictionary.registerOre("blockBrick", Blocks.brick_block);
-			OreDictionary.registerOre("blockBrick", Blocks.nether_brick);
-			OreDictionary.registerOre("blockBrick", Blocks.stonebrick);
+			OreDictionary.registerOre("blockBrick", Blocks.BRICK_BLOCK);
+			OreDictionary.registerOre("blockBrick", Blocks.NETHER_BRICK);
+			OreDictionary.registerOre("blockBrick", Blocks.STONEBRICK);
 		}
 		
 		OreDictionary.registerOre("blockBrick", CCPM.pollutionBricks);

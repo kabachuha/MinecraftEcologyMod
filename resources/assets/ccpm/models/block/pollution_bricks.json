@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "ccpm:blocks/bricks_pollution"
+	}
+}

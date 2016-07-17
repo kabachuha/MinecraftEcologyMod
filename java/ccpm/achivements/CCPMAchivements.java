@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import ccpm.core.CCPM;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
@@ -41,7 +42,7 @@ public class CCPMAchivements {
 			addAchLast(OffType.UP, new ItemStack(CCPM.cell,1,1), "ccpm.thaum");
 			addAchLast(OffType.LEFT, new ItemStack(CCPM.advThaum), "ccpm.advthaum");
 			ItemStack stk = new ItemStack(CCPM.respirator);
-			stk.addEnchantment(Enchantment.protection, 1);
+			stk.addEnchantment(Enchantments.PROTECTION, 1);
 			addAch(OffType.RIGHT, stk, achievementList.get("ccpm.thaum"), "ccpm.rev");
 		}
 		

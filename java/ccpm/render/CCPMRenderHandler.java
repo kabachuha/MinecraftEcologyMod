@@ -1,25 +1,11 @@
 package ccpm.render;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.lwjgl.opengl.GL11;
-
-import DummyCore.Utils.DrawUtils;
-import ccpm.api.IRespirator;
 import ccpm.core.CCPM;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,9 +25,9 @@ public class CCPMRenderHandler {
 		if(isPlayerInSmog(Minecraft.getMinecraft().thePlayer))
 		{
 			//FMLLog.info("Coloring fog");
-			event.red = 0.61F;
-			event.green = 0.54F;
-			event.blue = 0.54F;
+			event.setRed(0.61F);
+			event.setGreen(0.54F);
+			event.setBlue(0.54F);
 		}
 	}
 	private boolean b = false;

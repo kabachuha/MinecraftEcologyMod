@@ -2,8 +2,10 @@ package ccpm.commands;
 
 import ccpm.utils.PollutionUtils;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CommandIncPollution extends CommandBase {
 
@@ -21,11 +23,10 @@ public class CommandIncPollution extends CommandBase {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
-		
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(args==null||args[0]==null)
 		{
-			sender.addChatMessage(new ChatComponentText("Argument can't be null"));
+			sender.addChatMessage(new TextComponentString("Argument can't be null"));
 			return;
 		}
 		

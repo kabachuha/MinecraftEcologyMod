@@ -1,5 +1,6 @@
 package ccpm.utils;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -7,14 +8,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import DummyCore.Utils.MiscUtils;
 import ccpm.api.ITilePollutionProducer;
 import ccpm.core.CCPM;
 import ccpm.ecosystem.PollutionManager;
 import ccpm.ecosystem.PollutionManager.ChunksPollution.ChunkPollution;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
-import ccpm.integration.buildcraft.BCIntegration;
 import ccpm.utils.config.CCPMConfig;
 import ccpm.utils.config.PollutionConfig;
 import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
@@ -22,17 +21,26 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class PollutionUtils {
+	
+	static Field temp = Biome.class.getDeclaredFields()[21];
 
-	public PollutionUtils() {
+	public PollutionUtils() 
+	{
+		
 	}
 
-	
+	static
+	{
+		temp.setAccessible(true);
+	}
 	
 	public static void increasePollution(float amount, Chunk chunk)
 	{
@@ -45,7 +53,7 @@ public class PollutionUtils {
 		if(chunk == null)
 			return;
 		
-		if(chunk.getWorld() == null || chunk.getWorld().isRemote || chunk.getWorld().provider.getDimensionId() !=0)
+		if(chunk.getWorld() == null || chunk.getWorld().isRemote || chunk.getWorld().provider.getDimension() !=0)
 			return;
 		
 		if(WorldHandler.instance == null)
@@ -163,7 +171,7 @@ public class PollutionUtils {
 						Hashtable<String, Float> th = PollutionConfig.toHashNoModid();
 						
 						if(th.containsKey(id))
-							if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
+							/*if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
 							{
 								if(BCIntegration.IsHasWork(tile))
 								{
@@ -173,7 +181,7 @@ public class PollutionUtils {
 								else
 									ret = ret + th.get(id) * 60;
 							}
-							else
+							else*/
 							{
 								//FMLLog.info("Tile "+ id +" at "+tile.xCoord+","+tile.yCoord+","+tile.zCoord+" produces "+th.get(id)+" pollution");
 								ret = ret + th.get(id) * CCPMConfig.pollutionMultiplier;
@@ -238,7 +246,7 @@ public class PollutionUtils {
 	    		 {
 	    			 int x = chunk.xPosition * 16 + chunk.getWorld().rand.nextInt(16);
 	    			 int z = chunk.zPosition * 16 + chunk.getWorld().rand.nextInt(16);
-	    			 MiscUtils.changeBiome(chunk.getWorld(), CCPM.wasteland, x, z);
+	    			 changeBiome(chunk.getWorld(), CCPM.wasteland, x, z);
 	    		 }
 	    	 }
 	     }
@@ -250,7 +258,18 @@ public class PollutionUtils {
 	    	 if(chunk.isLoaded())
 	    	 for(int i = chunk.xPosition*16; i<=chunk.xPosition*16+16; i++)
 	    		 for(int j = chunk.zPosition*16; j<=chunk.zPosition*16+16; j++)
-	    	 chunk.getWorld().getBiomeGenForCoords(new BlockPos(i, 16, j)).temperature+=0.01F;
+					try 
+	    	 		{
+						temp.setFloat(chunk.getWorld().getBiomeGenForCoords(new BlockPos(i, 16, j)), temp.getFloat(chunk.getWorld().getBiomeGenForCoords(new BlockPos(i, 16, j)))+0.01F);
+					} 
+	    	 		catch (IllegalArgumentException e)
+	    	 		{
+						e.printStackTrace();
+					} 
+	    	 		catch (IllegalAccessException e)
+	    	 		{
+						e.printStackTrace();
+					}
 	     }
 	    	 
 	     //TODO Add more effects
@@ -279,7 +298,7 @@ public class PollutionUtils {
 			return Float.MIN_VALUE;
 		}
 		
-		if(chunk.getWorld().provider.getDimensionId() != 0)
+		if(chunk.getWorld().provider.getDimension() != 0)
 		{
 			CCPM.log.warn("This chunk isn't in overworld dimention(0)!");
 			//CCPM.addToEx();
@@ -358,7 +377,16 @@ public class PollutionUtils {
 		return stack.getTagCompound();
 	}
 
-
+	public static void changeBiome(World w, Biome biome, int x, int z)
+	{
+		Chunk chunk = w.getChunkFromBlockCoords(new BlockPos(x,w.getActualHeight(),z));
+		byte[] b = chunk.getBiomeArray();
+		byte cbiome = b[(z & 0xf) << 4 | x & 0xf]; //What is even going on here? Can this code be a little bit more readable?
+		cbiome = (byte)(Biome.getIdForBiome(biome) & 0xff);
+		b[(z & 0xf) << 4 | x & 0xf] = cbiome; //Looks like not.
+		chunk.setBiomeArray(b);
+		//notifyBiomeChange(x,z,Biome.getIdForBiome(biome));
+	}
 
 
 	

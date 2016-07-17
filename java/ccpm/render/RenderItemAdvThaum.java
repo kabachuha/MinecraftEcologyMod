@@ -1,5 +1,5 @@
 package ccpm.render;
-
+/*
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
@@ -80,4 +80,4 @@ public class RenderItemAdvThaum implements IItemRenderer {
 		return null;
 	}
 
-}
+}*/

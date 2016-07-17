@@ -11,7 +11,8 @@ import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CommandRemoveTile extends CommandBase {
 
@@ -30,10 +31,10 @@ public class CommandRemoveTile extends CommandBase {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(args==null || args.length == 0 || args[0] == null)
 		{
-			sender.addChatMessage(new ChatComponentText("Arguments can't be null. If you want to know tile ids click them with 'TestWand'(/testCCPM) or use /getRegTiles command but it is risky(Minecraft may crash) "));
+			sender.addChatMessage(new TextComponentString("Arguments can't be null. If you want to know tile ids click them with 'TestWand'(/testCCPM) or use /getRegTiles command but it is risky(Minecraft may crash) "));
 			return;
 		}
 		if(sender == null)
@@ -49,19 +50,20 @@ public class CommandRemoveTile extends CommandBase {
 		{
 			if(ht.containsKey(a))
 			{
-				sender.addChatMessage(new ChatComponentText("Removing tile with id "+a+" from configuration"));
+				sender.addChatMessage(new TextComponentString("Removing tile with id "+a+" from configuration"));
 				tiles.remove(ht.get(a));
 				ht.remove(a);
 			}
 			else
 			{
-				sender.addChatMessage(new ChatComponentText("Tile with id "+a+" is not found in configuration!"));
+				sender.addChatMessage(new TextComponentString("Tile with id "+a+" is not found in configuration!"));
 			}
 		}
 
 		PollutionConfig.cfg.setTiles(tiles.toArray(new Tilez[tiles.size()]));
 		
-		sender.addChatMessage(new ChatComponentText("If you want to save changes use /saveEcologyModCfg command"));
+		sender.addChatMessage(new TextComponentString("If you want to save changes use /saveEcologyModCfg command"));
+
 	}
 
 }

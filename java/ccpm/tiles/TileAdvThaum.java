@@ -1,5 +1,5 @@
 package ccpm.tiles;
-
+/*
 import ccpm.integration.thaumcraft.TCUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -34,3 +34,4 @@ public class TileAdvThaum extends TileEnergyCellBasic implements IInfusionStabil
 		return ret;
 	}
 }
+*/

@@ -59,10 +59,7 @@ public class WorldProcessingThread extends Thread {
 				continue;
 			}
 			for(int i = 0; i<cp.length; i++)
-			{
-				if(!world.getChunkProvider().chunkExists(cp[i].getX(), cp[i].getZ()))
-					continue;
-				
+			{	
 			      Chunk chunk = world.getChunkFromChunkCoords(cp[i].getX(), cp[i].getZ());
 
 			      

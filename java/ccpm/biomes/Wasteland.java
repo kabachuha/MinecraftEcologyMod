@@ -4,32 +4,24 @@ import java.awt.Color;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.biome.Biome;
 
-public class Wasteland extends BiomeGenBase {
+public class Wasteland extends Biome {
 
 	public static int wastelandColor = new Color(49,42,31).getRGB();
 	
-	public Wasteland(int id) {
+	public Wasteland(BiomeProperties id)
+	{
 		super(id);
-		this.setBiomeName("wasteland");
-		this.setDisableRain();
 		this.spawnableCreatureList.clear();
 		this.flowers.clear();
 		this.theBiomeDecorator.treesPerChunk = -999;
-		this.topBlock = Blocks.dirt.getDefaultState();
-		this.fillerBlock = Blocks.dirt.getDefaultState();
-		this.setHeight(height_Default);
+		this.topBlock = Blocks.DIRT.getDefaultState();
+		this.fillerBlock = Blocks.DIRT.getDefaultState();
 		this.spawnableWaterCreatureList.clear();
-		this.temperature = 100;
 	}
 
-	@Override
-	public boolean canSpawnLightningBolt()
-	{
-		return true;
-	}
 
 	@Override
 	public int getGrassColorAtPos(BlockPos p)

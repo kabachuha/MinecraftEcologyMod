@@ -1,16 +1,15 @@
 package ccpm.tiles;
 
-import DummyCore.Utils.MiscUtils;
-import DummyCore.Utils.TileStatTracker;
-import buildcraft.api.tiles.IControllable;
 import ccpm.api.ICCPMEnergySource;
 import ccpm.api.IHasProgress;
 import ccpm.fluids.CCPMFluids;
+import ccpm.utils.MiscUtils;
 import ccpm.utils.PollutionUtils;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -18,33 +17,29 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.FishingHooks.FishableCategory;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import thaumcraft.api.crafting.IInfusionStabiliser;
 
-public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedInventory, IInfusionStabiliser, IFluidHandler, ITickable, IHasProgress, IControllable{
+public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedInventory, /*IInfusionStabiliser,*/ IFluidHandler, ITickable, IHasProgress /*IControllable*/{
 
 	FluidTank tank = new FluidTank(CCPMFluids.concentratedPollution, 0, 1000);
 	
-	private TileStatTracker tracker;
 	
 	public AdvancedAirFilter() {
 		super();
-		tracker = new TileStatTracker(this);
 		maxProgress = 60;
 	}
 
@@ -83,13 +78,13 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	public FluidTankInfo[] getTankInfo(EnumFacing from) {
 		return new FluidTankInfo[]{tank.getInfo()};
 	}
-
+/*
 	@Override
 	public boolean canStabaliseInfusion(World world, BlockPos pos) {
 		
 		return CCPMConfig.fstab;
 	}
-
+*/
 	public int progress = 0;
 	
 	public static int maxProgress = 200;
@@ -98,7 +93,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	
 	int ticks = 0;
 	
-	Mode curMode = Mode.Unknown;
+	//Mode curMode = Mode.Unknown;
 	
 	@Override
 	public void update()
@@ -121,14 +116,14 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 		if(ticks>=20)
 			ticks = 0;
 		
-		if((isPowered() && curMode == Mode.Unknown) || curMode == Mode.On || curMode == Mode.Loop)
+		if(/*(*/isPowered()/* && curMode == Mode.Unknown) || curMode == Mode.On || curMode == Mode.Loop*/)
 		{
 			if(!getWorld().isRemote)
-			if(getWorld().provider.getDimensionId() == 0)
+			if(getWorld().provider.getDimension() == 0)
 			{
 				if(useEnergy())
 				{
-					worldObj.playSoundEffect(getPos().getX(), getPos().getY(), getPos().getZ(), "mob.enderdragon.wings", 5.0F, 0.8F + worldObj.rand.nextFloat() * 0.3F);
+					getWorld().playSound(null, getPos(), SoundEvents.ENTITY_ENDERDRAGON_FLAP, SoundCategory.BLOCKS, 5, 0.8F + worldObj.rand.nextFloat() * 0.3F);
 					PollutionUtils.increasePollution(-0.05F, getWorld().getChunkFromBlockCoords(getPos()));
 					++progress;
 					
@@ -139,8 +134,8 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 						
 						tank.fill(new FluidStack(CCPMFluids.concentratedPollution, 100), true);
 						
-						if(curMode == Mode.On)
-							curMode = Mode.Off;
+						//if(curMode == Mode.On)
+						//	curMode = Mode.Off;
 						
 						if(getWorld().rand.nextInt(10)==1)
 						{
@@ -148,10 +143,10 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 							{
 								if(getWorld().rand.nextInt(10) == 1)
 								{
-									rubbish = new ItemStack(Blocks.web,1);
+									rubbish = new ItemStack(Blocks.WEB,1);
 								}
 								else
-									rubbish = new ItemStack(Items.string,1);
+									rubbish = new ItemStack(Items.STRING,1);
 							}
 						}
 					}
@@ -184,11 +179,12 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		tank.writeToNBT(nbt);
 		MiscUtils.saveInventory(this, nbt);
+		return nbt;
 	}
 	
 	@Override
@@ -199,24 +195,6 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 		MiscUtils.loadInventory(this, nbt);
 	}
 	
-	@Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(this.getPos(), -10, nbt);
-    }
-	
-	@Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-		if(net.getNetHandler() instanceof INetHandlerPlayClient)
-			if(pkt.getTileEntityType() == -10)
-				this.readFromNBT(pkt.getNbtCompound());
-    }
-
-
-
 	@Override
 	public int getProgress() {
 		return progress;
@@ -246,8 +224,8 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 
 
 	@Override
-	public IChatComponent getDisplayName() {
-		return new ChatComponentText(StatCollector.translateToLocal(getName()));
+	public ITextComponent getDisplayName() {
+		return new TextComponentString(getName());
 	}
 
 
@@ -390,7 +368,7 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	}
 
 
-
+/*
 	@Override
 	public Mode getControlMode() {
 		return curMode;
@@ -409,4 +387,5 @@ public class AdvancedAirFilter extends TileEntity implements IInventory, ISidedI
 	public boolean acceptsControlMode(Mode mode) {
 		return true;
 	}
+	*/
 }

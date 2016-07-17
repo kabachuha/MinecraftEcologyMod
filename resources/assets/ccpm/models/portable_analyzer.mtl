@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/artem226/MCModding1.8/src/main/resources/assets/ccpm/textures/blocks/analyzer_core.png
+map_Kd ccpm:blocks/analyzer_core
 
 newmtl None
 Ns 0
@@ -19,4 +19,4 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd /home/artem226/MCModding1.8/src/main/resources/assets/ccpm/textures/blocks/analyzer_handle.png
+map_Kd ccpm:blocks/analyzer_handle

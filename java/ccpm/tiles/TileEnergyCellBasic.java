@@ -1,15 +1,6 @@
 package ccpm.tiles;
 
-import DummyCore.Utils.Coord3D;
-import DummyCore.Utils.Lightning;
-import DummyCore.Utils.MathUtils;
-import DummyCore.Utils.MiscUtils;
 import ccpm.api.ICCPMEnergySource;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedPeripheral;
-import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -19,7 +10,7 @@ import net.minecraftforge.fml.common.*;
     @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers"),
     @Optional.Interface(iface = "li.cil.oc.api.network.ManagedPeripheral", modid = "OpenComputers")
 })
-public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource, SimpleComponent, ManagedPeripheral, ITickable {
+public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource/*, SimpleComponent, ManagedPeripheral*/, ITickable {
 
 	int energy = 0;
 	public String name;
@@ -31,7 +22,7 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
 		this.maxEnergy=maxEnergy;
 	}
 
-	@Override
+//	@Override
 	public String getComponentName() {
 		return name;
 	}
@@ -55,13 +46,13 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
 		this.energy = amount;
 	}
 
-	@Override
+	//@Override
 	@Optional.Method(modid = "OpenComputers")
 	public String[] methods() {
 		return new String[]{"getEnergy"};
 	}
 
-	
+	/*
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
@@ -73,7 +64,7 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
 		
 		return null;
 	}
-
+*/
 
 	@Override
 	public boolean useEnergy(int amount, TileEntity user) {
@@ -88,14 +79,15 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt)
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
         nbt.setInteger("energy", this.energy);
+		return nbt;
 
     }
-    int sticks = -1;
-	@Override
+   // int sticks = -1;
+	/*@Override
 	public void update() {
 		
 		if(sticks <= 0)
@@ -108,6 +100,12 @@ public class TileEnergyCellBasic extends TileEntity implements ICCPMEnergySource
 			--sticks;
 		
 	}
+*/
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

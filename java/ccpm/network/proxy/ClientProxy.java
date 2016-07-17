@@ -1,7 +1,5 @@
 package ccpm.network.proxy;
 
-import DummyCore.Client.RenderAccessLibrary;
-import DummyCore.Utils.MiscUtils;
 import ccpm.core.CCPM;
 import ccpm.fluids.CCPMFluids;
 import ccpm.gui.ConAdv;
@@ -9,13 +7,8 @@ import ccpm.gui.ContainerCompressor;
 import ccpm.gui.GuiAdvFilter;
 import ccpm.gui.GuiCompressor;
 import ccpm.render.CCPMRenderHandler;
-import ccpm.render.RenderAdvThaum;
-import ccpm.render.RenderCell;
-import ccpm.render.RenderItemAdvThaum;
-import ccpm.render.RenderPortableAnalyzer;
 import ccpm.render.RespHud;
 import ccpm.tiles.AdvancedAirFilter;
-import ccpm.tiles.TileAdvThaum;
 import ccpm.tiles.TileCompressor;
 import ccpm.tiles.TileEnergyCellRf;
 import ccpm.tiles.TileEnergyCellThaumium;
@@ -23,14 +16,13 @@ import ccpm.utils.config.CCPMConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelLoader;
@@ -50,8 +42,8 @@ public class ClientProxy extends CommonProxy {
 	public void registerItemRenders()
 	{
 		//MinecraftForgeClient.registerItemRenderer(CCPM.respirator, new RenderRespirator());
-		RenderAccessLibrary.registerItemRenderingHandler(Item.getItemFromBlock(CCPM.advThaum), new RenderItemAdvThaum());
-		RenderAccessLibrary.registerItemRenderingHandler(CCPM.portableAnalyzer, new RenderPortableAnalyzer());
+		//RenderAccessLibrary.registerItemRenderingHandler(Item.getItemFromBlock(CCPM.advThaum), new RenderItemAdvThaum());
+		//RenderAccessLibrary.registerItemRenderingHandler(CCPM.portableAnalyzer, new RenderPortableAnalyzer());
 	}
 	
 	@Override
@@ -59,15 +51,13 @@ public class ClientProxy extends CommonProxy {
 	{
 		MinecraftForge.EVENT_BUS.register(new CCPMRenderHandler());
 		
-		MiscUtils.addHUDElement(new RespHud());
-		
 		//MiscUtils.addHUDElement(new PortableAnalyzerHud());
 		
 		CCPM.log.info("Registering tile entity special renders.");
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellRf.class, new RenderCell());
 		
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEnergyCellThaumium.class, new RenderCell());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAdvThaum.class, new RenderAdvThaum());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileAdvThaum.class, new RenderAdvThaum());
 	}
 	
 	@Override

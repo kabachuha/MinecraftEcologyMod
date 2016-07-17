@@ -8,12 +8,13 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
-import DummyCore.Utils.ReflectionProvider;
 import ccpm.core.CCPM;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 @Deprecated
@@ -34,11 +35,10 @@ public class CommandGetRegTiles extends CommandBase {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) {
-		
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(args == null || args.length == 0)
 		{
-			sender.addChatMessage(new ChatComponentText("Argument can't be null!"));
+			sender.addChatMessage(new TextComponentString("Argument can't be null!"));
 			return;
 		}
 		
@@ -112,6 +112,7 @@ public class CommandGetRegTiles extends CommandBase {
 				return;
 			}
 		}
+		
 	}
 
 }

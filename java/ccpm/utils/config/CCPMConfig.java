@@ -1,12 +1,12 @@
 package ccpm.utils.config;
 
+import java.io.File;
 import java.util.Locale;
 
-import DummyCore.Utils.IDummyConfig;
 import net.minecraftforge.common.config.Configuration;
 import scala.Int;
 
-public class CCPMConfig implements IDummyConfig {
+public class CCPMConfig {
 
 	public static int processingDelay = 60000;
 	public static Configuration cfg;
@@ -36,22 +36,26 @@ public class CCPMConfig implements IDummyConfig {
 	
 	public static int guiAdvFilterId = 0x1489;
 	
-	public static String cfgURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json";
+	public static int dims[];
+	
+	public static String cfgURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/PollutionConfig.json";
 	public CCPMConfig()
 	{
 		
 	}
 
-	@Override
-	public void load(Configuration config) {
-		cfg = config;
+	public static void readCFG(File config) 
+	{
+		cfg = new Configuration(config);
+		cfg.load();
+		
 		processingDelay = cfg.getInt("chunkProcessingDelay", "CORE", 60000, 0, Int.MaxValue(), "Delay(milliseconds) of the world handler processing thread");
         noPlanting = cfg.getInt("pollutionDieTrees", "POLLUTION", 200000, 0, Int.MaxValue(), "Pollution level to disable planting trees outside");
         //smogId = cfg.getInt("potionSmogId", "POTIONS", 77, 0, Int.MaxValue(), "");
         smogPoll= cfg.getInt("pollutionSmog", "POLLUTION", 50000, 0, Int.MaxValue(), "");
         wasteId = cfg.getInt("wastelandId", "BIOMES", 30, 0, Int.MaxValue(), "Id of the wasteland biome");
         filterRed = cfg.getFloat("filterRedution", "MACHINES", 100, Float.MIN_VALUE, Float.MAX_VALUE, "Amount of the air filter's pollution redution");
-        enableThaum = cfg.getBoolean("enableThaumcraftIntegration", "THAUMCRAFT", true, "Enable Thaumcraft integration?");
+       // enableThaum = cfg.getBoolean("enableThaumcraftIntegration", "THAUMCRAFT", true, "Enable Thaumcraft integration?");
         fstab = cfg.getBoolean("filterStabalise", "THAUMCRAFT", true, "Can machines stabalises infusion?");
         //useNode = cfg.getBoolean("useNode", "THAUMCRAFT", true, "Use jar node to craft the energy cell?");
        // useSano = cfg.getBoolean("useSano", "THAUMCRAFT", false, "Use the filter Sano aspect instead of Potentia to work?");
@@ -62,15 +66,19 @@ public class CCPMConfig implements IDummyConfig {
         
         mobsScared = cfg.getBoolean("mobsScared", "POLLUTION", false, "Are mobs scared by pollution too?");
         
-        advThaumReqPearl = cfg.getBoolean("advThaumReqPearl", "THAUMCRAFT", true, "Does advanced thaumic energy cell requires primordial pearl to craft? If not it will require the nether star.");
+        //advThaumReqPearl = cfg.getBoolean("advThaumReqPearl", "THAUMCRAFT", true, "Does advanced thaumic energy cell requires primordial pearl to craft? If not it will require the nether star.");
         
         enableHUD = cfg.getBoolean("enableRespiratorHUD", "GRAPHICS", true, "Enable respirator HUD?");
         
-        cfgURL = cfg.getString("cfgURL", "CORE", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/PollutionConfig.json", "URL to get Pollution Config");
+        cfgURL = cfg.getString("cfgURL", "CORE", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/PollutionConfig.json", "URL to get Pollution Config. You can set your own link.");
     
         guiCompressorId = cfg.getInt("guiCompressorId", "GUI", 0x1488, 0, Int.MaxValue(), "Id of the compressor's gui");
         
         guiAdvFilterId = cfg.getInt("guiAdvFilterId", "GUI", 0x1489, 0 , Int.MaxValue(), "Id of the advanced filter's gui");
+        
+        dims = cfg.get("POLLUTION", "allowedDims", new int[]{0}).getIntList();
+        
+        cfg.save();
 	}
 
 }

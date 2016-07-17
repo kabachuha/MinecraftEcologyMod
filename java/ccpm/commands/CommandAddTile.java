@@ -13,10 +13,11 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameData;
@@ -35,13 +36,17 @@ public class CommandAddTile extends CommandBase {
 	public String getCommandUsage(ICommandSender sender) {
 		return "/addTile <pollution> //Adds a tile under you to the pollution configuration";
 	}
+ 
+	 private static String getStackModid(ItemStack stack) {
+		 return ((ResourceLocation) GameData.getItemRegistry().getNameForObject(stack.getItem())).getResourceDomain();
+	    }
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		CCPM.log.debug("Starting handleling 'addTile' command...");
 		if(args==null || args.length == 0 || args[0] == null)
 		{
-			sender.addChatMessage(new ChatComponentText("Argument can't be null"));
+			sender.addChatMessage(new TextComponentString("Argument can't be null"));
 			return;
 		}
 		if(sender == null)
@@ -56,7 +61,7 @@ public class CommandAddTile extends CommandBase {
 		}
 		catch(NumberFormatException e)
 		{
-			sender.addChatMessage(new ChatComponentText("Invalid argument!"));
+			sender.addChatMessage(new TextComponentString("Invalid argument!"));
 			return;
 		}
 		
@@ -64,7 +69,7 @@ public class CommandAddTile extends CommandBase {
 		
 		if(tile == null || tile.isInvalid())
 		{
-			sender.addChatMessage(new ChatComponentText("There is not tile entity at pos "+tiPos.toString()));
+			sender.addChatMessage(new TextComponentString("There is not tile entity at pos "+tiPos.toString()));
 			return;
 		}
 		
@@ -74,7 +79,7 @@ public class CommandAddTile extends CommandBase {
 		
 		if(!tag.hasKey("id"))
 		{
-			sender.addChatMessage(new ChatComponentText("The tile entity doesn't have an ID properity!"));
+			sender.addChatMessage(new TextComponentString("The tile entity doesn't have an ID properity!"));
 			return;
 		}
 		
@@ -90,23 +95,20 @@ public class CommandAddTile extends CommandBase {
 		
 		if(!tiles.contains(tilez))
 		{
-			sender.addChatMessage(new ChatComponentText("Adding tile entity with id " + tilez.getName()+ " producing "+tilez.getPollution()+" pollution from mod"+tilez.getModid()+ " to configuration"));
+			sender.addChatMessage(new TextComponentString("Adding tile entity with id " + tilez.getName()+ " producing "+tilez.getPollution()+" pollution from mod"+tilez.getModid()+ " to configuration"));
 			tiles.add(tilez);
 		}
 		else
 		{
-			sender.addChatMessage(new ChatComponentText("There are already this tile in the configuration! If you want to rewrite it use /removeTile command"));
+			sender.addChatMessage(new TextComponentString("There are already this tile in the configuration! If you want to rewrite it use /removeTile command"));
 		}
 		
 		PollutionConfig.cfg.setTiles(tiles.toArray(new Tilez[tiles.size()]));
 		
-		sender.addChatMessage(new ChatComponentText("Tile added to configuration!"));
+		sender.addChatMessage(new TextComponentString("Tile added to configuration!"));
 		
-		sender.addChatMessage(new ChatComponentText("If you want to save changes use /saveEcologyModCfg command"));
-	}
+		sender.addChatMessage(new TextComponentString("If you want to save changes use /saveEcologyModCfg command"));
 
-	 
-	 private static String getStackModid(ItemStack stack) {
-		 return ((ResourceLocation) GameData.getItemRegistry().getNameForObject(stack.getItem())).getResourceDomain();
-	    }
+		
+	}
 }

@@ -24,7 +24,9 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -44,15 +46,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderItemInFrameEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -113,7 +116,7 @@ public class PlayerHandler {
 						//pe.setCurativeItems(ci);
 					
 						if(player.worldObj.canSeeSky(player.getPosition()) || player.worldObj.canSeeSky(player.getPosition().east())||player.worldObj.canSeeSky(player.getPosition().west())||player.worldObj.canSeeSky(player.getPosition().north())||player.worldObj.canSeeSky(player.getPosition().south()))
-						player.addPotionEffect(/*pe*/new PotionEffect(CCPM.smog.id, 120, 1));
+						player.addPotionEffect(/*pe*/new PotionEffect(CCPM.smog, 120, 1));
 					//}
 				}
 			}
@@ -126,22 +129,22 @@ public class PlayerHandler {
 				
 				if(player.isPotionActive(CCPM.smog))
 				{
-					if(player.getEquipmentInSlot(4) == null||!(player.getEquipmentInSlot(4).getItem() instanceof IRespirator)||!((IRespirator)player.getEquipmentInSlot(4).getItem()).isFiltering(player, player.getEquipmentInSlot(4)))
+					if(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null||!(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IRespirator)||!((IRespirator)player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem()).isFiltering(player, player.getItemStackFromSlot(EntityEquipmentSlot.HEAD)))
 					{
 					   player.attackEntityFrom(CCPMApi.damageSourcePollution, 1);
 					
 					if(player.worldObj.rand.nextInt(5) == 0)
 					{
-						player.addPotionEffect(new PotionEffect(Potion.poison.id, 100, 1));
+						player.addPotionEffect(new PotionEffect(MobEffects.POISON, 100, 1));
 						if(player.worldObj.rand.nextInt(8) == 0)
 						{
-							player.addPotionEffect(new PotionEffect(Potion.blindness.id, 20,1));
+							player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 20,1));
 							if(player.worldObj.rand.nextInt(6) == 0)
 							{
-								player.addPotionEffect(new PotionEffect(Potion.hunger.id, 100,1));
+								player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 100,1));
 								if(player.worldObj.rand.nextInt(10) == 0)
 								{
-									player.addPotionEffect(new PotionEffect(Potion.wither.id, 120, 2));
+									player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 120, 2));
 									if(player.worldObj.rand.nextInt(4) == 0)
 									{
 										player.attackEntityFrom(CCPMApi.damageSourcePollution, 10F);
@@ -161,14 +164,12 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void playerClick(PlayerInteractEvent event)
 	{
-		if(event.action == Action.RIGHT_CLICK_AIR)
-			return;
 
 		
-		if(!event.world.isRemote)
+		if(!event.getWorld().isRemote)
 		{
-			EntityPlayer player = event.entityPlayer;
-			ItemStack is = player.getCurrentEquippedItem();
+			EntityPlayer player = event.getEntityPlayer();
+			ItemStack is = player.getHeldItemMainhand();
 			if(is == null)
 				return;
 			if(!is.hasTagCompound())
@@ -177,7 +178,7 @@ public class PlayerHandler {
 			if(!nbt.hasKey("ccpmTest"))
 				return;
 			
-			TileEntity tile = event.world.getTileEntity(event.pos);
+			TileEntity tile = event.getWorld().getTileEntity(event.getPos());
 			
 			if(tile == null || tile.isInvalid())
 				return;
@@ -195,19 +196,19 @@ public class PlayerHandler {
 			
 			String id = tag.getString("id");
 			is.setStackDisplayName(id);
-			player.addChatMessage(new ChatComponentText("The tile entity id is " +tag.getString("id")));
+			player.addChatMessage(new TextComponentString("The tile entity id is " +tag.getString("id")));
 			if(tile instanceof ITilePollutionProducer)
 			{
-				player.addChatMessage(new ChatComponentText("This TE produces "+((ITilePollutionProducer)tile).getPollutionProdution() + " pollution"));
+				player.addChatMessage(new TextComponentString("This TE produces "+((ITilePollutionProducer)tile).getPollutionProdution() + " pollution"));
 			}
 			
 			Tilez[] tiles= PollutionConfig.cfg.getTiles();
 			for(int i = 0; i < tiles.length; i++)
 			if(id == tiles[i].getName())
 			{
-				player.addChatMessage(new ChatComponentText("This TE produces "+tiles[i].getPollution()+" pollution"));
+				player.addChatMessage(new TextComponentString("This TE produces "+tiles[i].getPollution()+" pollution"));
 			}
-		    player.swingItem();
+		    player.swingArm(EnumHand.MAIN_HAND);
 		    event.setCanceled(true);
 		}
 	}
@@ -216,8 +217,8 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onItemExpite(ItemExpireEvent event)
 	{
-		if(WorldHandler.isLoaded && event.entityItem!=null && !event.entityItem.worldObj.isRemote && event.entityItem.worldObj.provider.getDimensionId() == 0)
-		PollutionUtils.increasePollution((event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[0] || event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[1] || event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[2] || event.entityItem.getEntityItem().getItem() == CCPM.pollArmor[3] || event.entityItem.getEntityItem().getItem() == CCPM.pollutionBrick || event.entityItem.getEntityItem().getItem() == CCPM.buckPw || event.entityItem.getEntityItem().getItem() == Item.getItemFromBlock(CCPM.pollutionBricks)) ? 1000*event.entityItem.getEntityItem().stackSize : 2*event.entityItem.getEntityItem().stackSize, event.entityItem.worldObj.getChunkFromBlockCoords(event.entityItem.getPosition()));
+		if(WorldHandler.isLoaded && event.getEntityItem()!=null && !event.getEntityItem().worldObj.isRemote && event.getEntityItem().worldObj.provider.getDimension() == 0)
+		PollutionUtils.increasePollution((event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[0] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[1] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[2] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[3] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollutionBrick || event.getEntityItem().getEntityItem().getItem() == CCPM.buckPw || event.getEntityItem().getEntityItem().getItem() == Item.getItemFromBlock(CCPM.pollutionBricks)) ? 1000*event.getEntityItem().getEntityItem().stackSize : 2*event.getEntityItem().getEntityItem().stackSize, event.getEntityItem().worldObj.getChunkFromBlockCoords(event.getEntityItem().getPosition()));
 	}
 	
 	public static boolean firstPlayerJoinedWorld = false;
@@ -225,10 +226,10 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onPlayerJoinGame(EntityJoinWorldEvent event)
 	{
-			if(event.world == null || event.world.isRemote || event.entity == null)
+			if(event.getWorld() == null || event.getWorld().isRemote || event.getEntity() == null)
 				return;
 			
-			if(event.entity instanceof EntityPlayer)
+			if(event.getEntity() instanceof EntityPlayer)
 			{
 				if(!firstPlayerJoinedWorld)
 				{
@@ -238,11 +239,11 @@ public class PlayerHandler {
 				firstPlayerJoinedWorld = true;
 				}
 				
-				ChatComponentText cct1 = new ChatComponentText(CCPM.NAME+" is alpha version now. It may contain a lot of bugs! Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
-				cct1.setChatStyle(cct1.getChatStyle().setColor(EnumChatFormatting.RED));
+				TextComponentString cct1 = new TextComponentString(CCPM.NAME+" is alpha version now. It may contain a lot of bugs! Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
+				cct1.setStyle(cct1.getStyle().setColor(TextFormatting.RED));
 				
-				ChatComponentText cct2 = new ChatComponentText(CCPM.NAME+" is beta version now. It may contain few bugs. Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
-				cct2.setChatStyle(cct2.getChatStyle().setColor(EnumChatFormatting.BLUE));
+				TextComponentString cct2 = new TextComponentString(CCPM.NAME+" is beta version now. It may contain few bugs. Please, report all issues and suggestions to my GitHub! "+CCPM.githubURL);
+				cct2.setStyle(cct2.getStyle().setColor(TextFormatting.BLUE));
 					
 				StringBuilder sb = new StringBuilder();
 				
@@ -252,14 +253,14 @@ public class PlayerHandler {
 					sb.append(", ");
 				}
 				
-				ChatComponentText supMods = new ChatComponentText(CCPM.NAME+" now supports these mods: "+sb.toString());
+				TextComponentString supMods = new TextComponentString(CCPM.NAME+" now supports these mods: "+sb.toString());
 				
-				((EntityPlayer)event.entity).addChatMessage(supMods);
+				((EntityPlayer)event.getEntity()).addChatMessage(supMods);
 				
 				if(CCPM.version.endsWith("A"))
-					((EntityPlayer)event.entity).addChatMessage(cct1);
+					((EntityPlayer)event.getEntity()).addChatMessage(cct1);
 				if(CCPM.version.endsWith("B"))
-					((EntityPlayer)event.entity).addChatMessage(cct2);
+					((EntityPlayer)event.getEntity()).addChatMessage(cct2);
 			}
 		
 		
@@ -267,12 +268,11 @@ public class PlayerHandler {
 	
 	@SubscribeEvent
 	public void fillBucketEvent(FillBucketEvent event)
-	{
-		
-		if(event.target.typeOfHit != MovingObjectType.BLOCK)
+	{	
+		if(event.getTarget().typeOfHit != RayTraceResult.Type.BLOCK)
 			return;
-		BlockPos bp = new BlockPos(event.target.hitVec);
-		IBlockState state = event.world.getBlockState(bp);
+		BlockPos bp = new BlockPos(event.getTarget().hitVec);
+		IBlockState state = event.getWorld().getBlockState(bp);
 		Fluid f = FluidRegistry.lookupFluidForBlock(state.getBlock());
 		
 		if(f == null)
@@ -283,17 +283,17 @@ public class PlayerHandler {
 		
 		if(f == FluidRegistry.WATER)
 		{
-			if(!event.world.isRemote)
+			if(!event.getWorld().isRemote)
 			{
 				if((Integer)state.getValue(BlockLiquid.LEVEL) == 0)
 				{
-					if(PollutionUtils.getChunkPollution(event.world, bp) >= CCPMConfig.waterPoll)
+					if(PollutionUtils.getChunkPollution(event.getWorld(), bp) >= CCPMConfig.waterPoll)
 					{
-						ItemStack ret = FluidContainerRegistry.fillFluidContainer(new FluidStack(CCPMFluids.pollutedWater, FluidContainerRegistry.BUCKET_VOLUME), event.current);
+						ItemStack ret = FluidContainerRegistry.fillFluidContainer(new FluidStack(CCPMFluids.pollutedWater, FluidContainerRegistry.BUCKET_VOLUME), event.getEmptyBucket());
 						
 						if(ret != null)
 						{
-							event.result = ret;
+							event.setFilledBucket(ret);
 							event.setResult(Result.ALLOW);
 						}
 					}
@@ -305,16 +305,16 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingAttackEvent event)
 	{
-		if(event.entity.worldObj.isRemote)return;
+		if(event.getEntity().worldObj.isRemote)return;
 		
-		if(event.source == null || event.entity == null || event.ammount <= 0)
+		if(event.getSource() == null || event.getEntity() == null || event.getAmount() <= 0)
 			return;
 		
-		if(event.source.isUnblockable())
+		if(event.getSource().isUnblockable())
 			return;
 		
 		
-		ItemStack armor[] = new ItemStack[]{event.entityLiving.getEquipmentInSlot(4),event.entityLiving.getEquipmentInSlot(3), event.entityLiving.getEquipmentInSlot(2), event.entityLiving.getEquipmentInSlot(1)};
+		ItemStack armor[] = new ItemStack[]{event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD),event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD), event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD), event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD)};
 		
 		int multiplier = 0;
 		
@@ -331,12 +331,12 @@ public class PlayerHandler {
 		
 		if(multiplier == 0)return;
 		
-		List<Entity> elb = event.entity.worldObj.getEntitiesWithinAABBExcludingEntity(event.entity, AxisAlignedBB.fromBounds(event.entity.posX-(3*multiplier), event.entity.posY-(3*multiplier), event.entity.posZ-(3*multiplier), event.entity.posX+(3*multiplier), event.entity.posY+(3*multiplier), event.entity.posZ+(3*multiplier)));
+		List<Entity> elb = event.getEntity().worldObj.getEntitiesWithinAABBExcludingEntity(event.getEntity(), new AxisAlignedBB(event.getEntity().posX-(3*multiplier), event.getEntity().posY-(3*multiplier), event.getEntity().posZ-(3*multiplier), event.getEntity().posX+(3*multiplier), event.getEntity().posY+(3*multiplier), event.getEntity().posZ+(3*multiplier)));
 		
 		if(elb == null || elb.size() <= 0)
 			return;
 		
-		BlockPos pos = event.entity.getPosition();
+		BlockPos pos = event.getEntity().getPosition();
 		
 		
 		for(Entity e : elb)
@@ -346,37 +346,37 @@ public class PlayerHandler {
 				EntityLivingBase el = (EntityLivingBase)e;
 				if(e instanceof EntityPlayer)
 				{
-				if(el.getEquipmentInSlot(4) == null||!(el.getEquipmentInSlot(4).getItem() instanceof IRespirator)||!((IRespirator)el.getEquipmentInSlot(4).getItem()).isFiltering((EntityPlayer)el, el.getEquipmentInSlot(4)))
+				if(el.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null||!(el.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IRespirator)||!((IRespirator)el.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem()).isFiltering((EntityPlayer)el, el.getItemStackFromSlot(EntityEquipmentSlot.HEAD)))
 				{
 				el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
 				
-				el.addPotionEffect(new PotionEffect(Potion.poison.id,10*multiplier, multiplier));
+				el.addPotionEffect(new PotionEffect(MobEffects.POISON,10*multiplier, multiplier));
 				}
 				}
 				else
 				{
 					el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
 					
-					el.addPotionEffect(new PotionEffect(Potion.poison.id,10*multiplier, multiplier));
+					el.addPotionEffect(new PotionEffect(MobEffects.POISON,10*multiplier, multiplier));
 				}
 				
-				event.entity.getEntityWorld().playSoundAtEntity(event.entity, "random.fizz", multiplier*2, 2.6F + (event.entity.worldObj.rand.nextFloat() - event.entity.worldObj.rand.nextFloat()) * 0.8F);
+				event.getEntity().getEntityWorld().playSound(null, event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ, SoundEvents.ENTITY_FIREWORK_LARGE_BLAST, SoundCategory.PLAYERS, multiplier*2, 2.6F + (event.getEntity().worldObj.rand.nextFloat() - event.getEntity().worldObj.rand.nextFloat()) * 0.8F);
 				
 				for(int i = -2; i <= 2; i++)
 					for(int j = -2; j <=2; j++)
 						for(int k = -2; k <=2; k++)
 						{
-							event.entity.getEntityWorld().spawnParticle(event.entity.getEntityWorld().rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + event.entity.getEntityWorld().rand.nextFloat()) - 0.5D, (double)((float)k - event.entity.getEntityWorld().rand.nextFloat() - 1.0F), (double)((float)j + event.entity.getEntityWorld().rand.nextFloat()) - 0.5D, new int[0]);
+							event.getEntity().getEntityWorld().spawnParticle(event.getEntity().getEntityWorld().rand.nextBoolean() ? EnumParticleTypes.CLOUD : EnumParticleTypes.SMOKE_LARGE, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, (double)((float)i + event.getEntity().getEntityWorld().rand.nextFloat()) - 0.5D, (double)((float)k - event.getEntity().getEntityWorld().rand.nextFloat() - 1.0F), (double)((float)j + event.getEntity().getEntityWorld().rand.nextFloat()) - 0.5D, new int[0]);
 						}
 				
-				PollutionUtils.increasePollution(event.ammount*multiplier, event.entity.getEntityWorld().getChunkFromBlockCoords(pos));
+				PollutionUtils.increasePollution(event.getAmount()*multiplier, event.getEntity().getEntityWorld().getChunkFromBlockCoords(pos));
 			}
 		}
 		
 		
-		if(event.entity.worldObj.rand.nextInt(Math.round(100/multiplier)) == 1)
+		if(event.getEntity().worldObj.rand.nextInt(Math.round(100/multiplier)) == 1)
 		{
-			PollutionUtils.increasePollution(multiplier*100, event.entity.getEntityWorld().getChunkFromBlockCoords(pos));
+			PollutionUtils.increasePollution(multiplier*100, event.getEntity().getEntityWorld().getChunkFromBlockCoords(pos));
 			event.setCanceled(true);
 		}
 	}
@@ -384,17 +384,17 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void livingTick(LivingUpdateEvent event)
 	{
-		if(event.entity==null)
+		if(event.getEntity()==null)
 			return;
 		
-		if(event.entity.worldObj.isRemote)return;
+		if(event.getEntity().worldObj.isRemote)return;
 		
-		if(event.entity instanceof EntityPlayer || event.entity instanceof IProjectile)
+		if(event.getEntity() instanceof EntityPlayer || event.getEntity() instanceof IProjectile)
 			return;
 		
-		if(event.entityLiving instanceof EntityCreature){}else return;
+		if(event.getEntityLiving() instanceof EntityCreature){}else return;
 		
-		EntityCreature en = (EntityCreature)event.entityLiving;
+		EntityCreature en = (EntityCreature)event.getEntityLiving();
 		
 		if(!CCPMConfig.mobsScared)
 		if(en instanceof IMob)
@@ -428,11 +428,11 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void checkSpawn(CheckSpawn event)
 	{
-		if(event.entity!=null)
-		if(!event.world.isRemote)
-		if(event.entityLiving instanceof IAnimals)
+		if(event.getEntity()!=null)
+		if(!event.getWorld().isRemote)
+		if(event.getEntityLiving() instanceof IAnimals)
 		{
-			if(PollutionUtils.getChunkPollution(event.world, new BlockPos(event.x,event.y,event.z))>=CCPMConfig.smogPoll)
+			if(PollutionUtils.getChunkPollution(event.getWorld(), new BlockPos(event.getX(),event.getY(),event.getZ()))>=CCPMConfig.smogPoll)
 			{
 				event.setResult(Result.DENY);
 			}
@@ -442,13 +442,13 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event)
 	{
-		if(event.world == null || event.state == null)return;
+		if(event.getWorld() == null || event.getState() == null)return;
 		
-		if(event.world.isRemote)return;
+		if(event.getWorld().isRemote)return;
 		
-		if(event.state == CCPM.compressor.getDefaultState() || event.state == CCPM.baf.getDefaultState())
+		if(event.getState() == CCPM.compressor.getDefaultState() || event.getState() == CCPM.baf.getDefaultState())
 		{
-			TileEntity te = event.world.getTileEntity(event.pos);
+			TileEntity te = event.getWorld().getTileEntity(event.getPos());
 			
 			if(te == null) return;
 			
@@ -459,7 +459,7 @@ public class PlayerHandler {
 				for(FluidTankInfo f : fti)
 				{
 					if(f.fluid.amount == 0)continue;
-					FluidEvent.FluidSpilledEvent fse = new FluidEvent.FluidSpilledEvent(f.fluid, event.world, event.pos);
+					FluidEvent.FluidSpilledEvent fse = new FluidEvent.FluidSpilledEvent(f.fluid, event.getWorld(), event.getPos());
 					FluidEvent.fireEvent(fse);
 				}
 			}
@@ -470,7 +470,7 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onFluidSpilled(FluidEvent.FluidSpilledEvent event)
 	{
-		if(event.fluid != null && event.fluid.amount > 0 && event.fluid.getFluid() == CCPMFluids.concentratedPollution)
-			PollutionUtils.increasePollution(event.fluid.amount*100, event.world.getChunkFromBlockCoords(event.pos));
+		if(event.getFluid() != null && event.getFluid().amount > 0 && event.getFluid().getFluid() == CCPMFluids.concentratedPollution)
+			PollutionUtils.increasePollution(event.getFluid().amount*100, event.getWorld().getChunkFromBlockCoords(event.getPos()));
 	}
 }

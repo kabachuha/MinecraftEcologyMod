@@ -11,7 +11,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CommandSaveConfiguration extends CommandBase {
 
@@ -29,14 +30,14 @@ public class CommandSaveConfiguration extends CommandBase {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(sender == null)
 			return;
 		
 		if(sender.getEntityWorld() == null || sender.getEntityWorld().isRemote)
 			return;
 		
-		ItemStack book = new ItemStack(Items.written_book);
+		ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
 		
 		NBTTagList pages = new NBTTagList();
 		for(Tilez t : PollutionConfig.cfg.getTiles())
@@ -52,9 +53,11 @@ public class CommandSaveConfiguration extends CommandBase {
 		
 		sender.getEntityWorld().spawnEntityInWorld(ei);
 		
-		sender.addChatMessage(new ChatComponentText("Serializing and saving configuration..."));
+		sender.addChatMessage(new TextComponentString("Serializing and saving configuration..."));
 		PollutionConfig.serializeAndSave(CCPM.cfgpath);
-		sender.addChatMessage(new ChatComponentText("Configuration saved!"));
+		sender.addChatMessage(new TextComponentString("Configuration saved!"));
+
+		
 	}
 
 }

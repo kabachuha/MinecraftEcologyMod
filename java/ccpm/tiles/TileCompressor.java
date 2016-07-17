@@ -2,18 +2,15 @@ package ccpm.tiles;
 
 import java.util.Random;
 
-import DummyCore.Utils.Coord3D;
-import DummyCore.Utils.DummyData;
-import DummyCore.Utils.ITEHasGameData;
-import DummyCore.Utils.MiscUtils;
-import DummyCore.Utils.TileStatTracker;
 import ccpm.api.ICCPMEnergySource;
 import ccpm.api.IHasProgress;
 import ccpm.core.CCPM;
 import ccpm.fluids.CCPMFluids;
+import ccpm.utils.MiscUtils;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -21,25 +18,23 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import thaumcraft.api.crafting.IInfusionStabiliser;
 
 public class TileCompressor extends TileEntity implements IFluidHandler, IInventory/*, ITEHasGameData*/, IHasProgress,
-		IInfusionStabiliser, ITickable, ISidedInventory {
+		/*IInfusionStabiliser,*/ ITickable, ISidedInventory {
 
 	public EnumFacing pipeConDir = EnumFacing.UP;
 	
@@ -49,11 +44,7 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 	
 	public static int maxProgress = 100;
 	
-	private TileStatTracker track;
-	
-	public TileCompressor() {
-		track = new TileStatTracker(this);
-	}
+	public TileCompressor() {}
 
 	@Override
 	public String getName() {
@@ -66,8 +57,8 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
-		return StatCollector.canTranslate(getName()) ? new ChatComponentText(StatCollector.translateToLocal(getName())) : new ChatComponentText("Compressor");
+	public ITextComponent getDisplayName() {
+		return new TextComponentString("Compressor");
 	}
 
 	@Override
@@ -140,19 +131,19 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 				
 				if(isWorking)
 				{
-				
-				
-				
+					
 				if(useEnergy())
 				{
 					tank.drain(10, true);
 					
 					if(rand.nextBoolean())
-					getWorld().playSoundEffect(getPos().getX()+0.5D, getPos().getY()+0.5D, getPos().getZ()+0.5D, "random.fizz", 8, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+						getWorld().playSound(null, getPos().add(0.5, 0.5, 0.5), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 8, 2.6F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.8F);
+					
 					if(rand.nextBoolean())
-					getWorld().playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "tile.piston.out", 0.5F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
+						getWorld().playSound(null, getPos().add(0.5, 0.5, 0.5), SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.25F + 0.6F);
+
 					if(rand.nextBoolean())
-					getWorld().playSoundEffect((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "tile.piston.in", 0.5F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
+						getWorld().playSound(null, getPos().add(0.5, 0.5, 0.5), SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.5F, worldObj.rand.nextFloat() * 0.15F + 0.6F);
 					
 					++progress;
 				}
@@ -181,7 +172,6 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 		}
 	}
 
-	@Override
 	public boolean canStabaliseInfusion(World world, BlockPos pos) {
 		return CCPMConfig.fstab;
 	}
@@ -197,13 +187,14 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		tank.writeToNBT(nbt);
 		nbt.setBoolean("isWorking", isWorking);
 		nbt.setInteger("progress", progress);
 		MiscUtils.saveInventory(this, nbt);
+		return nbt;
 	}
 	
 	@Override
@@ -215,22 +206,6 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 		progress = nbt.getInteger("progress");
 		MiscUtils.loadInventory(this, nbt);
 	}
-	
-	@Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(this.getPos(), -10, nbt);
-    }
-	
-	@Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-		if(net.getNetHandler() instanceof INetHandlerPlayClient)
-			if(pkt.getTileEntityType() == -10)
-				this.readFromNBT(pkt.getNbtCompound());
-    }
 	
 	@Override
 	public int getSizeInventory() {
@@ -402,6 +377,6 @@ public class TileCompressor extends TileEntity implements IFluidHandler, IInvent
 	
 	private boolean checkIron(BlockPos pos)
 	{
-		return getWorld().getBlockState(pos) == Blocks.iron_block.getDefaultState();
+		return getWorld().getBlockState(pos) == Blocks.IRON_BLOCK.getDefaultState();
 	}
 }

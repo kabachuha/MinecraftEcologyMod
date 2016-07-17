@@ -34,9 +34,9 @@ public class WorldHandler {
 	@SubscribeEvent
 	public void onLoad(WorldEvent.Load event)
 	{
-		World w = event.world;
+		World w = event.getWorld();
 
-		if(w !=null && !w.isRemote && w.provider.getDimensionId() == 0 && !isLoaded)
+		if(w !=null && !w.isRemote && w.provider.getDimension() == 0 && !isLoaded)
 		{
 			pm = new PollutionManager(w);
 			
@@ -72,9 +72,9 @@ public class WorldHandler {
 	@SubscribeEvent
 	public void onSave(WorldEvent.Save event)
 	{
-		World w = event.world;
+		World w = event.getWorld();
 
-		if(w !=null && !w.isRemote && w.provider.getDimensionId() == 0)
+		if(w !=null && !w.isRemote && w.provider.getDimension() == 0)
 		{
             if(pm != null && pm.chunksPollution != null && pm.chunksPollution.getCP()!=null && pm.chunksPollution.getCP().length>0)
             	pm.save();
@@ -84,9 +84,9 @@ public class WorldHandler {
 	@SubscribeEvent
 	public void onUnLoad(WorldEvent.Unload event)
 	{
-		World w = event.world;
+		World w = event.getWorld();
 
-		if(w !=null && !w.isRemote && w.provider.getDimensionId() == 0)
+		if(w !=null && !w.isRemote && w.provider.getDimension() == 0)
 		{
 			isLoaded=false;
 			if(thread != null && thread.isAlive())

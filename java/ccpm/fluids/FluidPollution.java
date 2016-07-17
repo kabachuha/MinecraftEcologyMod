@@ -4,12 +4,16 @@ import ccpm.api.CCPMApi;
 import ccpm.api.IRespirator;
 import ccpm.core.CCPM;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
@@ -17,7 +21,7 @@ import net.minecraftforge.fluids.Fluid;
 public class FluidPollution extends BlockFluidClassic {
 
 	public FluidPollution() {
-		super(CCPMFluids.concentratedPollution, Material.water);
+		super(CCPMFluids.concentratedPollution, Material.WATER);
 		this.setHardness(0);
 		this.setResistance(0);
 		this.setRegistryName("liquid_ccpm_pollution");
@@ -25,9 +29,9 @@ public class FluidPollution extends BlockFluidClassic {
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, Entity entity)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state ,Entity entity)
 	{
-		super.onEntityCollidedWithBlock(world, pos, entity);
+		super.onEntityCollidedWithBlock(world, pos, state, entity);
 		
 		if(!world.isRemote)
 		{
@@ -35,25 +39,25 @@ public class FluidPollution extends BlockFluidClassic {
 			{
 				EntityLivingBase elb = (EntityLivingBase)entity;
 				
-				if(elb.getEquipmentInSlot(4) !=null)
-				if(elb.getEquipmentInSlot(4).getItem() instanceof IRespirator)
+				if(elb.getItemStackFromSlot(EntityEquipmentSlot.HEAD) !=null)
+				if(elb.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IRespirator)
 				{
 					if(entity instanceof EntityPlayer)
 					{
-						if(((IRespirator)elb.getEquipmentInSlot(4).getItem()).isFiltering((EntityPlayer)entity, elb.getEquipmentInSlot(4)))
+						if(((IRespirator)elb.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem()).isFiltering((EntityPlayer)entity, elb.getItemStackFromSlot(EntityEquipmentSlot.HEAD)))
 						{
 							return;
 						}
 					}
 				}
 				elb.attackEntityFrom(CCPMApi.damageSourcePollution, 1);
-				elb.addPotionEffect(new PotionEffect(Potion.poison.getId(), 100, world.rand.nextBoolean() ? 1 : 2));
-				elb.addPotionEffect(new PotionEffect(Potion.wither.getId(), 10, 1));
-				elb.addPotionEffect(new PotionEffect(Potion.blindness.getId(), 200, 1));
-				elb.addPotionEffect(new PotionEffect(Potion.confusion.getId(), 600, 3));
-				elb.addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 200, 2));
-				elb.addPotionEffect(new PotionEffect(Potion.hunger.getId(), 1000, 2));
-				elb.addPotionEffect(new PotionEffect(Potion.moveSlowdown.getId(), 200, 2));
+				elb.addPotionEffect(new PotionEffect(MobEffects.POISON, 100, world.rand.nextBoolean() ? 1 : 2));
+				elb.addPotionEffect(new PotionEffect(MobEffects.WITHER, 10, 1));
+				elb.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 200, 1));
+				elb.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 600, 3));
+				elb.addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 200, 2));
+				elb.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 1000, 2));
+				elb.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 2));
 			}
 		}
 	}

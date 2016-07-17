@@ -1,6 +1,7 @@
 package ccpm.core;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,12 +12,6 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.UnmodifiableIterator;
 import com.ibm.icu.util.BytesTrie.Iterator;
 
-import DummyCore.Blocks.BlocksRegistry;
-import DummyCore.Core.Core;
-import DummyCore.Core.CoreInitialiser;
-import DummyCore.Items.ItemRegistry;
-import DummyCore.Utils.MiscUtils;
-import DummyCore.Utils.ModVersionChecker;
 import ccpm.achivements.CCPMAchivements;
 import ccpm.biomes.Wasteland;
 import ccpm.blocks.BlockAdvFilter;
@@ -43,7 +38,6 @@ import ccpm.handlers.CCPMFuelHandler;
 import ccpm.handlers.ChunkHandler;
 import ccpm.handlers.PlayerHandler;
 import ccpm.handlers.WorldHandler;
-import ccpm.integration.buildcraft.BCIntegration;
 import ccpm.items.PWBucket;
 import ccpm.items.PistonArray;
 import ccpm.items.PollutedArmor;
@@ -73,12 +67,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.BiomeProperties;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
@@ -102,13 +100,12 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = CCPM.MODID, name = CCPM.NAME, version = CCPM.version, dependencies = CCPM.dependencies)
+@Mod(modid = CCPM.MODID, name = CCPM.NAME, version = CCPM.version)
 public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.2.189.1A";
-	public static final String dependencies = "required-before:DummyCore;";
+	public static final String version = "0.3.1102.0preA";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
 	
@@ -174,15 +171,14 @@ public class CCPM {
 	{
 		instance = this;
 		cfgpath=event.getModConfigurationDirectory().getAbsolutePath();
-		Core.registerModAbsolute(getClass(), NAME, cfgpath, cfg);
+		CCPMConfig.readCFG(event.getSuggestedConfigurationFile());
 		
 		
 		log.info("Configuration directory is "+cfgpath);
 		PollutionConfig.load(cfgpath);
 		
-		ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.8/version.txt");
-		
-		
+		//TODO Add an update JSON
+		//ModVersionChecker.addRequest(getClass(), "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/version.txt");
 		
 		ModMetadata meta = event.getModMetadata();
 		meta.authorList = Arrays.asList(new String[]{"Artem226"});
@@ -196,8 +192,8 @@ public class CCPM {
 		
 		//MiscUtils.extendPotionArray(1);
 		smog = new PotionSmog(/*Potion.potionTypes.length-1, false, new Color(61, 54 , 54).getRGB()*/);
-		log.info("Potion smog id is "+smog.id);
-		wasteland = new Wasteland(CCPMConfig.wasteId);
+		log.info("Potion smog id is "+Potion.getIdFromPotion(smog));
+		wasteland = new Wasteland(new BiomeProperties("wasteland").setRainDisabled().setWaterColor(Wasteland.wastelandColor));
 		
 		BiomeManager.addBiome(BiomeType.DESERT, new BiomeEntry(wasteland, 1));
 		
@@ -207,32 +203,32 @@ public class CCPM {
 		
 		pw = new FluidPW();
 		
-		BlocksRegistry.registerBlock(pollFlu, "liquid_ccpm_pollution", getClass(), null);
-		BlocksRegistry.registerBlock(pw, "liquid_ccpm_pw", getClass(), null);
+		registerBlock(pollFlu, "liquid_ccpm_pollution");
+		registerBlock(pw, "liquid_ccpm_pw");
 		
-		ItemRegistry.registerItem(respirator, "itemRespirator", getClass());
-		ItemRegistry.registerItem(pistons, "pistons", getClass());
-		ItemRegistry.registerItem(pollutionBrick, "pollutionBrick", getClass());
+		registerItem(respirator, "itemRespirator");
+		registerItem(pistons, "pistons");
+		registerItem(pollutionBrick, "pollutionBrick");
 		
-		ItemRegistry.registerItem(pollArmor[0], pollArmor[0].getUnlocalizedName(), getClass());
-		ItemRegistry.registerItem(pollArmor[1], pollArmor[1].getUnlocalizedName(), getClass());
-		ItemRegistry.registerItem(pollArmor[2], pollArmor[2].getUnlocalizedName(), getClass());
-		ItemRegistry.registerItem(pollArmor[3], pollArmor[3].getUnlocalizedName(), getClass());
+		registerItem(pollArmor[0], pollArmor[0].getUnlocalizedName());
+		registerItem(pollArmor[1], pollArmor[1].getUnlocalizedName());
+		registerItem(pollArmor[2], pollArmor[2].getUnlocalizedName());
+		registerItem(pollArmor[3], pollArmor[3].getUnlocalizedName());
 		
-		ItemRegistry.registerItem(sword, "ccpmSword", getClass());
+		registerItem(sword, "ccpmSword");
 		
-		ItemRegistry.registerItem(miscIngredient, "ccpmIngr", getClass());
+		registerItem(miscIngredient, "ccpmIngr");
 		
-		ItemRegistry.registerItem(portableAnalyzer, "itemPortAnalyser", getClass());
+		registerItem(portableAnalyzer, "itemPortAnalyser");
 		
-		BlocksRegistry.registerBlock(cell, "energycell", getClass(), ItemBlockCell.class);
-		BlocksRegistry.registerBlock(an, "analyser", getClass(), null);
-		BlocksRegistry.registerBlock(filter, "filter", getClass(), null);
+		registerBlock(cell, "energycell");
+		registerBlock(an, "analyser");
+		registerBlock(filter, "filter");
 		
-		BlocksRegistry.registerBlock(baf, "adv_filter", getClass(), null);
-		BlocksRegistry.registerBlock(advThaum, "adv_thaum_cell", getClass(), ItemAdThaum.class);
-		BlocksRegistry.registerBlock(pollutionBricks, "pollution_bricks", getClass(), null);
-		BlocksRegistry.registerBlock(compressor, "compressor", getClass(), null);
+		registerBlock(baf, "adv_filter");
+		//BlocksRegistry.registerBlock(advThaum, "adv_thaum_cell", getClass(), ItemAdThaum.class);
+		registerBlock(pollutionBricks, "pollution_bricks");
+		registerBlock(compressor, "compressor");
 		
 		buckPw = new PWBucket();
 		
@@ -242,7 +238,7 @@ public class CCPM {
 		//FluidContainerRegistry.registerFluidContainer(CCPMFluids.pollutedWater, new ItemStack(buckPw), new ItemStack(Items.bucket));
 		GameRegistry.registerTileEntity(TileEnergyCellMana.class, "TECM");
 		GameRegistry.registerTileEntity(TileEnergyCellRf.class, "TECR");
-		GameRegistry.registerTileEntity(TileEnergyCellThaumium.class, "TECT");
+		//GameRegistry.registerTileEntity(TileEnergyCellThaumium.class, "TECT");
 		GameRegistry.registerTileEntity(TileEntityFilter.class, "TEF");
 		GameRegistry.registerTileEntity(TileEntityAnalyser.class, "TEA");
 		GameRegistry.registerTileEntity(AdvancedAirFilter.class, "TEAAF");
@@ -296,15 +292,15 @@ public class CCPM {
 		if(instance != this)
 			instance = this;
 		
-		if(Loader.isModLoaded("Thaumcraft")&&CCPM.cfg.enableThaum)
-			RecipeRegistry.thaum();
+		//if(Loader.isModLoaded("Thaumcraft")&&CCPM.cfg.enableThaum)
+		//	RecipeRegistry.thaum();
 		
-		if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
-		{
-			BCIntegration.regFuels();
-			
-			BCIntegration.regRecipes();
-		}
+		//if(Loader.isModLoaded("BuildCraft|Core") || Loader.isModLoaded("BuildCraft"))
+		//{
+		//	BCIntegration.regFuels();
+		//	
+		//	BCIntegration.regRecipes();
+		//}
 		
 		CCPMAchivements.init();
 	}
@@ -380,4 +376,26 @@ public class CCPM {
 		}
 	}
 	
+	public static void registerBlock(Block block, String name)
+	{
+		registerBlock(block, new ItemBlock(block), new ResourceLocation(MODID, name));
+	}
+	
+	public static void registerBlock(Block block, Item item, ResourceLocation name)
+	{
+		GameRegistry.register(block, name);
+		
+		if (item != null)
+			registerItem(item, name);
+	}
+	
+	public static void registerItem(Item item, ResourceLocation name)
+	{
+		GameRegistry.register(item, name);
+	}
+	
+	public static void registerItem(Item item, String name)
+	{
+		GameRegistry.register(item, new ResourceLocation(MODID, name));
+	}
 }

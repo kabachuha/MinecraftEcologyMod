@@ -8,7 +8,7 @@ import ccpm.tiles.TileCompressor;
 import ccpm.utils.config.CCPMConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.network.IGuiHandler;
