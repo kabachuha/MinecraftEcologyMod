@@ -2,7 +2,6 @@ package ccpm.core;
 
 import java.awt.Color;
 
-import ccpm.integration.thaumcraft.Wands;
 import ccpm.utils.config.CCPMConfig;
 
 import net.minecraft.enchantment.Enchantment;

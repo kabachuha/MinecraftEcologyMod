@@ -51,7 +51,6 @@ import ccpm.potions.PotionSmog;
 import ccpm.render.CCPMRenderHandler;
 import ccpm.render.RespHud;
 import ccpm.tiles.AdvancedAirFilter;
-import ccpm.tiles.TileAdvThaum;
 import ccpm.tiles.TileCompressor;
 //import ccpm.render.RenderRespirator;
 import ccpm.tiles.TileEnergyCellMana;
@@ -66,6 +65,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -135,7 +135,7 @@ public class CCPM {
 	
 	public static Block pollutionBricks = new BlockPollutionBricks();
 	
-	public static Item[] pollArmor = new Item[]{new PollutedArmor(PollutedArmor.pollution,0,"ccpm.pollhelm").setTextureName("ccpm:Helmet"), new PollutedArmor(PollutedArmor.pollution,1,"ccpm.pollchest").setTextureName("ccpm:chest"), new PollutedArmor(PollutedArmor.pollution,2,"ccpm.polllegs").setTextureName("ccpm:leg"), new PollutedArmor(PollutedArmor.pollution,3,"ccpm.pollboots").setTextureName("ccpm:boots")};
+	public static Item[] pollArmor = new Item[]{new PollutedArmor(PollutedArmor.pollution,EntityEquipmentSlot.HEAD,"ccpm.pollhelm").setTextureName("ccpm:Helmet"), new PollutedArmor(PollutedArmor.pollution,EntityEquipmentSlot.CHEST,"ccpm.pollchest").setTextureName("ccpm:chest"), new PollutedArmor(PollutedArmor.pollution,EntityEquipmentSlot.LEGS,"ccpm.polllegs").setTextureName("ccpm:leg"), new PollutedArmor(PollutedArmor.pollution,EntityEquipmentSlot.FEET,"ccpm.pollboots").setTextureName("ccpm:boots")};
 
 	public static Block compressor = new BlockCompressor();
 	
@@ -242,7 +242,7 @@ public class CCPM {
 		GameRegistry.registerTileEntity(TileEntityFilter.class, "TEF");
 		GameRegistry.registerTileEntity(TileEntityAnalyser.class, "TEA");
 		GameRegistry.registerTileEntity(AdvancedAirFilter.class, "TEAAF");
-		GameRegistry.registerTileEntity(TileAdvThaum.class, "TEADVTHAUM");
+	//	GameRegistry.registerTileEntity(TileAdvThaum.class, "TEADVTHAUM");
 		GameRegistry.registerTileEntity(TileCompressor.class, "TECCPMCOMPRESSOR");
 		
 		proxy.registerFluidModels();

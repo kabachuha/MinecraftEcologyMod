@@ -4,41 +4,33 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import DummyCore.Client.Icon;
-import DummyCore.Client.IconRegister;
-import DummyCore.Client.RenderAccessLibrary;
-import DummyCore.Utils.BlockStateMetadata;
-import DummyCore.Utils.IOldCubicBlock;
 import ccpm.tiles.TileEntityFilter;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 
-public class BlockFilter extends Block implements ITileEntityProvider, IOldCubicBlock {
+public class BlockFilter extends Block implements ITileEntityProvider {
 
 	public BlockFilter() {
-		super(Material.rock);
+		super(Material.ROCK);
 		
 		this.setUnlocalizedName("ccpm.filter");
         this.setHardness(1.0F);
         this.setResistance(6.0F);
         //this.setLightLevel(1.0F);
         this.setHarvestLevel("pickaxe", 0);
-        this.setStepSound(soundTypeMetal);
         //this.lightValue = 5;
-        this.setDefaultState(BlockStateMetadata.createDefaultBlockState(this));
 	}
 
 	@Override
@@ -46,66 +38,11 @@ public class BlockFilter extends Block implements ITileEntityProvider, IOldCubic
 		return new TileEntityFilter();
 	}
 	
-	Icon i = null;
-	Icon bot;
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIcon(int i, int j)
-    {
-		if(i == EnumFacing.DOWN.getIndex())
-			return bot;
-		
-		return this.i;
-    }
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IconRegister reg)
-    {		
-		i = reg.registerBlockIcon("ccpm:filter");
-		bot = reg.registerBlockIcon("ccpm:compressor_bottom");
-    }
-
-	@Override
-	public Icon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		return getIcon(side,BlockStateMetadata.getBlockMetadata(world, x, y, z));
-	}
-
-	public int damageDropped(IBlockState state)
-    {
-    	return BlockStateMetadata.getMetaFromState(state);
-    }
-    
-    public IBlockState getStateFromMeta(int meta)
-    {
-    	return this.getDefaultState().withProperty(BlockStateMetadata.METADATA, meta);
-    }
-    
-    public int getMetaFromState(IBlockState state)
-    {
-    	return BlockStateMetadata.getMetaFromState(state);
-    }
-
-    protected BlockState createBlockState()
-    {
-    	return new BlockState(this,BlockStateMetadata.METADATA);
-    }
-	
-	@Override
-	public List<IBlockState> listPossibleStates(Block b) {
-		return Arrays.asList(new IBlockState[]{this.getDefaultState()});
-	}
-
-	@Override
-	public int getDCRenderID() {
-		return RenderAccessLibrary.RENDER_ID_CUBE;
-	}
     
 	@SideOnly(Side.CLIENT)
-    public void randomDisplayTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    public void randomDisplayTick(IBlockState state, World worldIn, BlockPos pos, Random rand)
     {
-		super.randomDisplayTick(worldIn, pos, state, rand);
+		super.randomDisplayTick(state, worldIn, pos, rand);
 		
 		if(worldIn.isBlockPowered(pos))
 		for(int i = -2; i <= 2; i++)

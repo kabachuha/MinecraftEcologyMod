@@ -2,86 +2,42 @@ package ccpm.items;
 
 import java.util.List;
 
-import DummyCore.Client.Icon;
-import DummyCore.Client.IconRegister;
-import DummyCore.Utils.IOldItem;
-import DummyCore.Utils.MiscUtils;
 import ccpm.api.CCPMApi;
 import ccpm.api.IRespirator;
 import ccpm.utils.PollutionUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import thaumcraft.api.items.IRepairable;
-import thaumcraft.api.items.IWarpingGear;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.Optional.Interface;
 
 
-@Optional.InterfaceList({
-@Optional.Interface(iface = "thaumcraft.api.items.IRepairable", modid = "Thaumcraft"),
-@Optional.Interface(iface = "thaumcraft.api.items.IWarpingGear", modid = "Thaumcraft")
-})
-public class PollutedSword extends ItemSword implements IOldItem, IRepairable, IWarpingGear {
+public class PollutedSword extends ItemSword {
 
 	public PollutedSword() {
 		super(CCPMApi.pollMaterial);
 		this.setUnlocalizedName("ccpm.sword");
 	}
-
-	Icon icon;
 	
 	@Override
-	public int getWarp(ItemStack itemstack, EntityPlayer player) {
-		return 1;
-	}
-
-	@Override
-	public Icon getIconFromDamage(int meta) {
-		return icon;
-	}
-
-	@Override
-	public Icon getIconFromItemStack(ItemStack stk) {
-		return icon;
-	}
-
-	@Override
-	public void registerIcons(IconRegister reg) {
-		icon=reg.registerItemIcon("ccpm:ccpb_sword");
-	}
-
-	@Override
-	public int getRenderPasses(ItemStack stk) {
-		return 0;
-	}
-
-	@Override
-	public Icon getIconFromItemStackAndRenderPass(ItemStack stk, int pass) {
-		return icon;
-	}
-
-	@Override
-	public boolean recreateIcon(ItemStack stk) {
-		return false;
-	}
-
-	@Override
-	public boolean render3D(ItemStack stk) {
-		return true;
-	}
-	
-	@Override
-	public void onUsingTick(ItemStack stack, EntityPlayer player, int count)
+	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
 	{
 		if(player == null || stack == null)
 			return;
@@ -92,7 +48,7 @@ public class PollutedSword extends ItemSword implements IOldItem, IRepairable, I
 			return;
 		
 		if(count >= 20)
-			player.getEntityWorld().playSoundAtEntity(player, "random.fizz", 0.3F, 2.6F + (player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.8F);
+			player.getEntityWorld().playSound(player instanceof EntityPlayer ? (EntityPlayer) player : null, player.getPosition(), SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.PLAYERS, 0.3F, 2.6F + (player.getEntityWorld().rand.nextFloat() - player.getEntityWorld().rand.nextFloat()) * 0.8F);
 		
 		if(count >=50)
 		{
@@ -108,8 +64,7 @@ public class PollutedSword extends ItemSword implements IOldItem, IRepairable, I
         return 200;
     }
 	
-	
-	public ItemStack onItemUseFinish(ItemStack item, World world, EntityPlayer player)
+	public ItemStack onItemUseFinish(ItemStack item, World world, EntityLivingBase player)
 	{
 		if(item==null || player == null)
 			return item;
@@ -118,7 +73,7 @@ public class PollutedSword extends ItemSword implements IOldItem, IRepairable, I
 			return item;
 		
 		
-		List<Entity> elb = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, AxisAlignedBB.fromBounds(player.posX-8, player.posY-8, player.posZ-8, player.posX+8, player.posY+8, player.posZ+8));
+		List<Entity> elb = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, new AxisAlignedBB(player.posX-8, player.posY-8, player.posZ-8, player.posX+8, player.posY+8, player.posZ+8));
 		
 		if(elb == null || elb.size() <= 0)
 			return item;
@@ -133,25 +88,25 @@ public class PollutedSword extends ItemSword implements IOldItem, IRepairable, I
 			{
 				EntityLivingBase el = (EntityLivingBase)e;
 				
-				int multiplier = (int) MiscUtils.applyPotionDamageCalculations(el, CCPMApi.damageSourcePollution, this.getDamageVsEntity()+world.rand.nextInt(3));
+				int multiplier = (int) (this.getDamageVsEntity()+world.rand.nextInt(3));
 				
 				if(e instanceof EntityPlayer)
 				{
-				if(el.getEquipmentInSlot(4) == null||!(el.getEquipmentInSlot(4).getItem() instanceof IRespirator)||!((IRespirator)el.getEquipmentInSlot(4).getItem()).isFiltering((EntityPlayer)el, el.getEquipmentInSlot(4)))
+				if(el.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null||!((el.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() instanceof IRespirator)&&!((IRespirator)el.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem()).isFiltering((EntityPlayer)el, el.getItemStackFromSlot(EntityEquipmentSlot.HEAD))))
 				{
 				el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
 				
-				el.addPotionEffect(new PotionEffect(Potion.poison.id,10*multiplier, 2));
+				el.addPotionEffect(new PotionEffect(MobEffects.POISON,10*multiplier, 2));
 				}
 				}
 				else
 				{
 					el.attackEntityFrom(CCPMApi.damageSourcePollution, multiplier);
 					
-					el.addPotionEffect(new PotionEffect(Potion.poison.id,10*multiplier, 3));
+					el.addPotionEffect(new PotionEffect(MobEffects.POISON,10*multiplier, 3));
 				}
 				
-				player.getEntityWorld().playSoundAtEntity(player, "random.fizz", 32F, 2.6F + (player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.8F);
+				player.getEntityWorld().playSound(player instanceof EntityPlayer ? (EntityPlayer)player : null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.PLAYERS, 32, 2.6F + (player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.8F);
 				
 				for(int i = -2; i <= 2; i++)
 					for(int j = -2; j <=2; j++)
@@ -175,4 +130,15 @@ public class PollutedSword extends ItemSword implements IOldItem, IRepairable, I
 	{
 		return EnumRarity.RARE;
 	}
+	
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    {
+        playerIn.setActiveHand(hand);
+        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+    }
+	
+	public EnumAction getItemUseAction(ItemStack stack)
+    {
+        return EnumAction.BLOCK;
+    }
 }
