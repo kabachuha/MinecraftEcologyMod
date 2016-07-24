@@ -1,9 +1,9 @@
 package ccpm.gui.element;
 
 import DummyCore.Client.GuiElement;
-import DummyCore.Utils.DrawUtils;
-import DummyCore.Utils.MathUtils;
 import ccpm.api.IHasProgress;
+import ccpm.utils.MiscUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class ProgressBar extends GuiElement {
@@ -30,9 +30,9 @@ public class ProgressBar extends GuiElement {
 	public void draw(int posX, int posY, int mouseX, int mouseY) {
 		this.drawTexturedModalRect(posX, posY, 0, 0, 24, 17);
 		
-		int s = MathUtils.pixelatedTextureSize(tile.getProgress(), tile.getMaxProgress(), 25);
+		int s = MiscUtils.pixelatedTextureSize(tile.getProgress(), tile.getMaxProgress(), 25);
 		
-		DrawUtils.bindTexture(bar2.getResourceDomain(), bar2.getResourcePath());
+		Minecraft.getMinecraft().renderEngine.bindTexture(bar2);
 		
 		this.drawTexturedModalRect(posX, posY, 0, 0, s, 17);
 	}

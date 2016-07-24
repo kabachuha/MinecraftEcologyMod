@@ -2,10 +2,7 @@
 package ccpm.gui.element;
 
 import DummyCore.Client.GuiElement;
-import DummyCore.Client.Icon;
-import DummyCore.Client.IconRegister;
-import DummyCore.Utils.DrawUtils;
-import DummyCore.Utils.MathUtils;
+import ccpm.utils.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -65,16 +62,16 @@ public class ElemFluTank extends GuiElement {
 			{
 				GlStateManager.pushMatrix();
 				
-				int scale = MathUtils.pixelatedTextureSize(fluid.amount, tank.getCapacity(), 52);
+				int scale = MiscUtils.pixelatedTextureSize(fluid.amount, tank.getCapacity(), 52);
 			//	DrawUtils.drawTexturedModalRect(posX+1, posY+1+(52-scale), 0, 0, 16, scale, 2);
-				Icon icon = new Icon(Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill(fluid).toString()));
+				TextureAtlasSprite icon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill(fluid).toString());
 				
 				//DrawUtils.bindTexture(fluid.getFluid().getStill().getResourceDomain(), fluid.getFluid().getStill().getResourcePath());
 				//DrawUtils.drawTexturedModalRect(posX+1, posY+1+(52-scale),0,0, 16, scale, 1);
 				
 				GlStateManager.color((fluid.getFluid().getColor(fluid) >> 16 & 255) / 255.0F, (fluid.getFluid().getColor(fluid) >> 8 & 255) / 255.0F, (fluid.getFluid().getColor(fluid) & 255) / 255.0F, 1.0F);
 				
-				DrawUtils.drawTexture(posX+1, posY+1+(52-scale), icon, 16, scale, 0);
+				MiscUtils.drawScaledTexturedRectFromTAS(posX+1, posY+1+(52-scale), icon, 16, scale, 0);
 				
 				GlStateManager.popMatrix();
 			}

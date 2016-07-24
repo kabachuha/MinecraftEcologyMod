@@ -19,4 +19,7 @@ public class GuiCompressor extends GuiCommon {
 		this.elementList.add(new ProgressBar(this.guiLeft+this.xSize/2-26, this.guiTop+this.ySize/8+22, (IHasProgress)tile));
 	}
 
+
+	
+
 }

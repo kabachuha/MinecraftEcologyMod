@@ -9,7 +9,6 @@ public class ContainerCompressor extends ContainerInventory {
 
 	public ContainerCompressor(InventoryPlayer playerInv, TileEntity tileInv) {
 		super(playerInv, tileInv);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
