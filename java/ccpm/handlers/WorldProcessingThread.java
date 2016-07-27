@@ -17,7 +17,7 @@ public class WorldProcessingThread extends Thread {
 	
 	public WorldProcessingThread(World w, PollutionManager poma)
 	{
-		super("WorldProcessingThread for world "+w.getWorldInfo().getWorldName());
+		super("WorldProcessingThread for dimension "+w.provider.getDimension());
 		//To shut down with Minecraft
 	      this.setDaemon(true);
 	      //Working in background

@@ -217,7 +217,7 @@ public class PlayerHandler {
 	@SubscribeEvent
 	public void onItemExpite(ItemExpireEvent event)
 	{
-		if(WorldHandler.isLoaded && event.getEntityItem()!=null && !event.getEntityItem().worldObj.isRemote && event.getEntityItem().worldObj.provider.getDimension() == 0)
+		if(WorldHandler.isLoaded && event.getEntityItem()!=null && !event.getEntityItem().worldObj.isRemote && PollutionUtils.isValidDim(event.getEntityItem().worldObj))
 		PollutionUtils.increasePollution((event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[0] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[1] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[2] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollArmor[3] || event.getEntityItem().getEntityItem().getItem() == CCPM.pollutionBrick || event.getEntityItem().getEntityItem().getItem() == CCPM.buckPw || event.getEntityItem().getEntityItem().getItem() == Item.getItemFromBlock(CCPM.pollutionBricks)) ? 1000*event.getEntityItem().getEntityItem().stackSize : 2*event.getEntityItem().getEntityItem().stackSize, event.getEntityItem().worldObj.getChunkFromBlockCoords(event.getEntityItem().getPosition()));
 	}
 	

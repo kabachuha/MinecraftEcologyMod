@@ -31,6 +31,7 @@ public class CCPMRenderHandler {
 		}
 	}
 	private boolean b = false;
+	private float prevFPD;
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
@@ -47,8 +48,13 @@ public class CCPMRenderHandler {
 		{
 			if(b)
 			{
-				GlStateManager.setFogDensity(1);
+				if(prevFPD!=0)
+					GlStateManager.setFogEnd(prevFPD);
 				b=false;
+			}
+			else
+			{
+				prevFPD = event.getFarPlaneDistance();
 			}
 		}
 	}

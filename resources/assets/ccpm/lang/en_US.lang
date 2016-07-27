@@ -120,6 +120,8 @@ tc.research_text.ROD_STAFF_CCPB_INVERTED=Do you have any pollution? Then we come
 tc.research_name.CAP_CCPB=CCPB Wand cap
 tc.research_text.CAP_CCPB=Why?
 
-ccpm.ccpb.cap=Now you can craft wand caps from CCPM!
+ccpm.ccpb.cap=Now you can craft wand caps from CCPB!
 
 ccpm.advThaum=You researched how you can replace aura in thaumic energy cell! This machine comsumes Aer and Potentia essentia and convert them to the energy!
+
+itemGroup.ccpm=Ecology Mod

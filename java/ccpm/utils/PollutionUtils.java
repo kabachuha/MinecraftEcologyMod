@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ccpm.api.ITilePollutionProducer;
 import ccpm.core.CCPM;
@@ -64,7 +65,7 @@ public class PollutionUtils {
 		}
 		if(WorldHandler.instance.pm == null)
 		{
-			CCPM.log.warn("[CCPM]Pollution Manager isn't initialized!!!");
+			CCPM.log.warn("Pollution Manager isn't initialized!!!");
 			CCPM.addToEx();
 			return;
 		}
@@ -126,7 +127,7 @@ public class PollutionUtils {
 		if(c==null)
 			return 0;
 		
-		Map<BlockPos, TileEntity> tileMapClone = new LinkedHashMap<BlockPos, TileEntity>(c.getTileEntityMap());
+		HashMap<BlockPos, TileEntity> tileMapClone = new LinkedHashMap<BlockPos, TileEntity>(c.getTileEntityMap());
 		
 		Iterator iter = tileMapClone.values().iterator();
 		
@@ -381,14 +382,18 @@ public class PollutionUtils {
 	{
 		Chunk chunk = w.getChunkFromBlockCoords(new BlockPos(x,w.getActualHeight(),z));
 		byte[] b = chunk.getBiomeArray();
-		byte cbiome = b[(z & 0xf) << 4 | x & 0xf]; //What is even going on here? Can this code be a little bit more readable?
+		byte cbiome = b[(z & 0xf) << 4 | x & 0xf];
 		cbiome = (byte)(Biome.getIdForBiome(biome) & 0xff);
-		b[(z & 0xf) << 4 | x & 0xf] = cbiome; //Looks like not.
+		b[(z & 0xf) << 4 | x & 0xf] = cbiome;
 		chunk.setBiomeArray(b);
-		//notifyBiomeChange(x,z,Biome.getIdForBiome(biome));
 	}
-
-
 	
-
+	public static boolean isValidDim(World w)
+	{
+		for(int i : CCPMConfig.dims)
+			if(w.provider.getDimension() == i)
+				return true;
+		
+		return false;
+	}
 }

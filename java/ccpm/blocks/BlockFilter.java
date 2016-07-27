@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import ccpm.core.CCPM;
 import ccpm.tiles.TileEntityFilter;
 
 import net.minecraft.block.Block;
@@ -31,6 +32,7 @@ public class BlockFilter extends Block implements ITileEntityProvider {
         //this.setLightLevel(1.0F);
         this.setHarvestLevel("pickaxe", 0);
         //this.lightValue = 5;
+        this.setCreativeTab(CCPM.CREATIVE_TAB);
 	}
 
 	@Override

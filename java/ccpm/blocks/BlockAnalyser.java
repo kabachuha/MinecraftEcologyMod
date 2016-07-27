@@ -3,6 +3,7 @@ package ccpm.blocks;
 import java.util.Arrays;
 import java.util.List;
 
+import ccpm.core.CCPM;
 import ccpm.tiles.TileEntityAnalyser;
 import ccpm.tiles.TileEntityFilter;
 
@@ -30,6 +31,7 @@ public class BlockAnalyser extends Block implements ITileEntityProvider {
 	        //this.setLightLevel(1.0F);
 	        this.setHarvestLevel("pickaxe", 0);
 	        //this.lightValue = 5;
+	        this.setCreativeTab(CCPM.CREATIVE_TAB);
 		}
 
 		@Override

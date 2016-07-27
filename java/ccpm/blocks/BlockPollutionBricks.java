@@ -3,6 +3,7 @@ package ccpm.blocks;
 import java.util.Arrays;
 import java.util.List;
 
+import ccpm.core.CCPM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -20,6 +21,7 @@ public class BlockPollutionBricks extends Block {
         this.setLightLevel(6.0F);
         this.setHarvestLevel("pickaxe", 2);
         //this.lightValue = 5;
+        this.setCreativeTab(CCPM.CREATIVE_TAB);
 	}
 
 	@Override

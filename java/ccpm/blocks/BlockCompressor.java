@@ -35,6 +35,7 @@ public class BlockCompressor extends Block implements ITileEntityProvider {
         this.setResistance(70.0F);
         this.setLightLevel(6.0F);
         this.setHarvestLevel("pickaxe", 3);
+        this.setCreativeTab(CCPM.CREATIVE_TAB);
 	}
 
 	@Override

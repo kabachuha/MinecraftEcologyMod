@@ -64,6 +64,7 @@ import ccpm.utils.config.PollutionConfig.PollutionProp.Tilez;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -100,12 +101,14 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = CCPM.MODID, name = CCPM.NAME, version = CCPM.version)
+@Mod(modid = CCPM.MODID, name = CCPM.NAME, version = CCPM.version, updateJSON = CCPM.UPDATE_JSON)
 public class CCPM {
 
 	public static final String MODID = "ccpm";
 	public static final String NAME = /*"Artem226's Climate Change And Pollution Mod"*/ "Artem226's Ecology Mod";
-	public static final String version = "0.3.1102.0preA";
+	public static final String version = "0.3.1102.0A";
+	
+	public static final String UPDATE_JSON = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/version.json";
 	
 	public static Item respirator = new RespiratorBase("ccpmRespirator", RespiratorBase.respiratorMatter);
 	
@@ -398,4 +401,14 @@ public class CCPM {
 	{
 		GameRegistry.register(item, new ResourceLocation(MODID, name));
 	}
+	
+	public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(MODID){
+
+		@Override
+		public Item getTabIconItem()
+		{
+			return respirator;
+		}
+		
+	};
 }

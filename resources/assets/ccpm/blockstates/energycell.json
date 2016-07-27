@@ -1,0 +1,12 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"uvlock": true,
+		"model": "ccpm:energycell"
+	},
+	"variants": {
+		"type": {
+			"rf": {"textures": {"all": "ccpm:ccpmEnergyCellRf" }}
+		}
+	}
+}
