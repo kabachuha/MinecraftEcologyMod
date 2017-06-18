@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"side": "ccpm:blocks/compressor",
-		"top": "ccpm:blocks/pipeConDir",
-		"bottom": "ccpm:blocks/compressor_bottom"
-	}
-}
