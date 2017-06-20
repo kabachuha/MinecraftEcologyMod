@@ -1,12 +1,12 @@
 {
-  "version": "0.0",
+  "version": "1.0",
   "config": [
     {
       "id": "minecraft:furnace",
       "emission": {
-        "air_pollution": 1,
+        "air_pollution": 10,
         "water_pollution": 1,
-        "soil_pollution": 1
+        "soil_pollution": 3
       }
     }
   ]

@@ -27,7 +27,7 @@ public class EMConfig
 	
 	public static float filtmult = 0.92F;
 	
-	public static PollutionData pp2di = new PollutionData(0,1,1);
+	public static PollutionData pp2di = new PollutionData(0, 0.0625D, 0.125D);
 	
 	public static List<String> item_blacklist = new ArrayList<String>();
 	
@@ -57,7 +57,7 @@ public class EMConfig
 			
 			wpr = config.getInt("WaterPollutionRadius", "POLLUTION", 2, 0, 128, "", lang("pollution.wpr"));
 			
-			String ppdi = config.getString("PollutionPerDecayedItem", "POLLUTION", new PollutionData(0,1,1).toString(), "Default pollution emission per stack of decayed items", lang("pollution.ppdi"));
+			String ppdi = config.getString("PollutionPerDecayedItem", "POLLUTION", new PollutionData(0,0.0625D,0.125D).toString(), "Default pollution emission decayed item", lang("pollution.ppdi"));
 			
 			Gson gson = new GsonBuilder().create();
 			
@@ -67,8 +67,8 @@ public class EMConfig
 			}
 			catch (JsonSyntaxException e)
 			{
-				EcologyMod.log.error("Failed to get PollutionPerStackOfDecayedItems property from config! Invalid JSON syntax!");
-				pp2di = new PollutionData(0,1,1);
+				EcologyMod.log.error("Failed to get PollutionPerDecayedItem property from config! Invalid JSON syntax!");
+				pp2di = new PollutionData(0, 0.0625D, 0.125D);
 			}
 			
 			String ib[] = config.getStringList("BlacklistedItems", "POLLUTION", new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}, "");

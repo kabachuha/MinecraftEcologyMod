@@ -2,11 +2,11 @@ package ecomod.api.pollution;
 
 public class PollutionData
 {
-	private int air_pollution;
+	private double air_pollution;
 	
-	private int water_pollution;
+	private double water_pollution;
 	
-	private int soil_pollution;
+	private double soil_pollution;
 	
 	public enum PollutionType
 	{
@@ -26,7 +26,7 @@ public class PollutionData
 		soil_pollution = p.getSoilPollution();
 	}
 	
-	public PollutionData(int air, int water, int soil)
+	public PollutionData(double air, double water, double soil)
 	{
 		air_pollution = air;
 		water_pollution = water;
@@ -38,42 +38,42 @@ public class PollutionData
 	/**
 	 * @return the air_pollution
 	 */
-	public int getAirPollution() {
+	public double getAirPollution() {
 		return air_pollution;
 	}
 
 	/**
 	 * @param air_pollution the air_pollution to set
 	 */
-	public void setAirPollution(int air_pollution) {
+	public void setAirPollution(double air_pollution) {
 		this.air_pollution = air_pollution;
 	}
 
 	/**
 	 * @return the water_pollution
 	 */
-	public int getWaterPollution() {
+	public double getWaterPollution() {
 		return water_pollution;
 	}
 
 	/**
 	 * @param water_pollution the water_pollution to set
 	 */
-	public void setWaterPollution(int water_pollution) {
+	public void setWaterPollution(double water_pollution) {
 		this.water_pollution = water_pollution;
 	}
 
 	/**
 	 * @return the soil_pollution
 	 */
-	public int getSoilPollution() {
+	public double getSoilPollution() {
 		return soil_pollution;
 	}
 
 	/**
 	 * @param soil_pollution the soil_pollution to set
 	 */
-	public void setSoilPollution(int soil_pollution) {
+	public void setSoilPollution(double soil_pollution) {
 		this.soil_pollution = soil_pollution;
 	}
 
@@ -85,7 +85,7 @@ public class PollutionData
 		return this;
 	}
 	
-	public PollutionData add(PollutionType type, int amount)
+	public PollutionData add(PollutionType type, double amount)
 	{
 		switch(type)
 		{
@@ -161,5 +161,20 @@ public class PollutionData
 	public static PollutionData getEmpty()
 	{
 		return new PollutionData(0,0,0);
+	}
+	
+	public PollutionData clone()
+	{
+		return new PollutionData(air_pollution, water_pollution, soil_pollution);
+	}
+	
+	public boolean equals(Object pd)
+	{
+		if(!(pd instanceof PollutionData))
+			return false;
+		
+		PollutionData d = ((PollutionData)pd);
+		
+		return d.getAirPollution() == getAirPollution() && d.getWaterPollution() == getWaterPollution() && d.getSoilPollution() == getSoilPollution();
 	}
 }

@@ -65,6 +65,7 @@ public class WorldProcessingThread extends Thread
 			while(Minecraft.getMinecraft().isGamePaused())
 				slp(15); //Don't make anything while MC is paused
 			
+			int error_counter = 0;
 			isWorking = true;
 			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
 			
@@ -75,26 +76,65 @@ public class WorldProcessingThread extends Thread
 			for(Pair<Integer, Integer> c : getLoadedChunks())
 				chks.add(PollutionUtils.coordsToChunk(world, c));
 			
+			List<ChunkPollution> temp = Collections.synchronizedList(new ArrayList<ChunkPollution>());
+			
 			for(Chunk c : chks)
 			{
-				PollutionData d = calculateChunkPollution(c).add(manager.getChunkPollution(Pair.of(c.xPosition, c.zPosition)).getPollution());
-				Map<PollutionType, Float> m = calculateMultipliers(c);
-				
-				for(ChunkPollution cp : getScheduledEmissions())
-					if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
+				try
+				{
+					PollutionData d = calculateChunkPollution(c).add(manager.getChunkPollution(Pair.of(c.xPosition, c.zPosition)).getPollution());
+					Map<PollutionType, Float> m = calculateMultipliers(c);	
+					
+					
+					synchronized(getScheduledEmissions())
 					{
-						d.add(cp.getPollution());
+						temp.addAll(getScheduledEmissions());
 					}
 				
-				for(PollutionType pt : PollutionType.values())
-				{
-					d = d.multiply(pt, m.get(pt));
-				}
+						synchronized(temp)
+						{
+						for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
+							if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
+							{
+								d.add(cp.getPollution());
+								temp.remove(cp);
+							}
+						}
+						
+					synchronized(scheduledEmissions)
+					{
+						scheduledEmissions.clear();
+					
+						scheduledEmissions.addAll(temp);
+					}
+					
+					temp.clear();
+					
+					
+					for(PollutionType pt : PollutionType.values())
+					{
+						d = d.multiply(pt, m.get(pt));
+					}
 				
-				manager.setChunkPollution(new ChunkPollution(c.xPosition, c.zPosition, d));
+					manager.setChunkPollution(new ChunkPollution(c.xPosition, c.zPosition, d));
+				}
+				catch (Exception e)
+				{
+					EcologyMod.log.error("Caught an exception while processing chunk ("+c.xPosition+";"+c.zPosition+")!");
+					EcologyMod.log.error(e.toString());
+					e.printStackTrace();
+					
+					error_counter++;
+				}
 			}
 			
 			manager.save();
+			
+			if(error_counter > 10)
+			{
+				EcologyMod.log.error("It seems there were many exceptions while processing chunks. If exceptions were the same, please, go to https://github.com/Artem226/MinecraftEcologyMod/issues and make an issue about the exception (Don't forget to include the log!)");
+			}
+			
 			slp();
 		}
 		
@@ -154,7 +194,7 @@ public class WorldProcessingThread extends Thread
 			if(te instanceof IPollutionEmitter)
 			{
 				IPollutionEmitter ipe = (IPollutionEmitter) te;
-				ret.add(ipe.pollutionEmission());
+				ret.add(ipe.pollutionEmission().multiply(PollutionType.WATER, EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr)));
 			}
 			else
 			{
@@ -180,7 +220,7 @@ public class WorldProcessingThread extends Thread
 		Map<PollutionType, Float> ret = new HashMap<PollutionType, Float>();
 		
 		//Multipliers
-		float mA = 1, mW = 1, mS = 1, mN = 1;
+		float mA = 1, mW = 1, mS = 1;
 		
 		for(TileEntity te : tes)
 			if(te instanceof IPollutionMultiplier)

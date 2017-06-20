@@ -311,7 +311,7 @@ public class TEPollutionConfig
 		
 		public PollutionData getEmission()
 		{
-			return emission;
+			return emission.clone();
 		}
 		
 		public String toString()

@@ -4,6 +4,7 @@ import ecomod.core.*;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -203,6 +204,8 @@ public class PollutionHandler
 		
 		String key = PollutionUtils.genPMid(w);
 		
+		//EcologyMod.log.info(event.getEmission().toString());
+		
 		if(threads.containsKey(key))
 		{
 			WorldProcessingThread wpt = threads.get(key);
@@ -221,7 +224,7 @@ public class PollutionHandler
 		}
 	}
 	
-	@SubscribeEvent(priority = EventPriority.LOW)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onItemExpire(ItemExpireEvent event)
 	{
 		if(event.isCanceled())return;
@@ -232,7 +235,7 @@ public class PollutionHandler
 		
 		if(w.isRemote)return;
 		
-		EcologyMod.log.info("PollutionHandler#onItemExpire");
+		EcologyMod.log.debug("PollutionHandler#onItemExpire");
 		
 		ItemStack is = ei.getEntityItem();
 		
@@ -241,13 +244,31 @@ public class PollutionHandler
 		
 		boolean isInWater = EMUtils.countWaterInRadius(w, ei.getPosition(), 1) >= 1;
 		
-		if(is.getItem() instanceof IGarbage)
+		if(!is.hasTagCompound() || !is.getTagCompound().hasKey("ECO_PH_ONITEMEXPIRE"))
 		{
-			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), ((IGarbage)is.getItem()).getPollutionOnDecay().multiplyAll(is.getCount()).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
+			EcologyMod.log.info(is.toString());
+			
+			if(is.getItem() instanceof IGarbage)
+			{
+				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), ((IGarbage)is.getItem()).getPollutionOnDecay().clone().multiplyAll(is.getCount()).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
+			}
+			else
+			{
+				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), EMConfig.pp2di.clone().multiply(PollutionType.WATER, isInWater ? 2 : 1).multiplyAll(is.getCount()), true);
+			}
+			
+			if(is.hasTagCompound())
+			{
+				is.getTagCompound().setBoolean("ECO_PH_ONITEMEXPIRE", true);
+			}
+			else
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setBoolean("ECO_PH_ONITEMEXPIRE", true);
+				is.setTagCompound(tag);
+			}
 		}
-		else
-		{
-			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), EMConfig.pp2di.multiplyAll(is.getCount()).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
-		}
+		
+		
 	}
 }

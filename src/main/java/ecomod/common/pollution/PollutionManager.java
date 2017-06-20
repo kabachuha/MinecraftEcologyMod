@@ -319,6 +319,16 @@ public class PollutionManager
 		{
 			return pollution == null || (pollution.getAirPollution() == 0 && pollution.getWaterPollution() == 0 && pollution.getSoilPollution() == 0);
 		}
+		
+		public static boolean coordEquals(ChunkPollution f, ChunkPollution s)
+		{
+			return (f.getX() == s.getX()) && (f.getZ() == s.getZ());
+		}
+		
+		public String toString()
+		{
+			return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+"}";
+		}
 	}
 	
 	//Just for serialization
