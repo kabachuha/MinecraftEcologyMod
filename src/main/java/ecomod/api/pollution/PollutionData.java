@@ -1,11 +1,18 @@
 package ecomod.api.pollution;
 
-public class PollutionData
+import com.google.gson.annotations.SerializedName;
+
+import io.netty.buffer.ByteBuf;
+
+public class PollutionData implements Comparable
 {
+	@SerializedName("air")
 	private double air_pollution;
 	
+	@SerializedName("water")
 	private double water_pollution;
 	
+	@SerializedName("soil")
 	private double soil_pollution;
 	
 	public enum PollutionType
@@ -76,6 +83,39 @@ public class PollutionData
 	public void setSoilPollution(double soil_pollution) {
 		this.soil_pollution = soil_pollution;
 	}
+	
+	public double get(PollutionType type)
+	{
+		switch(type)
+		{
+			case AIR:
+				return getAirPollution();
+			case WATER:
+				return getWaterPollution();
+			case SOIL:
+				return getSoilPollution();
+		}
+		
+		return 0;
+	}
+	
+	public PollutionData set(PollutionType type, double toset)
+	{
+		switch(type)
+		{
+			case AIR:
+				air_pollution = toset;
+				break;
+			case SOIL:
+				soil_pollution = toset;
+				break;
+			case WATER:
+				water_pollution = toset;
+				break;
+		}
+		
+		return this;
+	}
 
 	public PollutionData add(PollutionData d)
 	{
@@ -89,16 +129,25 @@ public class PollutionData
 	{
 		switch(type)
 		{
-		case AIR:
-			air_pollution += amount;
-			break;
-		case SOIL:
-			soil_pollution += amount;
-			break;
-		case WATER:
-			water_pollution += amount;
-			break;
+			case AIR:
+				air_pollution += amount;
+				break;
+			case SOIL:
+				soil_pollution += amount;
+				break;
+			case WATER:
+				water_pollution += amount;
+				break;
 		}
+		return this;
+	}
+	
+	public PollutionData addAll(double amount)
+	{
+		air_pollution += amount;
+		water_pollution += amount;
+		soil_pollution += amount;
+		
 		return this;
 	}
 	
@@ -155,7 +204,7 @@ public class PollutionData
 	@Override
 	public String toString()
 	{
-		return "{\"air_pollution\" : "+air_pollution+", \"water_pollution\" : "+water_pollution+", \"soil_pollution\" : "+soil_pollution+"}";
+		return "{\"air\" : "+air_pollution+", \"water\" : "+water_pollution+", \"soil\" : "+soil_pollution+"}";
 	}
 	
 	public static PollutionData getEmpty()
@@ -176,5 +225,55 @@ public class PollutionData
 		PollutionData d = ((PollutionData)pd);
 		
 		return d.getAirPollution() == getAirPollution() && d.getWaterPollution() == getWaterPollution() && d.getSoilPollution() == getSoilPollution();
+	}
+
+	/**
+	 * Compare AND (default)
+	 */
+	@Override
+	public int compareTo(Object o)
+	{
+		PollutionData pd = ((PollutionData)o);
+		
+		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
+			return 0;
+		
+		if(air_pollution >= pd.getAirPollution() && water_pollution >= pd.getWaterPollution() && soil_pollution >= pd.getSoilPollution())
+			return 1;
+		
+		return -1;
+	}
+	
+	/**
+	 * Compare OR
+	 * 
+	 * @param pd
+	 * @return @see {@link Comparable#compareTo(Object)}
+	 */
+	public int compareOR(PollutionData pd)
+	{
+		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
+			return 0;
+		
+		if(air_pollution >= pd.getAirPollution() || water_pollution >= pd.getWaterPollution() || soil_pollution >= pd.getSoilPollution())
+			return 1;
+		
+		return -1;
+	}
+	
+	public void writeByteBuf(ByteBuf bb)
+	{
+		for(PollutionType t : PollutionType.values())
+			bb.writeDouble(get(t));
+	}
+	
+	public static PollutionData fromByteBuf(ByteBuf bb)
+	{
+		PollutionData ret = getEmpty();
+		
+		for(PollutionType t : PollutionType.values())
+			ret.set(t, bb.readDouble());
+		
+		return ret;
 	}
 }

@@ -10,21 +10,27 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionMultiplier;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.PollutionManager.ChunkPollution;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
+import ecomod.network.EMPacketHandler;
+import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class WorldProcessingThread extends Thread
 {
@@ -35,6 +41,9 @@ public class WorldProcessingThread extends Thread
 	
 	private List<ChunkPollution> scheduledEmissions = Collections.synchronizedList(new ArrayList<ChunkPollution>());
 	
+	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
+	
+	//TODO Add a profiler?
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
@@ -65,6 +74,8 @@ public class WorldProcessingThread extends Thread
 			while(Minecraft.getMinecraft().isGamePaused())
 				slp(15); //Don't make anything while MC is paused
 			
+			//delta.clear();
+			
 			int error_counter = 0;
 			isWorking = true;
 			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
@@ -78,6 +89,8 @@ public class WorldProcessingThread extends Thread
 			
 			List<ChunkPollution> temp = Collections.synchronizedList(new ArrayList<ChunkPollution>());
 			
+			
+			
 			for(Chunk c : chks)
 			{
 				try
@@ -85,38 +98,38 @@ public class WorldProcessingThread extends Thread
 					PollutionData d = calculateChunkPollution(c).add(manager.getChunkPollution(Pair.of(c.xPosition, c.zPosition)).getPollution());
 					Map<PollutionType, Float> m = calculateMultipliers(c);	
 					
-					
 					synchronized(getScheduledEmissions())
 					{
 						temp.addAll(getScheduledEmissions());
 					}
-				
-						synchronized(temp)
+					
+					synchronized(temp)
+					{
+					for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
+						if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
 						{
-						for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
-							if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
-							{
-								d.add(cp.getPollution());
-								temp.remove(cp);
-							}
+							d.add(cp.getPollution());
+							temp.remove(cp);
 						}
+					}
 						
 					synchronized(scheduledEmissions)
 					{
 						scheduledEmissions.clear();
-					
+						
 						scheduledEmissions.addAll(temp);
 					}
-					
+						
 					temp.clear();
-					
-					
+						
 					for(PollutionType pt : PollutionType.values())
 					{
 						d = d.multiply(pt, m.get(pt));
 					}
 				
 					manager.setChunkPollution(new ChunkPollution(c.xPosition, c.zPosition, d));
+					
+					handleChunk(c);
 				}
 				catch (Exception e)
 				{
@@ -128,11 +141,14 @@ public class WorldProcessingThread extends Thread
 				}
 			}
 			
+			manager.do_diffusion();
+			
 			manager.save();
+			
 			
 			if(error_counter > 10)
 			{
-				EcologyMod.log.error("It seems there were many exceptions while processing chunks. If exceptions were the same, please, go to https://github.com/Artem226/MinecraftEcologyMod/issues and make an issue about the exception (Don't forget to include the log!)");
+				EcologyMod.log.error("It seems there were many exceptions while processing chunks. If exceptions were the same, please, restart Minecraft or go to https://github.com/Artem226/MinecraftEcologyMod/issues and make an issue about the exception (Don't forget to include the log!)");
 			}
 			
 			slp();
@@ -191,10 +207,13 @@ public class WorldProcessingThread extends Thread
 		
 		for(TileEntity te : tes)
 		{
+			int wir = EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr);
+			boolean rain = c.getWorld().isRainingAt(te.getPos());
+			
 			if(te instanceof IPollutionEmitter)
 			{
 				IPollutionEmitter ipe = (IPollutionEmitter) te;
-				ret.add(ipe.pollutionEmission().multiply(PollutionType.WATER, EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr)));
+				ret.add(ipe.pollutionEmission().clone().multiply(PollutionType.WATER, rain ? 6 : 1)).multiply(PollutionType.SOIL, rain ? 3 : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir);
 			}
 			else
 			{
@@ -204,7 +223,9 @@ public class WorldProcessingThread extends Thread
 					{
 						TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
 						if(tep != null)
-							ret.add(tep.getEmission().multiply(PollutionType.WATER, EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr)));
+						{
+							ret.add(tep.getEmission().multiply(PollutionType.WATER, rain ? 6 : 1)).multiply(PollutionType.SOIL, rain ? 3 : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir);
+						}
 					}
 				}
 			}
@@ -236,5 +257,31 @@ public class WorldProcessingThread extends Thread
 		ret.put(PollutionType.SOIL, mS);
 		
 		return ret;
+	}
+	
+	public void handleChunk(Chunk c)
+	{
+		
+	}
+	
+	
+	public void forceSE()
+	{
+		List<ChunkPollution> temp = Collections.synchronizedList(new ArrayList<ChunkPollution>());
+		
+		synchronized(getScheduledEmissions())
+		{
+			temp.addAll(getScheduledEmissions());
+		}
+		
+		synchronized(temp)
+		{
+			for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
+				for(ChunkPollution c : manager.getData())
+					if(cp.getX() == c.getX() && cp.getZ() == c.getZ())
+					{
+						manager.setChunkPollution(new ChunkPollution(cp.getX(), cp.getZ(), c.getPollution().clone().add(cp.getPollution())));
+					}
+		}
 	}
 }

@@ -4,9 +4,13 @@ import ecomod.core.*;
 import ecomod.core.stuff.EMBlocks;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.MainRegistry;
+import ecomod.network.EMPacketHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.*;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -15,6 +19,8 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.registry.GameData;
+import ecomod.common.commands.CommandAddPollution;
+import ecomod.common.commands.CommandGetPollution;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.handlers.PollutionHandler;
@@ -62,15 +68,27 @@ public class EcologyMod
 		
 		setupMeta(event.getModMetadata());
 		
+		if(proxy == null)
+		{
+			log.fatal("Unable to load proxies!!");
+			Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(new NullPointerException("Unable to load either common or client proxy!!!"), "Unable to load either common or client proxy!!!"));
+			return;
+		}
+		
 		MainRegistry.doPreInit();
 		
 		ph = new PollutionHandler();
 		
 		MinecraftForge.EVENT_BUS.register(ph);
+		MinecraftForge.TERRAIN_GEN_BUS.register(ph);
+		
+		proxy.doPreInit();
 		
 		tepc = new TEPollutionConfig();
 		
 		tepc.load(event.getModConfigurationDirectory().getAbsolutePath());
+		
+		EMPacketHandler.init();
 	}
 	
 	@EventHandler
@@ -128,6 +146,13 @@ public class EcologyMod
 				EMConfig.item_blacklist.add(m.getStringValue());
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onServerStart(FMLServerStartingEvent event)
+	{
+		event.registerServerCommand(new CommandGetPollution());
+		event.registerServerCommand(new CommandAddPollution());
 	}
 	
 	

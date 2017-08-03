@@ -12,9 +12,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
 
+import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
+import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMConfig;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import scala.actors.threadpool.Arrays;
@@ -180,6 +185,16 @@ public class PollutionManager
 		return true;
 	}
 	
+	public void writeByteBuf(ByteBuf bb)
+	{
+		bb.writeInt(getDim());
+		for(ChunkPollution cp : data)
+			cp.writeByteBuf(bb);
+	}
+	
+	
+	
+	
 	//Interaction
 	public void reset()
 	{
@@ -189,47 +204,97 @@ public class PollutionManager
 	
 	public boolean contains(Pair<Integer, Integer> coord)
 	{
-		for(ChunkPollution cp : data)
-			if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-				return true;
+		synchronized(data)
+		{
+			for(ChunkPollution cp : data)
+				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+					return true;
+		}
 		
 		return false;
 	}
 	
 	public ChunkPollution getChunkPollution(Pair<Integer, Integer> coord)
 	{
-		for(ChunkPollution cp : data)
-			if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-				return cp;
+		synchronized(data)
+		{
+			for(ChunkPollution cp : data)
+				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+					return cp;
+		}
 		
 		return new ChunkPollution(coord.getLeft(), coord.getRight(), PollutionData.getEmpty());
 	}
 	
-	public void setChunkPollution(ChunkPollution cp)
+	public ChunkPollution setChunkPollution(ChunkPollution cp)
 	{
 		cp = new ChunkPollution(cp.getX(), cp.getZ(), cp.getPollution());
+		
+		PollutionData pd = cp.getPollution();
+		
+		if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
+		if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
+		if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
 		
 		Pair<Integer, Integer> coords = Pair.of(cp.getX(), cp.getZ());
 		
 		if(!cp.isEmpty())
 		{
-			if(contains(coords))
+			synchronized(data)
 			{
-				data.remove(getChunkPollution(coords));
-				data.add(cp);
-			}
-			else
-			{
-				data.add(cp);
+				if(contains(coords))
+				{
+					data.remove(getChunkPollution(coords));
+					data.add(cp);
+				}
+				else
+				{
+					data.add(cp);
+				}
 			}
 		}
+		
+		return cp;
+	}
+	
+	public void setChunkPollution(Pair<Integer, Integer> of, PollutionData add) 
+	{
+		setChunkPollution(new ChunkPollution(of, add));
+	}
+	
+	public void setChunkPollution(int x, int z, PollutionData add) 
+	{
+		setChunkPollution(new ChunkPollution(Pair.of(x, z), add));
+	}
+	
+	public void addPollution(Pair<Integer, Integer> coord, PollutionData delta)
+	{
+		setChunkPollution(coord, getPollution(coord).add(delta));
+	}
+	
+	public void addPollution(int x, int z, PollutionData delta)
+	{
+		setChunkPollution(Pair.of(x, z), getPollution(Pair.of(x, z)).add(delta));
+	}
+	
+	public PollutionData getPollution(Pair<Integer, Integer> coord)
+	{
+		return getChunkPollution(coord).getPollution().clone();
+	}
+	
+	public PollutionData getPollution(int x, int z)
+	{
+		return getChunkPollution(Pair.of(x, z)).getPollution().clone();
 	}
 	
 	public Chunk getChunk(Pair<Integer, Integer> coord)
 	{
-		for(ChunkPollution cp : data)
-			if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-				return world.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());
+		synchronized(data)
+		{
+			for(ChunkPollution cp : data)
+				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+					return world.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());
+		}
 		
 		return null;
 	}
@@ -251,85 +316,34 @@ public class PollutionManager
 		return data;
 	}
 	
-	
-	//Data types
-	
-	public static class ChunkPollution
+	public void do_diffusion()
 	{
-		private int chunkX;
-		private int chunkZ;
-		
-		
-		private PollutionData pollution;
-		
-		public ChunkPollution()
-		{
-			
-		}
-
-		public ChunkPollution(int xPosition, int zPosition, PollutionData data) {
-			chunkX = xPosition;
-			chunkZ = zPosition;
-			pollution = data;
-		}
-
-		/**
-		 * @return the chunkX
-		 */
-		public int getX() {
-			return chunkX;
-		}
-
-		/**
-		 * @param chunkX the chunkX to set
-		 */
-		public void setX(int chunkX) {
-			this.chunkX = chunkX;
-		}
-
-		/**
-		 * @return the chunkY
-		 */
-		public int getZ() {
-			return chunkZ;
-		}
-
-		/**
-		 * @param chunkY the chunkY to set
-		 */
-		public void setZ(int chunkZ) {
-			this.chunkZ = chunkZ;
-		}
-
-		/**
-		 * @return the pollution
-		 */
-		public PollutionData getPollution() {
-			return pollution;
-		}
-
-		/**
-		 * @param pollution the pollution to set
-		 */
-		public void setPollution(PollutionData pollution) {
-			this.pollution = pollution;
-		}
-		
-		public boolean isEmpty()
-		{
-			return pollution == null || (pollution.getAirPollution() == 0 && pollution.getWaterPollution() == 0 && pollution.getSoilPollution() == 0);
-		}
-		
-		public static boolean coordEquals(ChunkPollution f, ChunkPollution s)
-		{
-			return (f.getX() == s.getX()) && (f.getZ() == s.getZ());
-		}
-		
-		public String toString()
-		{
-			return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+"}";
-		}
+		//synchronized(data)
+		//{
+			for(ChunkPollution c : data.toArray(new ChunkPollution[data.size()]))
+				diffuse(c);
+		//}
 	}
+	
+	public void diffuse(ChunkPollution c)
+	{
+		int i = c.getX();
+		int j = c.getZ();
+		
+		PollutionData to_spread = c.getPollution();
+		
+		to_spread = to_spread.multiplyAll(EMConfig.diffusion_factor * EMConfig.wptcd / 60);
+		
+		addPollution(i + 1, j, to_spread);
+        addPollution(i - 1, j, to_spread);
+        addPollution(i, j - 1, to_spread);
+        addPollution(i, j + 1, to_spread);
+
+        addPollution(i, j, to_spread.multiplyAll(-4F));
+	}
+	
+	
+	
 	
 	//Just for serialization
 		public static class WorldPollution
@@ -350,5 +364,7 @@ public class PollutionManager
 				this.data = chunks;
 			}
 		}
+
+		
 		
 }

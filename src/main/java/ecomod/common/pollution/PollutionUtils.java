@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import buildcraft.api.tiles.IHasWork;
 import buildcraft.api.tiles.TilesAPI;
+import ecomod.api.pollution.PollutionData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
@@ -29,6 +30,7 @@ public class PollutionUtils
 	
 	public static boolean isTEWorking(TileEntity te)
 	{	
+		//TODO add more checks
 		if(te instanceof TileEntityFurnace)
 		{
 			return ((TileEntityFurnace)te).isBurning();
@@ -51,5 +53,16 @@ public class PollutionUtils
 		}
 		
 		return true;
+	}
+	
+	public static PollutionData pollutionMaxFrom(PollutionData a, PollutionData b)
+	{
+		for(PollutionData.PollutionType type : PollutionData.PollutionType.values())
+		{
+			if(b.get(type) > a.get(type))
+				a.set(type, b.get(type));
+		}
+		
+		return a;
 	}
 }

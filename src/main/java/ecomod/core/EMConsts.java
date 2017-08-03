@@ -34,5 +34,11 @@ public class EMConsts
 	public static final String common_proxy = "ecomod.common.proxy.ComProxy";
 	public static final String client_proxy = "ecomod.client.proxy.CliProxy";
 	
+	// Consts
 	
+	/**
+	 * Max cached pollution radius.
+	 * Set to prevent abuse when requesting from server
+	 */
+	public static final int max_cached_pollution_radius = 16;
 }
