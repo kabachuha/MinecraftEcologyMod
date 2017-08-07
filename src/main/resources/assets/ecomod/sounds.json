@@ -1,0 +1,8 @@
+{
+  "advanced_filter_working": {
+    "category": "block",
+    "sounds": [
+      {"name": "ecomod:advanced_filter_working", "stream": true}
+    ]
+  }
+}

@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionManager;
@@ -21,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -63,7 +66,13 @@ public class ClientHandler
 		if(json.length() < 3)
 			return false;
 		
+		json = "OQdataQk["+json+"]C";
+		
 		json = json.replaceAll("pn", "QpollutionQkOQairQk0.0,QwaterQk0.0,QsoilQk0.0C");
+		
+		json = json.replaceAll("N", "chunkX");
+		
+		json = json.replaceAll("M", "chunkZ");
 		
 		json = json.replace('Q', '\"');
 		
@@ -158,12 +167,21 @@ public class ClientHandler
 		return false;
 	}
 	
+	
+	
+	@SubscribeEvent
+	public void registerModels(ModelRegistryEvent event)
+	{
+		
+	}
+	
 	//Rendering handlers:
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void fogColor(EntityViewRenderEvent.FogColors event)
 	{
+		EcologyMod.log.debug("Fog color!!!");
 		if(isPlayerInSmog())
 		{
 			event.setRed(0.61F);
@@ -178,6 +196,7 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
 	{
+		
 		if(isPlayerInSmog())
 		{
 			GlStateManager.setFogStart(6.4F+Minecraft.getMinecraft().world.rand.nextFloat()/100); // 0.7

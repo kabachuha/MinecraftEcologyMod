@@ -1,7 +1,10 @@
 package ecomod.api;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
+import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionEmissionEvent;
 import net.minecraft.world.World;
@@ -29,5 +32,16 @@ public class EcomodAPI
 		return MinecraftForge.EVENT_BUS.post(em) && !em.isCanceled();
 	}
 	
+	public static IPollutionGetter pollution_getter = null;
 	
+	@Nullable
+	public static PollutionData getPollution(World w, int chunkX, int chunkZ)
+	{
+		if(pollution_getter != null)
+		{
+			return pollution_getter.getPollution(w, chunkX, chunkZ);
+		}
+		
+		return null;
+	}
 }

@@ -1,6 +1,7 @@
 package ecomod.common.blocks;
 
-import ecomod.common.tiles.TileFilter;
+import ecomod.common.tiles.TileAdvancedFilter;
+import ecomod.core.EcologyMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
@@ -9,26 +10,29 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockFilter extends Block implements ITileEntityProvider {
+public class BlockAdvancedFilter extends Block implements ITileEntityProvider{
 
-	public BlockFilter() {
-		super(Material.ROCK, MapColor.GRAY);
-		this.setDefaultState(this.blockState.getBaseState());
+	public BlockAdvancedFilter()
+	{
+		super(Material.IRON, MapColor.DIAMOND);
 		this.setCreativeTab(CreativeTabs.REDSTONE);
-		this.setHardness(8F);
-		this.setResistance(5F);
 		
-		this.setHarvestLevel("pickaxe", 1);
+		this.setHardness(15F);
+		this.setResistance(10F);
+		
+		this.setHarvestLevel("pickaxe", 2);
 	}
 
-	
 	public boolean isFullCube(IBlockState state)
     {
         return false;
@@ -50,10 +54,9 @@ public class BlockFilter extends Block implements ITileEntityProvider {
 		return new BlockStateContainer(this, new IProperty[0]);
     }
 
-
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
-		return new TileFilter();
+		return new TileAdvancedFilter();
 	}
 }

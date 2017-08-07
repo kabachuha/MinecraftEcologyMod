@@ -28,6 +28,18 @@ public class EMConfig
 	
 	public static float filtmult = 0.92F;
 	
+	public static PollutionData adv_filter_redution = new PollutionData(1.8, 0.02, 0.0005);
+	
+	public static int filter_energy = 5000;
+	
+	public static int adv_filter_energy = 70000;
+	
+	public static int adv_filter_capacity = 5000;
+	
+	public static int adv_filter_delay_secs = 5;
+	
+	public static boolean enable_advanced_filter = true;
+	
 	public static PollutionData pp2di = new PollutionData(0, 0.0625D, 0.125D);
 	
 	public static List<String> item_blacklist = new ArrayList<String>();
@@ -75,6 +87,12 @@ public class EMConfig
 	public static PollutionData no_trees_pollution = new PollutionData(2750000, 700000, 310000);
 	
 	public static float diffusion_factor = 0.0001F;
+	
+	public static boolean enable_concentrated_pollution_flow_texture = true;
+	
+	public static int advanced_filter_energy_per_second = 500;
+	
+	public static int analyzer_energy = 100000;
 	
 	public static void sync()
 	{
@@ -126,6 +144,13 @@ public class EMConfig
 			
 			check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
 			
+			advanced_filter_energy_per_second = config.getInt("AdvancedFilterEnergyPerSecond", "TILES", 500, 0, Integer.MAX_VALUE, "", lang("tiles.advancedfilter.power"));
+			
+			adv_filter_delay_secs = config.getInt("AdvancedFilterDelaySeconds", "TILES", 5, 1, Integer.MAX_VALUE, "", lang("tiles.advancedfilter.delay"));
+			
+			enable_concentrated_pollution_flow_texture = config.getBoolean("EnableConcentratedPollutionFlowTexture", "CLIENT", true, "", lang("client.concentrated_pollution.flow"));
+			
+			analyzer_energy = config.getInt("AnalyzerEnergy", "TILES", 100000, 0, Integer.MAX_VALUE, "", lang("tiles.analyzer.energy"));
 		}
 		catch(Exception e)
 		{

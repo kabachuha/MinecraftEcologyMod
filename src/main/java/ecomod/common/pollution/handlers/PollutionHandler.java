@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.gson.Gson;
@@ -68,6 +70,7 @@ import com.google.gson.GsonBuilder;
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
+import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionEmissionEvent;
 import ecomod.api.pollution.PollutionData.PollutionType;
@@ -78,7 +81,7 @@ import ecomod.common.utils.EMUtils;
 
 
 
-public class PollutionHandler
+public class PollutionHandler implements IPollutionGetter
 {
 	public Map<String, WorldProcessingThread> threads = new HashMap<String, WorldProcessingThread>();
 	
@@ -132,7 +135,7 @@ public class PollutionHandler
 			
 			wp.setData(list.toArray(new ChunkPollution[list.size()]));
 			
-			String json = "P"+gson.toJson(wp, WorldPollution.class);
+			String json = gson.toJson(wp, WorldPollution.class);
 			
 			json = json.replace('\"', 'Q');
 			
@@ -142,7 +145,15 @@ public class PollutionHandler
 			
 			json = json.replace('}', 'C');
 			
+			json = json.substring(9, json.length() - 2);
+			
 			json = json.replaceAll("QpollutionQkOQairQk0.0,QwaterQk0.0,QsoilQk0.0C", "pn");
+			
+			json = json.replaceAll("chunkX", "N");
+			
+			json = json.replaceAll("chunkZ", "M");
+			
+			json = "P"+json;
 			
 			EcologyMod.log.info(json);
 			
@@ -183,7 +194,6 @@ public class PollutionHandler
 			return;
 		}
 		
-		EcologyMod.log.debug("PollutionHandler#onWorldLoad");
 		
 		boolean b1 = false;
 		
@@ -229,7 +239,6 @@ public class PollutionHandler
 		
 		if(w.isRemote)return;
 		
-		EcologyMod.log.debug("PollutionHandler#onWorldSave");
 		
 		String key = PollutionUtils.genPMid(w);
 		
@@ -261,7 +270,6 @@ public class PollutionHandler
 		
 		if(w.isRemote)return;
 		
-		EcologyMod.log.debug("PollutionHandler#onWorldUnload");
 		
 		String key = PollutionUtils.genPMid(w);
 		
@@ -286,8 +294,6 @@ public class PollutionHandler
 		
 		if(w.isRemote)return;
 		
-		EcologyMod.log.debug("PollutionHandler#onChunkLoad");
-		
 		String key = PollutionUtils.genPMid(w);
 		
 		if(threads.containsKey(key))
@@ -311,8 +317,6 @@ public class PollutionHandler
 		World w = event.getWorld();
 		
 		if(w.isRemote)return;
-		
-		EcologyMod.log.debug("PollutionHandler#onChunkUnload");
 		
 		String key = PollutionUtils.genPMid(w);
 		
@@ -691,5 +695,17 @@ public class PollutionHandler
 	{
 		String str = event.getContent();
 		EcologyMod.log.info(str);
+	}
+
+	@Nullable
+	@Override
+	public PollutionData getPollution(World w, int chunkx, int chunkz)
+	{
+		WorldProcessingThread wpt = getWPT(w);
+		
+		if(wpt == null)
+			return null;
+		
+		return wpt.getPM().getPollution(chunkx, chunkz).clone();
 	}
 }

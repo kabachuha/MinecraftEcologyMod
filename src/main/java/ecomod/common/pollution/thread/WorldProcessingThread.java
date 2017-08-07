@@ -84,11 +84,13 @@ public class WorldProcessingThread extends Thread
 			
 			List<Chunk> chks = new ArrayList<Chunk>();
 			
-			for(Pair<Integer, Integer> c : getLoadedChunks())
-				chks.add(PollutionUtils.coordsToChunk(world, c));
+			synchronized(loadedChunks)
+			{
+				for(Pair<Integer, Integer> c : loadedChunks)
+					chks.add(PollutionUtils.coordsToChunk(world, c));
+			}
 			
 			List<ChunkPollution> temp = Collections.synchronizedList(new ArrayList<ChunkPollution>());
-			
 			
 			
 			for(Chunk c : chks)
@@ -178,7 +180,7 @@ public class WorldProcessingThread extends Thread
 		return loadedChunks;
 	}
 	
-	private void slp(int seconds)
+	public void slp(int seconds)
 	{
 		isWorking = false;
 		

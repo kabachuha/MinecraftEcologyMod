@@ -1,0 +1,6 @@
+#Blocks
+#tile.ecomod.XXX.name
+tile.ecomod.filter.name=Pollution Filter
+tile.ecomod.advanced_filter.name=Advanced Pollution Filter
+
+fluid.concentrated_pollution=Concentrated Pollution

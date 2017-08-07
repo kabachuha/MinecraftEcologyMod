@@ -22,18 +22,30 @@ import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.network.EMPacketHandler;
 import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class EMUtils 
 {
 	public static ResourceLocation resloc(String path)
 	{
 		return new ResourceLocation(EMConsts.modid, path);
+	}
+	
+	public static ResourceLocation MC_resloc(String path)
+	{
+		return new ResourceLocation(path);
 	}
 	
 	public static String getString(URL url) throws IOException
@@ -197,5 +209,42 @@ public class EMUtils
 		
 		
 		return points.isEmpty();
+	}
+	
+	//Borrowed from Buildcraft(https://github.com/BuildCraft/BuildCraft) and slightly modified
+	public static void pushFluidAround(IBlockAccess world, BlockPos pos, IFluidTank tank) 
+	{
+        FluidStack potential = tank.drain(tank.getFluidAmount(), false);
+        
+        int drained = 0;
+        
+        if (potential == null || potential.amount <= 0)
+        {
+            return;
+        }
+        FluidStack working = potential.copy();
+        
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            if (potential.amount <= 0)
+                break;
+            
+            TileEntity target = world.getTileEntity(pos.offset(side));
+            if (target == null) {
+                continue;
+            }
+            IFluidHandler handler = target.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite());
+            if (handler != null) {
+                int used = handler.fill(potential, true);
+
+                if (used > 0) {
+                    drained += used;
+                    potential.amount -= used;
+                }
+            }
+        }
+        if (drained > 0) {
+            FluidStack actuallyDrained = tank.drain(drained, true);
+        }
 	}
 }

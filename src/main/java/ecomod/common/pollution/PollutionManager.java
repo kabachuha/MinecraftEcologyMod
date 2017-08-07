@@ -277,6 +277,17 @@ public class PollutionManager
 		setChunkPollution(Pair.of(x, z), getPollution(Pair.of(x, z)).add(delta));
 	}
 	
+	public boolean addPollutionIfLoaded(int x, int z, PollutionData delta)
+	{
+		if(world.isChunkGeneratedAt(x, z))
+		{
+			setChunkPollution(Pair.of(x, z), getPollution(Pair.of(x, z)).add(delta));
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public PollutionData getPollution(Pair<Integer, Integer> coord)
 	{
 		return getChunkPollution(coord).getPollution().clone();
@@ -334,12 +345,16 @@ public class PollutionManager
 		
 		to_spread = to_spread.multiplyAll(EMConfig.diffusion_factor * EMConfig.wptcd / 60);
 		
-		addPollution(i + 1, j, to_spread);
-        addPollution(i - 1, j, to_spread);
-        addPollution(i, j - 1, to_spread);
-        addPollution(i, j + 1, to_spread);
+		to_spread.multiply(PollutionType.SOIL, 0.4F);
+		
+		float count = 0;
+		
+		if(addPollutionIfLoaded(i + 1, j, to_spread))count--;
+		if(addPollutionIfLoaded(i - 1, j, to_spread))count--;
+		if(addPollutionIfLoaded(i, j - 1, to_spread))count--;
+		if(addPollutionIfLoaded(i, j + 1, to_spread))count--;
 
-        addPollution(i, j, to_spread.multiplyAll(-4F));
+        addPollutionIfLoaded(i, j, to_spread.multiplyAll(count));
 	}
 	
 	
