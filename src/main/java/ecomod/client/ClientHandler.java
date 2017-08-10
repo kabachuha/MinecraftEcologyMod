@@ -158,9 +158,8 @@ public class ClientHandler
 		PollutionData data = getLocalPollutionAtChunk(EMUtils.blockPosToPair(new BlockPos(Minecraft.getMinecraft().player.posX, 0, Minecraft.getMinecraft().player.posZ)));
 		
 		if(data != null)
-			if(data.getAirPollution() >= EMConfig.smog_pollution)
+			if(data.compareTo(EMConfig.smog_pollution) >= 0)
 			{
-				
 				return true;
 			}
 		

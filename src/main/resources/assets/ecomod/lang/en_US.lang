@@ -1,6 +1,14 @@
-#Blocks
-#tile.ecomod.XXX.name
+﻿#Blocks
 tile.ecomod.filter.name=Pollution Filter
 tile.ecomod.advanced_filter.name=Advanced Pollution Filter
+tile.ecomod.analyzer.name=Pollution Analyzer
 
+tile.ecomod.block.concentrated_pollution.name=Concentrated Pollution
 fluid.concentrated_pollution=Concentrated Pollution
+
+#Effects
+ape.ecomod.food_pollution.name=Food Pollution
+ape.ecomod.smog_pollution.name=Smog
+ape.ecomod.bad_sleep_pollution.name=Bad Sleep
+ape.ecomod.poisonous_sleep_pollution.name=Poisoinous Sleep
+ape.ecomod.no_fish_pollution.name=No Fish

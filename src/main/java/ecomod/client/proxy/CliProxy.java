@@ -6,9 +6,11 @@ import java.util.List;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.client.ClientHandler;
+import ecomod.client.gui.GuiAnalyzer;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
+import ecomod.common.tiles.TileAnalyzer;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.block.Block;
@@ -18,10 +20,14 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -93,7 +99,12 @@ public class CliProxy extends ComProxy
 				return modelResourceLocation;
 			}
 		});
-		
-		
+	}
+	
+	@Override
+	public void openGUIAnalyzer(TileAnalyzer tile)
+	{
+		if(tile != null)
+			Minecraft.getMinecraft().displayGuiScreen(new GuiAnalyzer(tile));
 	}
 }

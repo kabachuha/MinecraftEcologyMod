@@ -3,14 +3,22 @@ package ecomod.core.stuff;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.*;
 
+import ecomod.api.EcomodAPI;
+import ecomod.api.EcomodStuff;
+import ecomod.api.client.IAnalyzerPollutionEffect;
+import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.utils.AnalyzerPollutionEffect;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 
 public class EMConfig
@@ -58,19 +66,19 @@ public class EMConfig
 	
 	public static boolean check_client_pollution = true;
 	
-	public static double food_pollution_start = 10000;
+	public static PollutionData food_pollution_start = new PollutionData(15000, 10000, 10000);
 	
 	public static double bonemeal_limiting_soil_pollution = 65000;
 	
 	public static double wasteland_pollution = 300000;
 	
-	public static double smog_pollution = 150000;
+	public static PollutionData smog_pollution = new PollutionData(150000, 0, 0);
 	
-	public static double bad_sleep_pollution = 15000;
+	public static PollutionData bad_sleep_pollution = new PollutionData(45000, 0, 0);
 	
-	public static double poisonous_sleep_pollution = 70000;
+	public static PollutionData poisonous_sleep_pollution = new PollutionData(70000, 0, 0);
 	
-	public static double no_fish_pollution = 18000;
+	public static PollutionData no_fish_pollution = new PollutionData(18000, 0, 0);
 	
 	public static double useless_hoe_pollution = 75000;
 	
@@ -94,6 +102,8 @@ public class EMConfig
 	
 	public static int analyzer_energy = 100000;
 	
+	public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -101,6 +111,7 @@ public class EMConfig
 			EcologyMod.log.error("The configuration file hasn't been loaded!");
 			throw new NullPointerException("The configuration file hasn't been loaded!");
 		}
+		
 		
 		try
 		{
@@ -151,6 +162,10 @@ public class EMConfig
 			enable_concentrated_pollution_flow_texture = config.getBoolean("EnableConcentratedPollutionFlowTexture", "CLIENT", true, "", lang("client.concentrated_pollution.flow"));
 			
 			analyzer_energy = config.getInt("AnalyzerEnergy", "TILES", 100000, 0, Integer.MAX_VALUE, "", lang("tiles.analyzer.energy"));
+			
+			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
+			
+			setupEffects();
 		}
 		catch(Exception e)
 		{
@@ -162,6 +177,23 @@ public class EMConfig
 			if(config.hasChanged())
 				config.save();
 		}	
+	}
+	
+	private static void setupEffects()
+	{
+		List<AnalyzerPollutionEffect> defs = new ArrayList<AnalyzerPollutionEffect>();
+		
+		defs.add(new AnalyzerPollutionEffect("food_pollution", "ape.ecomod.food_pollution.name", "ape.ecomod.food_pollution.desc", new ResourceLocation("ecomod:textures/gui/analyzer/icons/food_pollution.png"), food_pollution_start, TriggeringType.OR));
+		defs.add(new AnalyzerPollutionEffect("smog_pollution", "ape.ecomod.smog_pollution.name", "ape.ecomod.smog_pollution.desc", null, smog_pollution, TriggeringType.AND));
+		defs.add(new AnalyzerPollutionEffect("bad_sleep_pollution", "ape.ecomod.bad_sleep_pollution.name", "ape.ecomod.bad_sleep_pollution.desc", new ResourceLocation("ecomod:textures/gui/analyzer/icons/sleep_pollution.png"), bad_sleep_pollution, TriggeringType.AND));
+		defs.add(new AnalyzerPollutionEffect("poisonous_sleep_pollution", "ape.ecomod.poisonous_sleep_pollution.name", "ape.ecomod.poisonous_sleep_pollution.desc", new ResourceLocation("ecomod:textures/gui/analyzer/icons/sleep_pollution.png"), poisonous_sleep_pollution, TriggeringType.AND));
+		defs.add(new AnalyzerPollutionEffect("no_fish_pollution", "ape.ecomod.no_fish_pollution.name", "ape.ecomod.no_fish_pollution.desc", new ResourceLocation("ecomod:textures/gui/analyzer/icons/no_fish_pollution.png"), no_fish_pollution, TriggeringType.AND));
+		
+		
+		for(IAnalyzerPollutionEffect iape : defs)
+		{
+			EcomodAPI.addAnalyzerPollutionEffect(iape);
+		}
 	}
 	
 	private static String lang(String str)

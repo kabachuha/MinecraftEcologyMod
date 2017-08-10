@@ -1,5 +1,6 @@
 package ecomod.common.utils;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -22,11 +23,16 @@ import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.network.EMPacketHandler;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -210,6 +216,92 @@ public class EMUtils
 		
 		return points.isEmpty();
 	}
+	
+	//Linear interpolation
+	public static double lerp(double a, double b, double v)
+	{
+		if (v == 0)
+			return a;
+		else if (v == 1)
+			return b;
+
+		return a + (b - a) * v;
+	}
+
+	public static float lerp(float a, float b, float v)
+	{
+		if (v == 0)
+			return a;
+		else if (v == 1)
+			return b;
+
+		return a + (b - a) * v;
+	}
+
+	public static int lerp(int a, int b, float v)
+	{
+		if (v == 0)
+			return a;
+		else if (v == 1)
+			return b;
+
+		return a + Math.round((b - a) * v);
+	}
+	
+	public static Vec3d lerp(Vec3d a, Vec3d b, float v)
+	{
+		if (v == 0)
+			return a;
+		else if (v == 1)
+			return b;
+
+		return new Vec3d(lerp(a.xCoord, b.xCoord, v),
+						lerp(a.yCoord, b.yCoord, v),
+						lerp(a.zCoord, b.zCoord, v));
+	}
+	
+	public static Color lerp(Color a, Color b, float v)
+	{
+		if (v == 0)
+			return a;
+		else if (v == 1)
+			return b;
+		
+		
+		return new Color(lerp(a.getRed(), b.getRed(), v),
+						lerp(a.getGreen(), b.getGreen(), v),
+						lerp(a.getBlue(), b.getBlue(), v));
+	}
+	
+	//Horizontal gradient
+	public static void drawHorizontalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor, float zLevel)
+    {
+        float f = (float)(startColor >> 24 & 255) / 255.0F;
+        float f1 = (float)(startColor >> 16 & 255) / 255.0F;
+        float f2 = (float)(startColor >> 8 & 255) / 255.0F;
+        float f3 = (float)(startColor & 255) / 255.0F;
+        float f4 = (float)(endColor >> 24 & 255) / 255.0F;
+        float f5 = (float)(endColor >> 16 & 255) / 255.0F;
+        float f6 = (float)(endColor >> 8 & 255) / 255.0F;
+        float f7 = (float)(endColor & 255) / 255.0F;
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.shadeModel(7425);
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        vertexbuffer.pos((double)right, (double)top, (double)zLevel).color(f5, f6, f7, f4).endVertex();
+        vertexbuffer.pos((double)left, (double)top, (double)zLevel).color(f1, f2, f3, f).endVertex();
+        vertexbuffer.pos((double)left, (double)bottom, (double)zLevel).color(f1, f2, f3, f).endVertex();
+        vertexbuffer.pos((double)right, (double)bottom, (double)zLevel).color(f5, f6, f7, f4).endVertex();
+        tessellator.draw();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+    }
 	
 	//Borrowed from Buildcraft(https://github.com/BuildCraft/BuildCraft) and slightly modified
 	public static void pushFluidAround(IBlockAccess world, BlockPos pos, IFluidTank tank) 

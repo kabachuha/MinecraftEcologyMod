@@ -238,7 +238,7 @@ public class PollutionData implements Comparable
 		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
 			return 0;
 		
-		if(air_pollution >= pd.getAirPollution() && water_pollution >= pd.getWaterPollution() && soil_pollution >= pd.getSoilPollution())
+		if(air_pollution > pd.getAirPollution() && water_pollution > pd.getWaterPollution() && soil_pollution > pd.getSoilPollution())
 			return 1;
 		
 		return -1;
@@ -255,7 +255,7 @@ public class PollutionData implements Comparable
 		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
 			return 0;
 		
-		if(air_pollution >= pd.getAirPollution() || water_pollution >= pd.getWaterPollution() || soil_pollution >= pd.getSoilPollution())
+		if(air_pollution > pd.getAirPollution() || water_pollution > pd.getWaterPollution() || soil_pollution > pd.getSoilPollution())
 			return 1;
 		
 		return -1;

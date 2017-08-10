@@ -4,9 +4,11 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionEmissionEvent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -43,5 +45,50 @@ public class EcomodAPI
 		}
 		
 		return null;
+	}
+	
+	public static boolean addAnalyzerPollutionEffect(IAnalyzerPollutionEffect iape)
+	{
+		if(EcomodStuff.pollution_effects.containsKey(iape.getId()) || EcomodStuff.pollution_effects.containsValue(iape))
+			return false;
+		
+		EcomodStuff.pollution_effects.put(iape.getId(), iape);
+		
+		return true;
+	}
+	
+	public static boolean addAnalyzerPollutionEffect(String id, String header, String desc, ResourceLocation icon, PollutionData triggering_pollution, IAnalyzerPollutionEffect.TriggeringType triggering_type)
+	{
+		return addAnalyzerPollutionEffect(new IAnalyzerPollutionEffect(){
+			@Override
+			public PollutionData getTriggerringPollution() {
+				return triggering_pollution;
+			}
+
+			@Override
+			public TriggeringType getTriggeringType() {
+				return triggering_type;
+			}
+
+			@Override
+			public String getId() {
+				return id;
+			}
+
+			@Override
+			public String getHeader() {
+				return header;
+			}
+
+			@Override
+			public String getDescription() {
+				return desc;
+			}
+
+			@Override
+			public ResourceLocation getIcon() {
+				return icon == null ? IAnalyzerPollutionEffect.BLANK_ICON : icon;
+			}
+		});
 	}
 }

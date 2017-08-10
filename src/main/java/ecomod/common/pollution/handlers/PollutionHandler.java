@@ -532,18 +532,18 @@ public class PollutionHandler implements IPollutionGetter
 		
 		PollutionData data = wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(player.getPosition())).getPollution();
 		
-		if(data.getAirPollution() >= EMConfig.bad_sleep_pollution)
+		if(data.compareTo(EMConfig.bad_sleep_pollution) >= 0)
 		{
-			int f = (int) (data.getAirPollution()/EMConfig.bad_sleep_pollution + 1);
+			int f = (int) (data.getAirPollution()/EMConfig.bad_sleep_pollution.getAirPollution() + 1);
 			
 			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? 250*f : 2500, 1));
 			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("weakness").toString()), 2000, f));
 			if(f >= 2)
 				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("hunger").toString()), 2000, 2));
 			
-			player.sendMessage(new TextComponentString("You feels ill. It seems the air is not clean enough."));
+			player.sendMessage(new TextComponentString("You are feeling ill. Perhaps the air is not clean enough."));
 			
-			if(data.getAirPollution() >= EMConfig.poisonous_sleep_pollution)
+			if(data.compareTo(EMConfig.poisonous_sleep_pollution) >= 0)
 			{
 				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, f));
 			}

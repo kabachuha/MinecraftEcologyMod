@@ -1,6 +1,8 @@
 package ecomod.common.blocks;
 
+import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
+import ecomod.api.pollution.PollutionData;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import net.minecraft.block.material.Material;
@@ -33,6 +35,8 @@ public class BlockFluidPollution extends BlockFluidFinite {
 	{
 		if(worldIn.isRemote)
 			return;
+		
+		EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), new PollutionData(50,5,10), true);
 		
 		worldIn.newExplosion(explosionIn.getExplosivePlacedBy(), pos.getX(), pos.getY(), pos.getZ(), 3F, true, true);
 	}

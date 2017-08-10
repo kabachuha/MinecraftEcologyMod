@@ -41,4 +41,7 @@ public class EMConsts
 	 * Set to prevent abuse when requesting from server
 	 */
 	public static final int max_cached_pollution_radius = 16;
+	
+	
+	public static final int analyzer_gui_id = 0;
 }
