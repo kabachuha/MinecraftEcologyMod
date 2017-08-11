@@ -13,6 +13,7 @@ import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.utils.EMUtils;
@@ -158,7 +159,7 @@ public class ClientHandler
 		PollutionData data = getLocalPollutionAtChunk(EMUtils.blockPosToPair(new BlockPos(Minecraft.getMinecraft().player.posX, 0, Minecraft.getMinecraft().player.posZ)));
 		
 		if(data != null)
-			if(data.compareTo(EMConfig.smog_pollution) >= 0)
+			if(PollutionEffectsConfig.isEffectActive("smog", data))
 			{
 				return true;
 			}
@@ -180,7 +181,6 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogColor(EntityViewRenderEvent.FogColors event)
 	{
-		EcologyMod.log.debug("Fog color!!!");
 		if(isPlayerInSmog())
 		{
 			event.setRed(0.61F);
@@ -195,7 +195,6 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
 	{
-		
 		if(isPlayerInSmog())
 		{
 			GlStateManager.setFogStart(6.4F+Minecraft.getMinecraft().world.rand.nextFloat()/100); // 0.7

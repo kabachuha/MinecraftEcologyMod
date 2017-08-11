@@ -9,17 +9,22 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import ecomod.api.client.IAnalyzerPollutionEffect;
+import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.util.ResourceLocation;
 
 public class AnalyzerPollutionEffect implements IAnalyzerPollutionEffect
 {
-	String icon;
-	PollutionData triggerring_pollution;
 	String id;
 	String header;
 	String description;
+	
+	String icon;
+	
 	TriggeringType triggering_type;
+	PollutionData triggerring_pollution;
+	
+
 	
 	private static Gson gson = new GsonBuilder().create();
 	
@@ -41,6 +46,16 @@ public class AnalyzerPollutionEffect implements IAnalyzerPollutionEffect
 	public AnalyzerPollutionEffect(IAnalyzerPollutionEffect iape)
 	{
 		this(iape.getId(), iape.getHeader(), iape.getDescription(), iape.getIcon(), iape.getTriggerringPollution(), iape.getTriggeringType());
+	}
+	
+	public static AnalyzerPollutionEffect createSimple(String id, PollutionData triggering_pollution, IAnalyzerPollutionEffect.TriggeringType triggering_type)
+	{
+		return new AnalyzerPollutionEffect(id, "ape.ecomod."+id+".name", "ape.ecomod."+id+".desc", new ResourceLocation("ecomod:textures/gui/analyzer/icons/"+id+".png"), triggering_pollution, triggering_type);
+	}
+	
+	public static AnalyzerPollutionEffect createSimpleNull(String id, PollutionData triggering_pollution, IAnalyzerPollutionEffect.TriggeringType triggering_type)
+	{
+		return new AnalyzerPollutionEffect(id, "ape.ecomod."+id+".name", "ape.ecomod."+id+".desc", null, triggering_pollution, triggering_type);
 	}
 	
 	@Override

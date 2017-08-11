@@ -70,13 +70,14 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 						i1 = ticks;
 					}
 					
-					extractEnergy(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false);
+					if(energy.extractEnergy(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
+					{
+						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), EMConfig.adv_filter_redution.clone().multiplyAll(-1F), false);
 					
-					EcomodAPI.emitPollution(getWorld(), getChunkCoords(), EMConfig.adv_filter_redution.clone().multiplyAll(-1F), false);
+						tank.fillInternal(getProduction(), true);
 					
-					tank.fillInternal(getProduction(), true);
-					
-					EMUtils.pushFluidAround(getWorld(), getPos(), tank);
+						EMUtils.pushFluidAround(getWorld(), getPos(), tank);
+					}
 				}
 				else
 				{

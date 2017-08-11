@@ -108,6 +108,8 @@ public class EcologyMod
 		
 		tepc.load(event.getModConfigurationDirectory().getAbsolutePath());
 		
+		EMConfig.setupEffects(event.getModConfigurationDirectory().getAbsolutePath());
+		
 		EMPacketHandler.init();
 	}
 	

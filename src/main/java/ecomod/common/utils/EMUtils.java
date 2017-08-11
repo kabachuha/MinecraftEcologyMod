@@ -23,6 +23,7 @@ import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.network.EMPacketHandler;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -73,17 +74,77 @@ public class EMUtils
 		return buffer.toString(); 
 	}
 	
+	public static int compareEcomodVersionsNoMC(String ver1, String ver2)
+	{
+		int strt1 = ver1.indexOf("-")+1;
+		int strt2 = ver2.indexOf("-")+1;
+		
+		ver1 = ver1.substring(strt1);
+		ver2 = ver2.substring(strt2);
+		
+		strt1 = ver1.indexOf("-");
+		strt2 = ver2.indexOf("-");
+		
+		if(strt1 != -1)
+		{
+			ver1 = ver1.split("-")[0];
+		}
+		if(strt2 != -1)
+		{
+			ver2 = ver2.split("-")[0];
+		}
+		
+		return compareVersionsOnlyDots(ver1, ver2);
+	}
+	
+	public static int compareVersionsOnlyDots(String ver1, String ver2)
+	{
+		ver1 = ver1.replace('.', 'Y');
+		ver2 = ver2.replace('.', 'Y');
+		
+		String parts1[] = ver1.split("Y");
+		String parts2[] = ver2.split("Y");
+		
+		if(parts1.length != parts2.length)
+			throw new IllegalArgumentException();
+		
+		boolean greater = true;
+		for(int i = 0; i < parts1.length-1; i++)
+		{
+			greater &= Integer.parseInt(parts1[i]) >= Integer.parseInt(parts2[i]);
+		}
+		
+		if(!greater)
+			return -1;
+		
+		
+		if(Integer.parseInt(parts1[parts1.length-1]) == Integer.parseInt(parts2[parts1.length-1]))
+			return 0;
+		else if(Integer.parseInt(parts1[parts1.length-1]) > Integer.parseInt(parts2[parts1.length-1]))
+			return 1;
+		else if(Integer.parseInt(parts1[parts1.length-1]) < Integer.parseInt(parts2[parts1.length-1]))
+			return -1;
+		
+		return 1;
+	}
+	
+	public static String parseMINECRAFTURL(String mcurl)
+	{
+		if(mcurl.contains("<MINECRAFT>"))
+		{
+			String mcpath = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();
+			mcpath = mcpath.substring(0, mcpath.length()-2);
+			mcurl = mcurl.replace("<MINECRAFT>", mcpath);
+		}
+		
+		return mcurl;
+	}
+	
 	public static boolean shouldTEPCupdate(String thi/*s*/, String ne/*w*/)
 	{
 		if(thi.toLowerCase().contentEquals("custom")) return false;
 		
-		if(Integer.parseInt(String.valueOf(ne.charAt(0))) < Integer.parseInt(String.valueOf(thi.charAt(0))))
-			return false;
-		
-		if(Integer.parseInt(String.valueOf(ne.charAt(0))) > Integer.parseInt(String.valueOf(thi.charAt(0))))
-			return true;
-		
-		return Integer.parseInt(String.valueOf(ne.charAt(2))) > Integer.parseInt(String.valueOf(thi.charAt(2)));
+		return compareVersionsOnlyDots(thi, ne) > 0;
 	}
 	
 	public static Pair<Integer, Integer> chunkPosToPair(ChunkPos pos)

@@ -27,7 +27,6 @@ import scala.actors.threadpool.Arrays;
 
 public class TEPollutionConfig
 {
-	
 	public List<TEPollution> data;
 	
 	public String version = EMConsts.version.substring(0, 3);
@@ -77,12 +76,7 @@ public class TEPollutionConfig
 		
 		EcologyMod.log.info("Getting TEPC from "+urlstr);
 		
-		if(urlstr.contains("<MINECRAFT>"))
-		{
-			String mcpath = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();
-			mcpath = mcpath.substring(0, mcpath.length()-2);
-			urlstr = urlstr.replace("<MINECRAFT>", mcpath);
-		}
+		urlstr = EMUtils.parseMINECRAFTURL(urlstr);
 		
 		String json;
 		

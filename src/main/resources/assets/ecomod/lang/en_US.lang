@@ -8,7 +8,8 @@ fluid.concentrated_pollution=Concentrated Pollution
 
 #Effects
 ape.ecomod.food_pollution.name=Food Pollution
-ape.ecomod.smog_pollution.name=Smog
-ape.ecomod.bad_sleep_pollution.name=Bad Sleep
-ape.ecomod.poisonous_sleep_pollution.name=Poisoinous Sleep
-ape.ecomod.no_fish_pollution.name=No Fish
+ape.ecomod.smog.name=Smog
+ape.ecomod.bad_sleep.name=Bad Sleep
+ape.ecomod.poisonous_sleep.name=Poisoinous Sleep
+ape.ecomod.no_fish.name=No Fish
+ape.ecomod.polluted_water.name=Polluted Water

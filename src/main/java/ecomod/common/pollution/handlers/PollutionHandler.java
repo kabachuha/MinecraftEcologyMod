@@ -72,6 +72,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ecomod.api.EcomodAPI;
+import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
 import ecomod.api.pollution.IPollutionGetter;
@@ -454,29 +455,13 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		PollutionData data = getPollution(w, EMUtils.blockPosToPair(event.getPos()).getLeft(), EMUtils.blockPosToPair(event.getPos()).getRight());
 		
-		if(threads.containsKey(key))
+		if(PollutionEffectsConfig.isEffectActive("no_bonemeal", data))
 		{
-			WorldProcessingThread wpt = threads.get(key);
-			
-			PollutionData data = wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(event.getPos())).getPollution();
-			
-			if((data.getWaterPollution() + data.getSoilPollution()) >= EMConfig.bonemeal_limiting_soil_pollution)
+			if(w.getBlockState(event.getPos()).getBlock() == Blocks.SAPLING)
 			{
-				if(w.getBlockState(event.getPos()).getBlock() == Blocks.SAPLING)
-				{
-					if(data.compareOR(EMConfig.no_trees_pollution) >= 0)
-					{
-						event.setResult(Result.DENY);
-						event.setCanceled(true);
-					}
-					else
-					{
-						
-					}
-				}
-				else
+				if(PollutionEffectsConfig.isEffectActive("no_trees", data))
 				{
 					event.setResult(Result.DENY);
 					event.setCanceled(true);
@@ -484,8 +469,13 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			else
 			{
-				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), EMConfig.bonemeal_pollution, true);
+				event.setResult(Result.DENY);
+				event.setCanceled(true);
 			}
+		}
+		else
+		{
+			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), EMConfig.bonemeal_pollution, true);
 		}
 	}
 	
@@ -498,15 +488,9 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		PollutionData data = getPollution(w, EMUtils.blockPosToPair(event.getPos()).getLeft(), EMUtils.blockPosToPair(event.getPos()).getRight());
 		
-		WorldProcessingThread wpt = getWPT(key);
-		
-		if(wpt == null)return;
-		
-		PollutionData data = wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(event.getPos())).getPollution();
-		
-		if((data.getWaterPollution() + data.getSoilPollution()) >= EMConfig.useless_hoe_pollution)
+		if(PollutionEffectsConfig.isEffectActive("no_plowing", data))
 		{
 			event.setResult(Result.DENY);
 			event.setCanceled(true);
@@ -528,29 +512,24 @@ public class PollutionHandler implements IPollutionGetter
 		World w = player.getEntityWorld();
 		
 		if(w.isRemote)return;
+
 		
-		String key = PollutionUtils.genPMid(w);
+		PollutionData data = getPollution(w, EMUtils.blockPosToPair(player.getPosition()).getLeft(), EMUtils.blockPosToPair(player.getPosition()).getRight());
 		
-		WorldProcessingThread wpt = getWPT(key);
-		
-		if(wpt == null)return;
-		
-		PollutionData data = wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(player.getPosition())).getPollution();
-		
-		if(data.compareTo(EMConfig.bad_sleep_pollution) >= 0)
+		if(PollutionEffectsConfig.isEffectActive("bad_sleep", data))
 		{
-			int f = (int) (data.getAirPollution()/EMConfig.bad_sleep_pollution.getAirPollution() + 1);
+			float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
 			
-			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? 250*f : 2500, 1));
-			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("weakness").toString()), 2000, f));
+			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? (int)(250*f) : 2500, 1));
+			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("weakness").toString()), 2000, (int)f));
 			if(f >= 2)
 				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("hunger").toString()), 2000, 2));
 			
 			player.sendMessage(new TextComponentString("You are feeling ill. Perhaps the air is not clean enough."));
 			
-			if(data.compareTo(EMConfig.poisonous_sleep_pollution) >= 0)
+			if(PollutionEffectsConfig.isEffectActive("poisonous_sleep", data))
 			{
-				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, f));
+				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, (int)f));
 			}
 		}
 	}
@@ -584,9 +563,8 @@ public class PollutionHandler implements IPollutionGetter
 		
 		EcologyMod.log.info(data.toString());
 		
-		if(data.compareOR(EMConfig.no_trees_pollution) >= 0)
+		if(PollutionEffectsConfig.isEffectActive("no_trees", data))
 		{
-			EcologyMod.log.info(1);
 			event.setResult(Result.DENY);
 		}
 		else
@@ -617,17 +595,13 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		Pair<Integer, Integer> chunkCoords = EMUtils.blockPosToPair(pos);
 		
-		WorldProcessingThread wpt = getWPT(key);
-		
-		if(wpt == null)return;
-		
-		PollutionData data = wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(pos)).getPollution();
+		PollutionData data = getPollution(w, chunkCoords.getLeft(), chunkCoords.getRight());
 		
 		if(event.getEntityLiving() instanceof IAnimals)
 		{
-			if(data.compareOR(data) >= 0)
+			if(PollutionEffectsConfig.isEffectActive("no_animals", data))
 			{
 				event.setResult(Result.DENY);
 			}

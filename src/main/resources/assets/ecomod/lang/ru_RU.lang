@@ -1,2 +1,14 @@
-tile.ecomod.filter.name=������ �����������
-tile.ecomod.advanced_filter.name=���������� ������ �����������
+﻿#Блоки
+tile.ecomod.filter.name=Фильтр Загрязнения
+tile.ecomod.advanced_filter.name=Продвинутый Фильтр Загрязнения
+tile.ecomod.analyzer.name=Анализатор Загрязнения
+
+tile.ecomod.block.concentrated_pollution.name=Концентрированное Загрязнение
+fluid.concentrated_pollution=Концентрированное Загрязнение
+
+#Эффекты
+ape.ecomod.food_pollution.name=Загрязнение Еды
+ape.ecomod.smog.name=Смог
+ape.ecomod.bad_sleep.name=Плохой Сон
+ape.ecomod.poisonous_sleep.name=Ядовитый Сон
+ape.ecomod.no_fish.name=Нет Рыб
