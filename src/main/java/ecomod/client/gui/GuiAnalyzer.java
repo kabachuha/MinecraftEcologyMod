@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import ecomod.api.EcomodStuff;
@@ -18,13 +17,13 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
+import ecomod.network.EMPacketHandler;
+import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -32,7 +31,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class GuiAnalyzer extends GuiScreen
 {
-	PollutionData pollution = new PollutionData(500000, 400000, 450000);
+	PollutionData pollution = null;//new PollutionData(500000, 400000, 450000);
 	
 	Date last_update_time = null;
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat();
@@ -60,8 +59,6 @@ public class GuiAnalyzer extends GuiScreen
 		
 		allowUserInput = true;
 		
-		last_update_time = new Date();
-		
 		if(!inited_first)
 		{
 			no_energy_text.add("Not enough energy to work!");
@@ -77,7 +74,7 @@ public class GuiAnalyzer extends GuiScreen
      */
 	@Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {	
+    {
 		//Background
 		drawRect(0, 0, width, height, new Color(198, 198, 198, 150).getRGB());
 		//pollution = null;
@@ -102,13 +99,13 @@ public class GuiAnalyzer extends GuiScreen
 		drawRect(width-110 + (int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored())), height-30, width-10, height-10, Color.DARK_GRAY.getRGB());
 		//end Energy indicator
 		
+		if(fontRendererObj == null)
+			return;//Wait for fontRendererObj
 
 		if(pollution == null)
 			this.drawString(fontRendererObj, "Energy:", width-110, height-40-1, Color.ORANGE.getRGB());
 		else
 			this.drawStringNoShadow(fontRendererObj, "Energy:", width-110, height-40-1, Color.RED.getRGB());
-		
-
 		
 		this.drawVerticalLine(xt1, 0, height, Color.BLACK.getRGB());
 		this.drawHorizontalLine(xt1, width, buttonAnalyze.yPosition + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
@@ -130,7 +127,8 @@ public class GuiAnalyzer extends GuiScreen
 			
 			this.drawHorizontalLine(xt1, width, strt + 11, Color.BLACK.getRGB());
 			
-			this.drawStringNoShadow(fontRendererObj, "Analyzed: "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
+			if(last_update_time != null && last_update_time.getTime() != -1)
+				this.drawStringNoShadow(fontRendererObj, "Analyzed: "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 22, Color.BLACK.getRGB());
 /*
@@ -182,42 +180,9 @@ public class GuiAnalyzer extends GuiScreen
 	static final int header_width = 80;
 	static final int icon_size = 50;
 	
-	private boolean wasClicking = false;
 	
 	public void drawGrid(int xt1, int startX, int startY, int endX, int endY, int mouseX, int mouseY)
 	{
-		//boolean flag = Mouse.isButtonDown(0);
-		
-		//int k = xt1 - 14;
-        //int l = 0;
-        //int i1 = xt1;
-        //int j1 = height;
-        /*
-        if(needScrollBar())
-        {
-        	if (!this.wasClicking && flag && mouseX >= k && mouseY >= l && mouseX < i1 && mouseY < j1)
-        	{
-            	scroll.isScrolling = pollution != null;
-        	}
-
-        	if (!flag)
-        	{
-            	scroll.isScrolling = false;
-        	}
-
-        	this.wasClicking = flag;
-        
-        	if (scroll.isScrolling)
-        	{
-            	scroll.currentScroll = ((float)(mouseY - l) - 7.5F) / ((float)(j1 - l) - 15.0F);
-            	scroll.currentScroll = MathHelper.clamp(scroll.currentScroll, 0.0F, 1.0F);
-        	}
-        
-        	Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/gui/container/creative_inventory/tabs.png"));
-        	
-        	this.drawTexturedModalRect(k, l + (int)((float)(j1 - l - 17) * scroll.currentScroll), 232, 0, 12, 15);
-        }
-        */
         if(effects.size() > 0)
         {	
         	int num = Math.min(effects.size(), (endY - startY) / icon_size);
@@ -261,8 +226,13 @@ public class GuiAnalyzer extends GuiScreen
 	
 	protected void actionPerformed(GuiButton button) throws IOException
     {
-        if (button.enabled)
+        if (button.enabled && button.visible)
         {
+        	if(button.id == 0)
+        	{
+        		EMPacketHandler.WRAPPER.sendToServer(new EMPacketString("A"+te.getPos().getX()+";"+te.getPos().getY()+";"+te.getPos().getZ()+";"+te.getWorld().provider.getDimension()));
+        	}
+        	
         	if(button.id == 1)
         	{
         		if(startIndex >=1)
@@ -353,6 +323,12 @@ public class GuiAnalyzer extends GuiScreen
     			buttonDown.enabled = buttonDown.visible = false;
     		}
     	}
+        
+        if(pollution != te.pollution)
+        	pollution = te.pollution;
+        
+        if(last_update_time != new Date(te.last_analyzed) && te.last_analyzed != -1)
+        	last_update_time = new Date(te.last_analyzed);
         
         if (!this.mc.player.isEntityAlive() || this.mc.player.isDead)
         {

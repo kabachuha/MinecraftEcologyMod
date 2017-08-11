@@ -100,7 +100,7 @@ public class EMConfig
 	
 	public static int advanced_filter_energy_per_second = 500;
 	
-	public static int analyzer_energy = 100000;
+	public static int analyzer_energy = 450000;
 	
 	public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
@@ -161,7 +161,7 @@ public class EMConfig
 			
 			enable_concentrated_pollution_flow_texture = config.getBoolean("EnableConcentratedPollutionFlowTexture", "CLIENT", true, "", lang("client.concentrated_pollution.flow"));
 			
-			analyzer_energy = config.getInt("AnalyzerEnergy", "TILES", 100000, 0, Integer.MAX_VALUE, "", lang("tiles.analyzer.energy"));
+			analyzer_energy = config.getInt("AnalyzerEnergy", "TILES", 450000, 1, Integer.MAX_VALUE, "Analyzer energetic capacity", lang("tiles.analyzer.energy"));
 			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 			

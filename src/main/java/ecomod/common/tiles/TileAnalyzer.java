@@ -1,8 +1,14 @@
 package ecomod.common.tiles;
 
 import net.minecraftforge.fml.common.Optional;
+
+import java.util.Date;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.utils.EMUtils;
 import ecomod.core.stuff.EMConfig;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -12,22 +18,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 
 
-//@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")
-public class TileAnalyzer extends TileEnergy implements /*SimpleComponent, */ITickable
+public class TileAnalyzer extends TileEnergy
 {
+	public PollutionData pollution = null;
+	public long last_analyzed = -1;
+	
 	public TileAnalyzer()
 	{
 		super(EMConfig.analyzer_energy);
-		
 	}
 
-	@Override
-	public void update()
-	{
-		//TODO
-	}
-
-	//@Override
 	public String getComponentName()
 	{
 		return "ecomod.analyzer";
@@ -38,34 +38,42 @@ public class TileAnalyzer extends TileEnergy implements /*SimpleComponent, */ITi
 		return EcomodAPI.getPollution(getWorld(), getChunkCoords().getLeft(), getChunkCoords().getRight());
 	}
 	
-	//@Callback(getter = true)
-	//@Optional.Method(modid = "OpenComputers")
-	public Object[] get_pollution(Context context, Arguments arguments) throws Exception
+	public Pair<Long, PollutionData> analyze()
 	{
-		Object[] ret = new Object[PollutionData.PollutionType.values().length];
-		
-		PollutionData pd = getPollution();
-		
-		if(pd == null)
+		if(world.isRemote)
 			return null;
 		
-		ret[0] = pd.getAirPollution();
-		ret[1] = pd.getWaterPollution();
-		ret[2] = pd.getSoilPollution();
+		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
+		{
+			energy.setEnergyStored(0);
+			
+			pollution = getPollution();
+			
+			last_analyzed = new Date().getTime();
+			
+			return Pair.of(last_analyzed, pollution);
+		}
 		
-		return ret;
+		return null;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		
+		pollution = EMUtils.pollutionDataFromJSON(nbt.getString("pollution"), null);
+		last_analyzed = nbt.getLong("last_analyzed");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
+		
+		nbt.setString("pollution", pollution.toString());
+		nbt.setLong("last_analyzed", last_analyzed);
+		
 		return nbt;
 	}
 }

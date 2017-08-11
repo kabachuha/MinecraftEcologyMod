@@ -20,6 +20,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionAbsorption;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +29,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.feature.WorldGenHugeTrees;
 import net.minecraft.world.gen.feature.WorldGenSavannaTree;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -48,6 +51,7 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -77,6 +81,7 @@ import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.*;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.pollution.thread.WorldProcessingThread;
+import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
 
 
@@ -695,6 +700,63 @@ public class PollutionHandler implements IPollutionGetter
 	{
 		String str = event.getContent();
 		EcologyMod.log.info(str);
+		char TYPE = str.charAt(0);
+		
+		if(str.length() >= 1)
+			str = str.substring(1);
+		
+		switch(TYPE)
+		{
+			case 'A':
+				makeAnalysis(str);
+				break;
+				
+			case '0':
+			case '\0'://So if the string is empty
+			default:
+				return;
+		}
+	}
+	
+	public void makeAnalysis(String str)
+	{
+		String strs[] = str.split(";");
+		
+		//strs[0] - x
+		//strs[1] - y
+		//strs[2] - z
+		//strs[3] - dim
+		
+		if(strs.length < 4)
+			return;
+		
+		BlockPos bp;
+		int dim;
+		
+		try{
+			 bp = new BlockPos(Integer.parseInt(strs[0]), Integer.parseInt(strs[1]), Integer.parseInt(strs[2]));
+			 dim = Integer.parseInt(strs[3]);
+		}
+		catch (NumberFormatException nfe)
+		{
+			EcologyMod.log.info(nfe.toString());
+			return;
+		}
+		
+		if(bp != null)
+		{
+			MinecraftServer mcserver = FMLCommonHandler.instance().getMinecraftServerInstance();
+			
+			WorldServer ws = mcserver.worldServerForDimension(dim);
+			
+			TileEntity te = ws.getTileEntity(bp);
+			
+			if(te != null)
+			if(te instanceof TileAnalyzer)
+			{
+				((TileAnalyzer)te).analyze();
+			}
+		}
 	}
 
 	@Nullable
