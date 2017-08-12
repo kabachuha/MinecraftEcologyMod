@@ -170,7 +170,8 @@ public class PollutionManager
 		List<ChunkPollution> l = new ArrayList<ChunkPollution>();
 		
 		for(ChunkPollution u : wp.getData())
-			l.add(u);
+			if(!(u.getPollution().getAirPollution() == 0 && u.getPollution().getWaterPollution() == 0 && u.getPollution().getSoilPollution() == 0))
+				l.add(u);
 		
 		synchronized(data)
 		{
@@ -236,9 +237,11 @@ public class PollutionManager
 		if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
 		if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
 		
+		cp.setPollution(pd);
+		
 		Pair<Integer, Integer> coords = Pair.of(cp.getX(), cp.getZ());
 		
-		if(!cp.isEmpty())
+		if(!cp.isEmpty() && !(pd.getAirPollution() == 0.0D && pd.getWaterPollution() == 0.0D && pd.getSoilPollution() == 0.0D))
 		{
 			synchronized(data)
 			{
@@ -341,7 +344,7 @@ public class PollutionManager
 		int i = c.getX();
 		int j = c.getZ();
 		
-		PollutionData to_spread = c.getPollution();
+		PollutionData to_spread = c.getPollution().clone();
 		
 		to_spread = to_spread.multiplyAll(EMConfig.diffusion_factor * EMConfig.wptcd / 60);
 		

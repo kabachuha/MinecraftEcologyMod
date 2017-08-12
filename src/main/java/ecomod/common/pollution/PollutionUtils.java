@@ -4,9 +4,16 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import buildcraft.api.tiles.IHasWork;
 import buildcraft.api.tiles.TilesAPI;
+import ecomod.api.pollution.IRespirator;
 import ecomod.api.pollution.PollutionData;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.ModAPIManager;
@@ -64,5 +71,48 @@ public class PollutionUtils
 		}
 		
 		return a;
+	}
+	
+	
+	public static boolean hasSurfaceAccess(World w, BlockPos bp)
+	{
+		if(w.canBlockSeeSky(bp))
+			return true;
+		
+		if(!w.isBlockFullCube(bp.up()))
+			if(hasSurfaceAccess(w, bp.up()))
+				return true;
+		
+		for(EnumFacing facing : EnumFacing.HORIZONTALS)
+		{
+			BlockPos b = bp.offset(facing);
+			if(!w.isBlockFullCube(b))
+			{
+				if(w.canSeeSky(b))
+					return true;
+				else if(!w.isBlockFullCube(b.up()))
+					if(hasSurfaceAccess(w, b.up()))
+						return true;
+			}
+		}
+			
+			
+		return false;
+	}
+	
+	
+	public static boolean isEntityRespirating(EntityLivingBase entity)
+	{
+		ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		
+		if(is != null)
+		{
+			if(is.getItem() instanceof IRespirator)
+			{
+				return ((IRespirator)is.getItem()).isRespirating(entity, is);
+			}
+		}
+		
+		return false;
 	}
 }

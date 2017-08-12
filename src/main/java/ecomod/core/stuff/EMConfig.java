@@ -55,8 +55,6 @@ public class EMConfig
 	
 	public static int wpr = 2;
 	
-	public static int min_ps = 10000;
-	
 	public static boolean allow_acid_rain_render = true;
 	
 	public static PollutionData explosion_pollution = new PollutionData(20.5, 6.25, 8.25);
@@ -121,8 +119,6 @@ public class EMConfig
 			String ib[] = config.getStringList("BlacklistedItems", "POLLUTION", new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}, "Items which do not create pollution when dropped and expired");
 			
 			item_blacklist.addAll(Arrays.asList(ib));
-			
-			min_ps = config.getInt("MinPollutionToSpread", "POLLUTION", 10000, 10, Integer.MAX_VALUE, "", lang("pollution.min_ps"));
 			
 			String bone_pollution = config.getString("BonemealPollution", "POLLUTION", new PollutionData(0.05, 0.15, 0.5).toString(), "Bonemeal usage pollution", lang("pollution.bonemeal"));
 			

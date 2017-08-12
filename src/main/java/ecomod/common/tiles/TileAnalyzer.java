@@ -7,6 +7,7 @@ import java.util.Date;
 import org.apache.commons.lang3.tuple.Pair;
 
 import ecomod.api.EcomodAPI;
+import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.stuff.EMConfig;
@@ -16,6 +17,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 
 
 public class TileAnalyzer extends TileEnergy
@@ -45,6 +47,8 @@ public class TileAnalyzer extends TileEnergy
 		
 		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
 		{
+			world.playSound(null, getPos(), EcomodStuff.analyzer, SoundCategory.BLOCKS, 3F, 1F);
+			
 			energy.setEnergyStored(0);
 			
 			pollution = getPollution();
@@ -71,7 +75,8 @@ public class TileAnalyzer extends TileEnergy
 	{
 		super.writeToNBT(nbt);
 		
-		nbt.setString("pollution", pollution.toString());
+		if(pollution != null)
+			nbt.setString("pollution", pollution.toString());
 		nbt.setLong("last_analyzed", last_analyzed);
 		
 		return nbt;

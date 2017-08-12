@@ -11,6 +11,7 @@ public class EcomodStuff
 	public static Fluid concentrated_pollution = null;
 	
 	public static SoundEvent advanced_filter_working = null;
+	public static SoundEvent analyzer = null;
 	
 	public static Map<String, IAnalyzerPollutionEffect> pollution_effects = null;
 }

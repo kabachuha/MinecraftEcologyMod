@@ -209,7 +209,7 @@ public class PollutionData implements Comparable
 	
 	public static PollutionData getEmpty()
 	{
-		return new PollutionData(0,0,0);
+		return new PollutionData(0.0D,0.0D,0.0D);
 	}
 	
 	public PollutionData clone()
@@ -238,7 +238,7 @@ public class PollutionData implements Comparable
 		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
 			return 0;
 		
-		if(air_pollution > pd.getAirPollution() && water_pollution > pd.getWaterPollution() && soil_pollution > pd.getSoilPollution())
+		if(air_pollution >= pd.getAirPollution() && water_pollution >= pd.getWaterPollution() && soil_pollution >= pd.getSoilPollution())
 			return 1;
 		
 		return -1;

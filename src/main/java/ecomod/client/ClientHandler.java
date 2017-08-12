@@ -36,6 +36,8 @@ public class ClientHandler
 	
 	public Gson gson = new GsonBuilder().create();
 	
+	public boolean smog = false;
+	
 	public boolean requestForNearbyPollution()
 	{
 		return false;
@@ -58,6 +60,23 @@ public class ClientHandler
 		}
 		
 		return null;
+	}
+	
+	public void setSmog(String str)
+	{
+		if(str.length() != 1)
+			return;
+		
+		try
+		{
+			boolean b = Integer.parseInt(str) != 0;
+		
+			smog = b;
+		}
+		catch (Exception ex)
+		{
+			smog = false;
+		}
 	}
 	
 	public boolean setFromJson(String json)
@@ -123,6 +142,7 @@ public class ClientHandler
 	 * <br>
 	 * By the first char:<br>
 	 * P - Update cached_pollution<br>
+	 * > - Set smog<br>
 	 * ...<br>
 	 * TODO add more cases<br>
 	 * 
@@ -135,7 +155,7 @@ public class ClientHandler
 	public void onStrEventReceived(EMPacketString.EventReceived event)
 	{
 		String str = event.getContent();
-		EcologyMod.log.info(str);
+		//EcologyMod.log.info(str);
 		char TYPE = str.charAt(0);
 		
 		if(str.length() >= 1)
@@ -146,6 +166,9 @@ public class ClientHandler
 			case 'P':
 				setFromJson(str);
 				break;
+			case '>':
+				setSmog(str);
+				break;
 				
 			case '0':
 			case '\0'://So if the string is empty
@@ -153,21 +176,6 @@ public class ClientHandler
 				return;
 		}
 	}
-	
-	public boolean isPlayerInSmog()
-	{
-		PollutionData data = getLocalPollutionAtChunk(EMUtils.blockPosToPair(new BlockPos(Minecraft.getMinecraft().player.posX, 0, Minecraft.getMinecraft().player.posZ)));
-		
-		if(data != null)
-			if(PollutionEffectsConfig.isEffectActive("smog", data))
-			{
-				return true;
-			}
-		
-		return false;
-	}
-	
-	
 	
 	@SubscribeEvent
 	public void registerModels(ModelRegistryEvent event)
@@ -181,11 +189,11 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogColor(EntityViewRenderEvent.FogColors event)
 	{
-		if(isPlayerInSmog())
+		if(smog)
 		{
-			event.setRed(0.61F);
-			event.setGreen(0.54F);
-			event.setBlue(0.54F);
+			event.setRed(66F/255);
+			event.setGreen(80F/255);
+			event.setBlue(67F/255);
 		}
 	}
 	
@@ -195,10 +203,11 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
 	{
-		if(isPlayerInSmog())
+		if(smog)
 		{
-			GlStateManager.setFogStart(6.4F+Minecraft.getMinecraft().world.rand.nextFloat()/100); // 0.7
-			GlStateManager.setFogEnd(9.5F+Minecraft.getMinecraft().world.rand.nextFloat()/100);
+			GlStateManager.setFogDensity(1F);
+			GlStateManager.setFogStart(0.3F); // 0.7
+			GlStateManager.setFogEnd(event.getFarPlaneDistance()*0.2F);
 			if(!b)
 				b = true;
 		}

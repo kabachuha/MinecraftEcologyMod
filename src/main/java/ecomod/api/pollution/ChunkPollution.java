@@ -81,7 +81,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	
 	public boolean isEmpty()
 	{
-		return pollution == null || (pollution == PollutionData.getEmpty());
+		return pollution == null || (pollution.getAirPollution() == 0.0D && pollution.getWaterPollution() == 0.0D && pollution.getSoilPollution() == 0.0D);
 	}
 	
 	public static boolean coordEquals(ChunkPollution f, ChunkPollution s)

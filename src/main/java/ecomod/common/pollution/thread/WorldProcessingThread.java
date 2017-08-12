@@ -97,7 +97,7 @@ public class WorldProcessingThread extends Thread
 			{
 				try
 				{
-					PollutionData d = calculateChunkPollution(c).add(manager.getChunkPollution(Pair.of(c.xPosition, c.zPosition)).getPollution());
+					PollutionData d = calculateChunkPollution(c);
 					Map<PollutionType, Float> m = calculateMultipliers(c);	
 					
 					synchronized(getScheduledEmissions())
@@ -129,7 +129,8 @@ public class WorldProcessingThread extends Thread
 						d = d.multiply(pt, m.get(pt));
 					}
 				
-					manager.setChunkPollution(new ChunkPollution(c.xPosition, c.zPosition, d));
+					if(!(d.getAirPollution() == 0.0D && d.getWaterPollution() == 0.0D && d.getSoilPollution() == 0.0D))
+						manager.addPollution(c.xPosition, c.zPosition, d);//(new ChunkPollution(c.xPosition, c.zPosition, d));
 					
 					handleChunk(c);
 				}
@@ -282,7 +283,7 @@ public class WorldProcessingThread extends Thread
 				for(ChunkPollution c : manager.getData())
 					if(cp.getX() == c.getX() && cp.getZ() == c.getZ())
 					{
-						manager.setChunkPollution(new ChunkPollution(cp.getX(), cp.getZ(), c.getPollution().clone().add(cp.getPollution())));
+						manager.addPollution(c.getX(), c.getZ(), cp.getPollution());
 					}
 		}
 	}

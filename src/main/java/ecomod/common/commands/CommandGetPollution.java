@@ -2,6 +2,7 @@ package ecomod.common.commands;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ecomod.api.EcomodAPI;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.utils.EMUtils;
@@ -34,24 +35,18 @@ public class CommandGetPollution extends CommandBase {
 		
 		if(w == null || w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
 		
-		if(EcologyMod.ph.threads.containsKey(key))
+		if(args.length == 2)
+		{	
+			sender.sendMessage(new TextComponentString(EcomodAPI.getPollution(w, Integer.parseInt(args[0]), Integer.parseInt(args[1])).toString()));
+		}
+		else if (args.length == 0)
 		{
-			WorldProcessingThread wpt = EcologyMod.ph.threads.get(key);
-			
-			if(args.length == 2)
-			{	
-				sender.sendMessage(new TextComponentString(wpt.getPM().getChunkPollution(Pair.of(Integer.parseInt(args[0]), Integer.parseInt(args[1]))).toString()));
-			}
-			else if (args.length == 0)
-			{
-				sender.sendMessage(new TextComponentString(wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(sender.getPosition())).toString()));
-			}
-			else
-			{
-				sender.sendMessage(new TextComponentString("Invalid command format!"));
-			}
+			sender.sendMessage(new TextComponentString(EcomodAPI.getPollution(w, EMUtils.blockPosToPair(sender.getPosition()).getLeft(), EMUtils.blockPosToPair(sender.getPosition()).getRight()).toString()));
+		}
+		else
+		{
+			sender.sendMessage(new TextComponentString("Invalid command format!"));
 		}
 	}
 

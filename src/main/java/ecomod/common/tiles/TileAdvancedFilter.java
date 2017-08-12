@@ -8,6 +8,7 @@ import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
+import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
@@ -103,6 +104,11 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 	public boolean isWorking()
 	{
 		boolean ret = true;
+		
+		if(!PollutionUtils.hasSurfaceAccess(getWorld(), getPos()))
+		{
+			return false;
+		}
 		
 		ret &= world.isBlockPowered(getPos());
 		

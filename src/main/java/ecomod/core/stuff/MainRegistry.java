@@ -26,9 +26,8 @@ public class MainRegistry
 	
 	public static void doInit()
 	{
-		EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working"));
-		
-		SoundEvent.REGISTRY.putObject(EMUtils.resloc("advanced_filter_working"), EcomodStuff.advanced_filter_working);
+		SoundEvent.REGISTRY.putObject(EMUtils.resloc("advanced_filter_working"), EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")));
+		SoundEvent.REGISTRY.putObject(EMUtils.resloc("analyzer"), EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")));
 		
 		IGuiHandler igh = new EMGuiHandler();
 		

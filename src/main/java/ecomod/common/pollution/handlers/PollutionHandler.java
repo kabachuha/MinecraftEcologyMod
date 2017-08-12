@@ -161,7 +161,7 @@ public class PollutionHandler implements IPollutionGetter
 			
 			json = "P"+json;
 			
-			EcologyMod.log.info(json);
+			//EcologyMod.log.info(json);
 			
 			if(json != "P")
 				return new EMPacketString(json);
@@ -367,7 +367,7 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			else
 			{
-				wpt.getPM().setChunkPollution(new ChunkPollution(event.getChunkX(), event.getChunkZ(), event.getEmission().clone().add(wpt.getPM().getChunkPollution(Pair.of(event.getChunkX(), event.getChunkZ())).getPollution())));
+				wpt.getPM().addPollution(event.getChunkX(), event.getChunkZ(), event.getEmission());
 			}
 		}
 	}
@@ -628,6 +628,10 @@ public class PollutionHandler implements IPollutionGetter
 				{
 					EMPacketHandler.WRAPPER.sendTo(to_send, (EntityPlayerMP)event.getEntity());
 				}
+				
+				boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
+				
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 			}
 			catch (Exception e)
 			{
@@ -650,30 +654,86 @@ public class PollutionHandler implements IPollutionGetter
 		if(world.isRemote)//client side actions are handled in ClientHandler
 			return;
 		
-		if(entity instanceof EntityPlayer)
-		{
+		
 			//1.5 min
 			if((entity.ticksExisted + 1) % 1800 == 0)
 			{
-				EMPacketString to_send = EcologyMod.ph.formCachedPollutionToSend((EntityPlayer)event.getEntity(), EMConfig.cached_pollution_radius);
+				if(entity instanceof EntityPlayer)
+				{
+					EMPacketString to_send = EcologyMod.ph.formCachedPollutionToSend((EntityPlayer)event.getEntity(), EMConfig.cached_pollution_radius);
 				
-				if(to_send == null)
-				{
-					EcologyMod.log.error("Unable to make EMPacketString with mark 'P'!!! Unable to form cached pollution for player "+((EntityPlayer)event.getEntity()).getName()+"("+((EntityPlayer)event.getEntity()).getUniqueID().toString()+")");
-				}
-				else
-				{
-					EMPacketHandler.WRAPPER.sendTo(to_send, (EntityPlayerMP)event.getEntity());
+					if(to_send == null)
+					{
+						EcologyMod.log.error("Unable to make EMPacketString with mark 'P'!!! Unable to form cached pollution for player "+((EntityPlayer)event.getEntity()).getName()+"("+((EntityPlayer)event.getEntity()).getUniqueID().toString()+")");
+					}
+					else
+					{
+						EMPacketHandler.WRAPPER.sendTo(to_send, (EntityPlayerMP)event.getEntity());
+					}
 				}
 			}
-		}
+			
+			if(((entity.ticksExisted) % 300 == 0))
+			{
+				if(entity instanceof EntityLivingBase)
+				{
+					if(entity instanceof EntityPlayer)
+					{
+						boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
+				
+						EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
+						
+						if(inSmog)
+						{
+							if(!PollutionUtils.isEntityRespirating(entity))
+							{
+								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
+							
+							
+								BlockPos bp = new BlockPos(entity.posX, entity.posY, entity.posZ);
+								if(getPollution(world, EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
+									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 140, 0));
+							}
+						}
+					}
+					else
+					{
+						if(entity.getEntityWorld().rand.nextInt(10) == 0)
+						{
+							if(isEntityInSmog(entity))
+							{
+								if(!PollutionUtils.isEntityRespirating(entity))
+								{
+									((EntityLivingBase)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
+								}
+							}
+						}
+					}
+				}
+			}
+	}
+	
+	public boolean isEntityInSmog(EntityLivingBase player)
+	{
+		BlockPos bp = new BlockPos(player.posX, player.posY, player.posZ);
+		
+		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone();
+		
+		if(pollution!=null && pollution != PollutionData.getEmpty())
+			if(PollutionEffectsConfig.isEffectActive("smog", pollution))
+			{
+				if(PollutionUtils.hasSurfaceAccess(player.getEntityWorld(), bp))
+					return true;
+			}
+		
+		return false;
 	}
 	
 	@SubscribeEvent
 	public void onStrEventReceived(EMPacketString.EventReceived event)
 	{
 		String str = event.getContent();
-		EcologyMod.log.info(str);
+		//EcologyMod.log.info(str);
 		char TYPE = str.charAt(0);
 		
 		if(str.length() >= 1)
