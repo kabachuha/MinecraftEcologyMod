@@ -29,9 +29,11 @@ public class EcomodAPI
 	 */
 	public static boolean emitPollution(World world, Pair<Integer,Integer> chunkLoc, PollutionData emission, boolean scheduled)
 	{
+		if(emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0)) return false;
+		
 		PollutionEmissionEvent em = new PollutionEmissionEvent(world, chunkLoc.getLeft(), chunkLoc.getRight(), emission, scheduled);
 		
-		return MinecraftForge.EVENT_BUS.post(em) && !em.isCanceled();
+		return MinecraftForge.EVENT_BUS.post(em);
 	}
 	
 	public static IPollutionGetter pollution_getter = null;

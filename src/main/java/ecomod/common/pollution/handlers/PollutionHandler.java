@@ -220,7 +220,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		PollutionManager pm = new PollutionManager(w);
 		
-		EcologyMod.log.debug("Creating PollutionManager for "+key);
+		EcologyMod.log.info("Creating PollutionManager for "+key);
 		
 		if(pm.load())
 		{
@@ -348,7 +348,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		EcologyMod.log.debug("PollutionHandler#onEmission");
+///		EcologyMod.log.debug("PollutionHandler#onEmission");
 		
 		String key = PollutionUtils.genPMid(w);
 		
@@ -386,7 +386,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		EcologyMod.log.debug("PollutionHandler#onItemExpire");
+//		EcologyMod.log.debug("PollutionHandler#onItemExpire");
 		
 		ItemStack is = ei.getEntityItem();
 		
@@ -405,7 +405,7 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			else
 			{
-				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), EMConfig.pp2di.clone().multiply(PollutionType.WATER, isInWater ? 2 : 1).multiplyAll(is.getCount()), true);
+				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), PollutionSourcesConfig.getItemStackPollution(is).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
 			}
 			
 			if(is.hasTagCompound())
@@ -434,7 +434,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		int water_affected = EMUtils.countWaterInRadius(w, new BlockPos(expl.getPosition()), (int)expl.explosionSize);
 		
-		PollutionData emission = EMConfig.explosion_pollution.clone();
+		PollutionData emission = PollutionSourcesConfig.getSource("explosion_pollution_per_power");
 		
 		emission.multiply(PollutionType.AIR, expl.isFlaming ? 1.5F : 1);	
 		emission.multiply(PollutionType.SOIL, expl.isFlaming ? 1.5F : 1);
@@ -475,7 +475,7 @@ public class PollutionHandler implements IPollutionGetter
 		}
 		else
 		{
-			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), EMConfig.bonemeal_pollution, true);
+			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("bonemeal_pollution"), true);
 		}
 	}
 	
@@ -497,7 +497,7 @@ public class PollutionHandler implements IPollutionGetter
 		}
 		else
 		{
-			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), new PollutionData(0,0,-0.5), true);
+			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("hoe_plowing_reducion"), true);
 		}
 		
 	}
@@ -543,7 +543,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getEntityPlayer().getPosition()), EMConfig.pollution_per_potion_brewed, true);
+		EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getEntityPlayer().getPosition()), PollutionSourcesConfig.getSource("brewing_potion_pollution"), true);
 	}
 	
 	@SubscribeEvent
@@ -581,7 +581,7 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			else
 			{*/
-				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), EMConfig.pollution_reduced_by_tree, true);
+				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("tree_growing_pollution_redution"), true);
 			//}
 		}
 	}

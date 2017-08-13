@@ -178,7 +178,7 @@ public class PollutionEffectsConfig
 	
 	public static PollutionEffectsConfig get()
 	{
-		String urlstr = EMConfig.tepcURL;
+		String urlstr = EMConfig.effectsURL;
 		
 		EcologyMod.log.info("Getting PollutionEffects from "+urlstr);
 		
@@ -287,8 +287,6 @@ public class PollutionEffectsConfig
 			EcologyMod.log.error("Unable to save PollutionEffects as PollutionEffects.json in "+cfg_path+"! It will very likely have serious problems later!!");
 			EcologyMod.log.error("Look for the reason in the log!");
 		}
-		
-		pushToApi();
 	}
 	
 	private static class Effects

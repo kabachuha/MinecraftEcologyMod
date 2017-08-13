@@ -1,8 +1,10 @@
 package ecomod.api;
 
+import java.util.List;
 import java.util.Map;
 
 import ecomod.api.client.IAnalyzerPollutionEffect;
+import ecomod.api.pollution.PollutionData;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fluids.Fluid;
 
@@ -14,4 +16,13 @@ public class EcomodStuff
 	public static SoundEvent analyzer = null;
 	
 	public static Map<String, IAnalyzerPollutionEffect> pollution_effects = null;
+	
+	public static Map<String, PollutionData> pollution_sources = null;
+	
+	//Format:  item_registry_name:[meta(optional)]
+	public static List<String> blacklisted_items = null;
+	
+	public static Map<String, PollutionData> polluting_items = null;
+	
+	public static Map<String, PollutionData> smelted_items_pollution = null;
 }

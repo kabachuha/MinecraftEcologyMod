@@ -3,8 +3,10 @@ package ecomod.common.blocks;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
+import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -36,9 +38,10 @@ public class BlockFluidPollution extends BlockFluidFinite {
 		if(worldIn.isRemote)
 			return;
 		
-		EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), new PollutionData(50,5,10), true);
+		EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("concentrated_pollution_explosion_pollution"), true);
 		
-		worldIn.newExplosion(explosionIn.getExplosivePlacedBy(), pos.getX(), pos.getY(), pos.getZ(), 3F, true, true);
+		if(EMConfig.isConcentratedPollutionExplosive)
+			worldIn.newExplosion(explosionIn.getExplosivePlacedBy(), pos.getX(), pos.getY(), pos.getZ(), 3F, true, true);
 	}
 	
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)

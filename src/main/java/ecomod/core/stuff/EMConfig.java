@@ -15,6 +15,7 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.utils.AnalyzerPollutionEffect;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
@@ -34,10 +35,10 @@ public class EMConfig
 	public static int wptcd = 180;
 	
 	public static String tepcURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/TEPC.json";*/"file:///<MINECRAFT>/tepc.json";
+	public static String effectsURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/pollution_effects.json";*/"file:///<MINECRAFT>/pollution_effects.json";
+	public static String sourcesURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/pollution_sources.json";*/"file:///<MINECRAFT>/pollution_sources.json";
 	
 	public static float filtmult = 0.92F;
-	
-	public static PollutionData adv_filter_redution = new PollutionData(1.8, 0.02, 0.0005);
 	
 	public static int filter_energy = 5000;
 	
@@ -49,25 +50,15 @@ public class EMConfig
 	
 	public static boolean enable_advanced_filter = true;
 	
-	public static PollutionData pp2di = new PollutionData(0, 0.0625D, 0.125D);
-	
 	public static List<String> item_blacklist = new ArrayList<String>();
 	
 	public static int wpr = 2;
 	
 	public static boolean allow_acid_rain_render = true;
 	
-	public static PollutionData explosion_pollution = new PollutionData(20.5, 6.25, 8.25);
-	
-	public static PollutionData bonemeal_pollution = new PollutionData(0.05, 0.15, 0.5);
-	
 	public static int cached_pollution_radius = 5;
 	
 	public static boolean check_client_pollution = true;
-	
-	public static PollutionData pollution_per_potion_brewed = new PollutionData(6, 0, 0); 
-	
-	public static PollutionData pollution_reduced_by_tree = new PollutionData(-45, -5, -35);
 	
 	public static float diffusion_factor = 0.0001F;
 	
@@ -76,6 +67,8 @@ public class EMConfig
 	public static int advanced_filter_energy_per_second = 5000;
 	
 	public static int analyzer_energy = 450000;
+	
+	public static boolean isConcentratedPollutionExplosive = true;
 	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
@@ -108,22 +101,6 @@ public class EMConfig
 			
 			wpr = config.getInt("WaterPollutionRadius", "POLLUTION", 2, 0, 128, "", lang("pollution.wpr"));
 			
-			String ppdi = config.getString("PollutionPerDecayedItem", "POLLUTION", new PollutionData(0,0.0625D,0.125D).toString(), "Default pollution emission decayed item", lang("pollution.ppdi"));
-			
-			pp2di = EMUtils.pollutionDataFromJSON(ppdi, new PollutionData(0, 0.0625D, 0.125D), "Failed to get PollutionPerDecayedItem property from config! Invalid JSON syntax!");
-			
-			String ppe = config.getString("PollutionPerExplosionUnitOfPower", "POLLUTION", new PollutionData(20.5, 6.25, 8.25).toString(), "Pollution emitted by an explosion per unit of its power. (The TNT's explosion power is 4.0 by default)", lang("pollution.explosion"));
-			
-			explosion_pollution = EMUtils.pollutionDataFromJSON(ppe, new PollutionData(20.5, 6.25, 8.25), "Failed to get PollutionPerExplosionUnitOfPower property from config! Invalid JSON syntax!");
-			
-			String ib[] = config.getStringList("BlacklistedItems", "POLLUTION", new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}, "Items which do not create pollution when dropped and expired");
-			
-			item_blacklist.addAll(Arrays.asList(ib));
-			
-			String bone_pollution = config.getString("BonemealPollution", "POLLUTION", new PollutionData(0.05, 0.15, 0.5).toString(), "Bonemeal usage pollution", lang("pollution.bonemeal"));
-			
-			bonemeal_pollution = EMUtils.pollutionDataFromJSON(bone_pollution, new PollutionData(0.05, 0.15, 0.5), "Failed to get BonemealPollution property from config! Invalid JSON syntax!");
-			
 			cached_pollution_radius = config.getInt("CachedPollutionRadius", "CLIENT", 5, 1, EMConsts.max_cached_pollution_radius, "", lang("client.max_cpr"));
 			
 			check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
@@ -135,6 +112,8 @@ public class EMConfig
 			enable_concentrated_pollution_flow_texture = config.getBoolean("EnableConcentratedPollutionFlowTexture", "CLIENT", true, "", lang("client.concentrated_pollution.flow"));
 			
 			analyzer_energy = config.getInt("AnalyzerEnergy", "TILES", 450000, 1, Integer.MAX_VALUE, "Analyzer energetic capacity", lang("tiles.analyzer.energy"));
+			
+			isConcentratedPollutionExplosive = config.getBoolean("ConcentratedPollutionExplosive", "POLLUTION", true, "", lang("pollution.concentrated_pollution_explosive"));
 			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 		}
@@ -187,8 +166,8 @@ public class EMConfig
 		defs.add(AnalyzerPollutionEffect.createSimple("no_fish", no_fish_pollution, TriggeringType.AND));
 		
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("polluted_water", polluted_water_pollution, TriggeringType.AND));
-		defs.add(AnalyzerPollutionEffect.createSimpleNull("dead_trees", dead_trees_pollution, TriggeringType.OR));
-		defs.add(AnalyzerPollutionEffect.createSimpleNull("no_trees", no_trees_pollution, TriggeringType.OR));
+		defs.add(AnalyzerPollutionEffect.createSimple("dead_trees", dead_trees_pollution, TriggeringType.OR));
+		defs.add(AnalyzerPollutionEffect.createSimple("no_trees", no_trees_pollution, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("acid_rain", acid_rain_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("wasteland", wasteland_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_plowing", useless_hoe_pollution, TriggeringType.AND));
@@ -202,6 +181,36 @@ public class EMConfig
 		pec.save(cfg_dir);
 		
 		pec.pushToApi();
+	}
+	
+	public static void setupSources(String cfg_dir)
+	{
+		PollutionData adv_filter_redution = new PollutionData(-1.8, -0.02, -0.0005);
+		PollutionData item_expire_pollution = new PollutionData(0, 0.0625D, 0.125D);
+		PollutionData explosion_pollution = new PollutionData(20.5, 6.25, 8.25);
+		PollutionData concentrated_pollution_explosion_pollution = new PollutionData(50,5,10);
+		PollutionData bonemeal_pollution = new PollutionData(0.05, 0.15, 0.5);
+		PollutionData pollution_per_potion_brewed = new PollutionData(6, 0, 0);
+		PollutionData pollution_reduced_by_tree = new PollutionData(-22, -2.5, -17);
+		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-0.5);
+		
+		List<String> item_blacklist = new ArrayList<String>();
+		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));
+		
+		PollutionSourcesConfig psc = new PollutionSourcesConfig();
+		psc.blacklisted_items.addAll(item_blacklist);
+		psc.pollution_sources.put("advanced_filter_redution", adv_filter_redution);
+		psc.pollution_sources.put("expired_item", item_expire_pollution);
+		psc.pollution_sources.put("explosion_pollution_per_power", explosion_pollution);
+		psc.pollution_sources.put("bonemeal_pollution", bonemeal_pollution);
+		psc.pollution_sources.put("brewing_potion_pollution", pollution_per_potion_brewed);
+		psc.pollution_sources.put("tree_growing_pollution_redution", pollution_reduced_by_tree);
+		psc.pollution_sources.put("concentrated_pollution_explosion_pollution", concentrated_pollution_explosion_pollution);
+		psc.pollution_sources.put("hoe_plowing_reducion", hoe_plowing_reducion);
+		
+		psc.save(cfg_dir);
+		
+		psc.pushToApi();
 	}
 	
 	private static String lang(String str)
