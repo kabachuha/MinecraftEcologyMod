@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+FMLCorePlugin: ecomod.asm.EcomodLoadingPlugin
+FMLCorePluginContainsFMLMod: ecomod.core.EcologyMod
+Created-By: 1.7.0 (Oracle Corporation)
