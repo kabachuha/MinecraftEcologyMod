@@ -34,6 +34,9 @@ public class EcomodClassTransformer implements IClassTransformer
 		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockFire", "net.minecraft.block.BlockFire"))
 			return handleBlockFire(name, basicClass);
 		
+		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockLeaves", "net.minecraft.block.BlockLeaves"))
+			return handleBlockLeaves(name, basicClass);
+		
 		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.EntityRenderer", "net.minecraft.client.renderer.EntityRenderer"))
 			return handleEntityRenderer(name, basicClass);
 		
@@ -227,6 +230,50 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 	}
 	
+	private byte[] handleBlockLeaves(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "leavesTickAddition", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V", false));
+			lst.add(new LabelNode());
+			
+			log.info(mn.instructions.getLast().getPrevious().getPrevious().toString());
+			mn.instructions.insert(mn.instructions.getLast().getPrevious().getPrevious(), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+	
 	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
 	public static final String REGEX_NOTCH_FROM_MCP = "!&!";
 	
@@ -338,6 +385,25 @@ public class EcomodClassTransformer implements IClassTransformer
 			{
 				EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("fire_pollution"), true);
 			}
+		}
+	}
+	
+	public static void leavesTickAddition(World worldIn, BlockPos pos)
+	{
+		if(!worldIn.isRemote)
+		{
+				//FIXME!!! Too loading
+				//EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_redution"), true);
+			
+				if(worldIn.isRainingAt(pos.up()))
+				if(worldIn.rand.nextInt(3) == 0)
+				{
+					PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
+			
+					if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
+						if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
+								worldIn.setBlockToAir(pos);
+				}
 		}
 	}
 }
