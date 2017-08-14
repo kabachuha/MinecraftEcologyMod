@@ -70,6 +70,8 @@ public class EMConfig
 	
 	public static boolean isConcentratedPollutionExplosive = true;
 	
+	public static float acid_rain_item_deterioriation_factor = 0.05F;
+	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
 	public static void sync()
@@ -114,6 +116,8 @@ public class EMConfig
 			analyzer_energy = config.getInt("AnalyzerEnergy", "TILES", 450000, 1, Integer.MAX_VALUE, "Analyzer energetic capacity", lang("tiles.analyzer.energy"));
 			
 			isConcentratedPollutionExplosive = config.getBoolean("ConcentratedPollutionExplosive", "POLLUTION", true, "", lang("pollution.concentrated_pollution_explosive"));
+			
+			acid_rain_item_deterioriation_factor = config.getFloat("AcidRainItemDeterioriationFactor", "POLLUTION", 0.05F, 0, 1, "", lang("pollution.acid_rain_item_deterioriation_factor"));
 			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 		}
@@ -193,6 +197,7 @@ public class EMConfig
 		PollutionData pollution_per_potion_brewed = new PollutionData(6, 0, 0);
 		PollutionData pollution_reduced_by_tree = new PollutionData(-22, -2.5, -17);
 		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-0.5);
+		PollutionData fire_pollution = new PollutionData(2, 0, 0);
 		
 		List<String> item_blacklist = new ArrayList<String>();
 		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));
@@ -203,6 +208,7 @@ public class EMConfig
 		psc.pollution_sources.put("expired_item", item_expire_pollution);
 		psc.pollution_sources.put("explosion_pollution_per_power", explosion_pollution);
 		psc.pollution_sources.put("bonemeal_pollution", bonemeal_pollution);
+		psc.pollution_sources.put("fire_pollution", fire_pollution);
 		psc.pollution_sources.put("brewing_potion_pollution", pollution_per_potion_brewed);
 		psc.pollution_sources.put("tree_growing_pollution_redution", pollution_reduced_by_tree);
 		psc.pollution_sources.put("concentrated_pollution_explosion_pollution", concentrated_pollution_explosion_pollution);

@@ -76,7 +76,7 @@ public class PollutionUtils
 	
 	public static boolean hasSurfaceAccess(World w, BlockPos bp)
 	{
-		if(w.canBlockSeeSky(bp))
+		if(w.canSeeSky(bp))
 			return true;
 		
 		if(!w.isBlockFullCube(bp.up()))

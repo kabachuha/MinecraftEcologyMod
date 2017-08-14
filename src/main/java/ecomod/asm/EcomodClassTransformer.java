@@ -9,6 +9,7 @@ import org.objectweb.asm.tree.*;
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import net.minecraft.client.Minecraft;
@@ -29,6 +30,9 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockGrass", "net.minecraft.block.BlockGrass"))
 			return handleBlockGrass(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockFire", "net.minecraft.block.BlockFire"))
+			return handleBlockFire(name, basicClass);
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.EntityRenderer", "net.minecraft.client.renderer.EntityRenderer"))
 			return handleEntityRenderer(name, basicClass);
@@ -180,6 +184,49 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 	}
 	
+	private byte[] handleBlockFire(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "fireTickAddition", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V", false));
+			lst.add(new LabelNode());
+			
+			mn.instructions.insert(mn.instructions.get(1), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+	
 	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
 	public static final String REGEX_NOTCH_FROM_MCP = "!&!";
 	
@@ -244,7 +291,7 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		if(!worldIn.isRemote)
 		{
-			if(worldIn.canBlockSeeSky(pos))
+			if(worldIn.canSeeSky(pos))
 			{
 				PollutionData pd = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
 				if(pd != null)
@@ -257,12 +304,12 @@ public class EcomodClassTransformer implements IClassTransformer
 					}
 					else
 					{
-						if(worldIn.rand.nextInt(10) == 0)
+						if(worldIn.rand.nextInt(35) == 0)
 						{
-							if(worldIn.rand.nextBoolean())
-								worldIn.setBlockState(pos, Blocks.SAND.getDefaultState());
-							else
+							if(worldIn.rand.nextInt(4) == 0)
 								worldIn.setBlockState(pos, Blocks.MYCELIUM.getDefaultState());
+							else
+								worldIn.setBlockState(pos, Blocks.SAND.getDefaultState());
 							
 							return false;
 						}
@@ -281,5 +328,16 @@ public class EcomodClassTransformer implements IClassTransformer
 		if(EcologyMod.proxy.getClientHandler() != null)
 		if(EcologyMod.proxy.getClientHandler().acid_rain)
 			Minecraft.getMinecraft().getTextureManager().bindTexture(rain_texture);
+	}
+	
+	public static void fireTickAddition(World worldIn, BlockPos pos)
+	{
+		if(!worldIn.isRemote)
+		{
+			if(worldIn.getGameRules().getBoolean("doFireTick"))
+			{
+				EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("fire_pollution"), true);
+			}
+		}
 	}
 }

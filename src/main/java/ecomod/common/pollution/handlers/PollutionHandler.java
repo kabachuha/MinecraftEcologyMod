@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -632,6 +633,8 @@ public class PollutionHandler implements IPollutionGetter
 				boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
+				
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone((EntityPlayer)event.getEntity()) ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 			}
 			catch (Exception e)
 			{
@@ -677,24 +680,42 @@ public class PollutionHandler implements IPollutionGetter
 			{
 				if(entity instanceof EntityLivingBase)
 				{
+					if(isPlayerInAcidRainZone(entity))
+					{
+						if(entity.world.isRainingAt(entity.getPosition()))
+						{
+							ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+						
+							if(is != null && !is.isEmpty())
+							{
+								if(is.isItemStackDamageable())
+									is.damageItem((int) (EMConfig.acid_rain_item_deterioriation_factor * is.getMaxDamage()), entity);
+							}
+							else
+							{
+								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 300, 1));
+							}
+						}
+					}
+					
 					if(entity instanceof EntityPlayer)
 					{
 						EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone(entity) ? 1 : 0)), (EntityPlayerMP)entity);
+						
+						BlockPos bp = new BlockPos(entity.posX, entity.posY, entity.posZ);
 						
 						boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
 				
 						EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 						
-						if(inSmog)
+						if(inSmog && PollutionUtils.hasSurfaceAccess(entity.getEntityWorld(), bp))
 						{
 							if(!PollutionUtils.isEntityRespirating(entity))
 							{
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
-							
-							
-								BlockPos bp = new BlockPos(entity.posX, entity.posY, entity.posZ);
+								
 								if(getPollution(world, EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
-									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 140, 0));
+									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 140, 1));
 							}
 						}
 					}
@@ -724,7 +745,6 @@ public class PollutionHandler implements IPollutionGetter
 		if(pollution!=null && pollution != PollutionData.getEmpty())
 			if(PollutionEffectsConfig.isEffectActive("smog", pollution))
 			{
-				if(PollutionUtils.hasSurfaceAccess(player.getEntityWorld(), bp))
 					return true;
 			}
 		
@@ -735,13 +755,16 @@ public class PollutionHandler implements IPollutionGetter
 	{
 		BlockPos bp = new BlockPos(player.posX, player.posY, player.posZ);
 		
-		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone();
+		if(player.world.isRaining())
+		{
+			PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone();
 		
-		if(pollution!=null && pollution != PollutionData.getEmpty())
-			if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
-			{
-					return true;
-			}
+			if(pollution!=null && pollution != PollutionData.getEmpty())
+				if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
+				{
+						return true;
+				}
+		}
 		
 		return false;
 	}
