@@ -679,6 +679,8 @@ public class PollutionHandler implements IPollutionGetter
 				{
 					if(entity instanceof EntityPlayer)
 					{
+						EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone(entity) ? 1 : 0)), (EntityPlayerMP)entity);
+						
 						boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
 				
 						EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
@@ -728,6 +730,22 @@ public class PollutionHandler implements IPollutionGetter
 		
 		return false;
 	}
+
+	public boolean isPlayerInAcidRainZone(EntityLivingBase player)
+	{
+		BlockPos bp = new BlockPos(player.posX, player.posY, player.posZ);
+		
+		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone();
+		
+		if(pollution!=null && pollution != PollutionData.getEmpty())
+			if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
+			{
+					return true;
+			}
+		
+		return false;
+	}
+	
 	
 	@SubscribeEvent
 	public void onStrEventReceived(EMPacketString.EventReceived event)

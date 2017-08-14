@@ -38,6 +38,8 @@ public class ClientHandler
 	
 	public boolean smog = false;
 	
+	public boolean acid_rain = false;
+	
 	public boolean requestForNearbyPollution()
 	{
 		return false;
@@ -76,6 +78,23 @@ public class ClientHandler
 		catch (Exception ex)
 		{
 			smog = false;
+		}
+	}
+	
+	public void setAcidRain(String str)
+	{
+		if(str.length() != 1)
+			return;
+		
+		try
+		{
+			boolean b = Integer.parseInt(str) != 0;
+		
+			acid_rain = b;
+		}
+		catch (Exception ex)
+		{
+			acid_rain = false;
 		}
 	}
 	
@@ -168,6 +187,9 @@ public class ClientHandler
 				break;
 			case '>':
 				setSmog(str);
+				break;
+			case 'R':
+				setAcidRain(str);
 				break;
 				
 			case '0':

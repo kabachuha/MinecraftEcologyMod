@@ -10,8 +10,11 @@ import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.utils.EMUtils;
+import ecomod.core.EcologyMod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.classloading.FMLForgePlugin;
@@ -26,6 +29,9 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockGrass", "net.minecraft.block.BlockGrass"))
 			return handleBlockGrass(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.EntityRenderer", "net.minecraft.client.renderer.EntityRenderer"))
+			return handleEntityRenderer(name, basicClass);
 		
 		return basicClass;
 	}
@@ -94,7 +100,87 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 	}
 	
-	//Part borrowed from DummyCore
+	private byte[] handleEntityRenderer(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "renderRainSnow", "func_78473_a", "(F)V", "(F)V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new LabelNode());
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "renderRainAddition", "()V", false));
+			
+			//INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager.bindTexture (Lnet/minecraft/util/ResourceLocation;)V
+			
+			AbstractInsnNode[] ain = mn.instructions.toArray();
+			int insertion_index = -1;
+			
+			//log.info("Environment required name is "+chooseByEnvironment("bindTexture", "func_110577_a"));
+			
+			for(int i = 0; i < ain.length; i++)
+			{
+				AbstractInsnNode insn = ain[i];
+				
+				if(insn instanceof MethodInsnNode)
+				{
+					MethodInsnNode min = (MethodInsnNode)insn;
+					/*
+					log.info("Method : ");
+					log.info(min.getOpcode());
+					log.info(min.owner);
+					log.info(min.name);
+					log.info(min.desc);
+					log.info(min.itf);
+					*/
+					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && min.owner.contentEquals("net/minecraft/client/renderer/texture/TextureManager") && min.name.contentEquals(chooseByEnvironment("bindTexture", "func_110577_a")) && min.desc.contentEquals("(Lnet/minecraft/util/ResourceLocation;)V") && (min.itf == false))
+					{
+						log.info("FOUND: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager.bindTexture (Lnet/minecraft/util/ResourceLocation;)V!!!!!");
+						insertion_index = i;
+						break;
+					}
+				}
+			}
+			
+			if(insertion_index != -1)
+			{
+				mn.instructions.insert(mn.instructions.get(insertion_index), lst);
+			}
+			else
+			{
+				EcologyMod.log.error("Not found: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager.bindTexture (Lnet/minecraft/util/ResourceLocation;)V");
+				return bytecode;
+			}
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+			
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+	
+	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
 	public static final String REGEX_NOTCH_FROM_MCP = "!&!";
 	
 	public static MethodNode getMethod(ClassNode cn, String deobfName, String obfName, String deobfDesc, String obfDesc)
@@ -152,7 +238,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		return comparedTo.equalsIgnoreCase(name.replace('/', '.'));
 	}
 	
-	//
+	//ASM Hooks:
 	
 	public static boolean updateTickAddition(World worldIn, BlockPos pos)
 	{
@@ -186,5 +272,14 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		
 		return true;
+	}
+	
+	private static final ResourceLocation rain_texture = new ResourceLocation("ecomod:textures/environment/rain.png");
+	
+	public static void renderRainAddition()
+	{
+		if(EcologyMod.proxy.getClientHandler() != null)
+		if(EcologyMod.proxy.getClientHandler().acid_rain)
+			Minecraft.getMinecraft().getTextureManager().bindTexture(rain_texture);
 	}
 }
