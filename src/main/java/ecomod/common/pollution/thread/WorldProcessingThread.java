@@ -15,18 +15,21 @@ import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionMultiplier;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
+import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
+import ecomod.core.stuff.MainRegistry;
 import ecomod.network.EMPacketHandler;
 import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -264,7 +267,19 @@ public class WorldProcessingThread extends Thread
 	
 	public void handleChunk(Chunk c)
 	{
-		
+		if(PollutionEffectsConfig.isEffectActive("wasteland", manager.getPollution(c.xPosition, c.zPosition)))
+		for(int i = 0; i < 16; i++)
+			for(int j = 0; j < 16; j++)
+			{
+				if(c.getWorld().rand.nextInt(10) == 0)
+				{
+					int strtx = c.xPosition << 4;
+					int strtz = c.zPosition << 4;
+					
+					if(c.getBiome(new BlockPos(i + strtx, c.getWorld().getActualHeight(), j + strtz), c.getWorld().getBiomeProvider()) != MainRegistry.biome_wasteland)
+						EMUtils.setBiome(c, MainRegistry.biome_wasteland, i + strtx, j + strtz);
+				}
+			}
 	}
 	
 	

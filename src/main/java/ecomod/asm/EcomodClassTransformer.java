@@ -338,7 +338,7 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		if(!worldIn.isRemote)
 		{
-			if(worldIn.canSeeSky(pos))
+			if(worldIn.canSeeSky(pos.up()))
 			{
 				PollutionData pd = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
 				if(pd != null)

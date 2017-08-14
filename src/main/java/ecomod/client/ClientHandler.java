@@ -23,6 +23,8 @@ import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -155,6 +157,37 @@ public class ClientHandler
 		return false;
 	}
 	
+	public void setBiome(String str)
+	{
+		if(str.isEmpty())
+			return;
+		
+		if(str.indexOf(";") == -1)
+			return;
+		
+		String args[] = str.split(";");
+		
+		if(args.length != 3)
+			return;
+		
+		int x = Integer.parseInt(args[0]);
+		int z = Integer.parseInt(args[1]);
+		
+		int id = Integer.parseInt(args[2]);
+		
+		World w = Minecraft.getMinecraft().world;
+		
+		Chunk chunk = w.getChunkFromBlockCoords(new BlockPos(x,w.getActualHeight(),z));
+		
+		byte[] biome = chunk.getBiomeArray();
+		int cbiome = biome[(z & 0xf) << 4 | x & 0xf];
+		cbiome = id & 0xff;
+		biome[(z & 0xf) << 4 | x & 0xf] = (byte) cbiome;
+		
+		chunk.setBiomeArray(biome);
+		w.markBlocksDirtyVertical(x, z, 16, 16);
+	}
+	
 	/**
 	 * Client side EMPacketString handler
 	 * 
@@ -162,6 +195,7 @@ public class ClientHandler
 	 * By the first char:<br>
 	 * P - Update cached_pollution<br>
 	 * > - Set smog<br>
+	 * * - Set biome<br>
 	 * ...<br>
 	 * TODO add more cases<br>
 	 * 
@@ -190,6 +224,9 @@ public class ClientHandler
 				break;
 			case 'R':
 				setAcidRain(str);
+				break;
+			case '*':
+				setBiome(str);
 				break;
 				
 			case '0':

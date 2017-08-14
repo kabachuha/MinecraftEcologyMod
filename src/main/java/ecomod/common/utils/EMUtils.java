@@ -22,6 +22,7 @@ import ecomod.api.pollution.PollutionData;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.network.EMPacketHandler;
+import ecomod.network.EMPacketString;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -36,6 +37,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -178,6 +181,23 @@ public class EMUtils
 				ret++;
 		
 		return ret;
+	}
+	
+	public static void setBiome(World w, Biome biome, int x, int z)
+	{
+		Chunk chunk = w.getChunkFromBlockCoords(new BlockPos(x,w.getActualHeight(),z));
+		setBiome(chunk, biome, x, z);
+	}
+	
+	public static void setBiome(Chunk c, Biome biome, int x, int z)
+	{
+		byte[] b = c.getBiomeArray();
+		byte cbiome = b[(z & 0xf) << 4 | x & 0xf];
+		cbiome = (byte)(Biome.getIdForBiome(biome) & 0xff);
+		b[(z & 0xf) << 4 | x & 0xf] = cbiome;
+		c.setBiomeArray(b);
+		
+		EMPacketHandler.WRAPPER.sendToDimension(new EMPacketString("*"+x+";"+z+";"+Biome.getIdForBiome(biome)), c.getWorld().provider.getDimension());
 	}
 	
 	public static PollutionData pollutionDataFromJSON(String json, PollutionData failture_data)
