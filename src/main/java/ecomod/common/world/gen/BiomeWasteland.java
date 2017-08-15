@@ -12,9 +12,10 @@ import net.minecraft.world.biome.Biome;
 public class BiomeWasteland extends Biome
 {
 	public static final int wastelandColor = new Color(49,42,31).getRGB();
+	public static final int wastelandWaterColor = new Color(150, 108, 74).getRGB();
 	
 	public BiomeWasteland() {
-		super(new BiomeProperties("Wasteland").setWaterColor(wastelandColor).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(1F).setRainfall(1F));
+		super(new BiomeProperties("Wasteland").setWaterColor(wastelandWaterColor).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(1F).setRainfall(1F));
 		
 		this.setRegistryName(new ResourceLocation("ecomod:wasteland"));
 		
@@ -54,6 +55,6 @@ public class BiomeWasteland extends Biome
 	@Override
 	public int getWaterColorMultiplier()
 	{
-		return wastelandColor;
+		return wastelandWaterColor;
 	}
 }

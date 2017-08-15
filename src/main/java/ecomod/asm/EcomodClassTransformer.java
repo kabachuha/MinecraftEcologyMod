@@ -10,12 +10,17 @@ import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
+import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.classloading.FMLForgePlugin;
@@ -36,6 +41,9 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockLeaves", "net.minecraft.block.BlockLeaves"))
 			return handleBlockLeaves(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockFarmland", "net.minecraft.block.BlockFarmland"))
+			return handleBlockFarmland(name, basicClass);
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.EntityRenderer", "net.minecraft.client.renderer.EntityRenderer"))
 			return handleEntityRenderer(name, basicClass);
@@ -253,7 +261,7 @@ public class EcomodClassTransformer implements IClassTransformer
 			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "leavesTickAddition", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V", false));
 			lst.add(new LabelNode());
 			
-			log.info(mn.instructions.getLast().getPrevious().getPrevious().toString());
+			//log.info(mn.instructions.getLast().getPrevious().getPrevious().toString());
 			mn.instructions.insert(mn.instructions.getLast().getPrevious().getPrevious(), lst);
 			
 			classNode.accept(cw);
@@ -273,6 +281,51 @@ public class EcomodClassTransformer implements IClassTransformer
 			return bytecode;
 		}
 	}
+	
+	private byte[] handleBlockFarmland(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "farmlandTickAddition", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V", false));
+			lst.add(new LabelNode());
+			
+			//log.info(mn.instructions.getLast().getPrevious().getPrevious().toString());
+			mn.instructions.insert(mn.instructions.getLast().getPrevious().getPrevious(), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+	
 	
 	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
 	public static final String REGEX_NOTCH_FROM_MCP = "!&!";
@@ -396,14 +449,85 @@ public class EcomodClassTransformer implements IClassTransformer
 				//EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_redution"), true);
 			
 				if(worldIn.isRainingAt(pos.up()))
-				if(worldIn.rand.nextInt(3) == 0)
 				{
-					PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
+					if(worldIn.rand.nextInt(3) == 0)
+					{
+						PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
 			
-					if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
-						if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
-								worldIn.setBlockToAir(pos);
+						if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
+							if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
+									worldIn.setBlockToAir(pos);
+					}
+				}
+				else
+				{
+					if(worldIn.rand.nextInt(10) == 0)
+					{
+						if(PollutionUtils.hasSurfaceAccess(worldIn, pos))
+						{
+							PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
+			
+							if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
+								if(PollutionEffectsConfig.isEffectActive("dead_trees", pollution))
+										worldIn.setBlockToAir(pos);
+								else
+									if(worldIn.rand.nextInt(10)==0)
+										EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_redution"), true);
+						}
+					}
 				}
 		}
 	}
+	
+	public static void farmlandTickAddition(World worldIn, BlockPos pos)
+	{
+		if(!worldIn.isRemote)
+		{
+			PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
+			
+			if(PollutionEffectsConfig.isEffectActive("no_plowing", pollution))
+			{
+				if(worldIn.rand.nextInt(3) == 0)
+				{
+					boolean sealed = true;
+					for(EnumFacing f : EnumFacing.VALUES)
+						sealed &= worldIn.getBlockState(pos.offset(f)).getBlock() != Blocks.DIRT;
+					
+					sealed &= !PollutionUtils.hasSurfaceAccess(worldIn, pos);
+					
+					//Turn to dirt
+					IBlockState iblockstate = Blocks.DIRT.getDefaultState();
+					worldIn.setBlockState(pos, iblockstate);
+					AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(worldIn, pos).offset(pos);
+
+					for (Entity entity : worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb))
+					{
+				       	entity.setPosition(entity.posX, axisalignedbb.maxY, entity.posZ);
+					}
+					
+					return;
+				}
+			}
+			
+			if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
+			{
+				if(worldIn.rand.nextInt(3) == 0)
+				{
+					if(worldIn.isRainingAt(pos.up()))
+					{
+						//Turn to dirt
+						IBlockState iblockstate = Blocks.DIRT.getDefaultState();
+						worldIn.setBlockState(pos, iblockstate);
+						AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(worldIn, pos).offset(pos);
+
+						for (Entity entity : worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb))
+						{
+					       	entity.setPosition(entity.posX, axisalignedbb.maxY, entity.posZ);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 }

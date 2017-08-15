@@ -137,6 +137,7 @@ public class EcologyMod
 	{
 		log.info("Postinitialization");
 		
+		MainRegistry.doPostInit();
 	}
 	
 	

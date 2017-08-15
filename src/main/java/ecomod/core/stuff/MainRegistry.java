@@ -6,6 +6,8 @@ import ecomod.common.utils.EMUtils;
 import ecomod.common.world.FluidPollution;
 import ecomod.common.world.gen.BiomeWasteland;
 import ecomod.core.EcologyMod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
@@ -15,6 +17,8 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -40,6 +44,12 @@ public class MainRegistry
 	
 	public static void doInit()
 	{
+		if(!ModAPIManager.INSTANCE.hasAPI("ecomodapi"))
+		{
+			EcologyMod.log.error("EcomodAPI has not been loaded!!!");
+			Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(new NullPointerException("EcomodAPI has not been loaded!!!"), "EcomodAPI has not been loaded!!!"));
+		}
+		
 		SoundEvent.REGISTRY.putObject(EMUtils.resloc("advanced_filter_working"), EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")));
 		SoundEvent.REGISTRY.putObject(EMUtils.resloc("analyzer"), EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")));
 		
@@ -58,7 +68,7 @@ public class MainRegistry
 	
 	public static void doPostInit()
 	{
-		
+		EMIntermod.registerBCFuels();
 	}
 	
 	

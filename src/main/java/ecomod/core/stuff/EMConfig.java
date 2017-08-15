@@ -72,6 +72,10 @@ public class EMConfig
 	
 	public static float acid_rain_item_deterioriation_factor = 0.05F;
 	
+	public static int fuel_concentrated_pollution_burn_time = 40;
+	
+	public static int fuel_concentrated_pollution_burn_energy = 600;
+	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
 	public static void sync()
@@ -118,6 +122,10 @@ public class EMConfig
 			isConcentratedPollutionExplosive = config.getBoolean("ConcentratedPollutionExplosive", "POLLUTION", true, "", lang("pollution.concentrated_pollution_explosive"));
 			
 			acid_rain_item_deterioriation_factor = config.getFloat("AcidRainItemDeterioriationFactor", "POLLUTION", 0.05F, 0, 1, "", lang("pollution.acid_rain_item_deterioriation_factor"));
+			
+			fuel_concentrated_pollution_burn_time = config.getInt("FuelConcentratedPollutionBurnTime", "INTERMOD", 40, 1, Integer.MAX_VALUE, "");
+			
+			fuel_concentrated_pollution_burn_energy = config.getInt("FuelConcentratedPollutionBurnEnergy", "INTERMOD", 600, 1, Integer.MAX_VALUE, "");
 			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 		}

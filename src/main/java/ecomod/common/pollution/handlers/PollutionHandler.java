@@ -43,6 +43,7 @@ import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -734,6 +735,26 @@ public class PollutionHandler implements IPollutionGetter
 					}
 				}
 			}
+	}
+	
+	@SubscribeEvent
+	public void onFished(ItemFishedEvent event)
+	{
+		BlockPos pos = new BlockPos(event.getHookEntity().posX, event.getHookEntity().posY, event.getHookEntity().posZ);
+		
+		World w = event.getHookEntity().world;
+		
+		if(w.isRemote)return;
+		
+		Pair<Integer, Integer> chunkCoords = EMUtils.blockPosToPair(pos);
+		
+		PollutionData data = getPollution(w, chunkCoords.getLeft(), chunkCoords.getRight());
+		
+		if(PollutionEffectsConfig.isEffectActive("no_fish", data))
+		{
+			event.damageRodBy(5);
+			event.setCanceled(true);
+		}
 	}
 	
 	public boolean isEntityInSmog(EntityLivingBase player)
