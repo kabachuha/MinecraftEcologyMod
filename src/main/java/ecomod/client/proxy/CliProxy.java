@@ -11,6 +11,7 @@ import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
 import ecomod.common.tiles.TileAnalyzer;
+import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.block.Block;
@@ -42,6 +43,7 @@ public class CliProxy extends ComProxy
 	ClientHandler handler;
 	
 	List<Block> blocks = new ArrayList<Block>();
+	List<Item> items = new ArrayList<Item>();
 	
 	@Override
 	public ClientHandler getClientHandler()
@@ -63,10 +65,16 @@ public class CliProxy extends ComProxy
 	{
 		for(Block b : blocks)
 		{
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(b), 0, new ModelResourceLocation(b.getRegistryName(), "inventory"));
+			registerBlockModel(b, 0, b.getRegistryName());
+		}
+		
+		for(Item i : items)
+		{
+			registerItemModel(i, 0, i.getRegistryName());
 		}
 		
 		blocks.clear();
+		items.clear();
 	}
 	
 	@Override
@@ -75,6 +83,12 @@ public class CliProxy extends ComProxy
 		blocks.add(b);
 	}
 	
+	@Override
+	public void putItemToBeRegistred(Item item)
+	{
+		items.add(item);
+	}
+
 	@Override
 	public void registerFluidModel(Block fluidBlock)
 	{
@@ -106,5 +120,29 @@ public class CliProxy extends ComProxy
 	{
 		if(tile != null)
 			Minecraft.getMinecraft().displayGuiScreen(new GuiAnalyzer(tile));
+	}
+
+	@Override
+	public void registerItemModel(Item item, int meta, String model) {
+		super.registerItemModel(item, meta, model);
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(EMUtils.resloc(model), "inventory"));
+	}
+	
+	@Override
+	public void registerItemModel(Item item, int meta, ResourceLocation model) {
+		super.registerItemModel(item, meta, model);
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(model, "inventory"));
+	}
+
+	@Override
+	public void registerBlockModel(Block block, int meta, String model) {
+		super.registerBlockModel(block, meta, model);
+		registerItemModel(Item.getItemFromBlock(block), meta, model);
+	}
+	
+	@Override
+	public void registerBlockModel(Block block, int meta, ResourceLocation model) {
+		super.registerBlockModel(block, meta, model);
+		registerItemModel(Item.getItemFromBlock(block), meta, model);
 	}
 }

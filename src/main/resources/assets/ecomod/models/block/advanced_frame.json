@@ -1,0 +1,7 @@
+{
+    "parent": "ecomod:block/frame",
+    "textures": {
+        "particle": "ecomod:blocks/advanced_filter_wall",
+        "1": "ecomod:blocks/advanced_filter_wall"
+    }
+}

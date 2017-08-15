@@ -1,7 +1,10 @@
 ﻿#Блоки
 tile.ecomod.filter.name=Фильтр Загрязнения
-tile.ecomod.advanced_filter.name=Продвинутый Фильтр Загрязнения
+tile.ecomod.advanced_filter.name=Улучшенный Фильтр Загрязнения
 tile.ecomod.analyzer.name=Анализатор Загрязнения
+
+tile.ecomod.frame.0.name=Основа Машины
+tile.ecomod.frame.1.name=Продвинутая Основа Машины
 
 tile.ecomod.block.concentrated_pollution.name=Концентрированное Загрязнение
 fluid.concentrated_pollution=Концентрированное Загрязнение

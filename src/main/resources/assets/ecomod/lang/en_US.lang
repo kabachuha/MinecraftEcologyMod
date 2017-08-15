@@ -3,6 +3,9 @@ tile.ecomod.filter.name=Pollution Filter
 tile.ecomod.advanced_filter.name=Advanced Pollution Filter
 tile.ecomod.analyzer.name=Pollution Analyzer
 
+tile.ecomod.frame.0.name=Empty Machine Frame
+tile.ecomod.frame.1.name=Advanced Empty Machine Frame
+
 tile.ecomod.block.concentrated_pollution.name=Concentrated Pollution
 fluid.concentrated_pollution=Concentrated Pollution
 

@@ -36,6 +36,7 @@ public class MainRegistry
 		FluidRegistry.addBucketForFluid(EcomodStuff.concentrated_pollution);
 		
 		EMBlocks.doPreInit();
+		EMItems.doPreInit();
 		EMTiles.doPreInit();
 		
 		//Biome.REGISTRY.putObject(new ResourceLocation("ecomod:wasteland"), biome_wasteland);
@@ -64,6 +65,9 @@ public class MainRegistry
 		BiomeProvider.allowedBiomes.add(biome_wasteland);
 		
 		EcologyMod.log.info("Wasteland ID : "+Biome.getIdForBiome(biome_wasteland));
+		
+		EMBlocks.doInit();
+		EMItems.doInit();
 	}
 	
 	public static void doPostInit()

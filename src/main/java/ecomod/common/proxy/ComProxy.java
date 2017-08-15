@@ -44,6 +44,11 @@ public class ComProxy
 		
 	}
 	
+	public void putItemToBeRegistred(Item item)
+	{
+		
+	}
+	
 	public void registerFluidModel(Block fluidBlock)
 	{
 		
@@ -51,6 +56,25 @@ public class ComProxy
 	
 	public void openGUIAnalyzer(TileAnalyzer tile)
 	{
+		
+	}
+	
+	public void registerItemModel(Item item, int meta, String model)
+	{
+		
+	}
+	
+	public void registerBlockModel(Block block, int meta, String model)
+	{
+		
+	}
+	
+	public void registerBlockModel(Block block, int meta, ResourceLocation model)
+	{
+		
+	}
+
+	public void registerItemModel(Item item, int meta, ResourceLocation model) {
 		
 	}
 }
