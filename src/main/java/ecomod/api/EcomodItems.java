@@ -8,5 +8,7 @@ public class EcomodItems
 	
 	public static Item CORE = null;
 	
+	public static Item CRAFT_INGREDIENT = null;
 	
+	public static Item RESPIRATOR = null;
 }

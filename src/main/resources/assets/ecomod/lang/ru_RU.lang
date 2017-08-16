@@ -9,17 +9,27 @@ tile.ecomod.frame.1.name=Продвинутая Основа Машины
 tile.ecomod.block.concentrated_pollution.name=Концентрированное Загрязнение
 fluid.concentrated_pollution=Концентрированное Загрязнение
 
+#Предметы
+item.ecomod.respirator.name=Противогаз
+
+item.ecomod.core.0.name=Ядро Фильтра
+item.ecomod.core.1.name=Улучшенное Ядро Фильтра
+item.ecomod.core.2.name=Ядро Анализатора
+
+item.ecomod.craft_ingredient.0.name=Поршневой Массив
+item.ecomod.craft_ingredient.1.name=Винт
+
 #Эффекты
 ape.ecomod.food_pollution.name=Загрязнение Еды
 ape.ecomod.smog.name=Смог
 ape.ecomod.bad_sleep.name=Плохой Сон
 ape.ecomod.poisonous_sleep.name=Ядовитый Сон
-ape.ecomod.no_fish.name=Нет Рыб
+ape.ecomod.no_fish.name=Вымирание Рыб
 ape.ecomod.polluted_water.name=Загрязнение Воды
 ape.ecomod.dead_trees.name=Безлистные Деревья
 ape.ecomod.no_trees.name=Обезлесивание
 ape.ecomod.acid_rain.name=Кислотный Дождь
 ape.ecomod.wasteland.name=Опустошение
 ape.ecomod.no_plowing.name=Безплодная Почва
-ape.ecomod.no_animals.name=Ушли Животные
+ape.ecomod.no_animals.name=Вымирание Животных
 ape.ecomod.no_bonemeal.name=Костная мука не работает

@@ -39,6 +39,8 @@ public class MainRegistry
 		EMItems.doPreInit();
 		EMTiles.doPreInit();
 		
+		EMRecipes.doPreInit();
+		
 		//Biome.REGISTRY.putObject(new ResourceLocation("ecomod:wasteland"), biome_wasteland);
 		GameRegistry.register(biome_wasteland);
 	}
@@ -68,11 +70,15 @@ public class MainRegistry
 		
 		EMBlocks.doInit();
 		EMItems.doInit();
+		
+		EMRecipes.doInit();
 	}
 	
 	public static void doPostInit()
 	{
 		EMIntermod.registerBCFuels();
+		
+		EMRecipes.doPostInit();
 	}
 	
 	

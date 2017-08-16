@@ -2,6 +2,7 @@ package ecomod.common.blocks;
 
 import ecomod.api.EcomodBlocks;
 import ecomod.common.items.ItemCore;
+import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -137,7 +138,7 @@ public class BlockFrame extends Block
 						}
 						else if(state.getValue(TYPE) == 1)
 						{
-							if(pi.getMetadata() == 1)//Advanced Filter
+							if(pi.getMetadata() == 1 && EMConfig.enable_advanced_filter)//Advanced Filter
 							{
 								worldIn.playEvent(1029, pos, 0);
 								

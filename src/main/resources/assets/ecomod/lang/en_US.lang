@@ -9,17 +9,27 @@ tile.ecomod.frame.1.name=Advanced Empty Machine Frame
 tile.ecomod.block.concentrated_pollution.name=Concentrated Pollution
 fluid.concentrated_pollution=Concentrated Pollution
 
+#Items
+item.ecomod.respirator.name=Respirator
+
+item.ecomod.core.0.name=Filter Core
+item.ecomod.core.1.name=Advanced Filter Core
+item.ecomod.core.2.name=Analyzer Core
+
+item.ecomod.craft_ingredient.0.name=Array of Pistons
+item.ecomod.craft_ingredient.1.name=Vent
+
 #Effects
 ape.ecomod.food_pollution.name=Food Pollution
 ape.ecomod.smog.name=Smog
 ape.ecomod.bad_sleep.name=Bad Sleep
 ape.ecomod.poisonous_sleep.name=Sleeping is poisonous
-ape.ecomod.no_fish.name=No Fish
+ape.ecomod.no_fish.name=Extinction of Fish
 ape.ecomod.polluted_water.name=Polluted Water
 ape.ecomod.dead_trees.name=Leafless Trees
 ape.ecomod.no_trees.name=Deforestation
 ape.ecomod.acid_rain.name=Acid Rain
 ape.ecomod.wasteland.name=Wasteland
 ape.ecomod.no_plowing.name=Barren Soil
-ape.ecomod.no_animals.name=Animals have Left
+ape.ecomod.no_animals.name=Extinction of Animals
 ape.ecomod.no_bonemeal.name=Bonemeal no more works

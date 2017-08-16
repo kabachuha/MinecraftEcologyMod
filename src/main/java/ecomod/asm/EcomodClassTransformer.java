@@ -7,6 +7,7 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 
 import ecomod.api.EcomodAPI;
+import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
@@ -15,8 +16,16 @@ import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -47,6 +56,9 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.EntityRenderer", "net.minecraft.client.renderer.EntityRenderer"))
 			return handleEntityRenderer(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.entity.layers.LayerCustomHead", "net.minecraft.client.renderer.entity.layers.LayerCustomHead"))
+			return handleLayerCustomHead(name, basicClass);
 		
 		return basicClass;
 	}
@@ -173,7 +185,7 @@ public class EcomodClassTransformer implements IClassTransformer
 			}
 			else
 			{
-				EcologyMod.log.error("Not found: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager.bindTexture (Lnet/minecraft/util/ResourceLocation;)V");
+				log.error("Not found: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager.bindTexture (Lnet/minecraft/util/ResourceLocation;)V");
 				return bytecode;
 			}
 			
@@ -325,6 +337,141 @@ public class EcomodClassTransformer implements IClassTransformer
 			return bytecode;
 		}
 	}
+	
+	private byte[] handleLayerCustomHead(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "doRenderLayer", "func_177141_a", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			lst.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/entity/layers/LayerCustomHead", chooseByEnvironment("modelRenderer", "field_177209_a"), "Lnet/minecraft/client/model/ModelRenderer;"));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new VarInsnNode(Opcodes.FLOAD, 8));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "lchAddition", "(Lnet/minecraft/client/model/ModelRenderer;Lnet/minecraft/entity/EntityLivingBase;F)V", false));
+			lst.add(new LabelNode());
+			
+			mn.instructions.insert(mn.instructions.get(1), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+		/*
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "doRenderLayer", "func_177141_a", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V");
+			
+			int insertion_index = -1;
+			
+			AbstractInsnNode[] ain = mn.instructions.toArray();
+			
+			for(int i = 0; i < ain.length; i++)
+			{
+				AbstractInsnNode insn = ain[i];
+				
+				if(insn != null)
+				if(insn instanceof TypeInsnNode)
+				{
+					TypeInsnNode min = (TypeInsnNode)insn;
+
+					if(min.getOpcode() == Opcodes.INSTANCEOF && min.desc.contentEquals("net/minecraft/item/ItemArmor"))
+					{
+						log.info("FOUND: INSTANCEOF net/minecraft/item/ItemArmor!!!!!");
+						insertion_index = i-2;
+						break;
+					}
+				}
+			}
+			
+			if(insertion_index == -1)
+			{
+				log.error("Not found: INSTANCEOF net/minecraft/item/ItemArmor");
+				
+				return bytecode;
+			}
+			
+			LabelNode label = null;
+			
+			for(int i = insertion_index; i < ain.length; i++)
+			{
+				AbstractInsnNode insn = ain[i];
+				
+				if(insn != null)
+				if(insn instanceof LabelNode)
+				{
+					label = (LabelNode)insn;
+				}
+			}
+			
+			if(label == null)
+			{
+				log.error("Not found: Label after INSTANCEOF net/minecraft/item/ItemArmor");
+				
+				return bytecode;
+			}
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 10));
+			lst.add(new TypeInsnNode(Opcodes.INSTANCEOF, "ecomod/api/client/IRenderableHeadArmor"));
+			lst.add(new JumpInsnNode(Opcodes.IFNE, label));
+			log.info(label.toString());
+			log.info(label.getOpcode());
+			log.info(label.getType());
+			log.info(label.getLabel().toString());
+			log.info(label.getLabel().info);
+			lst.add(new FrameNode(Opcodes.F_CHOP, 0, null, 0, null));
+			
+			mn.instructions.insert(mn.instructions.get(insertion_index), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+			
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+		*/
 	
 	
 	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
@@ -530,4 +677,50 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 	}
 	
+	public static void lchAddition(ModelRenderer modelRenderer, EntityLivingBase entitylivingbaseIn, float scale)
+	{
+		ItemStack itemstack = entitylivingbaseIn.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+
+        if (!itemstack.isEmpty())
+        {
+        	if(itemstack.getItem() instanceof IRenderableHeadArmor)
+        	{
+        		Minecraft minecraft = Minecraft.getMinecraft();
+                GlStateManager.pushMatrix();
+                
+                if (entitylivingbaseIn.isSneaking())
+                {
+                    GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                }
+                
+                boolean flag = entitylivingbaseIn instanceof EntityVillager || entitylivingbaseIn instanceof EntityZombieVillager;
+                
+                if (entitylivingbaseIn.isChild() && !(entitylivingbaseIn instanceof EntityVillager))
+                {
+                    float f = 2.0F;
+                    float f1 = 1.4F;
+                    GlStateManager.translate(0.0F, 0.5F * scale, 0.0F);
+                    GlStateManager.scale(0.7F, 0.7F, 0.7F);
+                    GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
+                }
+                
+                modelRenderer.postRender(0.0625F);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                
+                float f3 = 0.625F;
+                GlStateManager.translate(0.0F, -0.25F, 0.0F);
+                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.scale(0.625F, -0.625F, -0.625F);
+
+                if (flag)
+                {
+                    GlStateManager.translate(0.0F, 0.1875F, 0.0F);
+                }
+
+                minecraft.getItemRenderer().renderItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.HEAD);
+                
+                GlStateManager.popMatrix();
+        	}
+        }
+	}
 }

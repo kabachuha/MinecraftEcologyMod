@@ -76,6 +76,8 @@ public class EMConfig
 	
 	public static int fuel_concentrated_pollution_burn_energy = 600;
 	
+	public static int filter_durability = 30;
+	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
 	public static void sync()
@@ -111,6 +113,8 @@ public class EMConfig
 			
 			check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
 			
+			enable_advanced_filter = config.getBoolean("EnableAdvancedFilterCrafting", "TILES", true, "");
+			
 			adv_filter_delay_secs = config.getInt("AdvancedFilterDelaySeconds", "TILES", 5, 1, Integer.MAX_VALUE, "", lang("tiles.advancedfilter.delay"));
 			
 			advanced_filter_energy_per_second = config.getInt("AdvancedFilterEnergyPerSecons", "TILES", 5000, 0, adv_filter_energy, "", lang("tiles.advancedfilter.consumption"));
@@ -126,6 +130,8 @@ public class EMConfig
 			fuel_concentrated_pollution_burn_time = config.getInt("FuelConcentratedPollutionBurnTime", "INTERMOD", 40, 1, Integer.MAX_VALUE, "");
 			
 			fuel_concentrated_pollution_burn_energy = config.getInt("FuelConcentratedPollutionBurnEnergy", "INTERMOD", 600, 1, Integer.MAX_VALUE, "");
+			
+			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
 			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 		}
