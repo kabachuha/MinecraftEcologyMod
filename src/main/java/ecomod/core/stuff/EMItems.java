@@ -29,7 +29,7 @@ public class EMItems
 			
 			EcomodItems.CRAFT_INGREDIENT = new ItemCraftIngredient().setUnlocalizedName(EMConsts.modid+".craft_ingredient");
 			
-			RESPIRATOR_MATERIAL = EnumHelper.addArmorMaterial("ecomod_respirator", EMConsts.modid+":respirator", 13, new int[]{2, 2, 3, 1}, 7, SoundEvents.ENTITY_HORSE_BREATHE, 0.0F);
+			RESPIRATOR_MATERIAL = EnumHelper.addArmorMaterial("ecomod_respirator", EMConsts.modid+":respirator", 13, new int[]{2, 2, 3, 1}, 7, SoundEvents.ENTITY_PLAYER_BREATH, 0.0F);
 			
 			if(RESPIRATOR_MATERIAL == null)
 			{

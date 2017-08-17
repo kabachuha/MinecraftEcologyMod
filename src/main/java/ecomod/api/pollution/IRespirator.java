@@ -5,5 +5,5 @@ import net.minecraft.item.ItemStack;
 
 public interface IRespirator
 {
-	public boolean isRespirating(EntityLivingBase entity, ItemStack stack);
+	public boolean isRespirating(EntityLivingBase entity, ItemStack stack, boolean check_affects);
 }

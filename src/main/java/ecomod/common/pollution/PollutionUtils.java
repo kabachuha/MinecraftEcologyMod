@@ -100,8 +100,12 @@ public class PollutionUtils
 		return false;
 	}
 	
-	
 	public static boolean isEntityRespirating(EntityLivingBase entity)
+	{
+		return isEntityRespirating(entity, true);
+	}
+	
+	public static boolean isEntityRespirating(EntityLivingBase entity, boolean decr)
 	{
 		ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 		
@@ -109,7 +113,7 @@ public class PollutionUtils
 		{
 			if(is.getItem() instanceof IRespirator)
 			{
-				return ((IRespirator)is.getItem()).isRespirating(entity, is);
+				return ((IRespirator)is.getItem()).isRespirating(entity, is, decr);
 			}
 		}
 		
