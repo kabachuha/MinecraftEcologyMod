@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
@@ -11,6 +12,7 @@ import ecomod.api.pollution.PollutionEmissionEvent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 
 public class EcomodAPI
 {
@@ -92,5 +94,10 @@ public class EcomodAPI
 				return icon == null ? IAnalyzerPollutionEffect.BLANK_ICON : icon;
 			}
 		});
+	}
+	
+	static
+	{
+		CapabilityManager.INSTANCE.register(IPollution.class, new IPollution.Storage(), new IPollution.Factory());
 	}
 }

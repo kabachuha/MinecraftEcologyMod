@@ -3,9 +3,12 @@ package ecomod.api;
 import java.util.List;
 import java.util.Map;
 
+import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fluids.Fluid;
 
 public class EcomodStuff
@@ -25,4 +28,7 @@ public class EcomodStuff
 	public static Map<String, PollutionData> polluting_items = null;
 	
 	public static Map<String, PollutionData> smelted_items_pollution = null;
+	
+	@CapabilityInject(IPollution.class)
+	public static Capability<IPollution> CAPABILITY_POLLUTION = null;
 }

@@ -7,6 +7,9 @@ import ecomod.network.EMPacketString;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockNewLeaf;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.IGrowable;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -15,7 +18,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -24,6 +30,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -37,9 +44,11 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.client.event.GuiScreenEvent.PotionShiftEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -48,6 +57,7 @@ import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -75,6 +85,8 @@ import com.google.gson.GsonBuilder;
 
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
+import ecomod.api.capabilities.PollutionProvider;
+import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
 import ecomod.api.pollution.IPollutionGetter;
@@ -405,9 +417,14 @@ public class PollutionHandler implements IPollutionGetter
 			{
 				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), ((IGarbage)is.getItem()).getPollutionOnDecay().clone().multiplyAll(is.getCount()).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
 			}
-			else
+			else	
 			{
 				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), PollutionSourcesConfig.getItemStackPollution(is).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
+			}
+			
+			if(is.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+			{
+				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(ei.getPosition()), is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution(), true);
 			}
 			
 			if(is.hasTagCompound())
@@ -570,21 +587,8 @@ public class PollutionHandler implements IPollutionGetter
 			event.setResult(Result.DENY);
 		}
 		else
-		{/*
-			FIXME!!!
-			if(data.compareOR(EMConfig.dead_trees_pollution) >= 0)
-			{
-				EcologyMod.log.info(2);
-				event.setResult(Result.DENY);
-				
-				//WorldGenerator worldgenerator = new WorldGenHugeTrees();
-				
-				//worldgenerator.generate(w, w.rand, event.getPos());
-			}
-			else
-			{*/
-				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("tree_growing_pollution_redution"), true);
-			//}
+		{
+			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("tree_growing_pollution_redution"), true);
 		}
 	}
 	
@@ -854,7 +858,133 @@ public class PollutionHandler implements IPollutionGetter
 			}
 		}
 	}
-
+	
+	public static final ResourceLocation POLLUTION_CAPABILITY_RESLOC = EMUtils.resloc("pollution");
+	
+	@SubscribeEvent
+	public void onCapabilityAttachment(AttachCapabilitiesEvent<Item> event)
+	{
+		if(event.getObject() instanceof ItemFood)
+		{
+			event.addCapability(POLLUTION_CAPABILITY_RESLOC, new PollutionProvider());
+		}
+	}
+	
+	@SubscribeEvent
+	public void onCropGrow(BlockEvent.CropGrowEvent.Pre event)
+	{
+		if(!event.getWorld().isRemote)
+		{
+			PollutionData pollution = getPollution(event.getWorld(), EMUtils.blockPosToPair(event.getPos()));
+			
+			if(pollution != null && pollution.compareTo(PollutionData.getEmpty()) != 0 && pollution.getSoilPollution() > 1)
+			if(PollutionEffectsConfig.isEffectActive("no_plowing", pollution))
+			{
+				if(PollutionUtils.hasSurfaceAccess(event.getWorld(), event.getPos()))
+					event.setResult(Result.DENY);
+			}
+			else
+			{
+				if(PollutionUtils.hasSurfaceAccess(event.getWorld(), event.getPos()))
+				if(EcomodStuff.pollution_effects.containsKey("no_crops_growing"))
+				{
+					PollutionData effectPoll = EcomodStuff.pollution_effects.get("no_crops_growing").getTriggerringPollution();
+					
+					for(PollutionType type : PollutionType.values())
+					{
+						if(effectPoll.get(type) > 1 && pollution.get(type) > 1)
+						{
+							double k = effectPoll.get(type) / pollution.get(type);
+							
+							k = Math.max(k, 1);
+					
+							if(event.getWorld().rand.nextInt((int)k) == 0)
+							{
+								event.setResult(Result.DENY);
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onBlockDrops(BlockEvent.HarvestDropsEvent event)
+	{
+		if(!event.getWorld().isRemote)
+		{
+			if(event.getState().getBlock() instanceof IGrowable)
+			{
+				dropHandler(event.getWorld(), event.getPos(), event.getDrops());
+			}
+		}
+	}
+	
+	public void dropHandler(World w, BlockPos pos, List<ItemStack> drops)
+	{
+		PollutionData pd = getPollution(w, EMUtils.blockPosToPair(pos));
+		
+		if(PollutionEffectsConfig.isEffectActive("food_pollution", pd))
+		{
+			PollutionData trig = EcomodStuff.pollution_effects.get("food_pollution").getTriggerringPollution();
+		
+			PollutionData delta = pd.clone().add(trig.clone().multiplyAll(-1));
+		
+			if(EcomodStuff.pollution_effects.get("food_pollution").getTriggeringType() == TriggeringType.AND ? pd.compareTo(trig) >= 0 : pd.compareOR(trig) >= 0)
+			{	
+				boolean in = w.getBlockState(pos).getMaterial() == Material.WATER;
+			
+				if(!in)
+				for(EnumFacing dir : EnumFacing.VALUES)
+					if(!in)
+						in |= w.getBlockState(pos.offset(dir)).getMaterial() == Material.WATER;
+			
+			
+				delta.multiply(PollutionType.WATER, in ? 1F : 0.25F);
+			
+				in = PollutionUtils.hasSurfaceAccess(w, pos);
+			
+				delta.multiply(PollutionType.AIR, in ? 1F : 0.4F);
+			
+				in = w.getBlockState(pos).getMaterial() == Material.GRASS || w.getBlockState(pos).getMaterial() == Material.GROUND;
+			
+				if(!in)
+				for(EnumFacing dir : EnumFacing.VALUES)
+					if(!in)
+						in |= w.getBlockState(pos.offset(dir)).getMaterial() == Material.GRASS || w.getBlockState(pos.offset(dir)).getMaterial() == Material.GROUND;
+			
+				delta.multiply(PollutionType.SOIL, in ? 1F : 0.2F);
+			}
+			
+			for(ItemStack is : drops)
+			{
+				if(is.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+				{
+					is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).setPollution(is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution().add(delta.multiplyAll(EMConfig.food_polluting_factor * 2)));
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingDrops(LivingDropsEvent event)
+	{
+		if(event.getEntityLiving() != null)
+		if(!event.getEntityLiving().getEntityWorld().isRemote)
+		{
+			List<ItemStack> drps = new ArrayList<ItemStack>();
+			for(EntityItem ei : event.getDrops())
+			{
+				if(ei.getEntityItem().getItem() instanceof ItemFood)
+					drps.add(ei.getEntityItem());
+			}
+			
+			dropHandler(event.getEntityLiving().getEntityWorld(), event.getEntityLiving().getPosition(), drps);
+		}
+	}
+	
 	@Nullable
 	@Override
 	public PollutionData getPollution(World w, int chunkx, int chunkz)
@@ -865,5 +995,10 @@ public class PollutionHandler implements IPollutionGetter
 			return null;
 		
 		return wpt.getPM().getPollution(chunkx, chunkz).clone();
+	}
+	
+	public PollutionData getPollution(World w, Pair<Integer, Integer> pair)
+	{
+		return getPollution(w, pair.getLeft(), pair.getRight());
 	}
 }

@@ -4,6 +4,7 @@ import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionSourcesConfig;
+import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.stuff.EMConfig;
@@ -51,10 +52,13 @@ public class BlockFluidPollution extends BlockFluidFinite {
 		
 		if(entityIn instanceof EntityLivingBase)
 		{
-			((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("hunger"), 220, 2));
-			((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 220, 2));
-			((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 180, 1));
-			
+			if(entityIn.ticksExisted % 20 == 0)
+			if(!PollutionUtils.isEntityRespirating((EntityLivingBase) entityIn, true))
+			{
+				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("hunger"), 220, 2));
+				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 220, 2));
+				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 180, 1));
+			}
 		}
 	}
 }

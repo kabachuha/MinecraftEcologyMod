@@ -78,6 +78,10 @@ public class EMConfig
 	
 	public static int filter_durability = 30;
 	
+	public static float food_polluting_factor = 0.001F;
+	
+	public static float pollution_to_food_poison[] = new float[]{0.01F, 0.01F, 0.03F};
+	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
 	public static void sync()
@@ -133,6 +137,24 @@ public class EMConfig
 			
 			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
 			
+			food_polluting_factor = config.getFloat("FoodPollutiingFactor", "POLLUTION", 0.001F, 0, 1, "");
+			
+			
+			double dbls[] = config.get("POLLUTION", "PollutionToFoodPoisonFactors", new double[]{0.01F, 0.01F, 0.03F}).getDoubleList();
+			if(dbls.length == 3)
+			{
+				pollution_to_food_poison = new float[3];
+				for(int i = 0; i < 3; i++)
+				{
+					pollution_to_food_poison[i] = (float)dbls[i];
+				}
+			}
+			else
+			{
+				EcologyMod.log.error("Unable to read PollutionToFoodPoisonFactors property from the config!!! Using default value"+new double[]{0.001F, 0.01F, 0.03F}.toString());
+			}
+			
+			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 		}
 		catch(Exception e)
@@ -161,9 +183,11 @@ public class EMConfig
 		
 		PollutionData poisonous_sleep_pollution = new PollutionData(70000, 0, 0);
 		
-		PollutionData no_fish_pollution = new PollutionData(18000, 0, 0);
+		PollutionData no_fish_pollution = new PollutionData(0, 80000, 0);
 		
-		PollutionData useless_hoe_pollution = new PollutionData(0, 0, 150000);
+		PollutionData useless_hoe_pollution = new PollutionData(0, 0, 200000);
+		
+		PollutionData no_crop_growing_pollution = new PollutionData(100000, 125000 ,125000);
 		
 		PollutionData polluted_water_pollution = new PollutionData(0, 200000, 0);
 		
@@ -191,6 +215,7 @@ public class EMConfig
 		defs.add(AnalyzerPollutionEffect.createSimple("no_plowing", useless_hoe_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_animals", no_animals, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_bonemeal", bonemeal_limiting_pollution, TriggeringType.AND));
+		defs.add(AnalyzerPollutionEffect.createSimple("no_crops_growing", no_crop_growing_pollution, TriggeringType.OR));
 		
 		PollutionEffectsConfig pec = new PollutionEffectsConfig();
 		

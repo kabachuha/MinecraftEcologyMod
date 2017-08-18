@@ -1,6 +1,7 @@
 package ecomod.core.stuff;
 
 import ecomod.api.EcomodStuff;
+import ecomod.api.capabilities.IPollution;
 import ecomod.client.gui.EMGuiHandler;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.world.FluidPollution;
@@ -16,6 +17,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ModAPIManager;

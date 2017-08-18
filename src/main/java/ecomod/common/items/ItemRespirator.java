@@ -2,9 +2,13 @@ package ecomod.common.items;
 
 import java.util.List;
 
+import ecomod.api.EcomodStuff;
 import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.IRespirator;
+import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.utils.EMUtils;
+import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMItems;
 import net.minecraft.creativetab.CreativeTabs;
@@ -36,6 +40,17 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 			NBTTagCompound nbt = stack.getTagCompound();
 			
 			EntityPlayer player = (EntityPlayer)entity;
+			
+			if(player.ticksExisted % 60 == 0)
+			if(player.getHeldItemMainhand().hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+			{
+				//EcologyMod.log.info("Has cap pollution!!!");
+				//player.getHeldItemMainhand().getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).setPollution(player.getHeldItemMainhand().getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution().clone().add(PollutionType.AIR, 50));
+				EcologyMod.log.info(player.getHeldItemMainhand().getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution());
+				
+				// INVOKEVIRTUAL net/minecraft/item/Item.onEntityItemUpdate (Lnet/minecraft/entity/item/EntityItem;)Z
+				// stack.getItem().onEntityItemUpdate(null);
+			}
 			
 			if(nbt != null)
 			{
@@ -148,7 +163,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		if(nbt != null)
 		if(nbt.hasKey("filter"))
 		{
-			tooltip.add("Filter durability: "+(int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100)+"%");
+			tooltip.add("Filter capacity: "+(int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100)+"%");
 		}
 	}
 	

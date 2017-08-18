@@ -7,13 +7,18 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 
 import ecomod.api.EcomodAPI;
+import ecomod.api.EcomodStuff;
+import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.PollutionData;
+import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMConfig;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
@@ -21,16 +26,24 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.classloading.FMLForgePlugin;
 
@@ -59,6 +72,12 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.client.renderer.entity.layers.LayerCustomHead", "net.minecraft.client.renderer.entity.layers.LayerCustomHead"))
 			return handleLayerCustomHead(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "net.minecraft.item.Item", "net.minecraft.item.Item"))
+			return handleItem(name, basicClass);
+			
+		if(strictCompareByEnvironment(name, "net.minecraft.item.ItemFood", "net.minecraft.item.ItemFood"))
+			return handleItemFood(name, basicClass);
 		
 		return basicClass;
 	}
@@ -382,7 +401,14 @@ public class EcomodClassTransformer implements IClassTransformer
 			return bytecode;
 		}
 	}
-		/*
+		
+	private byte[] handleItem(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
 		try
 		{
 			ClassNode classNode = new ClassNode();
@@ -390,77 +416,22 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "doRenderLayer", "func_177141_a", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V");
-			
-			int insertion_index = -1;
-			
-			AbstractInsnNode[] ain = mn.instructions.toArray();
-			
-			for(int i = 0; i < ain.length; i++)
-			{
-				AbstractInsnNode insn = ain[i];
-				
-				if(insn != null)
-				if(insn instanceof TypeInsnNode)
-				{
-					TypeInsnNode min = (TypeInsnNode)insn;
-
-					if(min.getOpcode() == Opcodes.INSTANCEOF && min.desc.contentEquals("net/minecraft/item/ItemArmor"))
-					{
-						log.info("FOUND: INSTANCEOF net/minecraft/item/ItemArmor!!!!!");
-						insertion_index = i-2;
-						break;
-					}
-				}
-			}
-			
-			if(insertion_index == -1)
-			{
-				log.error("Not found: INSTANCEOF net/minecraft/item/ItemArmor");
-				
-				return bytecode;
-			}
-			
-			LabelNode label = null;
-			
-			for(int i = insertion_index; i < ain.length; i++)
-			{
-				AbstractInsnNode insn = ain[i];
-				
-				if(insn != null)
-				if(insn instanceof LabelNode)
-				{
-					label = (LabelNode)insn;
-				}
-			}
-			
-			if(label == null)
-			{
-				log.error("Not found: Label after INSTANCEOF net/minecraft/item/ItemArmor");
-				
-				return bytecode;
-			}
+			MethodNode mn = getMethod(classNode, "onEntityItemUpdate", /*It's MCforge added method*/"onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z", "(Lnet/minecraft/entity/item/EntityItem;)Z");
 			
 			InsnList lst = new InsnList();
 			
-			lst.add(new VarInsnNode(Opcodes.ALOAD, 10));
-			lst.add(new TypeInsnNode(Opcodes.INSTANCEOF, "ecomod/api/client/IRenderableHeadArmor"));
-			lst.add(new JumpInsnNode(Opcodes.IFNE, label));
-			log.info(label.toString());
-			log.info(label.getOpcode());
-			log.info(label.getType());
-			log.info(label.getLabel().toString());
-			log.info(label.getLabel().info);
-			lst.add(new FrameNode(Opcodes.F_CHOP, 0, null, 0, null));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "itemEntityUpdateAddition", "(Lnet/minecraft/entity/item/EntityItem;)V", false));
+			lst.add(new LabelNode());
 			
-			mn.instructions.insert(mn.instructions.get(insertion_index), lst);
+			mn.instructions.insert(mn.instructions.get(1), lst);
 			
 			classNode.accept(cw);
 			bytes = cw.toByteArray();
 			
 			log.info("Transformed "+name);
 			log.info("Final size: "+bytes.length+" bytes");
-			
+		
 			return bytes;
 		}
 		catch(Exception e)
@@ -471,8 +442,51 @@ public class EcomodClassTransformer implements IClassTransformer
 			
 			return bytecode;
 		}
-		*/
+	}
 	
+	private byte[] handleItemFood(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "onFoodEaten", "func_77849_c", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 3));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "itemFoodOnEatenAddition", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V", false));
+			lst.add(new LabelNode());
+			
+			mn.instructions.insert(mn.instructions.get(1), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
 	
 	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
 	public static final String REGEX_NOTCH_FROM_MCP = "!&!";
@@ -551,10 +565,10 @@ public class EcomodClassTransformer implements IClassTransformer
 					}
 					else
 					{
-						if(worldIn.rand.nextInt(35) == 0)
+						if(worldIn.rand.nextInt(50) == 0)
 						{
-							if(worldIn.rand.nextInt(4) == 0)
-								worldIn.setBlockState(pos, Blocks.MYCELIUM.getDefaultState());
+							if(worldIn.rand.nextInt(8) == 0)
+								worldIn.setBlockState(pos, Blocks.CLAY.getDefaultState());
 							else
 								worldIn.setBlockState(pos, Blocks.SAND.getDefaultState());
 							
@@ -722,5 +736,90 @@ public class EcomodClassTransformer implements IClassTransformer
                 GlStateManager.popMatrix();
         	}
         }
+	}
+	
+	public static void itemEntityUpdateAddition(EntityItem item)
+	{
+		if(!item.world.isRemote)
+		{
+			if(item.ticksExisted % 100 == 0)
+			{
+				ItemStack is = item.getEntityItem();
+			
+				if(is.getItem() instanceof ItemFood)
+				{
+					if(is.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+					{
+						if(!EcomodStuff.pollution_effects.containsKey("food_pollution"))
+							return;
+						
+						PollutionData pd = EcologyMod.ph.getPollution(item.getEntityWorld(), EMUtils.blockPosToPair(item.getPosition()));
+						
+						PollutionData trig = EcomodStuff.pollution_effects.get("food_pollution").getTriggerringPollution();
+						
+						if(EcomodStuff.pollution_effects.get("food_pollution").getTriggeringType() == TriggeringType.AND ? pd.compareTo(trig) >= 0 : pd.compareOR(trig) >= 0)
+						{
+							PollutionData delta = pd.clone().add(trig.clone().multiplyAll(-1));
+							
+							boolean in = item.getEntityWorld().getBlockState(item.getPosition()).getMaterial() == Material.WATER;
+							
+							if(!in)
+							for(EnumFacing dir : EnumFacing.VALUES)
+								if(!in)
+									in |= item.getEntityWorld().getBlockState(item.getPosition().offset(dir)).getMaterial() == Material.WATER;
+							
+							
+							delta.multiply(PollutionType.WATER, in ? 1F : 0.25F);
+							
+							in = PollutionUtils.hasSurfaceAccess(item.getEntityWorld(), item.getPosition());
+							
+							delta.multiply(PollutionType.AIR, in ? 1F : 0.4F);
+							
+							in = item.getEntityWorld().getBlockState(item.getPosition()).getMaterial() == Material.GRASS || item.getEntityWorld().getBlockState(item.getPosition()).getMaterial() == Material.GROUND;
+							
+							if(!in)
+							for(EnumFacing dir : EnumFacing.VALUES)
+								if(!in)
+									in |= item.getEntityWorld().getBlockState(item.getPosition().offset(dir)).getMaterial() == Material.GRASS || item.getEntityWorld().getBlockState(item.getPosition().offset(dir)).getMaterial() == Material.GROUND;
+							
+							delta.multiply(PollutionType.SOIL, in ? 1F : 0.2F);
+							
+							is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).setPollution(is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution().add(delta.multiplyAll(EMConfig.food_polluting_factor)));
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public static void itemFoodOnEatenAddition(ItemStack stack, World worldIn, EntityPlayer player)
+	{
+		if(!worldIn.isRemote)
+		{
+			if(stack.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+			{
+				PollutionData pollution = stack.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution();
+				
+				int a = (int)(pollution.getAirPollution() * EMConfig.pollution_to_food_poison[0]);
+				int b = (int)(pollution.getWaterPollution() * EMConfig.pollution_to_food_poison[1]);
+				int c = (int)(pollution.getSoilPollution() * EMConfig.pollution_to_food_poison[2]);
+				
+				int m = (a+b+c)/3;
+				int k = (int) Math.sqrt(a * b * c) / 300;
+				
+				if(m > 0)
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), Math.min(m*20, 1200), Math.min(k, 2)));
+				
+				if(m >= 60)
+				{
+					player.sendMessage(new TextComponentString("You've eaten polluted food").setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), m, Math.min(k, 2)));
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), m, Math.min(k, 2)));
+				}
+				
+				if(m >= 200)
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), m, Math.min(k, 2)));
+			}
+		}
 	}
 }

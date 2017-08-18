@@ -3,6 +3,8 @@ package ecomod.api.pollution;
 import com.google.gson.annotations.SerializedName;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 public class PollutionData implements Comparable
 {
@@ -275,5 +277,27 @@ public class PollutionData implements Comparable
 			ret.set(t, bb.readDouble());
 		
 		return ret;
+	}
+	
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
+		nbt.setDouble("air", getAirPollution());
+		nbt.setDouble("water", getWaterPollution());
+		nbt.setDouble("soil", getSoilPollution());
+		
+		return nbt;
+	}
+	
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		if(nbt != null)
+		{
+			if(nbt.hasKey("air"))
+				setAirPollution(nbt.getDouble("air"));
+			if(nbt.hasKey("water"))
+				setWaterPollution(nbt.getDouble("water"));
+			if(nbt.hasKey("soil"))
+				setSoilPollution(nbt.getDouble("soil"));
+		}
 	}
 }
