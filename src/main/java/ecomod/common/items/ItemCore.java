@@ -45,7 +45,7 @@ public class ItemCore extends Item
 		
 		if(stack.getMetadata() == 0)
 		{
-			tooltip.add("These filters are used by the Respirator");
+			tooltip.add("These filters are used by Respirator");
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))

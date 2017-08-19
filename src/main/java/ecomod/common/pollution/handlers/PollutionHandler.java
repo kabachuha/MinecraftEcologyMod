@@ -93,6 +93,7 @@ import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionEmissionEvent;
 import ecomod.api.pollution.PollutionData.PollutionType;
+import ecomod.common.items.ItemRespirator;
 import ecomod.common.pollution.*;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.pollution.thread.WorldProcessingThread;
@@ -537,18 +538,33 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(PollutionEffectsConfig.isEffectActive("bad_sleep", data))
 		{
-			float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
-			
-			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? (int)(250*f) : 2500, 1));
-			player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("weakness").toString()), 2000, (int)f));
-			if(f >= 2)
-				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("hunger").toString()), 2000, 2));
-			
-			player.sendMessage(new TextComponentString("You are feeling ill. Perhaps the air is not clean enough."));
-			
-			if(PollutionEffectsConfig.isEffectActive("poisonous_sleep", data))
+			if(!PollutionUtils.isEntityRespirating(player))
 			{
-				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, (int)f));
+				float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
+			
+				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? (int)(250*f) : 2500, 1));
+				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("weakness").toString()), 2000, (int)f));
+				if(f >= 2)
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("hunger").toString()), 2000, 2));
+			
+				player.sendMessage(new TextComponentString("You are feeling ill. Perhaps the air is not clean enough."));
+			
+				if(PollutionEffectsConfig.isEffectActive("poisonous_sleep", data))
+				{
+					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, (int)f));
+				}
+			}
+			else
+			{
+				ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+				
+				NBTTagCompound nbt = stack.getTagCompound();
+				
+				if(nbt != null)
+				if(nbt.hasKey("filter"))
+				{
+					nbt.setInteger("filter", Math.max(0, nbt.getInteger("filter") - EMConfig.filter_durability/2));
+				}
 			}
 		}
 	}

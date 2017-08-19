@@ -127,6 +127,52 @@ public class PollutionSourcesConfig
 		return getItemPollution(str);
 	}
 	
+	public static PollutionData getSmeltedItemPollution(String item)
+	{
+		if(item == null)
+			return null;
+		
+		if(EcomodStuff.smelted_items_pollution.containsKey(item))
+			return EcomodStuff.smelted_items_pollution.get(item).clone();
+		else
+			return getSource("default_smelted_item_pollution");
+	}
+	
+	public static PollutionData getSmeltedItemPollution(ItemStack item)
+	{
+		if(item == null)return null;
+		
+		String str = item.getItem().getRegistryName().toString();
+		if(item.getMetadata() != OreDictionary.WILDCARD_VALUE && item.getMetadata() != 0)
+		{
+			str += ":"+item.getMetadata();
+		}
+		
+		return getItemPollution(str);
+	}
+	
+	public static PollutionData getSmeltedItemPollution(Item item, int meta)
+	{
+		String str = item.getRegistryName().toString();
+		if(meta != OreDictionary.WILDCARD_VALUE && meta != 0)
+		{
+			str += ":"+meta;
+		}
+		
+		return getItemPollution(str);
+	}
+	
+	public static PollutionData getSmeltedItemStackPollution(ItemStack is)
+	{
+		if(is == null)return null;
+		
+		PollutionData ret = getSmeltedItemPollution(is).clone();
+		
+		ret.multiplyAll(is.getCount());
+		
+		return ret;
+	}
+	
 	public static PollutionData getItemStackPollution(ItemStack is)
 	{
 		if(is == null)return null;

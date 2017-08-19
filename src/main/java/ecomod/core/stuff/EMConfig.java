@@ -238,6 +238,7 @@ public class EMConfig
 		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-0.5);
 		PollutionData fire_pollution = new PollutionData(2, 0, 0);
 		PollutionData leaves_redution = new PollutionData(-0.018, 0, 0);
+		PollutionData smelted_item_pollution = new PollutionData(3, 0.6, 1.9);
 		
 		List<String> item_blacklist = new ArrayList<String>();
 		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));
@@ -254,6 +255,7 @@ public class EMConfig
 		psc.pollution_sources.put("concentrated_pollution_explosion_pollution", concentrated_pollution_explosion_pollution);
 		psc.pollution_sources.put("hoe_plowing_reducion", hoe_plowing_reducion);
 		psc.pollution_sources.put("leaves_redution", leaves_redution);
+		psc.pollution_sources.put("default_smelted_item_pollution", smelted_item_pollution);
 		
 		psc.save(cfg_dir);
 		

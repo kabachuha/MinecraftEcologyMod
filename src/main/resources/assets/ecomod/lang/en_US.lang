@@ -9,6 +9,8 @@ tile.ecomod.frame.1.name=Advanced Empty Machine Frame
 tile.ecomod.block.concentrated_pollution.name=Concentrated Pollution
 fluid.concentrated_pollution=Concentrated Pollution
 
+tile.ecomod.oc_analyzer_adapter.name=[WIP]OC Analyzer Adapter(Not working yet) 
+
 #Items
 item.ecomod.respirator.name=Respirator
 
@@ -34,3 +36,18 @@ ape.ecomod.no_plowing.name=Barren Soil
 ape.ecomod.no_animals.name=Extinction of Animals
 ape.ecomod.no_bonemeal.name=Bonemeal no more works
 ape.ecomod.no_crops_growing.name=No crops growth
+
+ape.ecomod.food_pollution.desc=Dropped food items and crop drops are absorbing pollution from the environment unless they're isolated. When eaten these items will cause bad potion effects.
+ape.ecomod.smog.desc=Pollution in the air when combined with water particles forms a dense fog which poisons living creatures. To prevent poisoning put on a respirator. Make sure you have filters!
+ape.ecomod.bad_sleep.desc=Because of air pollution you sleeping here makes you sick.
+ape.ecomod.poisonous_sleep.desc=When sleeping you can be poisoned by the polluted air.
+ape.ecomod.no_fish.desc=Because of the pollution fish cannot live in the water. Fishing is futile.
+ape.ecomod.polluted_water.desc=Because of high water pollution, water turns into polluted water, making it poisonous and almost useless.
+ape.ecomod.dead_trees.desc=Because of strong pollution, tree leaves deteriorate and decay.
+ape.ecomod.no_trees.desc=Saplings can grow into trees no more in this region.
+ape.ecomod.acid_rain.desc=The rain mixed with pollution produces an acid rain. When raining it will poison any living creature if the one isn't wearing a helmet(helmet is damaged instead). Also the rain dissolves leaves and farmland.
+ape.ecomod.wasteland.desc=The area turns into lifeless wasteland, grass turn into dirt and sand, the biome color changes to dark, entities defined as "creature" or "water creature" can no longer spawn there. 
+ape.ecomod.no_plowing.desc=Because soil pollution is too great, soil deteriorates. Thus the dirt cannot be plowed and farmland turns into dirt. 
+ape.ecomod.no_animals.desc=Because of harsh environmental conditions animals can spawn no more here.
+ape.ecomod.no_bonemeal.desc=Because soil is oversaturated with poisonous substances fertilizers do not have an effect.
+ape.ecomod.no_crops_growing.desc=Crops can grow no more here, but you still can fertilize them with bonemeal unless you have a bonemeal restricting effect.

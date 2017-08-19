@@ -8,9 +8,11 @@ import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -30,6 +32,8 @@ public class EMItems
 			EcomodItems.CRAFT_INGREDIENT = new ItemCraftIngredient().setUnlocalizedName(EMConsts.modid+".craft_ingredient");
 			
 			RESPIRATOR_MATERIAL = EnumHelper.addArmorMaterial("ecomod_respirator", EMConsts.modid+":respirator", 13, new int[]{2, 2, 3, 1}, 7, SoundEvents.ENTITY_PLAYER_BREATH, 0.0F);
+			
+			RESPIRATOR_MATERIAL.setRepairItem(new ItemStack(Items.LEATHER,1,0));
 			
 			if(RESPIRATOR_MATERIAL == null)
 			{

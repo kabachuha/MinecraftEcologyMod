@@ -20,6 +20,7 @@ import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -40,6 +41,9 @@ public class MainRegistry
 		EMBlocks.doPreInit();
 		EMItems.doPreInit();
 		EMTiles.doPreInit();
+		
+		if(Loader.isModLoaded("opencomputers|core"))
+			EMIntermod.OCpreInit();
 		
 		EMRecipes.doPreInit();
 		

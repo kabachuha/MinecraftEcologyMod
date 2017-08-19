@@ -12,4 +12,5 @@ public class EcomodBlocks
 	public static Block FLUID_POLLUTION = null;
 	public static Block ANALYZER = null;
 	public static Block FRAME = null;
+	public static Block OC_ANALYZER_ADAPTER = null;
 }

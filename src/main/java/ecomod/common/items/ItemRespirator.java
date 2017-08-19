@@ -40,7 +40,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 			NBTTagCompound nbt = stack.getTagCompound();
 			
 			EntityPlayer player = (EntityPlayer)entity;
-			
+			/*
 			if(player.ticksExisted % 60 == 0)
 			if(player.getHeldItemMainhand().hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
 			{
@@ -50,7 +50,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 				
 				// INVOKEVIRTUAL net/minecraft/item/Item.onEntityItemUpdate (Lnet/minecraft/entity/item/EntityItem;)Z
 				// stack.getItem().onEntityItemUpdate(null);
-			}
+			}*/
 			
 			if(nbt != null)
 			{

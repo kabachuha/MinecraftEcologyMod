@@ -37,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -79,6 +80,9 @@ public class EcomodClassTransformer implements IClassTransformer
 		if(strictCompareByEnvironment(name, "net.minecraft.item.ItemFood", "net.minecraft.item.ItemFood"))
 			return handleItemFood(name, basicClass);
 		
+		if(strictCompareByEnvironment(name, "net.minecraft.tileentity.TileEntityFurnace", "net.minecraft.tileentity.TileEntityFurnace"))
+			return handleTileFurnace(name, basicClass);
+			
 		return basicClass;
 	}
 
@@ -488,6 +492,78 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 	}
 	
+	private byte[] handleTileFurnace(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			MethodNode mn = getMethod(classNode, "smeltItem", "func_145949_j", "()V", "()V");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new LabelNode());
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 2));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodClassTransformer", "smeltItemFurnaceAddition", "(Lnet/minecraft/tileentity/TileEntityFurnace;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)V", false));
+			
+			AbstractInsnNode[] ain = mn.instructions.toArray();
+			int insertion_index = -1;
+			
+			for(int i = 0; i < ain.length; i++)
+			{
+				AbstractInsnNode insn = ain[i];
+				
+				if(insn instanceof VarInsnNode)
+				{
+					VarInsnNode min = (VarInsnNode)insn;
+
+					if(min.getOpcode() == Opcodes.ASTORE && min.var == 3)
+					{
+						log.info("FOUND: ASTORE 3");
+						insertion_index = i;
+						break;
+					}
+				}
+			}
+			
+			if(insertion_index != -1)
+			{
+				mn.instructions.insert(mn.instructions.get(insertion_index), lst);
+			}
+			else
+			{
+				log.error("Not found: ASTORE 3");
+				return bytecode;
+			}
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+			
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+	
 	//Part borrowed from DummyCore(https://github.com/Modbder/DummyCore)
 	public static final String REGEX_NOTCH_FROM_MCP = "!&!";
 	
@@ -820,6 +896,24 @@ public class EcomodClassTransformer implements IClassTransformer
 				if(m >= 200)
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), m, Math.min(k, 2)));
 			}
+		}
+	}
+	
+	public static void smeltItemFurnaceAddition(TileEntityFurnace furnace, ItemStack ingr, ItemStack result)
+	{
+		if(!furnace.getWorld().isRemote)
+		{
+			/* FIXME!!! Not seeing Capablilties in result!
+			if(ingr.getItem() instanceof ItemFood && result.getItem() instanceof ItemFood)
+			{
+				if(ingr.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null) && result.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+				{
+					result.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).setPollution(result.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution().clone().add(ingr.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution()));
+				}
+			}
+			*/
+			
+			EcomodAPI.emitPollution(furnace.getWorld(), EMUtils.blockPosToPair(furnace.getPos()), PollutionSourcesConfig.getSmeltedItemStackPollution(ingr), true);
 		}
 	}
 }
