@@ -1,4 +1,7 @@
-﻿#Blocks
+﻿
+itemGroup.ecomod=Ecology Mod
+
+#Blocks
 tile.ecomod.filter.name=Pollution Filter
 tile.ecomod.advanced_filter.name=Advanced Pollution Filter
 tile.ecomod.analyzer.name=Pollution Analyzer

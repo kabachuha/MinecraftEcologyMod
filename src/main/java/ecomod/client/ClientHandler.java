@@ -21,6 +21,7 @@ import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -227,6 +228,9 @@ public class ClientHandler
 				break;
 			case '*':
 				setBiome(str);
+				break;
+			case '#':
+				GuiScreen.setClipboardString(str);
 				break;
 				
 			case '0':

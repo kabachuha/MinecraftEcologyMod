@@ -28,7 +28,7 @@ public class BlockFluidPollution extends BlockFluidFinite {
 	{
 		super(EcomodStuff.concentrated_pollution, Material.WATER);
 		
-		setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
+		setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		setUnlocalizedName(EMConsts.modid+".block."+EcomodStuff.concentrated_pollution.getName());
 		setResistance(0.5F);
 	}

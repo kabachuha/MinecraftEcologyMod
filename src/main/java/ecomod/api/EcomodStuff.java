@@ -6,6 +6,7 @@ import java.util.Map;
 import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.PollutionData;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -30,5 +31,7 @@ public class EcomodStuff
 	public static Map<String, PollutionData> smelted_items_pollution = null;
 	
 	@CapabilityInject(IPollution.class)
-	public static Capability<IPollution> CAPABILITY_POLLUTION = null;
+	public static final Capability<IPollution> CAPABILITY_POLLUTION = null;
+	
+	public static CreativeTabs ecomod_creative_tabs = null;
 }

@@ -1,6 +1,7 @@
 package ecomod.common.items;
 
 import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodStuff;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
@@ -13,7 +14,7 @@ public class ItemBlockFrame extends ItemBlock
 		
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 	}
 
 	public int getMetadata(int damage)

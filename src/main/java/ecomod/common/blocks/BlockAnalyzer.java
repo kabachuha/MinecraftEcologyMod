@@ -1,5 +1,6 @@
 package ecomod.common.blocks;
 
+import ecomod.api.EcomodStuff;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
@@ -26,8 +27,7 @@ public class BlockAnalyzer extends Block implements ITileEntityProvider {
 	public BlockAnalyzer()
 	{
 		super(Material.ROCK, MapColor.BROWN);
-		this.setCreativeTab(CreativeTabs.REDSTONE);
-		
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		this.setHardness(8F);
 		this.setResistance(5F);
 		

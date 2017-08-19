@@ -28,7 +28,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 	public ItemRespirator() {
 		super(EMItems.RESPIRATOR_MATERIAL, 1, EntityEquipmentSlot.HEAD);
 		
-		this.setCreativeTab(CreativeTabs.COMBAT);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		
 	}
 
@@ -160,10 +160,16 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		
 		NBTTagCompound nbt = stack.getTagCompound();
 		
-		if(nbt != null)
-		if(nbt.hasKey("filter"))
+		if(nbt != null && nbt.hasKey("filter"))
 		{
-			tooltip.add("Filter capacity: "+(int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100)+"%");
+			int i = (int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100);
+			if(i == 0)
+				tooltip.add("Insert a filter!");
+			tooltip.add("Filter capacity: "+i+"%");
+		}
+		else
+		{
+			tooltip.add("Insert a filter!");
 		}
 	}
 	

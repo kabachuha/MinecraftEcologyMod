@@ -1,5 +1,6 @@
 package ecomod.common.items;
 
+import ecomod.api.EcomodStuff;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,7 +11,7 @@ public class ItemCraftIngredient extends Item
 	public ItemCraftIngredient() {
 		super();
 		this.setHasSubtypes(true);
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		
 	}
 	

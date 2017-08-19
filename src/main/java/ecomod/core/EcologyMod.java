@@ -1,52 +1,37 @@
 package ecomod.core;
 
-import ecomod.core.*;
-import ecomod.core.stuff.EMBlocks;
-import ecomod.core.stuff.EMConfig;
-import ecomod.core.stuff.MainRegistry;
-import ecomod.network.EMPacketHandler;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.*;
-import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
-import net.minecraftforge.fml.common.registry.GameData;
-import ecomod.common.blocks.BlockAdvancedFilter;
-import ecomod.common.commands.CommandAddPollution;
-import ecomod.common.commands.CommandClearManager;
-import ecomod.common.commands.CommandGetPollution;
-import ecomod.common.commands.CommandLoadManager;
-import ecomod.common.commands.CommandSaveManager;
-import ecomod.common.commands.CommandUpdateCache;
-import ecomod.common.pollution.TEPollutionConfig;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
-import ecomod.common.pollution.handlers.PollutionHandler;
-import ecomod.common.proxy.ComProxy;
-import ecomod.common.tiles.TileAdvancedFilter;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.IPollutionGetter;
-import ecomod.api.pollution.PollutionData;
-import ecomod.client.proxy.CliProxy;
+import ecomod.common.pollution.TEPollutionConfig;
+import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.handlers.PollutionHandler;
+import ecomod.common.proxy.ComProxy;
+import ecomod.core.stuff.EMCommands;
+import ecomod.core.stuff.EMConfig;
+import ecomod.core.stuff.MainRegistry;
+import ecomod.network.EMPacketHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 
 @Mod(modid = EMConsts.modid, name = EMConsts.name, version = EMConsts.version, dependencies = EMConsts.deps, updateJSON = EMConsts.json, canBeDeactivated = false)
@@ -181,12 +166,7 @@ public class EcologyMod
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event)
 	{
-		event.registerServerCommand(new CommandGetPollution());
-		event.registerServerCommand(new CommandAddPollution());
-		event.registerServerCommand(new CommandClearManager());
-		event.registerServerCommand(new CommandLoadManager());
-		event.registerServerCommand(new CommandSaveManager());
-		event.registerServerCommand(new CommandUpdateCache());
+		EMCommands.onServerStart(event);
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodStuff;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ public class ItemCore extends Item
 	public ItemCore() {
 		super();
 		this.setHasSubtypes(true);
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		
 	}
 	

@@ -1,5 +1,6 @@
 package ecomod.common.blocks;
 
+import ecomod.api.EcomodStuff;
 import ecomod.common.tiles.TileFilter;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -21,7 +22,7 @@ public class BlockFilter extends Block implements ITileEntityProvider {
 	public BlockFilter() {
 		super(Material.ROCK, MapColor.GRAY);
 		this.setDefaultState(this.blockState.getBaseState());
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		this.setHardness(8F);
 		this.setResistance(5F);
 		

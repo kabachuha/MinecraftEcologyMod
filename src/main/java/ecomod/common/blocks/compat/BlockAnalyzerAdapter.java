@@ -1,5 +1,6 @@
 package ecomod.common.blocks.compat;
 
+import ecomod.api.EcomodStuff;
 import ecomod.common.tiles.compat.TileAnalyzerAdapter;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -21,7 +22,7 @@ public class BlockAnalyzerAdapter extends Block implements ITileEntityProvider {
 	public BlockAnalyzerAdapter() {
 		super(Material.ROCK, MapColor.SILVER);
 		
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		
 		this.setHardness(8F);
 		this.setResistance(5F);

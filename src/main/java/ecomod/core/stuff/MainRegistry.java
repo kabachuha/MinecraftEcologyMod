@@ -1,14 +1,18 @@
 package ecomod.core.stuff;
 
+import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.IPollution;
 import ecomod.client.gui.EMGuiHandler;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.world.FluidPollution;
 import ecomod.common.world.gen.BiomeWasteland;
+import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
@@ -37,6 +41,13 @@ public class MainRegistry
 		FluidRegistry.registerFluid(EcomodStuff.concentrated_pollution);
 		
 		FluidRegistry.addBucketForFluid(EcomodStuff.concentrated_pollution);
+		
+		EcomodStuff.ecomod_creative_tabs = new CreativeTabs(EMConsts.modid){
+			@Override
+			public ItemStack getTabIconItem() {
+				return new ItemStack(EcomodItems.RESPIRATOR);
+			}
+		};
 		
 		EMBlocks.doPreInit();
 		EMItems.doPreInit();

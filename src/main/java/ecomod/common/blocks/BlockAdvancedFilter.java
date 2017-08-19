@@ -1,5 +1,6 @@
 package ecomod.common.blocks;
 
+import ecomod.api.EcomodStuff;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.core.EcologyMod;
 import net.minecraft.block.Block;
@@ -25,7 +26,7 @@ public class BlockAdvancedFilter extends Block implements ITileEntityProvider{
 	public BlockAdvancedFilter()
 	{
 		super(Material.IRON, MapColor.DIAMOND);
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 		
 		this.setHardness(15F);
 		this.setResistance(10F);

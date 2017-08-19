@@ -1,6 +1,7 @@
 package ecomod.common.blocks;
 
 import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodStuff;
 import ecomod.common.items.ItemCore;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.Block;
@@ -36,7 +37,7 @@ public class BlockFrame extends Block
 	{
 		super(Material.ROCK);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, 0));
-		this.setCreativeTab(CreativeTabs.REDSTONE);
+		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
 
 		this.setHardness(10F);
 		this.setResistance(3.5F);

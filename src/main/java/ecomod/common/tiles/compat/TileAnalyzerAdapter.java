@@ -2,9 +2,13 @@ package ecomod.common.tiles.compat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -113,5 +117,40 @@ public class TileAnalyzerAdapter extends TileEntity implements SimpleComponent {
 		}
 		
 		return new Object[]{time == -1 ? "" : DATE_FORMAT.format(time)};
+	}
+	
+	@Callback
+	public Object[] get_pollution_effects(Context context, Arguments args) throws Exception{
+		int n = 0;
+		BlockPos analyzer_pos = null;
+		
+		for(EnumFacing f : EnumFacing.VALUES)
+			if(getWorld().getBlockState(getPos().offset(f)).getBlock() == EcomodBlocks.ANALYZER)
+			{
+				analyzer_pos = getPos().offset(f);
+				n++;
+			}
+		
+		PollutionData data = null;
+		if(n == 1)
+		{
+			TileAnalyzer ta = (TileAnalyzer)getWorld().getTileEntity(analyzer_pos);
+			
+			data = ta.getPollution();
+		}
+		
+		if(data != null)
+		{
+			List<String> effects = new ArrayList<String>();
+			for(String s : EcomodStuff.pollution_effects.keySet())
+			{
+				if(PollutionEffectsConfig.isEffectActive(s, data))
+					effects.add(s);
+			}
+			
+			return effects.toArray();
+		}
+		
+		return new Object[]{};
 	}
 }
