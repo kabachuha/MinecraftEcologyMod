@@ -60,7 +60,7 @@ public class CommandAddPollution extends CommandBase {
 				return;
 			}
 			
-			EcomodAPI.emitPollution(w, Pair.of(x, z), new PollutionData().add(PollutionType.valueOf(args[0]), Double.parseDouble(args[1])), true);
+			EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Double.parseDouble(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Double.parseDouble(args[1])), true);
 		}
 
 	}

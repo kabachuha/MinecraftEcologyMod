@@ -7,15 +7,18 @@ import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
+import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -58,6 +61,17 @@ public class BlockFluidPollution extends BlockFluidFinite {
 				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("hunger"), 220, 2));
 				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 220, 2));
 				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 180, 1));
+				
+				if(entityIn instanceof EntityPlayer)
+				{
+					Achievement ach = EMAchievements.ACHS.get("concentrated_pollution");
+				
+					if(ach != null)
+					if(!((EntityPlayer)entityIn).hasAchievement(ach))
+					{
+						((EntityPlayer)entityIn).addStat(ach);
+					}
+				}
 			}
 		}
 	}

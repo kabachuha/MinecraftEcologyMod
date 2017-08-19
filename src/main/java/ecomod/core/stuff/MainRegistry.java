@@ -96,11 +96,7 @@ public class MainRegistry
 		EMIntermod.registerBCFuels();
 		
 		EMRecipes.doPostInit();
-	}
-	
-	
-	public static void initAnalyzerPollutionEffects()
-	{
 		
+		EMAchievements.setup();
 	}
 }

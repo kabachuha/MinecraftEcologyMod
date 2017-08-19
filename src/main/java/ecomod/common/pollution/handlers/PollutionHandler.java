@@ -1,6 +1,7 @@
 package ecomod.common.pollution.handlers;
 
 import ecomod.core.*;
+import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import ecomod.network.EMPacketHandler;
 import ecomod.network.EMPacketString;
@@ -28,6 +29,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionAbsorption;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.Achievement;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -492,6 +494,17 @@ public class PollutionHandler implements IPollutionGetter
 				event.setResult(Result.DENY);
 				event.setCanceled(true);
 			}
+			
+			if(event.getEntityPlayer() != null)
+			{
+				Achievement ach = EMAchievements.ACHS.get("no_bonemeal");
+				
+				if(ach != null)
+				if(!event.getEntityPlayer().hasAchievement(ach))
+				{
+					event.getEntityPlayer().addStat(ach);
+				}
+			}
 		}
 		else
 		{
@@ -536,10 +549,20 @@ public class PollutionHandler implements IPollutionGetter
 		
 		PollutionData data = getPollution(w, EMUtils.blockPosToPair(player.getPosition()).getLeft(), EMUtils.blockPosToPair(player.getPosition()).getRight());
 		
+		if(!event.updateWorld())
 		if(PollutionEffectsConfig.isEffectActive("bad_sleep", data))
 		{
+			if(PollutionUtils.hasSurfaceAccess(w, event.getEntityPlayer().getPosition()))
 			if(!PollutionUtils.isEntityRespirating(player))
 			{
+				Achievement ach = EMAchievements.ACHS.get("bad_sleep");
+				
+				if(ach != null)
+					if(!player.hasAchievement(ach))
+					{
+						player.addStat(ach);
+					}
+				
 				float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
 			
 				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? (int)(250*f) : 2500, 1));
@@ -552,6 +575,14 @@ public class PollutionHandler implements IPollutionGetter
 				if(PollutionEffectsConfig.isEffectActive("poisonous_sleep", data))
 				{
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, (int)f));
+					
+					ach = EMAchievements.ACHS.get("poisonous_sleep");
+					
+					if(ach != null)
+						if(!player.hasAchievement(ach))
+						{
+							player.addStat(ach);
+						}
 				}
 			}
 			else
@@ -716,6 +747,17 @@ public class PollutionHandler implements IPollutionGetter
 							{
 								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 300, 1));
 							}
+							
+							if(entity instanceof EntityPlayer)
+							{
+								Achievement ach = EMAchievements.ACHS.get("acid_rain");
+								
+								if(ach != null)
+								if(!((EntityPlayer)entity).hasAchievement(ach))
+								{
+									((EntityPlayer)entity).addStat(ach);
+								}
+							}
 						}
 					}
 					
@@ -733,6 +775,14 @@ public class PollutionHandler implements IPollutionGetter
 						{
 							if(!PollutionUtils.isEntityRespirating(entity))
 							{
+								Achievement ach = EMAchievements.ACHS.get("smog");
+								
+								if(ach != null)
+								if(!((EntityPlayerMP)event.getEntity()).hasAchievement(ach))
+								{
+									((EntityPlayerMP)event.getEntity()).addStat(ach);
+								}
+								
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
 								
 								if(getPollution(world, EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
@@ -772,6 +822,17 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(PollutionEffectsConfig.isEffectActive("no_fish", data))
 		{
+			if(event.getEntityPlayer() != null)
+			{
+				Achievement ach = EMAchievements.ACHS.get("no_fish");
+				
+				if(ach != null)
+				if(!((EntityPlayerMP)event.getEntity()).hasAchievement(ach))
+				{
+					((EntityPlayerMP)event.getEntity()).addStat(ach);
+				}
+			}
+			
 			event.damageRodBy(5);
 			event.setCanceled(true);
 		}

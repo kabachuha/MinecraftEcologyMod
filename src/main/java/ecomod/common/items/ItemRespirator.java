@@ -9,6 +9,7 @@ import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMItems;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +20,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -173,5 +175,19 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		}
 	}
 	
-	
+	@Override
+	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+		super.onCreated(stack, worldIn, playerIn);
+		
+		if(worldIn.isRemote)
+			return;
+		
+		Achievement ach = EMAchievements.ACHS.get("respirator");
+		
+		if(ach != null)
+		if(!playerIn.hasAchievement(ach))
+		{
+			playerIn.addStat(ach);
+		}
+	}
 }

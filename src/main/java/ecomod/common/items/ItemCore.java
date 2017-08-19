@@ -6,12 +6,15 @@ import org.lwjgl.input.Keyboard;
 
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
+import ecomod.core.stuff.EMAchievements;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 
 public class ItemCore extends Item
 {
@@ -57,6 +60,29 @@ public class ItemCore extends Item
 		else
 		{
 			tooltip.add("<SHIFT for more information>");
+		}
+	}
+
+	@Override
+	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+		super.onCreated(stack, worldIn, playerIn);
+		
+		if(worldIn.isRemote)
+			return;
+		
+		Achievement ach = null;
+		
+		if(stack.getMetadata() == 0)
+			ach = EMAchievements.ACHS.get("filter_core");
+		if(stack.getMetadata() == 1)
+			ach = EMAchievements.ACHS.get("advanced_core");
+		if(stack.getMetadata() == 2)
+			ach = EMAchievements.ACHS.get("analyzer_core");
+		
+		if(ach != null)
+		if(!playerIn.hasAchievement(ach))
+		{
+			playerIn.addStat(ach);
 		}
 	}
 	

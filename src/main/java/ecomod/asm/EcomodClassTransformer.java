@@ -17,6 +17,7 @@ import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -37,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.stats.Achievement;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -886,15 +888,35 @@ public class EcomodClassTransformer implements IClassTransformer
 				if(m > 0)
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), Math.min(m*20, 1200), Math.min(k, 2)));
 				
+				Achievement ach = null;
+				
 				if(m >= 60)
 				{
 					player.sendMessage(new TextComponentString("You've eaten polluted food").setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), m, Math.min(k, 2)));
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), m, Math.min(k, 2)));
+					
+					ach = EMAchievements.ACHS.get("polluted_food");
+					
+					if(ach != null)
+						if(!player.hasAchievement(ach))
+						{
+							player.addStat(ach);
+						}
 				}
 				
 				if(m >= 200)
+				{
+					ach = EMAchievements.ACHS.get("very_polluted_food");
+					
+					if(ach != null)
+						if(!player.hasAchievement(ach))
+						{
+							player.addStat(ach);
+						}
+					
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), m, Math.min(k, 2)));
+				}
 			}
 		}
 	}

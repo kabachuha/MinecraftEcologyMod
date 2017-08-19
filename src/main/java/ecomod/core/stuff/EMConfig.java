@@ -207,7 +207,7 @@ public class EMConfig
 		defs.add(new AnalyzerPollutionEffect("poisonous_sleep", "ape.ecomod.poisonous_sleep.name", "ape.ecomod.poisonous_sleep.desc", new ResourceLocation("ecomod:textures/gui/analyzer/icons/sleep.png"), poisonous_sleep_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_fish", no_fish_pollution, TriggeringType.AND));
 		
-		defs.add(AnalyzerPollutionEffect.createSimpleNull("polluted_water", polluted_water_pollution, TriggeringType.AND));
+		//defs.add(AnalyzerPollutionEffect.createSimpleNull("polluted_water", polluted_water_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("dead_trees", dead_trees_pollution, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_trees", no_trees_pollution, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("acid_rain", acid_rain_pollution, TriggeringType.AND));
