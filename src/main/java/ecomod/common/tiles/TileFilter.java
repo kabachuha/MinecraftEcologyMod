@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.ChunkPos;
 
-public class TileFilter extends TileEnergy implements IPollutionMultiplier {
+public class TileFilter extends TileEnergy/* implements IPollutionMultiplier */{
 
 	public TileFilter()
 	{
@@ -25,6 +25,7 @@ public class TileFilter extends TileEnergy implements IPollutionMultiplier {
 		
 	}
 
+	/*
 	@Override
 	public float pollutionFactor(PollutionType type)
 	{
@@ -39,5 +40,20 @@ public class TileFilter extends TileEnergy implements IPollutionMultiplier {
 		}
 		
 		return 1;
+	}*/
+	
+	public boolean isWorking()
+	{
+		if(world.isRemote) return false;
+		
+		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
+		{
+			if(energy.extractEnergy(energy.getMaxEnergyStored(), false) == energy.getMaxEnergyStored())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

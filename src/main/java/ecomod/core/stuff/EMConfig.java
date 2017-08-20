@@ -38,7 +38,7 @@ public class EMConfig
 	public static String effectsURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/pollution_effects.json";*/"file:///<MINECRAFT>/pollution_effects.json";
 	public static String sourcesURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/pollution_sources.json";*/"file:///<MINECRAFT>/pollution_sources.json";
 	
-	public static float filtmult = 0.92F;
+	public static float filter_adjacent_tiles_redution = 0.06F;
 	
 	public static int filter_energy = 5000;
 	
@@ -52,7 +52,7 @@ public class EMConfig
 	
 	public static List<String> item_blacklist = new ArrayList<String>();
 	
-	public static int wpr = 2;
+	public static int wpr = 1;
 	
 	public static boolean allow_acid_rain_render = true;
 	
@@ -60,7 +60,7 @@ public class EMConfig
 	
 	public static boolean check_client_pollution = true;
 	
-	public static float diffusion_factor = 0.0001F;
+	public static float diffusion_factor = 0.01F;
 	
 	public static boolean enable_concentrated_pollution_flow_texture = true;
 	
@@ -107,11 +107,11 @@ public class EMConfig
 			
 			tepcURL = config.getString("TEPC_URL", "CORE", "file:///<MINECRAFT>/tepc.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
 			
-			filtmult = config.getFloat("FilterMultiplier", "POLLUTION", 0.92F, 0, 1, "Filter pollution multiplier.", lang("pollution.filter"));
+			filter_adjacent_tiles_redution = config.getFloat("FilterAdjacentTilesRedution", "POLLUTION", 0.06F, 0, 1, "", lang("pollution.filter"));
 			
-			diffusion_factor = config.getFloat("DiffusionFactor", "POLLUTION", 0.0001F, 0, 1, "", lang("pollution.diffusion_factor"));
+			diffusion_factor = config.getFloat("DiffusionFactor", "POLLUTION", 0.01F, 0, 1, "", lang("pollution.diffusion_factor"));
 			
-			wpr = config.getInt("WaterPollutionRadius", "POLLUTION", 2, 0, 128, "", lang("pollution.wpr"));
+			wpr = config.getInt("WaterPollutionRadius", "POLLUTION", 1, 0, 128, "", lang("pollution.wpr"));
 			
 			cached_pollution_radius = config.getInt("CachedPollutionRadius", "CLIENT", 5, 1, EMConsts.max_cached_pollution_radius, "", lang("client.max_cpr"));
 			
@@ -171,33 +171,33 @@ public class EMConfig
 	
 	public static void setupEffects(String cfg_dir)
 	{
-		PollutionData food_pollution_start = new PollutionData(15000, 10000, 10000);
+		PollutionData food_pollution_start = new PollutionData(20000, 15000, 15000);
 		
-		PollutionData bonemeal_limiting_pollution = new PollutionData(0,0, 65000);
+		PollutionData bonemeal_limiting_pollution = new PollutionData(0,0, 100000);
 		
-		PollutionData wasteland_pollution = new PollutionData(300000, 300000, 150000);
+		PollutionData wasteland_pollution = new PollutionData(250000, 250000, 215000);
 		
-		PollutionData smog_pollution = new PollutionData(150000, 0, 0);
+		PollutionData smog_pollution = new PollutionData(50000, 0, 0);
 		
-		PollutionData bad_sleep_pollution = new PollutionData(45000, 0, 0);
+		PollutionData bad_sleep_pollution = new PollutionData(23000, 0, 0);
 		
-		PollutionData poisonous_sleep_pollution = new PollutionData(70000, 0, 0);
+		PollutionData poisonous_sleep_pollution = new PollutionData(80000, 0, 0);
 		
 		PollutionData no_fish_pollution = new PollutionData(0, 80000, 0);
 		
-		PollutionData useless_hoe_pollution = new PollutionData(0, 0, 200000);
+		PollutionData useless_hoe_pollution = new PollutionData(0, 0, 160000);
 		
-		PollutionData no_crop_growing_pollution = new PollutionData(100000, 125000 ,125000);
+		PollutionData no_crop_growing_pollution = new PollutionData(100000, 135000 ,80000);
 		
 		PollutionData polluted_water_pollution = new PollutionData(0, 200000, 0);
 		
-		PollutionData no_animals = new PollutionData(250000, 275000, 400000);
+		PollutionData no_animals = new PollutionData(68000, 180000, 90000);
 		
-		PollutionData acid_rain_pollution = new PollutionData(40000, 15000, 0);
+		PollutionData acid_rain_pollution = new PollutionData(40000, 0, 0);
 		
-		PollutionData dead_trees_pollution = new PollutionData(1750000, 250000, 150000);
+		PollutionData dead_trees_pollution = new PollutionData(150000, 270000, 150000);
 		
-		PollutionData no_trees_pollution = new PollutionData(2750000, 400000, 310000);
+		PollutionData no_trees_pollution = new PollutionData(200000, 400000, 200000);
 		
 		List<AnalyzerPollutionEffect> defs = new ArrayList<AnalyzerPollutionEffect>();
 		
@@ -228,16 +228,16 @@ public class EMConfig
 	
 	public static void setupSources(String cfg_dir)
 	{
-		PollutionData adv_filter_redution = new PollutionData(-1.8, -0.02, -0.0005);
+		PollutionData adv_filter_redution = new PollutionData(-4.5, -0.5, -0.5);
 		PollutionData item_expire_pollution = new PollutionData(0, 0.0625D, 0.125D);
 		PollutionData explosion_pollution = new PollutionData(20.5, 6.25, 8.25);
 		PollutionData concentrated_pollution_explosion_pollution = new PollutionData(50,5,10);
-		PollutionData bonemeal_pollution = new PollutionData(0.05, 0.15, 0.5);
+		PollutionData bonemeal_pollution = new PollutionData(1, 1, 2);
 		PollutionData pollution_per_potion_brewed = new PollutionData(6, 0, 0);
-		PollutionData pollution_reduced_by_tree = new PollutionData(-22, -2.5, -17);
-		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-0.5);
-		PollutionData fire_pollution = new PollutionData(2, 0, 0);
-		PollutionData leaves_redution = new PollutionData(-0.018, 0, 0);
+		PollutionData pollution_reduced_by_tree = new PollutionData(-22, -3, -17);
+		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-1);
+		PollutionData fire_pollution = new PollutionData(3.5, 0, 0);
+		PollutionData leaves_redution = new PollutionData(-4.5, 0, 0);
 		PollutionData smelted_item_pollution = new PollutionData(3, 0.6, 1.9);
 		
 		List<String> item_blacklist = new ArrayList<String>();

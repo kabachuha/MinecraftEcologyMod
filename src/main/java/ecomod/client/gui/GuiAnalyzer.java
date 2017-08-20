@@ -14,9 +14,12 @@ import org.lwjgl.opengl.GL11;
 
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect;
+import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.tiles.TileAnalyzer;
+import ecomod.common.utils.AnalyzerPollutionEffect;
 import ecomod.common.utils.EMUtils;
+import ecomod.core.EcologyMod;
 import ecomod.network.EMPacketHandler;
 import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
@@ -255,7 +258,14 @@ public class GuiAnalyzer extends GuiScreen
 	private void updateEffects()
 	{
 		effects.clear();
-		for(IAnalyzerPollutionEffect iape : EcomodStuff.pollution_effects.values())
+		
+		if(EcologyMod.proxy.getClientHandler().pollution_effects == null || EcologyMod.proxy.getClientHandler().pollution_effects.isEmpty())
+		{
+			effects.add(AnalyzerPollutionEffect.createSimple("effects_not_found", PollutionData.getEmpty(), TriggeringType.AND));
+			return;
+		}
+		
+		for(IAnalyzerPollutionEffect iape : EcologyMod.proxy.getClientHandler().pollution_effects.values())
 		{
 			if(iape.getTriggeringType() == IAnalyzerPollutionEffect.TriggeringType.AND)
 			{

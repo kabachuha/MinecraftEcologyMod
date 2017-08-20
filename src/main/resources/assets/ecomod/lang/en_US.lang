@@ -40,6 +40,9 @@ ape.ecomod.no_animals.name=Extinction of Animals
 ape.ecomod.no_bonemeal.name=Bonemeal no more works
 ape.ecomod.no_crops_growing.name=No crops growth
 
+ape.ecomod.effects_not_found.name=[ERROR!] EFFECTS NOT FOUND
+ape.ecomod.effects_not_found.desc=Effects Cache Had Not Been Received From The Server! Please Reconnect To The Server Or Rejoin The World!!!
+
 ape.ecomod.food_pollution.desc=Dropped food items and crop drops are absorbing pollution from the environment unless they're isolated. When eaten these items will cause bad potion effects.
 ape.ecomod.smog.desc=Pollution in the air when combined with water particles forms a dense fog which poisons living creatures. To prevent poisoning put on a respirator. Make sure you have filters!
 ape.ecomod.bad_sleep.desc=Because of air pollution you sleeping here makes you sick.

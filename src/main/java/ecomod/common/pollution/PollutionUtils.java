@@ -35,26 +35,28 @@ public class PollutionUtils
 		return w.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());
 	}
 	
-	public static boolean isTEWorking(TileEntity te)
+	public static boolean isTEWorking(World w, TileEntity te)
 	{	
+		TileEntity tile = w.getTileEntity(te.getPos());
+		
 		//TODO add more checks
 		if(te instanceof TileEntityFurnace)
 		{
-			return ((TileEntityFurnace)te).isBurning();
+			return ((TileEntityFurnace)tile).isBurning();
 		}
 		
 		if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
 		{
-			if(te.hasCapability(TilesAPI.CAP_HAS_WORK, null))
+			if(tile.hasCapability(TilesAPI.CAP_HAS_WORK, null))
 			{
-				IHasWork ihw = te.getCapability(TilesAPI.CAP_HAS_WORK, null);
+				IHasWork ihw = tile.getCapability(TilesAPI.CAP_HAS_WORK, null);
 				return ihw.hasWork();
 			}
 			else
 			{
-				if(te instanceof IHasWork)
+				if(tile instanceof IHasWork)
 				{
-					return ((IHasWork)te).hasWork();
+					return ((IHasWork)tile).hasWork();
 				}
 			}
 		}

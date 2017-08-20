@@ -88,6 +88,7 @@ import com.google.gson.GsonBuilder;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.PollutionProvider;
+import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
@@ -97,6 +98,7 @@ import ecomod.api.pollution.PollutionEmissionEvent;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.items.ItemRespirator;
 import ecomod.common.pollution.*;
+import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
@@ -304,7 +306,7 @@ public class PollutionHandler implements IPollutionGetter
 			
 			threads.get(key).getPM().save();
 			
-			threads.remove(key);
+			threads.get(key).shutdown();
 		}
 	}
 	
@@ -687,6 +689,12 @@ public class PollutionHandler implements IPollutionGetter
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone((EntityPlayer)event.getEntity()) ? 1 : 0)), (EntityPlayerMP)event.getEntity());
+				
+				Effects t = new Effects("", EcomodStuff.pollution_effects.values().toArray(new IAnalyzerPollutionEffect[EcomodStuff.pollution_effects.values().size()]));
+				
+				String json = gson.toJson(t, Effects.class);
+				
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("E"+json), (EntityPlayerMP)event.getEntity());
 			}
 			catch (Exception e)
 			{

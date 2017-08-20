@@ -1,7 +1,9 @@
 package ecomod.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -11,10 +13,13 @@ import com.google.gson.JsonSyntaxException;
 
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
+import ecomod.api.client.IAnalyzerPollutionEffect;
+import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
+import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
@@ -38,6 +43,8 @@ public class ClientHandler
 	public ChunkPollution[] cached_pollution;
 	
 	public Gson gson = new GsonBuilder().create();
+	
+	public Map<String, IAnalyzerPollutionEffect> pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 	
 	public boolean smog = false;
 	
@@ -158,6 +165,31 @@ public class ClientHandler
 		return false;
 	}
 	
+	public void setEffects(String str)
+	{
+		pollution_effects.clear();
+		Effects t = null;
+		EcologyMod.log.info("Receiving Pollution Effects Config from the server...");
+		try
+		{
+			t = gson.fromJson(str, Effects.class);
+		}
+		catch(JsonSyntaxException e)
+		{
+			EcologyMod.log.error("Unable to parse Pollution Effects cache received from the server!!!");
+			return;
+		}
+		
+		if(t != null)
+		{
+			for(IAnalyzerPollutionEffect iape : t.getEffects())
+			{
+				pollution_effects.put(iape.getId(), iape);
+			}
+			EcologyMod.log.info("Pollution Effects Config has been received.");
+		}
+	}
+	
 	public void setBiome(String str)
 	{
 		if(str.isEmpty())
@@ -197,6 +229,7 @@ public class ClientHandler
 	 * P - Update cached_pollution<br>
 	 * > - Set smog<br>
 	 * * - Set biome<br>
+	 * E - Update Effects Cache<br>
 	 * ...<br>
 	 * TODO add more cases<br>
 	 * 
@@ -228,6 +261,9 @@ public class ClientHandler
 				break;
 			case '*':
 				setBiome(str);
+				break;
+			case 'E':
+				setEffects(str);
 				break;
 			case '#':
 				GuiScreen.setClipboardString(str);
@@ -282,5 +318,26 @@ public class ClientHandler
 				b = false;
 			}
 		}
+	}
+	
+	public boolean client_isEffectActive(String id, PollutionData chunk_pd)
+	{
+		if(pollution_effects.containsKey(id))
+		{
+			IAnalyzerPollutionEffect iape = pollution_effects.get(id);
+			
+			if(iape != null)
+			{
+				if(iape.getTriggeringType() == TriggeringType.AND)
+				{
+					return chunk_pd.compareTo(iape.getTriggerringPollution()) >= 0;
+				}
+				else if(iape.getTriggeringType() == TriggeringType.OR)
+				{
+					return chunk_pd.compareOR(iape.getTriggerringPollution()) >= 0;
+				}
+			}
+		}
+		return false;
 	}
 }

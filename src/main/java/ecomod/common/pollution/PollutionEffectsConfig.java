@@ -289,7 +289,7 @@ public class PollutionEffectsConfig
 		}
 	}
 	
-	private static class Effects
+	public static class Effects
 	{
 		private String version;
 		

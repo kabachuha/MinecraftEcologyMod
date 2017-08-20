@@ -347,8 +347,9 @@ public class PollutionManager
 		PollutionData to_spread = c.getPollution().clone();
 		
 		to_spread = to_spread.multiplyAll(EMConfig.diffusion_factor * EMConfig.wptcd / 60);
+		to_spread.multiply(PollutionType.WATER, 0.5F);
 		
-		to_spread.multiply(PollutionType.SOIL, 0.4F);
+		to_spread.multiply(PollutionType.SOIL, 0.07F);
 		
 		float count = 0;
 		

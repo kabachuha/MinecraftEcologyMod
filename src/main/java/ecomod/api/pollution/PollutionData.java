@@ -161,6 +161,14 @@ public class PollutionData implements Comparable
 		return this;
 	}
 	
+	public PollutionData multiplyAllRound(float factor)
+	{
+		air_pollution = Math.round(air_pollution * factor);
+		water_pollution = Math.round(water_pollution * factor);
+		soil_pollution = Math.round(soil_pollution * factor);
+		return this;
+	}
+	
 	public PollutionData multiply(PollutionType type, float factor)
 	{
 		switch(type)
@@ -180,6 +188,9 @@ public class PollutionData implements Comparable
 	
 	public PollutionData divideAll(float d)
 	{
+		if(d == 0)
+			return null;
+		
 		air_pollution /= d;
 		water_pollution /= d;
 		soil_pollution /= d;
@@ -188,6 +199,8 @@ public class PollutionData implements Comparable
 	
 	public PollutionData divide(PollutionType type, float d)
 	{
+		if(d == 0)
+			return null;
 		switch(type)
 		{
 		case AIR:

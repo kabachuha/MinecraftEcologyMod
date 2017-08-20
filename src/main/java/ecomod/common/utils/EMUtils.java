@@ -29,6 +29,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -167,7 +168,7 @@ public class EMUtils
 	
 	public static boolean isBlockWater(World w, BlockPos pos)
 	{	
-		return w.getBlockState(pos).getMaterial() == Material.WATER;
+		return w.getBlockState(pos).getBlock() == Blocks.WATER;
 	}
 	
 	public static int countWaterInRadius(World w, BlockPos center, int radius)
