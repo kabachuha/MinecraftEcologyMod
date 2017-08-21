@@ -1,0 +1,161 @@
+{
+  "version": "1.0-1.11.2-1.0.0.0-beta1",
+  "effects": [
+    {
+      "id": "food_pollution",
+      "header": "ape.ecomod.food_pollution.name",
+      "description": "ape.ecomod.food_pollution.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/food_pollution.png",
+      "triggering_type": "OR",
+      "triggerring_pollution": {
+        "air": 20000.0,
+        "water": 15000.0,
+        "soil": 15000.0
+      }
+    },
+    {
+      "id": "smog",
+      "header": "ape.ecomod.smog.name",
+      "description": "ape.ecomod.smog.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/null.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 50000.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "bad_sleep",
+      "header": "ape.ecomod.bad_sleep.name",
+      "description": "ape.ecomod.bad_sleep.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/sleep.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 23000.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "poisonous_sleep",
+      "header": "ape.ecomod.poisonous_sleep.name",
+      "description": "ape.ecomod.poisonous_sleep.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/sleep.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 80000.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "no_fish",
+      "header": "ape.ecomod.no_fish.name",
+      "description": "ape.ecomod.no_fish.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/no_fish.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 0.0,
+        "water": 80000.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "dead_trees",
+      "header": "ape.ecomod.dead_trees.name",
+      "description": "ape.ecomod.dead_trees.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/dead_trees.png",
+      "triggering_type": "OR",
+      "triggerring_pollution": {
+        "air": 150000.0,
+        "water": 270000.0,
+        "soil": 150000.0
+      }
+    },
+    {
+      "id": "no_trees",
+      "header": "ape.ecomod.no_trees.name",
+      "description": "ape.ecomod.no_trees.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/no_trees.png",
+      "triggering_type": "OR",
+      "triggerring_pollution": {
+        "air": 200000.0,
+        "water": 400000.0,
+        "soil": 200000.0
+      }
+    },
+    {
+      "id": "acid_rain",
+      "header": "ape.ecomod.acid_rain.name",
+      "description": "ape.ecomod.acid_rain.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/null.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 40000.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "wasteland",
+      "header": "ape.ecomod.wasteland.name",
+      "description": "ape.ecomod.wasteland.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/null.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 250000.0,
+        "water": 250000.0,
+        "soil": 215000.0
+      }
+    },
+    {
+      "id": "no_plowing",
+      "header": "ape.ecomod.no_plowing.name",
+      "description": "ape.ecomod.no_plowing.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/no_plowing.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 0.0,
+        "water": 0.0,
+        "soil": 160000.0
+      }
+    },
+    {
+      "id": "no_animals",
+      "header": "ape.ecomod.no_animals.name",
+      "description": "ape.ecomod.no_animals.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/no_animals.png",
+      "triggering_type": "OR",
+      "triggerring_pollution": {
+        "air": 68000.0,
+        "water": 180000.0,
+        "soil": 90000.0
+      }
+    },
+    {
+      "id": "no_bonemeal",
+      "header": "ape.ecomod.no_bonemeal.name",
+      "description": "ape.ecomod.no_bonemeal.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/no_bonemeal.png",
+      "triggering_type": "AND",
+      "triggerring_pollution": {
+        "air": 0.0,
+        "water": 0.0,
+        "soil": 100000.0
+      }
+    },
+    {
+      "id": "no_crops_growing",
+      "header": "ape.ecomod.no_crops_growing.name",
+      "description": "ape.ecomod.no_crops_growing.desc",
+      "icon": "ecomod:textures/gui/analyzer/icons/no_crops_growing.png",
+      "triggering_type": "OR",
+      "triggerring_pollution": {
+        "air": 100000.0,
+        "water": 135000.0,
+        "soil": 80000.0
+      }
+    }
+  ]
+}

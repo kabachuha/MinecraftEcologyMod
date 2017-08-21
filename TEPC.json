@@ -4,9 +4,9 @@
     {
       "id": "minecraft:furnace",
       "emission": {
-        "air_pollution": 10,
-        "water_pollution": 1,
-        "soil_pollution": 3
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
       }
     }
   ]

@@ -17,6 +17,7 @@ import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
+import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import io.netty.buffer.ByteBuf;
@@ -62,7 +63,7 @@ public class PollutionManager
 			{
 				String worldPath = file.getAbsolutePath();
 				
-				File save = new File(worldPath+"/PollutionMap.json");
+				File save = new File(worldPath +"/PollutionMap.json");
 				
 				if(save.isDirectory())
 				{
@@ -115,7 +116,7 @@ public class PollutionManager
 			{
 				String worldPath = file.getAbsolutePath();
 				
-				File save = new File(worldPath+"/PollutionMap.json");
+				File save = new File(worldPath + "/PollutionMap.json");
 				
 				if(save.isDirectory())
 				{

@@ -208,7 +208,7 @@ public class PollutionSourcesConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path + "/PollutionSources.json";
+		cfg_path = cfg_path +"/"+ EMConsts.modid + "/PollutionSources.json";
 		
 		File f = new File(cfg_path);
 		
@@ -309,7 +309,7 @@ public class PollutionSourcesConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/PollutionSourcesConfig.json";
+		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionSourcesConfig.json";
 		
 		EcologyMod.log.info("Trying to load PollutionSources from file");
 		

@@ -689,7 +689,7 @@ public class EcomodClassTransformer implements IClassTransformer
 			
 				if(worldIn.isRainingAt(pos.up()))
 				{
-					if(worldIn.rand.nextInt(3) == 0)
+					if(worldIn.rand.nextInt(60) == 0)
 					{
 						PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
 			
@@ -710,7 +710,7 @@ public class EcomodClassTransformer implements IClassTransformer
 								if(PollutionEffectsConfig.isEffectActive("dead_trees", pollution))
 										worldIn.setBlockToAir(pos);
 								else
-									if(worldIn.rand.nextInt(10)==0)
+									if(worldIn.rand.nextInt(50)==0)
 										EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_redution"), true);
 						}
 					}

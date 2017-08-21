@@ -124,7 +124,7 @@ public class TEPollutionConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path + "/TEPollutionConfig.json";
+		cfg_path = cfg_path +"/"+ EMConsts.modid + "/TEPollutionConfig.json";
 		
 		File f = new File(cfg_path);
 		
@@ -173,7 +173,7 @@ public class TEPollutionConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/TEPollutionConfig.json";
+		cfg_path = cfg_path +"/"+ EMConsts.modid +"/TEPollutionConfig.json";
 		
 		EcologyMod.log.info("Trying to load TEPC from file");
 		

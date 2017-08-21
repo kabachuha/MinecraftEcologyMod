@@ -237,7 +237,7 @@ public class EMConfig
 		PollutionData pollution_reduced_by_tree = new PollutionData(-22, -3, -17);
 		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-1);
 		PollutionData fire_pollution = new PollutionData(3.5, 0, 0);
-		PollutionData leaves_redution = new PollutionData(-4.5, 0, 0);
+		PollutionData leaves_redution = new PollutionData(-20, 0, 0);
 		PollutionData smelted_item_pollution = new PollutionData(3, 0.6, 1.9);
 		
 		List<String> item_blacklist = new ArrayList<String>();

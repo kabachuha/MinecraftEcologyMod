@@ -22,7 +22,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -51,6 +53,7 @@ import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -86,6 +89,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ecomod.api.EcomodAPI;
+import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.PollutionProvider;
 import ecomod.api.client.IAnalyzerPollutionEffect;
@@ -792,9 +796,10 @@ public class PollutionHandler implements IPollutionGetter
 								}
 								
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
+								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
 								
 								if(getPollution(world, EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
-									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 140, 1));
+									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
 							}
 						}
 					}
@@ -1003,6 +1008,28 @@ public class PollutionHandler implements IPollutionGetter
 			if(event.getState().getBlock() instanceof IGrowable)
 			{
 				dropHandler(event.getWorld(), event.getPos(), event.getDrops());
+			}
+		}
+	}
+	
+	@SubscribeEvent 
+	public void onEntityUseItem(LivingEntityUseItemEvent.Start event)
+	{
+		if(event.getEntityLiving() != null && event.getItem() != null)
+		if(!event.getEntityLiving().getEntityWorld().isRemote)
+		{
+			ItemStack is = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+			
+			if(is.getItem() == EcomodItems.RESPIRATOR)
+			{
+				is = event.getItem();
+				if(is.getItem() instanceof ItemFood || is.getItem() instanceof ItemBucketMilk || is.getItem() instanceof ItemPotion)
+				{
+					if(event.getEntityLiving() instanceof EntityPlayer)
+						((EntityPlayer)event.getEntityLiving()).sendMessage(new TextComponentString("You are unable to eat or to drink while wearing a respirator"));
+					event.setDuration(-1);
+					event.setCanceled(true);
+				}
 			}
 		}
 	}

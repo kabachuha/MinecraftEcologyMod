@@ -1,5 +1,6 @@
 package ecomod.core;
 
+import java.io.File;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
@@ -7,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.IPollutionGetter;
+import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.handlers.PollutionHandler;
@@ -65,6 +68,8 @@ public class EcologyMod
 		
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		
+		new File(event.getModConfigurationDirectory().getAbsolutePath()+"/"+EMConsts.modid).mkdirs();
+		
 		EMConfig.config = cfg;
 		
 		EMConfig.sync();
@@ -93,8 +98,16 @@ public class EcologyMod
 		
 		tepc.load(event.getModConfigurationDirectory().getAbsolutePath());
 		
-		EMConfig.setupEffects(event.getModConfigurationDirectory().getAbsolutePath());
-		EMConfig.setupSources(event.getModConfigurationDirectory().getAbsolutePath());
+		//EMConfig.setupEffects(event.getModConfigurationDirectory().getAbsolutePath());
+		//EMConfig.setupSources(event.getModConfigurationDirectory().getAbsolutePath());
+		
+		PollutionSourcesConfig psc = new PollutionSourcesConfig();
+		psc.load(event.getModConfigurationDirectory().getAbsolutePath());
+		psc.pushToApi();
+		
+		PollutionEffectsConfig pec = new PollutionEffectsConfig();
+		pec.load(event.getModConfigurationDirectory().getAbsolutePath());
+		pec.pushToApi();
 		
 		EMPacketHandler.init();
 	}
