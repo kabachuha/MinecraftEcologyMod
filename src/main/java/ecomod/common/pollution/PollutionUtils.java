@@ -1,5 +1,8 @@
 package ecomod.common.pollution;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import buildcraft.api.tiles.IHasWork;
@@ -76,13 +79,16 @@ public class PollutionUtils
 	}
 	
 	
-	public static boolean hasSurfaceAccess(World w, BlockPos bp)
+	private static boolean hasSurfaceAccess(World w, BlockPos bp, List<BlockPos> was_at)
 	{
+		if(was_at.contains(bp))
+			return false;
+		
 		if(w.canSeeSky(bp))
 			return true;
 		
 		if(!w.isBlockFullCube(bp.up()))
-			if(hasSurfaceAccess(w, bp.up()))
+			if(hasSurfaceAccess(w, bp.up(), was_at))
 				return true;
 		
 		for(EnumFacing facing : EnumFacing.HORIZONTALS)
@@ -93,13 +99,18 @@ public class PollutionUtils
 				if(w.canSeeSky(b))
 					return true;
 				else if(!w.isBlockFullCube(b.up()))
-					if(hasSurfaceAccess(w, b.up()))
+					if(hasSurfaceAccess(w, b.up(), was_at))
 						return true;
 			}
 		}
 			
-			
+		was_at.add(bp);
 		return false;
+	}
+	
+	public static boolean hasSurfaceAccess(World w, BlockPos bp)
+	{	
+		return hasSurfaceAccess(w, bp, new ArrayList<BlockPos>());
 	}
 	
 	public static boolean isEntityRespirating(EntityLivingBase entity)

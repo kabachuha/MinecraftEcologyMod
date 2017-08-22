@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -29,6 +30,7 @@ import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -43,13 +45,12 @@ public class WorldProcessingThread extends Thread
 	private PollutionManager manager;
 	private boolean isWorking = false;
 	
-	private List<Pair<Integer, Integer>> loadedChunks = Collections.synchronizedList(new ArrayList<Pair<Integer,Integer>>());
+	private List<Pair<Integer, Integer>> loadedChunks = new CopyOnWriteArrayList<Pair<Integer,Integer>>();
 	
-	private List<ChunkPollution> scheduledEmissions = Collections.synchronizedList(new ArrayList<ChunkPollution>());
+	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<ChunkPollution>();
 	
+	public final Profiler profiler = new Profiler();
 	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
-	
-	//TODO Add a profiler?
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
@@ -70,6 +71,8 @@ public class WorldProcessingThread extends Thread
 		if(!EMConfig.wptimm)
 			slp();
 		
+		profiler.clearProfiling();
+		
 		//Some debug stuff
 		//EcologyMod.log.info(isInterrupted());
 		//EcologyMod.log.info(PollutionUtils.genPMid(manager));
@@ -80,8 +83,10 @@ public class WorldProcessingThread extends Thread
 			while(Minecraft.getMinecraft().isGamePaused())
 				slp(15); //Don't make anything while MC is paused
 			
-			//delta.clear();
+			profiler.profilingEnabled = true;
 			
+			//delta.clear();
+			profiler.startSection("WPT_PREPARING_FOR_RUN");
 			int error_counter = 0;
 			isWorking = true;
 			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
@@ -90,14 +95,11 @@ public class WorldProcessingThread extends Thread
 			
 			List<Chunk> chks = new ArrayList<Chunk>();
 			
-			synchronized(loadedChunks)
-			{
-				for(Pair<Integer, Integer> c : loadedChunks)
-					chks.add(PollutionUtils.coordsToChunk(world, c));
-			}
+			for(Pair<Integer, Integer> c : loadedChunks)
+				chks.add(PollutionUtils.coordsToChunk(world, c));
 			
 			List<ChunkPollution> temp = /*Collections.synchronizedList(*/new ArrayList<ChunkPollution>()/*)*/;
-			
+			profiler.endSection();
 			
 			for(Chunk c : chks)
 			{
@@ -107,10 +109,9 @@ public class WorldProcessingThread extends Thread
 					PollutionData d = calculateChunkPollution(c);
 					Map<PollutionType, Float> m = calculateMultipliers(c);	
 					
-					synchronized(scheduledEmissions)
-					{
-						temp.addAll(scheduledEmissions);
-					}
+					profiler.startSection("WPT_HANDLING_SCHEDULED_EMISSIONS");
+					
+					temp.addAll(scheduledEmissions);
 					
 					//synchronized(temp)
 					//{
@@ -123,15 +124,14 @@ public class WorldProcessingThread extends Thread
 								}
 					//}
 						
-					synchronized(scheduledEmissions)
-					{
-						scheduledEmissions.clear();
+					scheduledEmissions.clear();
 						
-						scheduledEmissions.addAll(temp);
-					}
+					scheduledEmissions.addAll(temp);
 						
 					temp.clear();
-						
+					
+					profiler.endStartSection("WPT_UPDATING_MANAGER");
+					
 					for(PollutionType pt : PollutionType.values())
 					{
 						d = d.multiply(pt, m.get(pt));
@@ -139,6 +139,8 @@ public class WorldProcessingThread extends Thread
 				
 					if(!(d.getAirPollution() == 0.0D && d.getWaterPollution() == 0.0D && d.getSoilPollution() == 0.0D))
 						manager.addPollution(c.xPosition, c.zPosition, d);//(new ChunkPollution(c.xPosition, c.zPosition, d));
+					
+					profiler.endSection();
 					
 					handleChunk(c);
 				}
@@ -152,15 +154,22 @@ public class WorldProcessingThread extends Thread
 				}
 			}
 			
+			profiler.startSection("WPT_DO_DIFFUSION");
+			
 			manager.do_diffusion();
+			
+			profiler.endStartSection("WPT_SAVING_TO_FILE");
 			
 			manager.save();
 			
+			profiler.endSection();
 			
 			if(error_counter > 10)
 			{
 				EcologyMod.log.error("It seems there were many exceptions while processing chunks. If exceptions were the same, please, restart Minecraft or go to https://github.com/Artem226/MinecraftEcologyMod/issues and make an issue about the exception (Don't forget to include the log!)");
 			}
+			
+			profiler.profilingEnabled = false;
 			
 			slp();
 		}
@@ -170,18 +179,35 @@ public class WorldProcessingThread extends Thread
 	
 	public void shutdown()
 	{
-		EcologyMod.log.info("Carefully shuting down...");
+		EcologyMod.log.info("["+this.getName()+"]Carefully shuting down...");
+		
+		if(profiler.profilingEnabled)
+		{
+			profiler.endSection();
+			profiler.clearProfiling();
+		}
+		profiler.profilingEnabled = false;
 		
 		isWorking = false;
-		manager.save();
 		
 		if(EcologyMod.ph.threads.containsKey(PollutionUtils.genPMid(manager)))
 			EcologyMod.ph.threads.remove(PollutionUtils.genPMid(manager));
 		
-		manager = null;
+		if(manager != null)
+		{
+			manager.save();
+			manager = null;
+		}
+		
 		loadedChunks.clear();
 		scheduledEmissions.clear();
+		
 		System.gc();
+		
+		EcologyMod.log.info("["+this.getName()+"]Shutted down.");
+		
+		//Bye, bye
+		interrupt();
 	}
 	
 	public PollutionManager getPM()
@@ -210,12 +236,12 @@ public class WorldProcessingThread extends Thread
 		
 		try
 		{
-			EcologyMod.log.info("Sleeping for "+seconds+" seconds");
+			EcologyMod.log.info("[WPT_"+manager.getDim()+"]Sleeping for "+seconds+" seconds");
 			sleep(seconds*1000);
 		} 
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return;
 		}
 	}
@@ -227,6 +253,7 @@ public class WorldProcessingThread extends Thread
 	
 	public PollutionData calculateChunkPollution(Chunk c)
 	{
+		profiler.startSection("WPT_CALCULATING_CHUNK_POLLUTION");
 		List<TileEntity> tes = new LinkedList<TileEntity>(c.getTileEntityMap().values());
 		
 		PollutionData ret = new PollutionData();
@@ -283,12 +310,13 @@ public class WorldProcessingThread extends Thread
 				}
 			}
 		}
-		
+		profiler.endSection();
 		return ret.multiplyAll(EMConfig.wptcd/60);
 	}
 	
 	public Map<PollutionType, Float> calculateMultipliers(Chunk c)
 	{
+		profiler.startSection("WPT_CALCULATING_POLLUTION_MULTIPLIERS");
 		List<TileEntity> tes = new LinkedList<TileEntity>(c.getTileEntityMap().values());
 		
 		Map<PollutionType, Float> ret = new HashMap<PollutionType, Float>();
@@ -309,11 +337,13 @@ public class WorldProcessingThread extends Thread
 		ret.put(PollutionType.WATER, mW);
 		ret.put(PollutionType.SOIL, mS);
 		
+		profiler.endSection();
 		return ret;
 	}
 	
 	public void handleChunk(Chunk c)
 	{
+		profiler.startSection("WPT_HANDLING_CHUNK");
 		if(PollutionEffectsConfig.isEffectActive("wasteland", manager.getPollution(c.xPosition, c.zPosition)))
 		for(int i = 0; i < 16; i++)
 			for(int j = 0; j < 16; j++)
@@ -327,26 +357,28 @@ public class WorldProcessingThread extends Thread
 						EMUtils.setBiome(c, MainRegistry.biome_wasteland, i + strtx, j + strtz);
 				}
 			}
+		profiler.endSection();
 	}
 	
 	
 	public void forceSE()
 	{
-		List<ChunkPollution> temp = Collections.synchronizedList(new ArrayList<ChunkPollution>());
-		
-		synchronized(getScheduledEmissions())
+		profiler.startSection("WPT_FORCED_HANDLING_SCHEDULED_EMISSIONS");
+		if(getScheduledEmissions().size() > 0)
 		{
+			List<ChunkPollution> temp = new ArrayList<ChunkPollution>();
+			List<ChunkPollution> managerdata = new ArrayList<ChunkPollution>();
+			managerdata.addAll(manager.getData());
+			
 			temp.addAll(getScheduledEmissions());
-		}
 		
-		synchronized(temp)
-		{
 			for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
-				for(ChunkPollution c : manager.getData())
-					if(cp.getX() == c.getX() && cp.getZ() == c.getZ())
-					{
-						manager.addPollution(c.getX(), c.getZ(), cp.getPollution());
-					}
+					for(ChunkPollution c : managerdata)
+						if(cp.getX() == c.getX() && cp.getZ() == c.getZ())
+						{
+							manager.addPollution(c.getX(), c.getZ(), cp.getPollution());
+						}
 		}
+		profiler.endSection();
 	}
 }

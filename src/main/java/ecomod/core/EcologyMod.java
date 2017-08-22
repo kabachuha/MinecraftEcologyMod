@@ -35,6 +35,7 @@ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 
 @Mod(modid = EMConsts.modid, name = EMConsts.name, version = EMConsts.version, dependencies = EMConsts.deps, updateJSON = EMConsts.json, canBeDeactivated = false)
@@ -180,6 +181,12 @@ public class EcologyMod
 	public void onServerStart(FMLServerStartingEvent event)
 	{
 		EMCommands.onServerStart(event);
+	}
+	
+	@EventHandler
+	public void onServerStopping(FMLServerStoppingEvent event)
+	{
+		ph.onServerStopping();
 	}
 	
 	

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,6 +18,7 @@ import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
+import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
@@ -30,7 +32,7 @@ public class PollutionManager
 	//Vars
 	private World world;
 	private int dim;
-	private List<ChunkPollution> data;
+	private CopyOnWriteArrayList<ChunkPollution> data;
 	
 	//Constructor
 	public PollutionManager(World w)
@@ -39,8 +41,10 @@ public class PollutionManager
 		
 		dim = w.provider.getDimension();
 		
-		data = Collections.synchronizedList(new ArrayList<ChunkPollution>());
+		data = new CopyOnWriteArrayList<ChunkPollution>();
 	}
+	
+	private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 	
 	//IO
 	public boolean save()
@@ -50,8 +54,6 @@ public class PollutionManager
 		wp.setData(data.toArray(new ChunkPollution[data.size()]));
 		
 		EcologyMod.log.info("Serializing and saving pollution manager for dimension "+dim);
-		
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		
 		String json = gson.toJson(wp, WorldPollution.class);
 		
@@ -101,8 +103,6 @@ public class PollutionManager
 	public boolean load()
 	{
 		EcologyMod.log.info("Loading pollution manager for dimension "+dim);
-		
-		Gson gson = new GsonBuilder().create();
 		
 		String json;
 		
@@ -174,14 +174,11 @@ public class PollutionManager
 			if(!(u.getPollution().getAirPollution() == 0 && u.getPollution().getWaterPollution() == 0 && u.getPollution().getSoilPollution() == 0))
 				l.add(u);
 		
-		synchronized(data)
-		{
-			data = l;
-		}
+		data.clear();
+		data.addAll(l);
 		
 		if(data == null)
 			return false;
-		
 		
 		EcologyMod.log.info("PM has been loaded!");
 		return true;
@@ -206,24 +203,18 @@ public class PollutionManager
 	
 	public boolean contains(Pair<Integer, Integer> coord)
 	{
-		synchronized(data)
-		{
 			for(ChunkPollution cp : data)
 				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
 					return true;
-		}
 		
 		return false;
 	}
 	
 	public ChunkPollution getChunkPollution(Pair<Integer, Integer> coord)
 	{
-		synchronized(data)
-		{
-			for(ChunkPollution cp : data)
-				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-					return cp;
-		}
+				for(ChunkPollution cp : data)
+					if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+						return cp;
 		
 		return new ChunkPollution(coord.getLeft(), coord.getRight(), PollutionData.getEmpty());
 	}
@@ -238,26 +229,19 @@ public class PollutionManager
 		if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
 		if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
 		
-		cp.setPollution(pd);
+		Pair<Integer, Integer> coords = cp.getLeft();
 		
-		Pair<Integer, Integer> coords = Pair.of(cp.getX(), cp.getZ());
-		
-		if(!cp.isEmpty() && !(pd.getAirPollution() == 0.0D && pd.getWaterPollution() == 0.0D && pd.getSoilPollution() == 0.0D))
+
+		if(contains(coords))
 		{
-			synchronized(data)
-			{
-				if(contains(coords))
-				{
-					data.remove(getChunkPollution(coords));
-					data.add(cp);
-				}
-				else
-				{
-					data.add(cp);
-				}
-			}
+			data.remove(getChunkPollution(coords));
+			data.add(cp);
 		}
-		
+		else
+		{
+			data.add(cp);
+		}
+			
 		return cp;
 	}
 	
@@ -304,12 +288,9 @@ public class PollutionManager
 	
 	public Chunk getChunk(Pair<Integer, Integer> coord)
 	{
-		synchronized(data)
-		{
-			for(ChunkPollution cp : data)
-				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-					return world.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());
-		}
+		for(ChunkPollution cp : data)
+			if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+				return world.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());
 		
 		return null;
 	}
@@ -333,11 +314,8 @@ public class PollutionManager
 	
 	public void do_diffusion()
 	{
-		//synchronized(data)
-		//{
-			for(ChunkPollution c : data.toArray(new ChunkPollution[data.size()]))
-				diffuse(c);
-		//}
+		for(ChunkPollution c : data.toArray(new ChunkPollution[data.size()]))
+			diffuse(c);
 	}
 	
 	public void diffuse(ChunkPollution c)

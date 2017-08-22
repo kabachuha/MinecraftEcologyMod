@@ -143,21 +143,23 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 				switch(type)
 				{
 					case AIR:
-						ret.amount += adv_filter_redution.get(type) * 10;
+						ret.amount += adv_filter_redution.get(type);
 						break;
 						
 					case WATER:
-						ret.amount += adv_filter_redution.get(type) * 100;
+						ret.amount += adv_filter_redution.get(type) * 2;
 						break;
 						
 					case SOIL:
-						ret.amount += adv_filter_redution.get(type) * 1000;
+						ret.amount += adv_filter_redution.get(type) * 4;
 						break;
 				}
 			}
 		}
 		
-		if(ret.amount == 0)
+		ret.amount = -ret.amount;
+		
+		if(ret.amount <= 0)
 			return null;
 		
 		return ret;

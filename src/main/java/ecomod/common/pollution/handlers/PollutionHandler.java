@@ -264,31 +264,7 @@ public class PollutionHandler implements IPollutionGetter
 	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public void onWorldSave(WorldEvent.Save event)
 	{
-		World w = event.getWorld();
 		
-		if(w.isRemote)return;
-		
-		
-		String key = PollutionUtils.genPMid(w);
-		
-		if(threads.containsKey(key) && threads.get(key) != null && !threads.get(key).isWorking() && PollutionUtils.genPMid(threads.get(key).getPM()) == key)
-		{
-			WorldProcessingThread t = threads.get(key);
-			
-			try
-			{
-				t.wait();
-			
-				t.getPM().save();
-			
-				t.notify();
-			}
-			catch(InterruptedException e)
-			{
-				EcologyMod.log.error(e.toString());
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	
@@ -302,15 +278,55 @@ public class PollutionHandler implements IPollutionGetter
 		
 		String key = PollutionUtils.genPMid(w);
 		
-		if(threads.containsKey(key) && PollutionUtils.genPMid(threads.get(key).getPM()) == key)
+		if(threads.containsKey(key))
 		{
-			threads.get(key).forceSE();
-			
-			threads.get(key).interrupt();
-			
-			threads.get(key).getPM().save();
-			
-			threads.get(key).shutdown();
+			try
+			{
+				synchronized(threads.get(key))
+				{
+					threads.get(key).notify();
+					
+					threads.get(key).forceSE();
+				}
+			}
+			catch(Exception e)
+			{
+				EcologyMod.log.error("Unable to force sheduled emissions handling for "+threads.get(key).getName()+" because of" + e.toString());
+				e.printStackTrace();
+			}
+			finally
+			{
+				threads.get(key).shutdown();
+			}
+		}
+	}
+	
+	public void onServerStopping()
+	{
+		EcologyMod.log.info("Server is stopping... Shutting down WorldProcessingThreads...");
+		for(String s : threads.keySet())
+		{
+			if(threads.get(s) != null)
+			{
+				try
+				{
+					synchronized(threads.get(s))
+					{
+						threads.get(s).notify();
+				
+						threads.get(s).forceSE();
+					}
+				}
+				catch(Exception e)
+				{
+					EcologyMod.log.error("Unable to force sheduled emissions handling for "+threads.get(s).getName()+" because of " + e.toString());
+					e.printStackTrace();
+				}
+				finally
+				{
+					threads.get(s).shutdown();
+				}
+			}
 		}
 	}
 	
@@ -331,11 +347,9 @@ public class PollutionHandler implements IPollutionGetter
 		
 			Pair<Integer, Integer> coord = Pair.of(event.getChunk().xPosition, event.getChunk().zPosition);
 		
-			synchronized(wpt.getLoadedChunks())
-			{
-				if(!wpt.getLoadedChunks().contains(coord))
-					wpt.getLoadedChunks().add(coord);
-			}
+			if(!wpt.getLoadedChunks().contains(coord))
+				wpt.getLoadedChunks().add(coord);
+			
 		}
 	}
 	
@@ -355,11 +369,8 @@ public class PollutionHandler implements IPollutionGetter
 		
 			Pair<Integer, Integer> coord = Pair.of(event.getChunk().xPosition, event.getChunk().zPosition);
 		
-			synchronized(wpt.getLoadedChunks())
-			{
-				if(wpt.getLoadedChunks().contains(coord))
-					wpt.getLoadedChunks().remove(coord);
-			}
+			if(wpt.getLoadedChunks().contains(coord))
+				wpt.getLoadedChunks().remove(coord);
 		}
 	}
 	
@@ -371,8 +382,6 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-///		EcologyMod.log.debug("PollutionHandler#onEmission");
-		
 		String key = PollutionUtils.genPMid(w);
 		
 		//EcologyMod.log.info(event.getEmission().toString());
@@ -383,10 +392,7 @@ public class PollutionHandler implements IPollutionGetter
 			
 			if(event.isScheduled())
 			{
-				synchronized(wpt.getScheduledEmissions())
-				{
-					wpt.getScheduledEmissions().add(new ChunkPollution(event.getChunkX(), event.getChunkZ(), event.getEmission()));
-				}
+				wpt.getScheduledEmissions().add(new ChunkPollution(event.getChunkX(), event.getChunkZ(), event.getEmission()));
 			}
 			else
 			{
@@ -408,8 +414,6 @@ public class PollutionHandler implements IPollutionGetter
 		World w = ei.getEntityWorld();
 		
 		if(w.isRemote)return;
-		
-//		EcologyMod.log.debug("PollutionHandler#onItemExpire");
 		
 		ItemStack is = ei.getEntityItem();
 		
@@ -693,6 +697,8 @@ public class PollutionHandler implements IPollutionGetter
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone((EntityPlayer)event.getEntity()) ? 1 : 0)), (EntityPlayerMP)event.getEntity());
+				
+				EcologyMod.log.info("Serializing and sending Pollution Effects Config to the Player: "+((EntityPlayerMP)event.getEntity()).getName()+"("+((EntityPlayerMP)event.getEntity()).getUniqueID() + ")");
 				
 				Effects t = new Effects("", EcomodStuff.pollution_effects.values().toArray(new IAnalyzerPollutionEffect[EcomodStuff.pollution_effects.values().size()]));
 				
