@@ -1,12 +1,6 @@
 package ecomod.core.stuff;
 
-import ecomod.common.commands.CommandAddPollution;
-import ecomod.common.commands.CommandClearManager;
-import ecomod.common.commands.CommandGetPollution;
-import ecomod.common.commands.CommandGetTileID;
-import ecomod.common.commands.CommandLoadManager;
-import ecomod.common.commands.CommandSaveManager;
-import ecomod.common.commands.CommandUpdateCache;
+import ecomod.common.commands.*;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class EMCommands {
@@ -20,5 +14,6 @@ public class EMCommands {
 		event.registerServerCommand(new CommandSaveManager());
 		event.registerServerCommand(new CommandUpdateCache());
 		event.registerServerCommand(new CommandGetTileID());
+		event.registerServerCommand(new CommandTEPC());
 	}
 }

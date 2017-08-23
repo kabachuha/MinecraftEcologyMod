@@ -94,7 +94,7 @@ public class TEPollutionConfig
 			
 			TEPollutionConfig tepc = new TEPollutionConfig();
 			
-			tepc.data = Arrays.asList(t.getCfg());
+			tepc.data = new ArrayList(Arrays.asList(t.getCfg()));
 			tepc.version = t.getVersion();
 			
 			return tepc;
@@ -232,15 +232,18 @@ public class TEPollutionConfig
 			return false;
 		
 		this.version = t.getVersion();
-		this.data = Arrays.asList(t.getCfg());
+		this.data = new ArrayList(Arrays.asList(t.getCfg()));
 		
 		return true;
 	}
 	
+	public String path = "";
 	
 	public void load(String cfg_path)
 	{
 		EcologyMod.log.info("Loading TEPC");
+		
+		path = cfg_path;
 		
 		boolean loaded_from_file = loadFromFile(cfg_path);
 		
@@ -270,6 +273,8 @@ public class TEPollutionConfig
 				version = tepc.version;
 			}
 		}
+		
+		EcologyMod.log.info("[TEPC]Loaded "+tepc.data.size()+" entries");
 		
 		if(!save(cfg_path))
 		{

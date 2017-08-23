@@ -16,10 +16,12 @@ import ecomod.common.pollution.handlers.PollutionHandler;
 import ecomod.common.proxy.ComProxy;
 import ecomod.core.stuff.EMCommands;
 import ecomod.core.stuff.EMConfig;
+import ecomod.core.stuff.EMIntermod;
 import ecomod.core.stuff.MainRegistry;
 import ecomod.network.EMPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -30,6 +32,7 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -143,38 +146,7 @@ public class EcologyMod
 	@EventHandler
 	public void onIMC(IMCEvent event)
 	{	
-		for(IMCMessage m : event.getMessages())
-		{
-			if(m.key.toLowerCase().contentEquals("tepc_add") && m.isStringMessage())
-			{
-				TEPollution tep = TEPollution.fromJson(m.getStringValue());
-				
-				if(tep == null)
-				{
-					log.warn(m.getSender()+" tried to add TEPollution as "+m.getStringValue()+" but it has incorrect JSON syntax!");
-				}
-				else
-				{
-					if(tepc.hasTile(new ResourceLocation(tep.getId())))
-					{
-						log.warn("Mod ["+m.getSender()+"] replaced "+tepc.getTEP(tep.getId()).toString()+" in TEPC with "+tep.toString());
-						tepc.data.remove(tepc.getTEP(tep.getId()));
-					}
-					else
-					{
-						log.info("Added "+tep.toString()+" to TEPC by "+m.getSender());
-					}
-					
-					tepc.data.add(tep);
-				}
-			}
-			
-			if(m.key.toLowerCase().contentEquals("blacklist_item") && m.isStringMessage())
-			{
-				log.info("Mod ["+m.getSender()+"] blacklisted "+m.getStringValue());
-				EMConfig.item_blacklist.add(m.getStringValue());
-			}
-		}
+		EMIntermod.processIMC(event.getMessages());
 	}
 	
 	@EventHandler

@@ -34,9 +34,9 @@ public class EMConfig
 	
 	public static int wptcd = 180;
 	
-	public static String tepcURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/TEPC.json";*/"file:///<MINECRAFT>/tepc.json";
-	public static String effectsURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/pollution_effects.json";*/"file:///<MINECRAFT>/pollution_effects.json";
-	public static String sourcesURL = /*"https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/pollution_sources.json";*/"file:///<MINECRAFT>/pollution_sources.json";
+	public static String tepcURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/TEPC.json";
+	public static String effectsURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/PollutionEffects.json";
+	public static String sourcesURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/PollutionSources.json";
 	
 	public static float filter_adjacent_tiles_redution = 0.06F;
 	
@@ -81,6 +81,8 @@ public class EMConfig
 	public static float food_polluting_factor = 0.001F;
 	
 	public static float pollution_to_food_poison[] = new float[]{0.01F, 0.01F, 0.03F};
+	
+	public static boolean isConcentratedPollutionIC2Fuel = true;
 	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
@@ -134,6 +136,8 @@ public class EMConfig
 			fuel_concentrated_pollution_burn_time = config.getInt("FuelConcentratedPollutionBurnTime", "INTERMOD", 40, 1, Integer.MAX_VALUE, "");
 			
 			fuel_concentrated_pollution_burn_energy = config.getInt("FuelConcentratedPollutionBurnEnergy", "INTERMOD", 600, 1, Integer.MAX_VALUE, "");
+			
+			isConcentratedPollutionIC2Fuel = config.getBoolean("IsConcentratedPollutionIC2Fuel", "INTERMOD", true, "");
 			
 			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
 			

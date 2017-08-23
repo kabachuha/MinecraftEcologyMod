@@ -95,6 +95,11 @@ public class MainRegistry
 	{
 		EMIntermod.registerBCFuels();
 		
+		EMIntermod.thermal_expansion_imc();
+		
+		if(Loader.isModLoaded("ic2"))
+			EMIntermod.setup_ic2_support();
+		
 		EMRecipes.doPostInit();
 		
 		EMAchievements.setup();
