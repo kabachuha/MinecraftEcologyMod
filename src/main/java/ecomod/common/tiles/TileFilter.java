@@ -17,41 +17,22 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.ChunkPos;
 
-public class TileFilter extends TileEnergy/* implements IPollutionMultiplier */{
+public class TileFilter extends TileEnergy{
 
 	public TileFilter()
 	{
-		super(5000);
-		
+		super(EMConfig.filter_energy_per_minute * EMConfig.wptcd/60 * 2);
 	}
-
-	/*
-	@Override
-	public float pollutionFactor(PollutionType type)
-	{
-		if(world.isRemote) return 1;
-		
-		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
-		{
-			if(energy.extractEnergy(energy.getMaxEnergyStored(), false) == energy.getMaxEnergyStored())
-			{
-				return EMConfig.filtmult;
-			}
-		}
-		
-		return 1;
-	}*/
 	
 	public boolean isWorking()
 	{
 		if(world.isRemote) return false;
 		
-		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
+		if(energy.getEnergyStored() >= (int)(EMConfig.filter_energy_per_minute * (EMConfig.wptcd/60F)))
 		{
-			if(energy.extractEnergy(energy.getMaxEnergyStored(), false) == energy.getMaxEnergyStored())
-			{
-				return true;
-			}
+			energy.extractEnergy((int)(EMConfig.filter_energy_per_minute * (EMConfig.wptcd/60F)), false);
+				
+			return true;
 		}
 		
 		return false;

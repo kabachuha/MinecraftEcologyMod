@@ -61,7 +61,7 @@ public class EcomodAPI
 		return true;
 	}
 	
-	public static boolean addAnalyzerPollutionEffect(String id, String header, String desc, ResourceLocation icon, PollutionData triggering_pollution, IAnalyzerPollutionEffect.TriggeringType triggering_type)
+	public static boolean addAnalyzerPollutionEffect(String id, String header, String desc, @Nullable ResourceLocation icon, PollutionData triggering_pollution, IAnalyzerPollutionEffect.TriggeringType triggering_type)
 	{
 		return addAnalyzerPollutionEffect(new IAnalyzerPollutionEffect(){
 			@Override
