@@ -17,9 +17,7 @@ public class EMConsts
 	
 	public static final String deps = "required-after:FML";
 	
-	public static final String gui = "";
-	
-	public static final String json = "file:///C:/MCModding/EcologyMod/versions.json";
+	public static final String json = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/versions.json";
 	
 	//
 	
@@ -44,4 +42,6 @@ public class EMConsts
 	
 	
 	public static final int analyzer_gui_id = 0;
+	
+	public static boolean asm_transformer_inited = false;
 }

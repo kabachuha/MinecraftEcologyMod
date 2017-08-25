@@ -70,6 +70,13 @@ public class EcologyMod
 		
 		log.info("Preinitialization");
 		
+		if(!EMConsts.asm_transformer_inited)
+		{
+			log.fatal("The mod ASM transformer had not been initialized!!! Unable to continue.");
+			Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(new NullPointerException("Ecomod ASM transformer had not been initialized!!!"), "Ecomod ASM transformer had not been initialized!!!"));
+			return;
+		}
+		
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		
 		new File(event.getModConfigurationDirectory().getAbsolutePath()+"/"+EMConsts.modid).mkdirs();
@@ -175,5 +182,12 @@ public class EcologyMod
 		meta.updateJSON = EMConsts.json;
 		meta.url = EMConsts.projectURL;
 		meta.version = EMConsts.version;
+		
+		meta.description = "EcologyMod adds an environmental pollution system to Minecraft that makes you care about consequences of your technical development.\n \n \n"
+				+ "Issue Tracker https://github.com/Artem226/MinecraftEcologyMod/issues.\n"
+				+ "Wiki https://github.com/Artem226/MinecraftEcologyMod/wiki.\n"
+				+ "The mod Github repository https://github.com/Artem226/MinecraftEcologyMod\n"
+				+ "The mod CurseForge project https://minecraft.curseforge.com/projects/ecology-mod\n"
+				+ "The mod MinecraftForum page http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2657500-ecology-mod-mod-that-adds-pollution-and-climate";
 	}
 }

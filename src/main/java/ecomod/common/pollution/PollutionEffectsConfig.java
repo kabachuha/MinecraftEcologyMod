@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -23,7 +24,6 @@ import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
-import scala.actors.threadpool.Arrays;
 
 public class PollutionEffectsConfig
 {

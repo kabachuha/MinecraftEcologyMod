@@ -26,7 +26,6 @@ import ecomod.core.stuff.EMConfig;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import scala.actors.threadpool.Arrays;
 
 public class PollutionSourcesConfig
 {
