@@ -112,24 +112,18 @@ public class EMUtils
 		if(parts1.length != parts2.length)
 			throw new IllegalArgumentException();
 		
-		boolean greater = true;
-		for(int i = 0; i < parts1.length-1; i++)
+		for(int i = 0; i < parts1.length; i++)
 		{
-			greater &= Integer.parseInt(parts1[i]) >= Integer.parseInt(parts2[i]);
+			int x1 = Integer.parseInt(parts1[i]);
+			int x2 = Integer.parseInt(parts2[i]);
+			
+			if(x1 > x2)
+				return 1;
+			if(x1 < x2)
+				return -1;
 		}
 		
-		if(!greater)
-			return -1;
-		
-		
-		if(Integer.parseInt(parts1[parts1.length-1]) == Integer.parseInt(parts2[parts1.length-1]))
-			return 0;
-		else if(Integer.parseInt(parts1[parts1.length-1]) > Integer.parseInt(parts2[parts1.length-1]))
-			return 1;
-		else if(Integer.parseInt(parts1[parts1.length-1]) < Integer.parseInt(parts2[parts1.length-1]))
-			return -1;
-		
-		return 1;
+		return 0;
 	}
 	
 	public static String parseMINECRAFTURL(String mcurl)
