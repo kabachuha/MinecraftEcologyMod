@@ -1,5 +1,5 @@
 {
-  "version": "1.0-1.11.2-1.0.0.0-beta1",
+  "version": "1.0-1.11.2-1.0.1.0-beta1",
   "sources": [
     {
       "id": "bonemeal_pollution",
@@ -87,6 +87,14 @@
         "air": 6.0,
         "water": 0.0,
         "soil": 0.0
+      }
+    },
+    {
+      "id": "nuclear_explosion_pollution_per_power",
+      "pollution": {
+        "air": 4100.0,
+        "water": 1250.0,
+        "soil": 2050.0
       }
     }
   ],

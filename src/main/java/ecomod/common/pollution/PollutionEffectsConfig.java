@@ -65,7 +65,7 @@ public class PollutionEffectsConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionEffectsConfig.json";
+		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionEffects.json";
 		
 		EcologyMod.log.info("Trying to load PollutionEffects from file");
 		
@@ -238,7 +238,7 @@ public class PollutionEffectsConfig
 		
 		String o_parts[] = other_version.split("-", 2);
 		
-		int flag1 = EMUtils.compareVersionsOnlyDots(parts[0], o_parts[0]);
+		int flag1 = EMUtils.compareVersionsOnlyDots(o_parts[0], parts[0]);
 		
 		int flag2 = EMUtils.compareEcomodVersionsNoMC(parts[1], o_parts[1]);
 		

@@ -5,6 +5,7 @@
     "1.11.2-recommended": "1.11.2-1.0.0.0-beta1"
   },
   "1.11.2": {
+    "1.11.2-1.0.1.0-beta1": "Support for IC2 explosions including nuclear + Fixes",
     "1.11.2-1.0.0.0-beta1": "Initial 1.11+ version"
   }
 }

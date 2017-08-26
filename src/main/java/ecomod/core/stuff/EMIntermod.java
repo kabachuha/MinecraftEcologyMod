@@ -11,12 +11,14 @@ import ecomod.api.pollution.PollutionData;
 import ecomod.common.blocks.compat.BlockAnalyzerAdapter;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.handlers.IC2Handler;
 import ecomod.common.tiles.compat.TileAnalyzerAdapter;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.API;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
@@ -195,5 +197,10 @@ public class EMIntermod
 			ic2.api.recipe.Recipes.semiFluidGenerator.addFluid(EcomodStuff.concentrated_pollution.getName(), 40, EMConfig.fuel_concentrated_pollution_burn_energy / 30);
 			ic2.api.recipe.Recipes.semiFluidGenerator.getAcceptedFluids().add(EcomodStuff.concentrated_pollution);
 		}
+	}
+	
+	public static void init_ic2_support()
+	{
+		MinecraftForge.EVENT_BUS.register(new IC2Handler());
 	}
 }

@@ -194,7 +194,7 @@ public class PollutionSourcesConfig
 		
 		String o_parts[] = other_version.split("-", 2);
 		
-		int flag1 = EMUtils.compareVersionsOnlyDots(parts[0], o_parts[0]);
+		int flag1 = EMUtils.compareVersionsOnlyDots(o_parts[0], parts[0]);
 		
 		int flag2 = EMUtils.compareEcomodVersionsNoMC(parts[1], o_parts[1]);
 		
@@ -308,7 +308,7 @@ public class PollutionSourcesConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionSourcesConfig.json";
+		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionSources.json";
 		
 		EcologyMod.log.info("Trying to load PollutionSources from file");
 		
@@ -371,6 +371,8 @@ public class PollutionSourcesConfig
 		pollution_sources = Sources.StrPDListToMap(t.sources);
 		smelted_items_pollution = Sources.StrPDListToMap(t.smelted_item_pollution);
 		version = t.version;
+		
+		EcologyMod.log.info("Loaded PollutionSources from file");
 		
 		return true;
 	}

@@ -88,6 +88,9 @@ public class MainRegistry
 		EMBlocks.doInit();
 		EMItems.doInit();
 		
+		if(Loader.isModLoaded("ic2"))
+			EMIntermod.init_ic2_support();
+		
 		EMRecipes.doInit();
 	}
 	
