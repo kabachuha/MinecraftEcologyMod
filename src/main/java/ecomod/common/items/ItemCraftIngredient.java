@@ -26,8 +26,12 @@ public class ItemCraftIngredient extends Item
     }
 	
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-	    subItems.add(new ItemStack(itemIn, 1, 0));//Pistons Array
-	    subItems.add(new ItemStack(itemIn, 1, 1));//Vent
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		
+		if(tab == EcomodStuff.ecomod_creative_tabs)
+		{
+			items.add(new ItemStack(this, 1, 0));//Pistons Array
+			items.add(new ItemStack(this, 1, 1));//Vent
+		}
 	}
 }

@@ -31,7 +31,6 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.stats.Achievement;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -243,7 +242,7 @@ public class EcomodASMHooks
 			{
 				if(item.ticksExisted % 100 == 0)
 				{
-					ItemStack is = item.getEntityItem();
+					ItemStack is = item.getItem();
 				
 					if(is.getItem() instanceof ItemFood)
 					{
@@ -309,7 +308,7 @@ public class EcomodASMHooks
 					if(m > 0)
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), Math.min(m*20, 1200), Math.min(k, 2)));
 					
-					Achievement ach = null;
+					//Achievement ach = null;
 					
 					if(m >= 60)
 					{
@@ -317,24 +316,24 @@ public class EcomodASMHooks
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), m, Math.min(k, 2)));
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), m, Math.min(k, 2)));
 						
-						ach = EMAchievements.ACHS.get("polluted_food");
+						//ach = EMAchievements.ACHS.get("polluted_food");
 						
-						if(ach != null)
-							if(!player.hasAchievement(ach))
-							{
-								player.addStat(ach);
-							}
+						//if(ach != null)
+							//if(!player.hasAchievement(ach))
+							//{
+							//	player.addStat(ach);
+							//}
 					}
 					
 					if(m >= 200)
 					{
-						ach = EMAchievements.ACHS.get("very_polluted_food");
+						//ach = EMAchievements.ACHS.get("very_polluted_food");
 						
-						if(ach != null)
-							if(!player.hasAchievement(ach))
-							{
-								player.addStat(ach);
-							}
+						//if(ach != null)
+							//if(!player.hasAchievement(ach))
+							//{
+							//	player.addStat(ach);
+							//}
 						
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), m, Math.min(k, 2)));
 					}

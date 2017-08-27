@@ -25,7 +25,7 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		//if(strictCompareByEnvironment(transformedName, "net.minecraft.client.renderer.texture.TextureManager", "net.minecraft.client.renderer.texture.TextureManager"))
 			//test_handleTextureManager(name, transformedName, basicClass);
-		
+		/*
 		name = transformedName;
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockGrass", "net.minecraft.block.BlockGrass"))
@@ -54,7 +54,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.tileentity.TileEntityFurnace", "net.minecraft.tileentity.TileEntityFurnace"))
 			return handleTileFurnace(name, basicClass);
-			
+			*/
 		return basicClass;
 	}
 

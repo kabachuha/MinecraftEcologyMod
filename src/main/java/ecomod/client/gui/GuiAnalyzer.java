@@ -88,7 +88,7 @@ public class GuiAnalyzer extends GuiScreen
 		
 		if(pollution != null)
 		{
-			drawRect(xt1, buttonAnalyze.yPosition + buttonAnalyze.height + 10, width, height, new Color(198, 198, 198).getRGB());
+			drawRect(xt1, buttonAnalyze.y + buttonAnalyze.height + 10, width, height, new Color(198, 198, 198).getRGB());
 		}
 		
 		//Energy indicator
@@ -102,36 +102,36 @@ public class GuiAnalyzer extends GuiScreen
 		drawRect(width-110 + (int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored())), height-30, width-10, height-10, Color.DARK_GRAY.getRGB());
 		//end Energy indicator
 		
-		if(fontRendererObj == null)
+		if(fontRenderer == null)
 			return;//Wait for fontRendererObj
 
 		if(pollution == null)
-			this.drawString(fontRendererObj, "Energy:", width-110, height-40-1, Color.ORANGE.getRGB());
+			this.drawString(fontRenderer, "Energy:", width-110, height-40-1, Color.ORANGE.getRGB());
 		else
-			this.drawStringNoShadow(fontRendererObj, "Energy:", width-110, height-40-1, Color.RED.getRGB());
+			this.drawStringNoShadow(fontRenderer, "Energy:", width-110, height-40-1, Color.RED.getRGB());
 		
 		this.drawVerticalLine(xt1, 0, height, Color.BLACK.getRGB());
-		this.drawHorizontalLine(xt1, width, buttonAnalyze.yPosition + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
-		this.drawVerticalLine(buttonAnalyze.xPosition-10, 0, buttonAnalyze.yPosition+buttonAnalyze.height+10, Color.DARK_GRAY.getRGB());
+		this.drawHorizontalLine(xt1, width, buttonAnalyze.y + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
+		this.drawVerticalLine(buttonAnalyze.x-10, 0, buttonAnalyze.y+buttonAnalyze.height+10, Color.DARK_GRAY.getRGB());
 		
-		this.drawString(fontRendererObj, "Chunk Position:", xt1+4, 11, Color.CYAN.getRGB());
-		this.drawString(fontRendererObj, te.getChunkCoords().toString(), xt1+4, 21, Color.CYAN.getRGB());
+		this.drawString(fontRenderer, "Chunk Position:", xt1+4, 11, Color.CYAN.getRGB());
+		this.drawString(fontRenderer, te.getChunkCoords().toString(), xt1+4, 21, Color.CYAN.getRGB());
 		
 		if(pollution == null)
 		{
-			this.drawString(fontRendererObj, "No data about this chunk was retrieved ", xt1+4, buttonAnalyze.yPosition + buttonAnalyze.height + 10 + 2, Color.MAGENTA.getRGB());
-			this.drawString(fontRendererObj, "by this analyzer yet! Analyze this chunk!", xt1+4, buttonAnalyze.yPosition + buttonAnalyze.height + 10 + 11, Color.MAGENTA.getRGB());
+			this.drawString(fontRenderer, "No data about this chunk was retrieved ", xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 2, Color.MAGENTA.getRGB());
+			this.drawString(fontRenderer, "by this analyzer yet! Analyze this chunk!", xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 11, Color.MAGENTA.getRGB());
 		}
 		else
 		{
-			int strt = buttonAnalyze.yPosition + buttonAnalyze.height + 10;
+			int strt = buttonAnalyze.y + buttonAnalyze.height + 10;
 			
-			this.drawStringNoShadow(fontRendererObj, "Chunk Pollution:", xt1+4, strt+2, Color.BLACK.getRGB());
+			this.drawStringNoShadow(fontRenderer, "Chunk Pollution:", xt1+4, strt+2, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 11, Color.BLACK.getRGB());
 			
 			if(last_update_time != null && last_update_time.getTime() != -1)
-				this.drawStringNoShadow(fontRendererObj, "Analyzed: "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
+				this.drawStringNoShadow(fontRenderer, "Analyzed: "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 22, Color.BLACK.getRGB());
 /*
@@ -141,15 +141,15 @@ public class GuiAnalyzer extends GuiScreen
 			
 			this.drawStringNoShadow(fontRendererObj, "Soil Pollution: "+pollution.getSoilPollution(), xt1+4, strt+74, new Color(89, 61, 41).getRGB());//0x593d29
 */
-			this.drawStringNoShadow(fontRendererObj, ""+pollution.getAirPollution(), xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
+			this.drawStringNoShadow(fontRenderer, ""+pollution.getAirPollution(), xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
 			
-			this.drawStringNoShadow(fontRendererObj, ""+pollution.getWaterPollution(), xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
+			this.drawStringNoShadow(fontRenderer, ""+pollution.getWaterPollution(), xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
 			
-			this.drawStringNoShadow(fontRendererObj, ""+pollution.getSoilPollution(), xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
+			this.drawStringNoShadow(fontRenderer, ""+pollution.getSoilPollution(), xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
 			
-			this.drawStringNoShadow(fontRendererObj, "Pollution Effects:", xt1/2-50, 10, Color.BLACK.getRGB());
+			this.drawStringNoShadow(fontRenderer, "Pollution Effects:", xt1/2-50, 10, Color.BLACK.getRGB());
 			
-			this.drawHorizontalLine(0, xt1, buttonAnalyze.yPosition + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
+			this.drawHorizontalLine(0, xt1, buttonAnalyze.y + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
 			
 			GlStateManager.color(1, 1, 1, 1);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(EMUtils.resloc("textures/gui/analyzer/pollution_local/en_us.png"));
@@ -157,15 +157,15 @@ public class GuiAnalyzer extends GuiScreen
 			
 			
 			updateEffects();
-			this.drawGrid(xt1, 0, buttonAnalyze.yPosition + buttonAnalyze.height + 11, xt1-1, height, mouseX, mouseY);
+			this.drawGrid(xt1, 0, buttonAnalyze.y + buttonAnalyze.height + 11, xt1-1, height, mouseX, mouseY);
 		}
 		
     	super.drawScreen(mouseX, mouseY, partialTicks);
     	
-    	if(mouseX > buttonAnalyze.xPosition && mouseX < buttonAnalyze.xPosition + buttonAnalyze.width && mouseY > buttonAnalyze.yPosition && mouseY < buttonAnalyze.yPosition + buttonAnalyze.height)
+    	if(mouseX > buttonAnalyze.x && mouseX < buttonAnalyze.x + buttonAnalyze.width && mouseY > buttonAnalyze.y && mouseY < buttonAnalyze.y + buttonAnalyze.height)
 		{
 			if(!buttonAnalyze.enabled)
-				this.drawHoveringText(no_energy_text, mouseX, mouseY+10, fontRendererObj);
+				this.drawHoveringText(no_energy_text, mouseX, mouseY+10, fontRenderer);
 		}
 		
 		if(mouseX >= width-110 && mouseX <= width-10 && mouseY >= height-30 && mouseY <= height-10)
@@ -211,13 +211,13 @@ public class GuiAnalyzer extends GuiScreen
         				this.drawVerticalLine(drawStartX + 50, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());
         				
         				//drawString(fontRendererObj, I18n.format(iape.getHeader(), new Object[0]), drawStartX + 51 + 4, drawStartY + 4, Color.ORANGE.getRGB());
-        				this.fontRendererObj.drawSplitString(I18n.format(iape.getHeader(), new Object[0]), drawStartX + 51 + 4, drawStartY + 4, header_width,Color.ORANGE.getRGB());
+        				this.fontRenderer.drawSplitString(I18n.format(iape.getHeader(), new Object[0]), drawStartX + 51 + 4, drawStartY + 4, header_width,Color.ORANGE.getRGB());
         				
         				this.drawVerticalLine(drawStartX + 50 + header_width, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());
         				
         				//Description
         				int textStartX = drawStartX + 51 + header_width + 4;
-        				this.fontRendererObj.drawSplitString(I18n.format(iape.getDescription(), new Object[0]), textStartX, drawStartY + 4, endX-4-textStartX, Color.WHITE.getRGB());
+        				this.fontRenderer.drawSplitString(I18n.format(iape.getDescription(), new Object[0]), textStartX, drawStartY + 4, endX-4-textStartX, Color.WHITE.getRGB());
         				
         				//Splitting line
         				this.drawHorizontalLine(drawStartX, endX, drawStartY + 50, Color.DARK_GRAY.getRGB());
@@ -252,7 +252,7 @@ public class GuiAnalyzer extends GuiScreen
 	
 	private boolean needScrollBar()
 	{
-		return pollution != null && effects.size() * icon_size > height - (buttonAnalyze.yPosition + buttonAnalyze.height + 10); 
+		return pollution != null && effects.size() * icon_size > height - (buttonAnalyze.y + buttonAnalyze.height + 10); 
 	}
 	
 	private void updateEffects()
@@ -363,11 +363,11 @@ public class GuiAnalyzer extends GuiScreen
     	public boolean isUp;
     	
     	@Override
-    	public void drawButton(Minecraft mc, int mouseX, int mouseY)
+    	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
         {
             if (this.visible)
             {
-                boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                boolean flag = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                 
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 mc.getTextureManager().bindTexture(new ResourceLocation("ecomod:textures/gui/analyzer/icons/buttons/updown.png"));
@@ -385,7 +385,7 @@ public class GuiAnalyzer extends GuiScreen
                 	i += 22;
                 }
                 
-                drawTexturedModalRect(this.xPosition, this.yPosition, i, j, sizeX, sizeY);
+                drawTexturedModalRect(this.x, this.y, i, j, sizeX, sizeY);
             }
         }
     }

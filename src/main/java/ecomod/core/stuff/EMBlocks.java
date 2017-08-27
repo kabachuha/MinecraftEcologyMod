@@ -1,5 +1,8 @@
 package ecomod.core.stuff;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.common.blocks.*;
@@ -18,18 +21,24 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class EMBlocks
 {
-	
+	static List<Block> blocks = new ArrayList<Block>();
 	
 	public static void doPreInit()
 	{
 		if(!EcomodBlocks.inited)
 		{
+			blocks.clear();
+			EMItems.items.clear();
+			
 			EcomodBlocks.inited = true;
 			EcomodBlocks.FILTER = new BlockFilter().setUnlocalizedName(EMConsts.modid+".filter");
 			EcomodBlocks.ADVANCED_FILTER = new BlockAdvancedFilter().setUnlocalizedName(EMConsts.modid+".advanced_filter");
@@ -39,10 +48,10 @@ public class EMBlocks
 			
 			EcomodBlocks.FLUID_POLLUTION = new BlockFluidPollution();
 			EcomodBlocks.FLUID_POLLUTION.setRegistryName("block_"+EcomodStuff.concentrated_pollution.getName());
-			GameRegistry.register(EcomodBlocks.FLUID_POLLUTION);
+			blocks.add(EcomodBlocks.FLUID_POLLUTION);
 			ItemBlock ib = new ItemBlock(EcomodBlocks.FLUID_POLLUTION);
 			ib.setRegistryName("block_"+EcomodStuff.concentrated_pollution.getName());
-			GameRegistry.register(ib);
+			EMItems.putItem(ib);
 		
 			regBlock(EcomodBlocks.FILTER, "filter");
 		
@@ -55,7 +64,7 @@ public class EMBlocks
 			ib = new ItemBlockFrame();
 			
 			ib.setRegistryName(EMUtils.resloc("frame"));
-			GameRegistry.register(ib);
+			EMItems.putItem(ib);
 			
 			ModelBakery.registerItemVariants(Item.getItemFromBlock(EcomodBlocks.FRAME), EMUtils.resloc("basic_frame"), EMUtils.resloc("advanced_frame"));
 		}
@@ -75,7 +84,7 @@ public class EMBlocks
 		
 		ib.setRegistryName(EMUtils.resloc(name));
 		
-		GameRegistry.register(ib);
+		EMItems.putItem(ib);
 	}
 	
 	public static void regBlockNoItem(Block block, String name)
@@ -89,9 +98,24 @@ public class EMBlocks
 		
 		block.setRegistryName(resloc);
 		
-		GameRegistry.register(block);
+		blocks.add(block);
 		
 		if(model)
 			EcologyMod.proxy.putBlockToBeRegistred(block);
+	}
+	
+	public static void register(RegistryEvent.Register<Block> event)
+	{
+		EcologyMod.log.info("Registring Blocks");
+		if(blocks.isEmpty())
+		{
+			EcologyMod.log.error("No blocks found!!!");
+			throw new NullPointerException("No blocks found!!!");
+		}
+
+		for(Block bl : blocks)
+		{
+			event.getRegistry().register(bl);
+		}
 	}
 }

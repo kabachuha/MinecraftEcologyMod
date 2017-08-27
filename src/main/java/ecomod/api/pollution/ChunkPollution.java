@@ -34,7 +34,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	}
 	
 	public ChunkPollution(ChunkPos pos, PollutionData data) {
-		this(pos.chunkXPos, pos.chunkZPos, data);
+		this(pos.x, pos.z, data);
 	}
 	
 	/**

@@ -8,11 +8,11 @@ import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.core.stuff.EMAchievements;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
@@ -23,15 +23,21 @@ public class ItemCore extends Item
 		super();
 		this.setHasSubtypes(true);
 		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
-		
+
 	}
 	
+	
 	@Override
-	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-	    subItems.add(new ItemStack(itemIn, 1, 0));//Filter Core
-	    subItems.add(new ItemStack(itemIn, 1, 1));//Advanced Filter Core
-	    subItems.add(new ItemStack(itemIn, 1, 2));//Analyzer Core
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		
+		if(tab == EcomodStuff.ecomod_creative_tabs)
+		{
+			items.add(new ItemStack(this, 1, 0));//Filter Core
+			items.add(new ItemStack(this, 1, 1));//Advanced Filter Core
+			items.add(new ItemStack(this, 1, 2));//Analyzer Core
+		}
 	}
+
 	
 	public int getMetadata(int damage)
     {
@@ -42,10 +48,12 @@ public class ItemCore extends Item
     public String getUnlocalizedName(ItemStack stack) {
         return super.getUnlocalizedName(stack) + "."+stack.getMetadata();
     }
+	
+	
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		if(stack.getMetadata() == 0)
 		{
@@ -70,7 +78,7 @@ public class ItemCore extends Item
 		if(worldIn.isRemote)
 			return;
 		
-		Achievement ach = null;
+		/*Achievement ach = null;
 		
 		if(stack.getMetadata() == 0)
 			ach = EMAchievements.ACHS.get("filter_core");
@@ -83,7 +91,7 @@ public class ItemCore extends Item
 		if(!playerIn.hasAchievement(ach))
 		{
 			playerIn.addStat(ach);
-		}
+		}*/
 	}
 	
 	

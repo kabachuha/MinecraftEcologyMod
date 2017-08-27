@@ -9,9 +9,11 @@ import ecomod.common.world.FluidPollution;
 import ecomod.common.world.gen.BiomeWasteland;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -19,16 +21,20 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
 public class MainRegistry
 {
@@ -36,6 +42,8 @@ public class MainRegistry
 	
 	public static void doPreInit()
 	{
+		MinecraftForge.EVENT_BUS.register(MainRegistry.class);
+		
 		EcomodStuff.concentrated_pollution = new FluidPollution();
 		
 		FluidRegistry.registerFluid(EcomodStuff.concentrated_pollution);
@@ -57,9 +65,6 @@ public class MainRegistry
 			EMIntermod.OCpreInit();
 		
 		EMRecipes.doPreInit();
-		
-		//Biome.REGISTRY.putObject(new ResourceLocation("ecomod:wasteland"), biome_wasteland);
-		GameRegistry.register(biome_wasteland);
 	}
 	
 	public static void doInit()
@@ -69,9 +74,6 @@ public class MainRegistry
 			EcologyMod.log.error("EcomodAPI has not been loaded!!!");
 			Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(new NullPointerException("EcomodAPI has not been loaded!!!"), "EcomodAPI has not been loaded!!!"));
 		}
-		
-		SoundEvent.REGISTRY.putObject(EMUtils.resloc("advanced_filter_working"), EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")));
-		SoundEvent.REGISTRY.putObject(EMUtils.resloc("analyzer"), EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")));
 		
 		IGuiHandler igh = new EMGuiHandler();
 		
@@ -105,6 +107,33 @@ public class MainRegistry
 		
 		EMRecipes.doPostInit();
 		
-		EMAchievements.setup();
+		//EMAchievements.setup();
+	}
+	
+	@SubscribeEvent
+	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
+	{
+		EcologyMod.log.info("Registring Sounds");
+		event.getRegistry().register(EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")).setRegistryName(EMUtils.resloc("advanced_filter_working")));
+		event.getRegistry().register(EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")).setRegistryName(EMUtils.resloc("analyzer")));
+	}
+	
+	@SubscribeEvent
+	public static void registerBiomes(RegistryEvent.Register<Biome> event)
+	{
+		EcologyMod.log.info("Registring Biomes");
+		event.getRegistry().register(biome_wasteland.setRegistryName(EMUtils.resloc("wasteland")));
+	}
+	
+	@SubscribeEvent
+	public static void registerBlocks(RegistryEvent.Register<Block> event)
+	{
+		EMBlocks.register(event);
+	}
+	
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event)
+	{
+		EMItems.register(event);
 	}
 }

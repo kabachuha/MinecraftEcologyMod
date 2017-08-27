@@ -117,7 +117,7 @@ public class WorldProcessingThread extends Thread
 					//{
 						for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
 							if(cp != null)
-								if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
+								if(cp.getX() == c.x && cp.getZ() == c.z)
 								{
 									d.add(cp.getPollution());
 									temp.remove(cp);
@@ -138,7 +138,7 @@ public class WorldProcessingThread extends Thread
 					}
 				
 					if(!(d.getAirPollution() == 0.0D && d.getWaterPollution() == 0.0D && d.getSoilPollution() == 0.0D))
-						manager.addPollution(c.xPosition, c.zPosition, d);//(new ChunkPollution(c.xPosition, c.zPosition, d));
+						manager.addPollution(c.x, c.z, d);//(new ChunkPollution(c.xPosition, c.zPosition, d));
 					
 					profiler.endSection();
 					
@@ -146,7 +146,7 @@ public class WorldProcessingThread extends Thread
 				}
 				catch (Exception e)
 				{
-					EcologyMod.log.error("Caught an exception while processing chunk ("+c.xPosition+";"+c.zPosition+")!");
+					EcologyMod.log.error("Caught an exception while processing chunk ("+c.x+";"+c.z+")!");
 					EcologyMod.log.error(e.toString());
 					e.printStackTrace();
 					
@@ -344,14 +344,14 @@ public class WorldProcessingThread extends Thread
 	public void handleChunk(Chunk c)
 	{
 		profiler.startSection("WPT_HANDLING_CHUNK");
-		if(PollutionEffectsConfig.isEffectActive("wasteland", manager.getPollution(c.xPosition, c.zPosition)))
+		if(PollutionEffectsConfig.isEffectActive("wasteland", manager.getPollution(c.x, c.z)))
 		for(int i = 0; i < 16; i++)
 			for(int j = 0; j < 16; j++)
 			{
 				if(c.getWorld().rand.nextInt(10) == 0)
 				{
-					int strtx = c.xPosition << 4;
-					int strtz = c.zPosition << 4;
+					int strtx = c.x << 4;
+					int strtz = c.z << 4;
 					
 					if(c.getBiome(new BlockPos(i + strtx, c.getWorld().getActualHeight(), j + strtz), c.getWorld().getBiomeProvider()) != MainRegistry.biome_wasteland)
 						EMUtils.setBiome(c, MainRegistry.biome_wasteland, i + strtx, j + strtz);

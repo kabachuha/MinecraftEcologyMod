@@ -25,10 +25,11 @@ import ecomod.network.EMPacketHandler;
 import ecomod.network.EMPacketString;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -147,7 +148,7 @@ public class EMUtils
 	
 	public static Pair<Integer, Integer> chunkPosToPair(ChunkPos pos)
 	{
-		return Pair.of(pos.chunkXPos, pos.chunkZPos);
+		return Pair.of(pos.x, pos.z);
 	}
 	
 	public static Pair<Integer, Integer> blockPosToPair(BlockPos pos)
@@ -331,9 +332,9 @@ public class EMUtils
 		else if (v == 1)
 			return b;
 
-		return new Vec3d(lerp(a.xCoord, b.xCoord, v),
-						lerp(a.yCoord, b.yCoord, v),
-						lerp(a.zCoord, b.zCoord, v));
+		return new Vec3d(lerp(a.x, b.x, v),
+						lerp(a.y, b.y, v),
+						lerp(a.z, b.z, v));
 	}
 	
 	public static Color lerp(Color a, Color b, float v)
@@ -366,7 +367,7 @@ public class EMUtils
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.shadeModel(7425);
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         vertexbuffer.pos((double)right, (double)top, (double)zLevel).color(f5, f6, f7, f4).endVertex();
         vertexbuffer.pos((double)left, (double)top, (double)zLevel).color(f1, f2, f3, f).endVertex();

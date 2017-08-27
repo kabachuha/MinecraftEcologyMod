@@ -17,8 +17,6 @@ public class BiomeWasteland extends Biome
 	public BiomeWasteland() {
 		super(new BiomeProperties("Wasteland").setWaterColor(wastelandWaterColor).setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(1F).setRainfall(1F));
 		
-		this.setRegistryName(new ResourceLocation("ecomod:wasteland"));
-		
 		this.fillerBlock = Blocks.DIRT.getDefaultState();
 		this.flowers.clear();
 		this.spawnableWaterCreatureList.clear();
@@ -28,14 +26,13 @@ public class BiomeWasteland extends Biome
 		this.modSpawnableLists.remove(EnumCreatureType.CREATURE);
 		this.modSpawnableLists.remove(EnumCreatureType.WATER_CREATURE);
 		
-		this.theBiomeDecorator.treesPerChunk = -999;
-		this.theBiomeDecorator.bigMushroomsPerChunk = -999;
-		this.theBiomeDecorator.cactiPerChunk = -999;
-		this.theBiomeDecorator.generateLakes = false;
-		this.theBiomeDecorator.grassPerChunk = -999;
-		this.theBiomeDecorator.mushroomsPerChunk = 8;
-		this.theBiomeDecorator.waterlilyPerChunk = -999;
-		this.theBiomeDecorator.reedsPerChunk = -999;
+		this.decorator.treesPerChunk = -999;
+		this.decorator.bigMushroomsPerChunk = -999;
+		this.decorator.cactiPerChunk = -999;
+		this.decorator.grassPerChunk = -999;
+		this.decorator.mushroomsPerChunk = 8;
+		this.decorator.waterlilyPerChunk = -999;
+		this.decorator.reedsPerChunk = -999;
 	}
 
 	

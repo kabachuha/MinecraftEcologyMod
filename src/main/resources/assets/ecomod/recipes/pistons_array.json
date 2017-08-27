@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "XXX",
+      "XOX",
+      "XXX"
+    ],
+    "key": {
+      "X": {
+        "item": "minecraft:piston"
+      },
+      "O": {
+        "item": "ecomod:frame",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "ecomod:craft_ingredient",
+      "data": 0
+    }
+  }

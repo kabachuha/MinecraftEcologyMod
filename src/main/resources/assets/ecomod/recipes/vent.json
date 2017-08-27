@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "XYX",
+      "YDY",
+      "XYX"
+    ],
+    "key": {
+      "X": {
+        "item": "minecraft:quartz"
+      },
+      "Y": {
+        "item": "minecraft:rail"
+      },
+      "D": {
+        "item": "minecraft:heavy_weighted_pressure_plate"
+      }
+    },
+    "result": {
+      "item": "ecomod:craft_ingredient",
+      "data": 1
+    }
+  }

@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "MVB",
+      "FCF",
+      "BSM"
+    ],
+    "key": {
+      "M": {
+        "item": "minecraft:brown_mushroom"
+      },
+      "B": {
+        "item": "minecraft:mushroom_stew"
+      },
+      "S": {
+        "item": "minecraft:sand",
+        "data": 0
+      },
+      "F": {
+        "item": "ecomod:core",
+        "data": 0
+      },
+      "V": {
+        "item": "ecomod:craft_ingredient",
+        "data": 1
+      },
+      "C": {
+        "item": "minecraft:comparator",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "ecomod:core",
+      "data": 2
+    }
+}

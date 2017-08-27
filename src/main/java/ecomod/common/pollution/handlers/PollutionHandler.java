@@ -1,80 +1,5 @@
 package ecomod.common.pollution.handlers;
 
-import ecomod.core.*;
-import ecomod.core.stuff.EMAchievements;
-import ecomod.core.stuff.EMConfig;
-import ecomod.network.EMPacketHandler;
-import ecomod.network.EMPacketString;
-import net.minecraft.block.BlockLeaves;
-import net.minecraft.block.BlockNewLeaf;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.IAnimals;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayer.SleepResult;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBucketMilk;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemPotion;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionAbsorption;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.Achievement;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.gen.feature.WorldGenHugeTrees;
-import net.minecraft.world.gen.feature.WorldGenSavannaTree;
-import net.minecraft.world.gen.feature.WorldGenerator;
-import net.minecraftforge.client.event.GuiScreenEvent.PotionShiftEvent;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.item.ItemExpireEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.ItemFishedEvent;
-import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
-import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
-import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.ExplosionEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.IFluidBlock;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,15 +23,72 @@ import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
-import ecomod.api.pollution.PollutionEmissionEvent;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.items.ItemRespirator;
-import ecomod.common.pollution.*;
+import ecomod.api.pollution.PollutionEmissionEvent;
+import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
+import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
+import ecomod.common.pollution.PollutionSourcesConfig;
+import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
+import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMAchievements;
+import ecomod.core.stuff.EMConfig;
+import ecomod.network.EMPacketHandler;
+import ecomod.network.EMPacketString;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.block.IGrowable;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucketMilk;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemPotion;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.item.ItemExpireEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
+import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
 
@@ -152,8 +134,8 @@ public class PollutionHandler implements IPollutionGetter
 		
 		List<ChunkPollution> list = new ArrayList<ChunkPollution>();
 		
-		for (int i = chpos.chunkXPos - radius; i <= chpos.chunkXPos + radius; i++) 
-			for (int j = chpos.chunkZPos - radius; j <= chpos.chunkZPos + radius; j++)
+		for (int i = chpos.x - radius; i <= chpos.x + radius; i++) 
+			for (int j = chpos.z - radius; j <= chpos.z + radius; j++)
 			{
 				list.add(wpt.getPM().getChunkPollution(Pair.of(i, j)));
 			}
@@ -345,7 +327,7 @@ public class PollutionHandler implements IPollutionGetter
 		{
 			WorldProcessingThread wpt = threads.get(key);
 		
-			Pair<Integer, Integer> coord = Pair.of(event.getChunk().xPosition, event.getChunk().zPosition);
+			Pair<Integer, Integer> coord = Pair.of(event.getChunk().x, event.getChunk().z);
 		
 			if(!wpt.getLoadedChunks().contains(coord))
 				wpt.getLoadedChunks().add(coord);
@@ -367,7 +349,7 @@ public class PollutionHandler implements IPollutionGetter
 		{
 			WorldProcessingThread wpt = threads.get(key);
 		
-			Pair<Integer, Integer> coord = Pair.of(event.getChunk().xPosition, event.getChunk().zPosition);
+			Pair<Integer, Integer> coord = Pair.of(event.getChunk().x, event.getChunk().z);
 		
 			if(wpt.getLoadedChunks().contains(coord))
 				wpt.getLoadedChunks().remove(coord);
@@ -415,7 +397,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		ItemStack is = ei.getEntityItem();
+		ItemStack is = ei.getItem();
 		
 		if(EMConfig.item_blacklist.contains(is.getItem().getRegistryName().toString()))
 			return;
@@ -455,7 +437,7 @@ public class PollutionHandler implements IPollutionGetter
 	
 	@SubscribeEvent
 	public void onExplosion(ExplosionEvent event)
-	{
+	{/*
 		if(event.isCanceled())return;
 		
 		World w = event.getWorld();
@@ -468,7 +450,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		PollutionData emission = PollutionSourcesConfig.getSource("explosion_pollution_per_power");
 		
-		emission.multiply(PollutionType.AIR, expl.isFlaming ? 1.5F : 1);	
+		emission.multiply(PollutionType.AIR, expl. ? 1.5F : 1);	
 		emission.multiply(PollutionType.SOIL, expl.isFlaming ? 1.5F : 1);
 		
 		emission.multiply(PollutionType.WATER, water_affected > 0 ? 2 : 1);
@@ -476,7 +458,7 @@ public class PollutionHandler implements IPollutionGetter
 		emission.multiplyAll(expl.explosionSize);
 		
 		EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(new BlockPos(expl.getPosition())), emission, true);
-	}
+	*/}
 	
 	@SubscribeEvent
 	public void onBonemeal(BonemealEvent event)
@@ -507,13 +489,14 @@ public class PollutionHandler implements IPollutionGetter
 			
 			if(event.getEntityPlayer() != null)
 			{
-				Achievement ach = EMAchievements.ACHS.get("no_bonemeal");
+				/*Advancement ach = EMAchievements.ACHS.get("no_bonemeal");
 				
 				if(ach != null)
-				if(!event.getEntityPlayer().hasAchievement(ach))
+				if(!event.getEntityPlayer().stat(ach))
 				{
 					event.getEntityPlayer().addStat(ach);
-				}
+					
+				}*/
 			}
 		}
 		else
@@ -565,13 +548,13 @@ public class PollutionHandler implements IPollutionGetter
 			if(PollutionUtils.hasSurfaceAccess(w, event.getEntityPlayer().getPosition()))
 			if(!PollutionUtils.isEntityRespirating(player))
 			{
-				Achievement ach = EMAchievements.ACHS.get("bad_sleep");
+				//Achievement ach = EMAchievements.ACHS.get("bad_sleep");
 				
-				if(ach != null)
-					if(!player.hasAchievement(ach))
-					{
-						player.addStat(ach);
-					}
+				//if(ach != null)
+				//	if(!player.hasAchievement(ach))
+				//	{
+				//		player.addStat(ach);
+				//	}
 				
 				float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
 			
@@ -586,13 +569,13 @@ public class PollutionHandler implements IPollutionGetter
 				{
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, (int)f));
 					
-					ach = EMAchievements.ACHS.get("poisonous_sleep");
+					//ach = EMAchievements.ACHS.get("poisonous_sleep");
 					
-					if(ach != null)
-						if(!player.hasAchievement(ach))
-						{
-							player.addStat(ach);
-						}
+					//if(ach != null)
+						//if(!player.hasAchievement(ach))
+						//{
+							//player.addStat(ach);
+						//}
 				}
 			}
 			else
@@ -768,13 +751,13 @@ public class PollutionHandler implements IPollutionGetter
 							
 							if(entity instanceof EntityPlayer)
 							{
-								Achievement ach = EMAchievements.ACHS.get("acid_rain");
+								/*Achievement ach = EMAchievements.ACHS.get("acid_rain");
 								
 								if(ach != null)
 								if(!((EntityPlayer)entity).hasAchievement(ach))
 								{
 									((EntityPlayer)entity).addStat(ach);
-								}
+								}*/
 							}
 						}
 					}
@@ -793,13 +776,13 @@ public class PollutionHandler implements IPollutionGetter
 						{
 							if(!PollutionUtils.isEntityRespirating(entity))
 							{
-								Achievement ach = EMAchievements.ACHS.get("smog");
+								/*Achievement ach = EMAchievements.ACHS.get("smog");
 								
 								if(ach != null)
 								if(!((EntityPlayerMP)event.getEntity()).hasAchievement(ach))
 								{
 									((EntityPlayerMP)event.getEntity()).addStat(ach);
-								}
+								}*/
 								
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
@@ -843,13 +826,13 @@ public class PollutionHandler implements IPollutionGetter
 		{
 			if(event.getEntityPlayer() != null)
 			{
-				Achievement ach = EMAchievements.ACHS.get("no_fish");
+				/*Achievement ach = EMAchievements.ACHS.get("no_fish");
 				
 				if(ach != null)
 				if(!((EntityPlayerMP)event.getEntity()).hasAchievement(ach))
 				{
 					((EntityPlayerMP)event.getEntity()).addStat(ach);
-				}
+				}*/
 			}
 			
 			event.damageRodBy(5);
@@ -943,7 +926,7 @@ public class PollutionHandler implements IPollutionGetter
 		{
 			MinecraftServer mcserver = FMLCommonHandler.instance().getMinecraftServerInstance();
 			
-			WorldServer ws = mcserver.worldServerForDimension(dim);
+			WorldServer ws = mcserver.getWorld(dim);
 			
 			TileEntity te = ws.getTileEntity(bp);
 			
@@ -1095,8 +1078,8 @@ public class PollutionHandler implements IPollutionGetter
 			List<ItemStack> drps = new ArrayList<ItemStack>();
 			for(EntityItem ei : event.getDrops())
 			{
-				if(ei.getEntityItem().getItem() instanceof ItemFood)
-					drps.add(ei.getEntityItem());
+				if(ei.getItem().getItem() instanceof ItemFood)
+					drps.add(ei.getItem());
 			}
 			
 			dropHandler(event.getEntityLiving().getEntityWorld(), event.getEntityLiving().getPosition(), drps);

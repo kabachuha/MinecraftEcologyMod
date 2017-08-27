@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "XYX",
+      "YDY",
+      "XYX"
+    ],
+    "key": {
+      "X": {
+        "item": "minecraft:iron_block"
+      },
+      "Y": {
+        "item": "minecraft:stained_hardened_clay",
+        "data": 8
+      },
+      "D": {
+        "item": "minecraft:diamond"
+      }
+    },
+    "result": {
+      "item": "ecomod:frame",
+      "data": 0
+    }
+}
+  

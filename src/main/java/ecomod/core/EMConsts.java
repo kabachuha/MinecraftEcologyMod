@@ -13,11 +13,11 @@ public class EMConsts
 	 * 	https://mcforge.readthedocs.io/en/latest/conventions/versioning/
 	 * 
 	 */
-	public static final String version = "1.11.2-1.0.2.0-beta1";
+	public static final String version = "1.12.1-1.0.2.0-beta1";
 	
 	public static final String deps = "required-after:FML";
 	
-	public static final String json = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/versions.json";
+	public static final String json = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/versions.json";
 	
 	//
 	

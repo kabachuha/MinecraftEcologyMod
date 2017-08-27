@@ -15,12 +15,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
-import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.fluids.FluidRegistry;
 
 public class EMAchievements
-{
+{/*
 	public static AchievementPage ECOMOD_ACHIEVEMENTS = null;
 	public static Map<String, Achievement> ACHS = new HashMap<String, Achievement>();
 	
@@ -62,5 +60,5 @@ public class EMAchievements
 			a.registerStat();
 		}
 		return a;
-	}
+	}*/
 }

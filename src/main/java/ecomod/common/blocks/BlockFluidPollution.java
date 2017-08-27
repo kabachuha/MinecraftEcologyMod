@@ -18,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -64,13 +63,13 @@ public class BlockFluidPollution extends BlockFluidFinite {
 				
 				if(entityIn instanceof EntityPlayer)
 				{
-					Achievement ach = EMAchievements.ACHS.get("concentrated_pollution");
+					//Achievement ach = EMAchievements.ACHS.get("concentrated_pollution");
 				
-					if(ach != null)
-					if(!((EntityPlayer)entityIn).hasAchievement(ach))
-					{
-						((EntityPlayer)entityIn).addStat(ach);
-					}
+					//if(ach != null)
+					//if(!((EntityPlayer)entityIn).hasAchievement(ach))
+					//{
+						//((EntityPlayer)entityIn).addStat(ach);
+					//}
 				}
 			}
 		}

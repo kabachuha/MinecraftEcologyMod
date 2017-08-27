@@ -12,6 +12,7 @@ import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMItems;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -157,8 +157,8 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-		super.addInformation(stack, playerIn, tooltip, advanced);
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
 		
 		NBTTagCompound nbt = stack.getTagCompound();
 		
@@ -181,13 +181,13 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		
 		if(worldIn.isRemote)
 			return;
-		
+		/*
 		Achievement ach = EMAchievements.ACHS.get("respirator");
 		
 		if(ach != null)
 		if(!playerIn.hasAchievement(ach))
 		{
 			playerIn.addStat(ach);
-		}
+		}*/
 	}
 }

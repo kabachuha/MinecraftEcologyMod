@@ -8,7 +8,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
 import net.minecraft.world.World;
 
 public class ItemBlockFrame extends ItemBlock
@@ -38,8 +37,8 @@ public class ItemBlockFrame extends ItemBlock
 		if(worldIn.isRemote)
 			return;
 		
-		Achievement ach = null;
-		
+		//Achievement ach = null;
+		/*
 		if(stack.getMetadata() == 0)
 			ach = EMAchievements.ACHS.get("basic_frame");
 		if(stack.getMetadata() == 1)
@@ -49,6 +48,6 @@ public class ItemBlockFrame extends ItemBlock
 		if(!playerIn.hasAchievement(ach))
 		{
 			playerIn.addStat(ach);
-		}
+		}*/
 	}
 }

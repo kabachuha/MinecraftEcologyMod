@@ -66,8 +66,8 @@ public class IC2Handler
 			
 			for(int offset = 0; offset <= max_range; offset++)
 			{
-				for(int i = pos.chunkXPos - offset; i <= pos.chunkXPos + offset; i++)
-					for(int j = pos.chunkZPos - offset; j <= pos.chunkZPos + offset; j++)
+				for(int i = pos.x - offset; i <= pos.x + offset; i++)
+					for(int j = pos.z - offset; j <= pos.z + offset; j++)
 					{
 						EcomodAPI.emitPollution(w, Pair.of(i, j), emission_nuke.clone().multiplyAll(nuke_rad_mult), true);
 					}
