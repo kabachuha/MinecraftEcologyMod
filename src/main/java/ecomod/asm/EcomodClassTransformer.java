@@ -25,7 +25,7 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		//if(strictCompareByEnvironment(transformedName, "net.minecraft.client.renderer.texture.TextureManager", "net.minecraft.client.renderer.texture.TextureManager"))
 			//test_handleTextureManager(name, transformedName, basicClass);
-		/*
+		
 		name = transformedName;
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.block.BlockGrass", "net.minecraft.block.BlockGrass"))
@@ -54,7 +54,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.tileentity.TileEntityFurnace", "net.minecraft.tileentity.TileEntityFurnace"))
 			return handleTileFurnace(name, basicClass);
-			*/
+			
 		return basicClass;
 	}
 
@@ -80,29 +80,14 @@ public class EcomodClassTransformer implements IClassTransformer
 			
 			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lajs;Lco;Latl;Ljava/util/Random;)V");
 			
-			LabelNode ln = new LabelNode();
 			InsnList lst = new InsnList();
 			
-			//Injection:
-			
-			//Invoking updateTickAddition
 			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
 			lst.add(new VarInsnNode(Opcodes.ALOAD, 2));
-			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodASMHooks", "updateTickAddition", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z", false));
-			
-			//Whether updateTickAddition worked
-			lst.add(new JumpInsnNode(Opcodes.IFEQ, ln));
-			
-			//if false return from updateTick
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodASMHooks", "updateTickAddition", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V", false));
 			lst.add(new LabelNode());
-			lst.add(new InsnNode(Opcodes.RETURN));
 			
-			//if true continue
-			lst.add(ln);
-			lst.add(new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
-			
-			
-			mn.instructions.insert(mn.instructions.get(1), lst);
+			mn.instructions.insert(mn.instructions.getLast().getPrevious().getPrevious(), lst);
 			
 			classNode.accept(cw);
 			bytes = cw.toByteArray();

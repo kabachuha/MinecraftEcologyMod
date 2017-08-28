@@ -6,6 +6,7 @@ import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
+import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
@@ -25,6 +26,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemFood;
@@ -46,7 +48,7 @@ public class EcomodASMHooks
 
 	//ASM Hooks:
 	
-		public static boolean updateTickAddition(World worldIn, BlockPos pos)
+		public static void updateTickAddition(World worldIn, BlockPos pos)
 		{
 			if(!worldIn.isRemote)
 			{
@@ -59,7 +61,6 @@ public class EcomodASMHooks
 						if(worldIn.rand.nextInt(10)==0)
 						{
 							worldIn.setBlockState(pos, Blocks.DIRT.getDefaultState());
-							return false;
 						}
 						else
 						{
@@ -69,15 +70,11 @@ public class EcomodASMHooks
 									worldIn.setBlockState(pos, Blocks.CLAY.getDefaultState());
 								else
 									worldIn.setBlockState(pos, Blocks.SAND.getDefaultState());
-								
-								return false;
 							}
 						}
 					}
 				}
 			}
-			
-			return true;
 		}
 		
 		private static final ResourceLocation rain_texture = new ResourceLocation("ecomod:textures/environment/rain.png");
@@ -104,12 +101,9 @@ public class EcomodASMHooks
 		{
 			if(!worldIn.isRemote)
 			{
-					//FIXME!!! Too loading
-					//EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_redution"), true);
-				
 					if(worldIn.isRainingAt(pos.up()))
 					{
-						if(worldIn.rand.nextInt(60) == 0)
+						if(worldIn.rand.nextInt(30) == 0)
 						{
 							PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
 				
@@ -308,32 +302,18 @@ public class EcomodASMHooks
 					if(m > 0)
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), Math.min(m*20, 1200), Math.min(k, 2)));
 					
-					//Achievement ach = null;
-					
 					if(m >= 60)
 					{
 						player.sendMessage(new TextComponentString("You've eaten polluted food").setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), m, Math.min(k, 2)));
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), m, Math.min(k, 2)));
 						
-						//ach = EMAchievements.ACHS.get("polluted_food");
-						
-						//if(ach != null)
-							//if(!player.hasAchievement(ach))
-							//{
-							//	player.addStat(ach);
-							//}
+						EMTriggers.POLLUTED_FOOD.trigger((EntityPlayerMP)player);
 					}
 					
 					if(m >= 200)
 					{
-						//ach = EMAchievements.ACHS.get("very_polluted_food");
-						
-						//if(ach != null)
-							//if(!player.hasAchievement(ach))
-							//{
-							//	player.addStat(ach);
-							//}
+						EMTriggers.VERY_POLLUTED_FOOD.trigger((EntityPlayerMP)player);
 						
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), m, Math.min(k, 2)));
 					}

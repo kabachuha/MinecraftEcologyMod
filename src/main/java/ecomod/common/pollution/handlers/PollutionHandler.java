@@ -25,6 +25,8 @@ import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.api.pollution.PollutionEmissionEvent;
+import ecomod.client.advancements.triggers.EMTriggers;
+import ecomod.client.advancements.triggers.PlayerInPollutionTrigger;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager;
@@ -437,7 +439,7 @@ public class PollutionHandler implements IPollutionGetter
 	
 	@SubscribeEvent
 	public void onExplosion(ExplosionEvent event)
-	{/*
+	{
 		if(event.isCanceled())return;
 		
 		World w = event.getWorld();
@@ -446,19 +448,19 @@ public class PollutionHandler implements IPollutionGetter
 		
 		Explosion expl = event.getExplosion();
 		
-		int water_affected = EMUtils.countWaterInRadius(w, new BlockPos(expl.getPosition()), (int)expl.explosionSize);
+		int water_affected = EMUtils.countWaterInRadius(w, new BlockPos(expl.getPosition()), (int)expl.size);
 		
 		PollutionData emission = PollutionSourcesConfig.getSource("explosion_pollution_per_power");
 		
-		emission.multiply(PollutionType.AIR, expl. ? 1.5F : 1);	
-		emission.multiply(PollutionType.SOIL, expl.isFlaming ? 1.5F : 1);
+		emission.multiply(PollutionType.AIR, expl.causesFire ? 1.5F : 1);	
+		emission.multiply(PollutionType.SOIL, expl.causesFire ? 1.5F : 1);
 		
 		emission.multiply(PollutionType.WATER, water_affected > 0 ? 2 : 1);
 		
-		emission.multiplyAll(expl.explosionSize);
+		emission.multiplyAll(expl.size);
 		
 		EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(new BlockPos(expl.getPosition())), emission, true);
-	*/}
+	}
 	
 	@SubscribeEvent
 	public void onBonemeal(BonemealEvent event)
@@ -489,14 +491,7 @@ public class PollutionHandler implements IPollutionGetter
 			
 			if(event.getEntityPlayer() != null)
 			{
-				/*Advancement ach = EMAchievements.ACHS.get("no_bonemeal");
-				
-				if(ach != null)
-				if(!event.getEntityPlayer().stat(ach))
-				{
-					event.getEntityPlayer().addStat(ach);
-					
-				}*/
+				EMTriggers.NO_BONEMEAL.trigger((EntityPlayerMP) event.getEntityPlayer());
 			}
 		}
 		else
@@ -548,13 +543,7 @@ public class PollutionHandler implements IPollutionGetter
 			if(PollutionUtils.hasSurfaceAccess(w, event.getEntityPlayer().getPosition()))
 			if(!PollutionUtils.isEntityRespirating(player))
 			{
-				//Achievement ach = EMAchievements.ACHS.get("bad_sleep");
-				
-				//if(ach != null)
-				//	if(!player.hasAchievement(ach))
-				//	{
-				//		player.addStat(ach);
-				//	}
+				EMTriggers.BAD_SLEEP.trigger((EntityPlayerMP) player);
 				
 				float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
 			
@@ -569,13 +558,7 @@ public class PollutionHandler implements IPollutionGetter
 				{
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("poison").toString()), 1000, (int)f));
 					
-					//ach = EMAchievements.ACHS.get("poisonous_sleep");
-					
-					//if(ach != null)
-						//if(!player.hasAchievement(ach))
-						//{
-							//player.addStat(ach);
-						//}
+					EMTriggers.POISONOUS_SLEEP.trigger((EntityPlayerMP)player);
 				}
 			}
 			else
@@ -751,13 +734,7 @@ public class PollutionHandler implements IPollutionGetter
 							
 							if(entity instanceof EntityPlayer)
 							{
-								/*Achievement ach = EMAchievements.ACHS.get("acid_rain");
-								
-								if(ach != null)
-								if(!((EntityPlayer)entity).hasAchievement(ach))
-								{
-									((EntityPlayer)entity).addStat(ach);
-								}*/
+								EMTriggers.ACID_RAIN.trigger((EntityPlayerMP)entity);
 							}
 						}
 					}
@@ -776,13 +753,7 @@ public class PollutionHandler implements IPollutionGetter
 						{
 							if(!PollutionUtils.isEntityRespirating(entity))
 							{
-								/*Achievement ach = EMAchievements.ACHS.get("smog");
-								
-								if(ach != null)
-								if(!((EntityPlayerMP)event.getEntity()).hasAchievement(ach))
-								{
-									((EntityPlayerMP)event.getEntity()).addStat(ach);
-								}*/
+								EMTriggers.BREATHE_SMOG.trigger((EntityPlayerMP)entity, new Object[]{});
 								
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
 								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
@@ -791,6 +762,8 @@ public class PollutionHandler implements IPollutionGetter
 									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
 							}
 						}
+						
+						EMTriggers.PLAYER_IN_POLLUTION.trigger((EntityPlayerMP)event.getEntity(), new Object[]{});
 					}
 					else
 					{
@@ -826,13 +799,7 @@ public class PollutionHandler implements IPollutionGetter
 		{
 			if(event.getEntityPlayer() != null)
 			{
-				/*Achievement ach = EMAchievements.ACHS.get("no_fish");
-				
-				if(ach != null)
-				if(!((EntityPlayerMP)event.getEntity()).hasAchievement(ach))
-				{
-					((EntityPlayerMP)event.getEntity()).addStat(ach);
-				}*/
+				EMTriggers.NO_FISH.trigger((EntityPlayerMP)event.getEntityPlayer());
 			}
 			
 			event.damageRodBy(5);
@@ -935,17 +902,6 @@ public class PollutionHandler implements IPollutionGetter
 			{
 				((TileAnalyzer)te).analyze();
 			}
-		}
-	}
-	
-	public static final ResourceLocation POLLUTION_CAPABILITY_RESLOC = EMUtils.resloc("pollution");
-	
-	@SubscribeEvent
-	public void onCapabilityAttachment(AttachCapabilitiesEvent<Item> event)
-	{
-		if(event.getObject() instanceof ItemFood)
-		{
-			event.addCapability(POLLUTION_CAPABILITY_RESLOC, new PollutionProvider());
 		}
 	}
 	

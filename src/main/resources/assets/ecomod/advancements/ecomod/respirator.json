@@ -1,0 +1,30 @@
+{
+    "parent": "ecomod:ecomod/smog",
+    "display": {
+        "icon": {
+            "item": "ecomod:respirator"
+        },
+        "title": {
+            "translate": "achievement.ecomod.respirator"
+        },
+        "description": {
+            "translate": "achievement.ecomod.respirator.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true,
+        "frame": "goal"
+    },
+    "criteria": {
+        "respirator": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ecomod:respirator"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [["respirator"]]
+}

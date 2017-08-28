@@ -1,0 +1,22 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:bed"
+        },
+        "title": {
+            "translate": "achievement.ecomod.bad_sleep"
+        },
+        "description": {
+            "translate": "achievement.ecomod.bad_sleep.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "bad_sleep": {
+            "trigger": "ecomod:bad_sleep"
+        }
+    },
+    "requirements": [["bad_sleep"]]
+}

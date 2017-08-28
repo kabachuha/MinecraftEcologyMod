@@ -3,6 +3,8 @@ package ecomod.core.stuff;
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.IPollution;
+import ecomod.api.capabilities.PollutionProvider;
+import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.client.gui.EMGuiHandler;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.world.FluidPollution;
@@ -14,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -25,6 +28,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -94,6 +98,8 @@ public class MainRegistry
 			EMIntermod.init_ic2_support();
 		
 		EMRecipes.doInit();
+		
+		EMTriggers.setup();
 	}
 	
 	public static void doPostInit()
@@ -135,5 +141,16 @@ public class MainRegistry
 	public static void registerItems(RegistryEvent.Register<Item> event)
 	{
 		EMItems.register(event);
+	}
+	
+	public static final ResourceLocation POLLUTION_CAPABILITY_RESLOC = EMUtils.resloc("pollution");
+	
+	@SubscribeEvent
+	public static void onCapabilityAttachment(AttachCapabilitiesEvent event)
+	{
+		if((event.getObject() instanceof ItemStack && ((ItemStack)event.getObject()).getItem() instanceof ItemFood) || event.getObject() instanceof ItemFood || event.getObject().getClass() == ItemFood.class)
+		{
+			event.addCapability(POLLUTION_CAPABILITY_RESLOC, new PollutionProvider());
+		}
 	}
 }

@@ -2,8 +2,8 @@ package ecomod.common.tiles;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
+import ecomod.common.utils.EMEnergyStorage;
 import ecomod.common.utils.EMUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,12 +15,12 @@ import net.minecraftforge.energy.*;
 
 public class TileEnergy extends TileEntity implements IEnergyReceiver, IEnergyStorage
 {
-	EnergyStorage energy;
+	EMEnergyStorage energy;
 	
 	public TileEnergy(int max_energy)
 	{
 		super();
-		energy = new EnergyStorage(max_energy);
+		energy = new EMEnergyStorage(max_energy, true);
 	}
 	
 	@Override
@@ -69,14 +69,14 @@ public class TileEnergy extends TileEntity implements IEnergyReceiver, IEnergySt
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		energy = readEnergyFromNBT(nbt);
+		energy = energy.readFromNBT(nbt);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		writeEnergyToNBT(nbt);
+		energy.writeToNBT(nbt);
 		return nbt;
 	}
 
@@ -118,24 +118,5 @@ public class TileEnergy extends TileEntity implements IEnergyReceiver, IEnergySt
 	public Pair<Integer, Integer> getChunkCoords()
 	{
 		return EMUtils.blockPosToPair(getPos());
-	}
-	
-	public EnergyStorage readEnergyFromNBT(NBTTagCompound nbt) {
-
-		this.energy.setEnergyStored(nbt.getInteger("Energy"));
-
-		if (energy.getEnergyStored() > energy.getMaxEnergyStored()) {
-			energy.setEnergyStored(energy.getMaxEnergyStored());
-		}
-		return energy;
-	}
-
-	public NBTTagCompound writeEnergyToNBT(NBTTagCompound nbt) {
-
-		if (energy.getEnergyStored() < 0) {
-			energy.setEnergyStored(0);
-		}
-		nbt.setInteger("Energy", energy.getEnergyStored());
-		return nbt;
 	}
 }

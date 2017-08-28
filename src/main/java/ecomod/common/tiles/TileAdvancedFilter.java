@@ -72,7 +72,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 						i1 = ticks;
 					}
 					
-					if(energy.extractEnergy(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
+					if(energy.extractEnergyNotOfficially(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
 					{
 						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_redution"), false);
 					

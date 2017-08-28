@@ -1,0 +1,23 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:air"
+        },
+        "title": {
+            "translate": "achievement.ecomod.acid_rain"
+        },
+        "description": {
+            "translate": "achievement.ecomod.acid_rain.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true,
+        "frame": "goal"
+    },
+    "criteria": {
+        "acid_rain": {
+            "trigger": "ecomod:acid_rain"
+        }
+    },
+    "requirements": [["acid_rain"]]
+}

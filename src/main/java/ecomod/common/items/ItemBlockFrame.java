@@ -2,6 +2,7 @@ package ecomod.common.items;
 
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
+import ecomod.client.advancements.triggers.PlayerInPollutionTrigger;
 import ecomod.core.stuff.EMAchievements;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;

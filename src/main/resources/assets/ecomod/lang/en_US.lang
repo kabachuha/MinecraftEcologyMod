@@ -59,11 +59,18 @@ ape.ecomod.no_bonemeal.desc=Because soil is oversaturated with poisonous substan
 ape.ecomod.no_crops_growing.desc=Crops can grow no more here, but you still can fertilize them with bonemeal unless you have a bonemeal restricting effect.
 
 #Achievements
-achievement.ecomod.bad_sleep=Sweet Dreams
+advancements.ecomod.root.title=Ecology Mod
+advancements.ecomod.root.description=You notice that something is wrong with the environment.
+
+
+achievement.ecomod.disaster=Environmental Disaster
+achievement.ecomod.disaster.desc=Have more than 1000000 pollution of each type!
+
+achievement.ecomod.bad_sleep=Bitterly-Sweet Dreams
 achievement.ecomod.bad_sleep.desc=Get sick after sleeping in polluted air
 achievement.ecomod.poisonous_sleep=The Next Morning
 achievement.ecomod.poisonous_sleep.desc=Get poisoned after sleeping in polluted air
-achievement.ecomod.smog=Cough, Cough
+achievement.ecomod.smog=Breathe Deeper
 achievement.ecomod.smog.desc=Breathe the Smog
 achievement.ecomod.acid_rain=It Is Raining... Acid!
 achievement.ecomod.acid_rain.desc=Be Caught In The Acid Rain

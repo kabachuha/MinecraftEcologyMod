@@ -1,0 +1,33 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:deadbush"
+        },
+        "title": {
+            "translate": "achievement.ecomod.disaster"
+        },
+        "description": {
+            "translate": "achievement.ecomod.disaster.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true,
+        "frame": "challenge"
+    },
+    "criteria": {
+        "disaster": {
+            "trigger": "ecomod:player_in_pollution",
+            "conditions": {
+                "chunk_pollution": {
+                    "pollution": {
+                        "air": 1000000.0,
+                        "water": 1000000.0,
+                        "soil": 1000000.0
+                      },
+                    "triggering_type": "AND"
+                }
+            }
+        }
+    },
+    "requirements": [["disaster"]]
+}

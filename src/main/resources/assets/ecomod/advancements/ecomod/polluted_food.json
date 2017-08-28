@@ -1,0 +1,22 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:poisonous_potato"
+        },
+        "title": {
+            "translate": "achievement.ecomod.polluted_food"
+        },
+        "description": {
+            "translate": "achievement.ecomod.polluted_food.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "polluted_food": {
+            "trigger": "ecomod:polluted_food"
+        }
+    },
+    "requirements": [["polluted_food"]]
+}

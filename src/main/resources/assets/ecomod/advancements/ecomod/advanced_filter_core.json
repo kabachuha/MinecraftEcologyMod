@@ -1,0 +1,31 @@
+{
+    "parent": "ecomod:ecomod/filter_core",
+    "display": {
+        "icon": {
+            "item": "ecomod:core",
+            "data": 1
+        },
+        "title": {
+            "translate": "achievement.ecomod.advanced_core"
+        },
+        "description": {
+            "translate": "achievement.ecomod.advanced_core.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "advfilter": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ecomod:core",
+                        "data": 1
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [["advfilter"]]
+}

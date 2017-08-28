@@ -1,0 +1,37 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "rewards": {
+        "recipes": [
+          "ecomod:advanced_frame",
+          "ecomod:pistons_array"
+        ]
+    },
+    "display": {
+        "icon": {
+            "item": "ecomod:frame",
+            "data": 0
+        },
+        "title": {
+            "translate": "achievement.ecomod.basic_frame"
+        },
+        "description": {
+            "translate": "achievement.ecomod.basic_frame.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "basic_frame": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ecomod:frame",
+                        "data": 0
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [["basic_frame"]]
+}

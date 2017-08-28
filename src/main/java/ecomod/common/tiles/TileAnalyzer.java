@@ -9,15 +9,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.stuff.EMConfig;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentString;
 
 
 public class TileAnalyzer extends TileEnergy
@@ -47,15 +51,25 @@ public class TileAnalyzer extends TileEnergy
 		
 		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
 		{
-			world.playSound(null, getPos(), EcomodStuff.analyzer, SoundCategory.BLOCKS, 3F, 1F);
+			if(PollutionUtils.hasSurfaceAccess(getWorld(), getPos()))
+			{
+				world.playSound(null, getPos(), EcomodStuff.analyzer, SoundCategory.BLOCKS, 3F, 1F);
 			
-			energy.setEnergyStored(0);
+				energy.setEnergyStored(0);
 			
-			pollution = getPollution();
+				pollution = getPollution();
 			
-			last_analyzed = new Date().getTime();
+				last_analyzed = new Date().getTime();
 			
-			return Pair.of(last_analyzed, pollution);
+				return Pair.of(last_analyzed, pollution);
+			}
+			else
+			{
+				for(EntityPlayerMP pl : world.getEntitiesWithinAABB(EntityPlayerMP.class, new AxisAlignedBB(getPos().add(-4, -4, -4), getPos().add(4, 4, 4))))
+				{
+					pl.sendMessage(new TextComponentString("Analyzer is unable to work without a surface access!"));
+				}
+			}
 		}
 		
 		return null;

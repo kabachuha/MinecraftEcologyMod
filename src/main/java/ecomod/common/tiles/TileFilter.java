@@ -21,7 +21,7 @@ public class TileFilter extends TileEnergy{
 
 	public TileFilter()
 	{
-		super(EMConfig.filter_energy_per_minute * EMConfig.wptcd/60 * 2);
+		super(EMConfig.filter_energy_per_minute * EMConfig.wptcd/60 * 5);
 	}
 	
 	public boolean isWorking()
@@ -30,7 +30,7 @@ public class TileFilter extends TileEnergy{
 		
 		if(energy.getEnergyStored() >= (int)(EMConfig.filter_energy_per_minute * (EMConfig.wptcd/60F)))
 		{
-			energy.extractEnergy((int)(EMConfig.filter_energy_per_minute * (EMConfig.wptcd/60F)), false);
+			energy.extractEnergyNotOfficially((int)(EMConfig.filter_energy_per_minute * (EMConfig.wptcd/60F)), false);
 				
 			return true;
 		}

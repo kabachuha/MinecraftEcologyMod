@@ -54,7 +54,12 @@ ape.ecomod.no_bonemeal.desc=Так как почва перенасыщена я
 ape.ecomod.no_crops_growing.desc=Растения не могут продолжить свой рост на этой территории. Но вы можете удобрить их костной мукой, если это ещё возможно.
 
 #Достижения
-achievement.ecomod.bad_sleep=Спокойной Ночи!
+advancements.ecomod.root.description=Вы замечаете, что что-то не так с окружающей средой...
+
+achievement.ecomod.disaster=Климатическая Катастрофа!
+achievement.ecomod.disaster.desc=Имейте свыше 1000000 единиц загрязнения каждого типа!
+
+achievement.ecomod.bad_sleep=Беспокойной Ночи!
 achievement.ecomod.bad_sleep.desc=Почувствуйте Тошноту После Сна В Загрязненном Воздухе 
 achievement.ecomod.poisonous_sleep=На Следующее Утро...
 achievement.ecomod.poisonous_sleep.desc=Отравитесь После Сна В Загрязненном Воздухе
