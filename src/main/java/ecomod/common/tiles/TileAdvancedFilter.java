@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import buildcraft.api.tiles.IHasWork;
+import buildcraft.api.tiles.TilesAPI;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -23,6 +24,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.Optional;
+
 
 public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWork
 {
@@ -184,7 +187,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 	@Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == TilesAPI.CAP_HAS_WORK || super.hasCapability(capability, facing);
     }
 
     @SuppressWarnings("unchecked")
@@ -194,6 +197,11 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
     {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T) tank;
+        
+        if (capability == TilesAPI.CAP_HAS_WORK)
+        	return (T) this;
+        
+        
         return super.getCapability(capability, facing);
     }
     

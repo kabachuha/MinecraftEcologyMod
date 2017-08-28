@@ -32,9 +32,9 @@ public class EMItems
 	
 	public static void doPreInit()
 	{
-		if(!EcomodItems.inited)
-		{	
 			EcomodItems.inited = true;
+			
+			EcologyMod.log.info("Setuping items");
 			
 			EcomodItems.CORE = new ItemCore().setUnlocalizedName(EMConsts.modid+".core");
 			
@@ -56,7 +56,6 @@ public class EMItems
 			regItem(EcomodItems.CRAFT_INGREDIENT, "craft_ingredient", false, EMUtils.resloc("piston_array"), EMUtils.resloc("vent"));
 			
 			regItem(EcomodItems.RESPIRATOR, "respirator", true, EMUtils.resloc("respirator"));
-		}
 	}
 	
 	public static void doInit()
@@ -97,10 +96,7 @@ public class EMItems
 	{
 		EcologyMod.log.info("Registring Items");
 		if(items.isEmpty())
-		{
-			EcologyMod.log.error("No items found!!!");
-			throw new NullPointerException("No items found!!!");
-		}
+			doPreInit();
 		
 		for(Item it : items)
 		{

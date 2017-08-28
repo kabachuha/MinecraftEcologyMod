@@ -127,7 +127,7 @@ public class EMConfig
 			
 			adv_filter_delay_secs = config.getInt("AdvancedFilterDelaySeconds", "TILES", 5, 1, Integer.MAX_VALUE, "", lang("tiles.advancedfilter.delay"));
 			
-			advanced_filter_energy_per_second = config.getInt("AdvancedFilterEnergyPerSecons", "TILES", 5000, 0, adv_filter_energy, "", lang("tiles.advancedfilter.consumption"));
+			advanced_filter_energy_per_second = config.getInt("AdvancedFilterEnergyPerSeconds", "TILES", 5000, 0, adv_filter_energy, "", lang("tiles.advancedfilter.consumption"));
 			
 			enable_concentrated_pollution_flow_texture = config.getBoolean("EnableConcentratedPollutionFlowTexture", "CLIENT", true, "", lang("client.concentrated_pollution.flow"));
 			

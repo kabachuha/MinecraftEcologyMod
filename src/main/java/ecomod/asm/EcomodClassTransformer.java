@@ -6,6 +6,7 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 
 import ecomod.core.EMConsts;
+import ecomod.core.EcologyMod;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.classloading.FMLForgePlugin;
 
@@ -13,6 +14,8 @@ public class EcomodClassTransformer implements IClassTransformer
 {
 	boolean b = false;
 	static Logger log = LogManager.getLogger("EcomodASM");
+	
+	private static final boolean DEBUG = false;
 	
 	public EcomodClassTransformer()
 	{
@@ -23,8 +26,9 @@ public class EcomodClassTransformer implements IClassTransformer
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass)
 	{
-		//if(strictCompareByEnvironment(transformedName, "net.minecraft.client.renderer.texture.TextureManager", "net.minecraft.client.renderer.texture.TextureManager"))
-			//test_handleTextureManager(name, transformedName, basicClass);
+		if(DEBUG)
+		if(strictCompareByEnvironment(transformedName, "net.minecraft.client.renderer.texture.TextureManager", "net.minecraft.client.renderer.texture.TextureManager"))
+			test_handleTextureManager(name, transformedName, basicClass);
 		
 		name = transformedName;
 		
@@ -78,7 +82,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lajs;Lco;Latl;Ljava/util/Random;)V");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lamu;Let;Lawt;Ljava/util/Random;)V");
 			
 			InsnList lst = new InsnList();
 			
@@ -121,6 +128,9 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
 			MethodNode mn = getMethod(classNode, "renderRainSnow", "func_78473_a!&!c", "(F)V", "(F)V");
 			
 			InsnList lst = new InsnList();
@@ -150,9 +160,9 @@ public class EcomodClassTransformer implements IClassTransformer
 					log.info(min.desc);
 					log.info(min.itf);
 					*/
-					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/client/renderer/texture/TextureManager", "net/minecraft/client/renderer/texture/TextureManager!&!bza") && equalOneOfNames(min.name, "bindTexture", "func_110577_a!&!a") && equalOneOfNames(min.desc, "(Lnet/minecraft/util/ResourceLocation;)V", "(Lnet/minecraft/util/ResourceLocation;)V!&!(Lkq;)V") && (min.itf == false))
+					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/client/renderer/texture/TextureManager", "net/minecraft/client/renderer/texture/TextureManager!&!cdr") && equalOneOfNames(min.name, "bindTexture", "func_110577_a!&!a") && equalOneOfNames(min.desc, "(Lnet/minecraft/util/ResourceLocation;)V", "(Lnet/minecraft/util/ResourceLocation;)V!&!(Lnf;)V") && (min.itf == false))
 					{
-						log.info("FOUND: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager(bza) bindTexture(a) (Lnet/minecraft/util/ResourceLocation;)V!&!(Lkq;)V  !!!!!");
+						log.info("FOUND: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager(cdr) bindTexture(a) (Lnet/minecraft/util/ResourceLocation;)V!&!(Lnf;)V  !!!!!");
 						insertion_index = i;
 						break;
 					}
@@ -201,7 +211,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lajs;Lco;Latl;Ljava/util/Random;)V");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lamu;Let;Lawt;Ljava/util/Random;)V");
 			
 			InsnList lst = new InsnList();
 			
@@ -244,7 +257,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lajs;Lco;Latl;Ljava/util/Random;)V");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lamu;Let;Lawt;Ljava/util/Random;)V");
 			
 			InsnList lst = new InsnList();
 			
@@ -288,7 +304,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lajs;Lco;Latl;Ljava/util/Random;)V");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "updateTick", "func_180650_b!&!b", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;Ljava/util/Random;)V!&!(Lamu;Let;Lawt;Ljava/util/Random;)V");
 			
 			InsnList lst = new InsnList();
 			
@@ -332,7 +351,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "doRenderLayer", "func_177141_a!&!a", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V!&!(Lsw;FFFFFFF)V");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "doRenderLayer", "func_177141_a!&!a", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", "(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V!&!(Lvp;FFFFFFF)V");
 			
 			InsnList lst = new InsnList();
 			
@@ -377,7 +399,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "onEntityItemUpdate", "onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z", "(Lnet/minecraft/entity/item/EntityItem;)Z!&!(Lzj;)Z");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "onEntityItemUpdate", "onEntityItemUpdate", "(Lnet/minecraft/entity/item/EntityItem;)Z", "(Lnet/minecraft/entity/item/EntityItem;)Z!&!(Lacl;)Z");
 			
 			InsnList lst = new InsnList();
 			
@@ -419,7 +444,10 @@ public class EcomodClassTransformer implements IClassTransformer
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 			
-			MethodNode mn = getMethod(classNode, "onFoodEaten", "func_77849_c!&!a", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V!&!(Lafj;Lajs;Laay;)V");
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "onFoodEaten", "func_77849_c!&!a", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V!&!(Laip;Lamu;Laed;)V");
 			
 			InsnList lst = new InsnList();
 			
@@ -462,6 +490,9 @@ public class EcomodClassTransformer implements IClassTransformer
 			ClassReader classReader = new ClassReader(bytes);
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			if(DEBUG)
+				printClassInfo(name, classNode);
 			
 			MethodNode mn = getMethod(classNode, "smeltItem", "func_145949_j!&!o", "()V", "()V");
 			
@@ -535,6 +566,9 @@ public class EcomodClassTransformer implements IClassTransformer
 			ClassReader classReader = new ClassReader(bytes);
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			if(DEBUG)
+				printClassInfo(name, classNode);
 			
 			MethodNode mn = getMethod(classNode, "onFoodEaten", "func_77849_c", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)V!&!(Lafj;Lajs;Laay;)V");
 			
@@ -645,5 +679,33 @@ public class EcomodClassTransformer implements IClassTransformer
 		return comparedTo.equalsIgnoreCase(name.replace('/', '.'));
 	}
 	
-	
+	public static void printClassInfo(String transformedName, ClassNode clazz)
+	{
+		log.info("----------------------------------------------------------------------------");
+		log.info("Transformed class name "+transformedName);
+		log.info("Class name "+clazz.name);
+		log.info("-----------------------");
+		log.info("Fields:");
+		for(FieldNode field : clazz.fields)
+		{
+			log.info(field.name + "   of type   " + field.desc + " of access "+field.access);
+		}
+		log.info("-----------------------");
+		log.info("Methods:");
+		for(MethodNode mn : clazz.methods)
+		{
+			log.info(mn.name + " with desc "+mn.desc);
+			if(mn.visibleAnnotations != null && mn.visibleAnnotations.size() > 0)
+			{
+				log.info("With annotations:");
+				for(AnnotationNode an : mn.visibleAnnotations)
+				{
+					log.info(an.desc);
+					log.info(an.values);
+				}
+			}
+		}
+		log.info("----------------------------------------------------------------------------");
+		
+	}
 }

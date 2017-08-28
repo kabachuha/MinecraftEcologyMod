@@ -34,10 +34,10 @@ public class EMBlocks
 	
 	public static void doPreInit()
 	{
-		if(!EcomodBlocks.inited)
-		{
 			blocks.clear();
 			EMItems.items.clear();
+			
+			EcologyMod.log.info("Setuping blocks");
 			
 			EcomodBlocks.inited = true;
 			EcomodBlocks.FILTER = new BlockFilter().setUnlocalizedName(EMConsts.modid+".filter");
@@ -45,7 +45,6 @@ public class EMBlocks
 			EcomodBlocks.ANALYZER = new BlockAnalyzer().setUnlocalizedName(EMConsts.modid+".analyzer");
 			EcomodBlocks.FRAME = new BlockFrame().setUnlocalizedName(EMConsts.modid+".frame");
 		
-			
 			EcomodBlocks.FLUID_POLLUTION = new BlockFluidPollution();
 			EcomodBlocks.FLUID_POLLUTION.setRegistryName("block_"+EcomodStuff.concentrated_pollution.getName());
 			blocks.add(EcomodBlocks.FLUID_POLLUTION);
@@ -67,7 +66,6 @@ public class EMBlocks
 			EMItems.putItem(ib);
 			
 			ModelBakery.registerItemVariants(Item.getItemFromBlock(EcomodBlocks.FRAME), EMUtils.resloc("basic_frame"), EMUtils.resloc("advanced_frame"));
-		}
 	}
 	
 	public static void doInit()
@@ -78,6 +76,7 @@ public class EMBlocks
 	
 	public static void regBlock(Block block, String name)
 	{
+		EcologyMod.log.info("Registring block ecomod:"+name);
 		regBlockNoItem(block, name);
 		
 		ItemBlock ib = new ItemBlock(block);
@@ -97,7 +96,7 @@ public class EMBlocks
 		ResourceLocation resloc = EMUtils.resloc(name);
 		
 		block.setRegistryName(resloc);
-		
+
 		blocks.add(block);
 		
 		if(model)
@@ -107,11 +106,9 @@ public class EMBlocks
 	public static void register(RegistryEvent.Register<Block> event)
 	{
 		EcologyMod.log.info("Registring Blocks");
+		
 		if(blocks.isEmpty())
-		{
-			EcologyMod.log.error("No blocks found!!!");
-			throw new NullPointerException("No blocks found!!!");
-		}
+			doPreInit();
 
 		for(Block bl : blocks)
 		{

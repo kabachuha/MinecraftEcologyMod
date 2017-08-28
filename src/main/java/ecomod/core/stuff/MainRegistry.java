@@ -148,9 +148,18 @@ public class MainRegistry
 	@SubscribeEvent
 	public static void onCapabilityAttachment(AttachCapabilitiesEvent event)
 	{
+		if(event != null)
+		if(event.getObject() != null)
+		if(EcomodStuff.CAPABILITY_POLLUTION != null)
 		if((event.getObject() instanceof ItemStack && ((ItemStack)event.getObject()).getItem() instanceof ItemFood) || event.getObject() instanceof ItemFood || event.getObject().getClass() == ItemFood.class)
 		{
 			event.addCapability(POLLUTION_CAPABILITY_RESLOC, new PollutionProvider());
 		}
+	}
+	
+	@net.minecraftforge.common.capabilities.CapabilityInject(IPollution.class)
+	private static void onPollutionCapability(net.minecraftforge.common.capabilities.Capability cap)
+	{
+		EcologyMod.log.info("Pollution capability had been initialized!");
 	}
 }
