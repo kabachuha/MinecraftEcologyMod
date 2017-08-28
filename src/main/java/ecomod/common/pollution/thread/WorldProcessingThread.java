@@ -236,7 +236,8 @@ public class WorldProcessingThread extends Thread
 		
 		try
 		{
-			EcologyMod.log.info("[WPT_"+manager.getDim()+"]Sleeping for "+seconds+" seconds");
+			if(manager != null)
+				EcologyMod.log.info("[WPT_"+manager.getDim()+"]Sleeping for "+seconds+" seconds");
 			sleep(seconds*1000);
 		} 
 		catch (InterruptedException e)

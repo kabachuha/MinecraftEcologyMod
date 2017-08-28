@@ -147,7 +147,7 @@ public class EMConfig
 			
 			food_polluting_factor = config.getFloat("FoodPollutiingFactor", "POLLUTION", 0.001F, 0, 1, "");
 			
-			filter_energy_per_minute = config.getInt("FilterEnergyPerMinute", "TILES", 5000, 0, Integer.MAX_VALUE, "");
+			filter_energy_per_minute = config.getInt("FilterEnergyPerMinute", "TILES", 5000, 0, Integer.MAX_VALUE, "FilterEnergyPerBLOCKPerMinute");
 			
 			double dbls[] = config.get("POLLUTION", "PollutionToFoodPoisonFactors", new double[]{0.01F, 0.01F, 0.03F}).getDoubleList();
 			if(dbls.length == 3)

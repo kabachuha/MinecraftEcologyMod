@@ -9,9 +9,6 @@ import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
-import li.cil.oc.api.network.Analyzable;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -21,7 +18,7 @@ public class TileFilter extends TileEnergy{
 
 	public TileFilter()
 	{
-		super(EMConfig.filter_energy_per_minute * EMConfig.wptcd/60 * 2);
+		super(EMConfig.filter_energy_per_minute * EMConfig.wptcd/60 * 5);
 	}
 	
 	public boolean isWorking()
