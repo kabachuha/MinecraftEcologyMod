@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import com.google.common.collect.ImmutableList;
 
 import buildcraft.api.fuels.BuildcraftFuelRegistry;
+import buildcraft.api.tiles.IHasWork;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -19,6 +20,7 @@ import ecomod.core.EcologyMod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.API;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
@@ -28,6 +30,9 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class EMIntermod
 {
+	@net.minecraftforge.common.capabilities.CapabilityInject(IHasWork.class)
+	public static final Capability<IHasWork> CAP_HAS_WORK = null;
+	
 	public static final org.apache.logging.log4j.Logger log = LogManager.getLogger("Ecomod|Intermod");
 	
 	public static void registerBCFuels()
@@ -202,5 +207,12 @@ public class EMIntermod
 	public static void init_ic2_support()
 	{
 		MinecraftForge.EVENT_BUS.register(new IC2Handler());
+	}
+	
+	@net.minecraftforge.common.capabilities.CapabilityInject(IHasWork.class)
+	private static void onIHasWorkCapLoaded(Capability cap)
+	{
+		if(cap != null)
+			log.info("Capability<IHasWork> had been loaded!");
 	}
 }

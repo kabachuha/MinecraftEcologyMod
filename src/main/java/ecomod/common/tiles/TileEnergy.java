@@ -2,7 +2,6 @@ package ecomod.common.tiles;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import cofh.api.energy.IEnergyReceiver;
 import ecomod.common.utils.EMEnergyStorage;
 import ecomod.common.utils.EMUtils;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,8 +11,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.*;
 
 
-
-public class TileEnergy extends TileEntity implements IEnergyReceiver, IEnergyStorage
+@net.minecraftforge.fml.common.Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux")
+public class TileEnergy extends TileEntity implements cofh.redstoneflux.api.IEnergyReceiver, IEnergyStorage
 {
 	EMEnergyStorage energy;
 	
@@ -59,6 +58,7 @@ public class TileEnergy extends TileEntity implements IEnergyReceiver, IEnergySt
 		return true;
 	}
 
+	@net.minecraftforge.fml.common.Optional.Method(modid = "redstoneflux")
 	@Override
 	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) 
 	{

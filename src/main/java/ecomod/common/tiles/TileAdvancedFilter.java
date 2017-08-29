@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import buildcraft.api.tiles.IHasWork;
-import buildcraft.api.tiles.TilesAPI;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -14,6 +13,7 @@ import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
+import ecomod.core.stuff.EMIntermod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -187,7 +187,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 	@Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == TilesAPI.CAP_HAS_WORK || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || (EMIntermod.CAP_HAS_WORK != null && capability == EMIntermod.CAP_HAS_WORK) || super.hasCapability(capability, facing);
     }
 
     @SuppressWarnings("unchecked")
@@ -198,7 +198,8 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T) tank;
         
-        if (capability == TilesAPI.CAP_HAS_WORK)
+        if (net.minecraftforge.fml.common.ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
+        if (EMIntermod.CAP_HAS_WORK != null && capability == EMIntermod.CAP_HAS_WORK)
         	return (T) this;
         
         

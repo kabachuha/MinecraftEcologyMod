@@ -1,10 +1,10 @@
 package ecomod.common.utils;
 
-import cofh.api.energy.IEnergyStorage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
 
-public class EMEnergyStorage extends EnergyStorage implements IEnergyStorage {
+@net.minecraftforge.fml.common.Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyStorage", modid = "redstoneflux")
+public class EMEnergyStorage extends EnergyStorage implements cofh.redstoneflux.api.IEnergyStorage {
 
 	public EMEnergyStorage(int capacity, boolean in)
 	{
