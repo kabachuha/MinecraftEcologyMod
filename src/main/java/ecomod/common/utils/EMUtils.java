@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -414,5 +416,37 @@ public class EMUtils
         if (drained > 0) {
             FluidStack actuallyDrained = tank.drain(drained, true);
         }
+	}
+	
+	public static TileEntity get1NearbyTileEntity(@Nullable ResourceLocation id, World w, BlockPos pos)
+	{
+		TileEntity ret = null;
+
+		for(EnumFacing ef : EnumFacing.VALUES)
+		{
+			TileEntity te = w.getTileEntity(pos.offset(ef));
+			if(te != null)
+			{
+				if(ret == null)
+				{
+					if(id == null || TileEntity.getKey(te.getClass()).toString().equals(id.toString()))
+						ret = te;
+				}
+				else
+				{
+					if(id == null || TileEntity.getKey(te.getClass()).toString().equals(id.toString()))
+					{
+						return null;
+					}
+				}
+			}
+		}
+
+		return ret;
+	}
+
+	public static TileEntity get1NearbyTileEntity(World w, BlockPos pos)
+	{
+		return get1NearbyTileEntity(null, w, pos);
 	}
 }

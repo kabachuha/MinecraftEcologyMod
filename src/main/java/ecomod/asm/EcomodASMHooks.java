@@ -112,7 +112,7 @@ public class EcomodASMHooks
 					{
 						if(worldIn.rand.nextInt(60) == 0)
 						{
-							PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
+							PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
 				
 							if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
 								if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
@@ -125,7 +125,7 @@ public class EcomodASMHooks
 						{
 							if(PollutionUtils.hasSurfaceAccess(worldIn, pos))
 							{
-								PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight()).clone();
+								PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
 				
 								if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
 									if(PollutionEffectsConfig.isEffectActive("dead_trees", pollution))

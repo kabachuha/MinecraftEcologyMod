@@ -1,10 +1,11 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/ecology-mod",
   "promos": {
-    "1.11.2-latest": "1.11.2-1.0.3.0-beta1",
-    "1.11.2-recommended": "1.11.2-1.0.3.0-beta1"
+    "1.11.2-latest": "1.11.2-1.0.5.0-beta1",
+    "1.11.2-recommended": "1.11.2-1.0.5.0-beta1"
   },
   "1.11.2": {
+    "1.11.2-1.0.5.0-beta1": "Added Pollution Analyzer Computer Interface - a tile which provide OpenComputers integration with Pollution Analyzer\nFixed error when travelling to other dimensions\nRemoved pollution caching on the client side.",
     "1.11.2-1.0.3.0-beta1": "Fixed error which occurs in absence of BuildcraftAPI + Minor other fixes",
     "1.11.2-1.0.2.0-beta1": "Important version comparison fix.",
     "1.11.2-1.0.1.0-beta1": "Support for IC2 explosions including nuclear + Fixes",

@@ -300,6 +300,7 @@ public class GuiAnalyzer extends GuiScreen
     {
         super.updateScreen();
         
+        if(buttonAnalyze != null)
         if(te.getEnergyStored() == te.getMaxEnergyStored())
         {
         	if(!buttonAnalyze.enabled)
@@ -313,10 +314,14 @@ public class GuiAnalyzer extends GuiScreen
         
         if(effects.size() > 0)
         {
+        	if(buttonUp != null)
         	if(!buttonUp.enabled)
         	{
         		buttonUp.enabled = buttonUp.visible = true;
         	}
+        	
+        	
+        	if(buttonDown != null)
         	if(!buttonDown.enabled)
         	{
         		buttonDown.enabled = buttonDown.visible = true;
@@ -324,10 +329,14 @@ public class GuiAnalyzer extends GuiScreen
         }
         else
     	{
+        	if(buttonUp != null)
     		if(buttonUp.enabled)
     		{
     			buttonUp.enabled = buttonUp.visible = false;
     		}
+        	
+        	
+        	if(buttonDown != null)
     		if(buttonDown.enabled)
     		{
     			buttonDown.enabled = buttonDown.visible = false;
@@ -340,7 +349,7 @@ public class GuiAnalyzer extends GuiScreen
         if(last_update_time != new Date(te.last_analyzed) && te.last_analyzed != -1)
         	last_update_time = new Date(te.last_analyzed);
         
-        if (!this.mc.player.isEntityAlive() || this.mc.player.isDead)
+        if (this.mc.player == null || !this.mc.player.isEntityAlive() || this.mc.player.isDead)
         {
             this.mc.player.closeScreen();
         }

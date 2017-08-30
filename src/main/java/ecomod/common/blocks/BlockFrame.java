@@ -25,11 +25,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry.ItemStackHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFrame extends Block
 {
+	@ItemStackHolder("opencomputers:adapter")
+	public static ItemStack oc_adapter = null;
+	
 	//0 - Basic, 1 - Advanced
 	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 1);
 	
@@ -149,6 +153,24 @@ public class BlockFrame extends Block
 								
 								playerIn.setHeldItem(hand, pi);
 								
+								return true;
+							}
+						}
+					}
+					else
+					{
+						if(oc_adapter != null)
+						{
+							if(oc_adapter.getItem() == pi.getItem())
+							{
+								worldIn.playEvent(1029, pos, 0);
+
+								worldIn.setBlockState(pos, EcomodBlocks.OC_ANALYZER_ADAPTER.getDefaultState());
+
+								pi.shrink(1);
+						
+								playerIn.setHeldItem(hand, pi);
+
 								return true;
 							}
 						}

@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import buildcraft.api.tiles.IHasWork;
-import buildcraft.api.tiles.TilesAPI;
 import ecomod.api.pollution.IRespirator;
 import ecomod.api.pollution.PollutionData;
+import ecomod.core.stuff.EMIntermod;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -50,9 +50,10 @@ public class PollutionUtils
 		
 		if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
 		{
-			if(tile.hasCapability(TilesAPI.CAP_HAS_WORK, null))
+			if(EMIntermod.CAP_HAS_WORK != null)
+			if(tile.hasCapability(EMIntermod.CAP_HAS_WORK, null))
 			{
-				IHasWork ihw = tile.getCapability(TilesAPI.CAP_HAS_WORK, null);
+				IHasWork ihw = tile.getCapability(EMIntermod.CAP_HAS_WORK, null);
 				return ihw.hasWork();
 			}
 			else

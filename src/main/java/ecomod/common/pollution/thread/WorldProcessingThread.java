@@ -378,6 +378,7 @@ public class WorldProcessingThread extends Thread
 						if(cp.getX() == c.getX() && cp.getZ() == c.getZ())
 						{
 							manager.addPollution(c.getX(), c.getZ(), cp.getPollution());
+							scheduledEmissions.remove(cp);
 						}
 		}
 		profiler.endSection();

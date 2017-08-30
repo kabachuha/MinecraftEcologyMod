@@ -33,7 +33,7 @@ public class BlockAnalyzerAdapter extends Block implements ITileEntityProvider {
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 
-		return FMLForgePlugin.RUNTIME_DEOBF ? new TileAnalyzerAdapter() : null;
+		return new TileAnalyzerAdapter();
 	}
 
 	

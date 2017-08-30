@@ -3,6 +3,7 @@ package ecomod.common.tiles.compat;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ecomod.api.EcomodBlocks;
@@ -10,147 +11,173 @@ import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.tiles.TileAnalyzer;
+import ecomod.common.utils.EMUtils;
+import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Analyzable;
+import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
+import li.cil.oc.api.network.Visibility;
+import li.cil.oc.api.prefab.TileEntityEnvironment;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
-public class TileAnalyzerAdapter extends TileEntity implements SimpleComponent {
+public class TileAnalyzerAdapter extends TileEntityEnvironment implements Analyzable{
+
+	public TileAnalyzerAdapter() {
+		super();
+		node = Network.newNode(this, Visibility.Network).withComponent("pollution_analyzer").create();
+	}
+	
+	public boolean attachedToAnalyzer()
+	{
+		return EMUtils.get1NearbyTileEntity(EMUtils.resloc("tile_analyzer"), getWorld(), getPos()) != null;
+	}
+	
+	public TileAnalyzer getAnalyzer()
+	{
+		return (TileAnalyzer)EMUtils.get1NearbyTileEntity(EMUtils.resloc("tile_analyzer"), getWorld(), getPos());
+	}
+
 
 	@Override
-	public String getComponentName() {
-		return "pollution_analyzer";
+	public Node[] onAnalyze(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		
+		player.sendMessage(new TextComponentString(attachedToAnalyzer() ? "Attached to Pollution Analyzer" : "Not attached to Pollution Analyzer"));
+		return new Node[]{this.node()};
 	}
-
+	
+	//Callback OC methods
+	
 	@Callback
-	public Object[] analyze(Context context, Arguments args) throws Exception{
-		int n = 0;
-		BlockPos analyzer_pos = null;
-		
-		for(EnumFacing f : EnumFacing.VALUES)
-			if(getWorld().getBlockState(getPos().offset(f)).getBlock() == EcomodBlocks.ANALYZER)
-			{
-				analyzer_pos = getPos().offset(f);
-				n++;
-			}
-		
-		boolean b = false;
-		if(n == 1)
-		{
-			TileAnalyzer ta = (TileAnalyzer)getWorld().getTileEntity(analyzer_pos);
-			
-			b = ta.analyze() != null;
-		}
-		
-		return new Object[]{b};
+    public Object[] is_attached(Context context, Arguments args) throws Exception
+	{
+		return new Object[]{attachedToAnalyzer()};
 	}
 	
 	@Callback
-	public Object[] get_pollution(Context context, Arguments args) throws Exception{
-		int n = 0;
-		BlockPos analyzer_pos = null;
-		
-		for(EnumFacing f : EnumFacing.VALUES)
-			if(getWorld().getBlockState(getPos().offset(f)).getBlock() == EcomodBlocks.ANALYZER)
-			{
-				analyzer_pos = getPos().offset(f);
-				n++;
-			}
-		
-		PollutionData data = null;
-		if(n == 1)
+    public Object[] analyze(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
 		{
-			TileAnalyzer ta = (TileAnalyzer)getWorld().getTileEntity(analyzer_pos);
-			
-			data = ta.getPollution();
+			return new Object[]{getAnalyzer().analyze() != null};
 		}
-		
-		return new Object[]{data};
-	}
-	
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat();
-	
-	@Callback
-	public Object[] get_last_analyzed_time(Context context, Arguments args) throws Exception{
-		int n = 0;
-		BlockPos analyzer_pos = null;
-		
-		for(EnumFacing f : EnumFacing.VALUES)
-			if(getWorld().getBlockState(getPos().offset(f)).getBlock() == EcomodBlocks.ANALYZER)
-			{
-				analyzer_pos = getPos().offset(f);
-				n++;
-			}
-		
-		long time = -1;
-		if(n == 1)
+		else
 		{
-			TileAnalyzer ta = (TileAnalyzer)getWorld().getTileEntity(analyzer_pos);
-			
-			time = ta.last_analyzed;
+			throw new Exception("The analyzer is not attached!");
 		}
-		
-		return new Object[]{time};
 	}
 	
 	@Callback
-	public Object[] get_last_analyzed_time_formatted(Context context, Arguments args) throws Exception{
-		int n = 0;
-		BlockPos analyzer_pos = null;
-		
-		for(EnumFacing f : EnumFacing.VALUES)
-			if(getWorld().getBlockState(getPos().offset(f)).getBlock() == EcomodBlocks.ANALYZER)
-			{
-				analyzer_pos = getPos().offset(f);
-				n++;
-			}
-		
-		long time = -1;
-		if(n == 1)
+    public Object[] get_pollution_data(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
 		{
-			TileAnalyzer ta = (TileAnalyzer)getWorld().getTileEntity(analyzer_pos);
-			
-			time = ta.last_analyzed;
+			TileAnalyzer ta = getAnalyzer();
+			if(ta.pollution != null)
+				return new Object[]{ta.pollution.toString()};
 		}
-		
-		return new Object[]{time == -1 ? "" : DATE_FORMAT.format(time)};
-	}
-	
-	@Callback
-	public Object[] get_pollution_effects(Context context, Arguments args) throws Exception{
-		int n = 0;
-		BlockPos analyzer_pos = null;
-		
-		for(EnumFacing f : EnumFacing.VALUES)
-			if(getWorld().getBlockState(getPos().offset(f)).getBlock() == EcomodBlocks.ANALYZER)
-			{
-				analyzer_pos = getPos().offset(f);
-				n++;
-			}
-		
-		PollutionData data = null;
-		if(n == 1)
+		else
 		{
-			TileAnalyzer ta = (TileAnalyzer)getWorld().getTileEntity(analyzer_pos);
-			
-			data = ta.getPollution();
-		}
-		
-		if(data != null)
-		{
-			List<String> effects = new ArrayList<String>();
-			for(String s : EcomodStuff.pollution_effects.keySet())
-			{
-				if(PollutionEffectsConfig.isEffectActive(s, data))
-					effects.add(s);
-			}
-			
-			return effects.toArray();
+			throw new Exception("The analyzer is not attached!");
 		}
 		
 		return new Object[]{};
+	}
+	
+	@Callback
+    public Object[] get_pollution_data_separately(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
+		{
+			TileAnalyzer ta = getAnalyzer();
+			if(ta.pollution != null)
+				return new Object[]{ta.pollution.getAirPollution(), ta.pollution.getWaterPollution(), ta.pollution.getSoilPollution()};
+		}
+		else
+		{
+			throw new Exception("The analyzer is not attached!");
+		}
+		
+		return new Object[]{};
+	}
+	
+	@Callback
+    public Object[] get_time_analyzed(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
+		{
+			TileAnalyzer ta = getAnalyzer();
+			return new Object[]{ta.last_analyzed};
+		}
+		else
+		{
+			throw new Exception("The analyzer is not attached!");
+		}
+	}
+	
+	DateFormat DATE_FORMAT = new SimpleDateFormat();
+	
+	@Callback
+    public Object[] get_time_analyzed_as_date(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
+		{
+			TileAnalyzer ta = getAnalyzer();
+			if(ta.last_analyzed != -1)
+				return new Object[]{DATE_FORMAT.format(new Date(ta.last_analyzed))};
+			else
+				return new Object[]{-1};
+		}
+		else
+		{
+			throw new Exception("The analyzer is not attached!");
+		}
+	}
+	
+	@Callback
+	public Object[] get_pollution_effects(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
+		{
+			TileAnalyzer ta = getAnalyzer();
+			if(ta.pollution != null)
+			{
+				List<String> effs = new ArrayList<String>();
+				for(String s : EcomodStuff.pollution_effects.keySet())
+				{
+					if(PollutionEffectsConfig.isEffectActive(s, ta.pollution))
+					{
+						effs.add(s);
+					}
+				}
+				return effs.toArray(new String[effs.size()]);
+			}
+		}
+		else
+		{
+			throw new Exception("The analyzer is not attached!");
+		}
+		
+		return new Object[]{};
+	}
+	
+	@Callback
+    public Object[] get_energy(Context context, Arguments args) throws Exception
+	{
+		if(attachedToAnalyzer())
+		{
+			TileAnalyzer ta = getAnalyzer();
+			return new Object[]{ta.getEnergyStored()};
+		}
+		else
+		{
+			throw new Exception("The analyzer is not attached!");
+		}
 	}
 }
