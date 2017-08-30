@@ -9,6 +9,8 @@ tile.ecomod.frame.1.name=Продвинутая Основа Машины
 tile.ecomod.block.concentrated_pollution.name=Концентрированное Загрязнение
 fluid.concentrated_pollution=Концентрированное Загрязнение
 
+tile.ecomod.oc_analyzer_adapter.name=Компьютерный Интерфейс Анализатора Загрязнения
+
 #Предметы
 item.ecomod.respirator.name=Противогаз
 

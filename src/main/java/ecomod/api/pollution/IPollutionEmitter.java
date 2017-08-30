@@ -2,7 +2,7 @@ package ecomod.api.pollution;
 
 /**
  * A TileEntity interface that determines the amount of pollution created by the TE (in pollution per WPT runs).<br>
- * <small>A delay between runs is 1 minute by default</small> 
+ * <small>A delay between runs is 3 minutes by default</small> 
  * <br><br>
  * Also, the amount can depend on conditions.
  * <br>

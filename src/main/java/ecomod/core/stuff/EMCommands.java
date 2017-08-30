@@ -12,7 +12,7 @@ public class EMCommands {
 		event.registerServerCommand(new CommandClearManager());
 		event.registerServerCommand(new CommandLoadManager());
 		event.registerServerCommand(new CommandSaveManager());
-		event.registerServerCommand(new CommandUpdateCache());
+		//event.registerServerCommand(new CommandUpdateCache());
 		event.registerServerCommand(new CommandGetTileID());
 		event.registerServerCommand(new CommandTEPC());
 	}

@@ -12,7 +12,7 @@ tile.ecomod.frame.1.name=Advanced Empty Machine Frame
 tile.ecomod.block.concentrated_pollution.name=Concentrated Pollution
 fluid.concentrated_pollution=Concentrated Pollution
 
-tile.ecomod.oc_analyzer_adapter.name=[WIP]OC Analyzer Adapter(Not working yet) 
+tile.ecomod.oc_analyzer_adapter.name=Pollution Analyzer Computer Interface
 
 #Items
 item.ecomod.respirator.name=Respirator

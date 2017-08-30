@@ -64,8 +64,8 @@ public class BlockAnalyzer extends Block implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 	    if (!world.isRemote) {	
-	    	//player.openGui(EcologyMod.instance, EMConsts.analyzer_gui_id, world, pos.getX(), pos.getY(), pos.getZ());
-	    	EcologyMod.proxy.openGUIAnalyzer((TileAnalyzer)world.getTileEntity(pos));
+	    	if(player == null ? true : !player.isSneaking())
+	    		EcologyMod.proxy.openGUIAnalyzer((TileAnalyzer)world.getTileEntity(pos));
 	    }
 	    return true;
 	}

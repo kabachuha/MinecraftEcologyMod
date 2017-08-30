@@ -58,7 +58,7 @@ public class ClientHandler
 	private List<ChunkPollution> polls = new ArrayList<ChunkPollution>();
 	
 	public PollutionData getLocalPollutionAtChunk(Pair<Integer, Integer> chunk_pos)
-	{
+	{/*
 		if(cached_pollution == null)
 		{
 			requestForNearbyPollution();
@@ -69,7 +69,7 @@ public class ClientHandler
 		{
 			if(cp.getLeft() == chunk_pos)
 				return cp.getValue();
-		}
+		}*/
 		
 		return null;
 	}
@@ -109,7 +109,7 @@ public class ClientHandler
 	}
 	
 	public boolean setFromJson(String json)
-	{
+	{/*
 		polls.clear();
 		
 		if(json.length() < 3)
@@ -161,7 +161,7 @@ public class ClientHandler
 				cached_pollution = polls.toArray(new ChunkPollution[polls.size()]);
 			}
 			polls.clear();
-		}
+		}*/
 		return false;
 	}
 	

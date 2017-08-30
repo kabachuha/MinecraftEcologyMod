@@ -101,6 +101,8 @@ public class EMConfig
 			
 			allowedDims = config.get("CORE", "allowedDimensions", allowedDims).getIntList();
 			
+			Arrays.sort(allowedDims);
+			
 			allow_acid_rain_render = config.getBoolean("allowAcidRainRender", "CLIENT", true, "", lang("client.rain"));
 			
 			wptimm = config.getBoolean("ImmediateStart", "THREAD", false, "Whether the thread starts without delay", lang("thread.wptimm"));

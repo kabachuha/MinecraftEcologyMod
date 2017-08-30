@@ -101,7 +101,7 @@ public class PollutionHandler implements IPollutionGetter
 	private Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	public EMPacketString formCachedPollutionToSend(int dim, UUID id, int radius)
-	{
+	{/*
 		WorldProcessingThread wpt = getWPT(DimensionManager.getWorld(dim));
 		
 		if(wpt != null)
@@ -117,12 +117,12 @@ public class PollutionHandler implements IPollutionGetter
 			
 			return formCachedPollutionToSend(p, radius);
 		}
-		else
+		else*/
 			return null;
 	}
 	
 	public EMPacketString formCachedPollutionToSend(EntityPlayer player, int radius)
-	{
+	{/*
 		if(player == null)
 		{
 			EcologyMod.log.error("Player not found when forming pollution data to be cached!");
@@ -176,7 +176,7 @@ public class PollutionHandler implements IPollutionGetter
 		else
 		{
 			EcologyMod.log.error("Unable to form pollution data to be send to a client!");
-		}
+		}*/
 		
 		return null;
 	}
@@ -646,7 +646,7 @@ public class PollutionHandler implements IPollutionGetter
 		if(event.getEntity() instanceof EntityPlayer)
 		{
 			try
-			{
+			{/*
 				EMPacketString to_send = formCachedPollutionToSend((EntityPlayer)event.getEntity(), EMConfig.cached_pollution_radius);
 				
 				if(to_send == null)
@@ -657,7 +657,7 @@ public class PollutionHandler implements IPollutionGetter
 				{
 					EMPacketHandler.WRAPPER.sendTo(to_send, (EntityPlayerMP)event.getEntity());
 				}
-				
+				*/
 				boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
@@ -693,7 +693,7 @@ public class PollutionHandler implements IPollutionGetter
 		if(world.isRemote)//client side actions are handled in ClientHandler
 			return;
 		
-		
+		/*
 			//1.5 min
 			if((entity.ticksExisted + 1) % 1800 == 0)
 			{
@@ -711,7 +711,7 @@ public class PollutionHandler implements IPollutionGetter
 					}
 				}
 			}
-			
+		*/
 			if(((entity.ticksExisted) % 300 == 0))
 			{
 				if(entity instanceof EntityLivingBase)
@@ -811,7 +811,7 @@ public class PollutionHandler implements IPollutionGetter
 	{
 		BlockPos bp = new BlockPos(player.posX, player.posY, player.posZ);
 		
-		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone();
+		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
 		
 		if(pollution!=null && pollution != PollutionData.getEmpty())
 			if(PollutionEffectsConfig.isEffectActive("smog", pollution))
@@ -828,7 +828,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(player.world.isRaining())
 		{
-			PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone();
+			PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
 		
 			if(pollution!=null && pollution != PollutionData.getEmpty())
 				if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
@@ -1046,12 +1046,20 @@ public class PollutionHandler implements IPollutionGetter
 	@Override
 	public PollutionData getPollution(World w, int chunkx, int chunkz)
 	{
+		if(w == null)
+			return null;
+		
 		WorldProcessingThread wpt = getWPT(w);
 		
 		if(wpt == null)
 			return null;
+		else if(wpt.getPM() == null)
+			return null;
 		
-		return wpt.getPM().getPollution(chunkx, chunkz).clone();
+		if(wpt.getPM().getPollution(chunkx, chunkz) != null)
+			return wpt.getPM().getPollution(chunkx, chunkz).clone();
+		else
+			return null;
 	}
 	
 	public PollutionData getPollution(World w, Pair<Integer, Integer> pair)
