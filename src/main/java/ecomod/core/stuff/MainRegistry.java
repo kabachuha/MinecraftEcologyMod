@@ -76,7 +76,7 @@ public class MainRegistry
 		if(!ModAPIManager.INSTANCE.hasAPI("ecomodapi"))
 		{
 			EcologyMod.log.error("EcomodAPI has not been loaded!!!");
-			Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(new NullPointerException("EcomodAPI has not been loaded!!!"), "EcomodAPI has not been loaded!!!"));
+			throw new NullPointerException("EcomodAPI has not been loaded!!!");
 		}
 		
 		IGuiHandler igh = new EMGuiHandler();

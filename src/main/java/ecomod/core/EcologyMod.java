@@ -26,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -73,8 +74,7 @@ public class EcologyMod
 		if(!EMConsts.asm_transformer_inited)
 		{
 			log.fatal("The mod ASM transformer had not been initialized!!! Unable to continue.");
-			Minecraft.getMinecraft().crashed(CrashReport.makeCrashReport(new NullPointerException("Ecomod ASM transformer had not been initialized!!!"), "Ecomod ASM transformer had not been initialized!!!"));
-			return;
+			throw new NullPointerException("Ecomod ASM transformer had not been initialized!!!");
 		}
 		
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());

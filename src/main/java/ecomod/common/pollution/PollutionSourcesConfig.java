@@ -86,15 +86,21 @@ public class PollutionSourcesConfig
 		return EcomodStuff.pollution_sources.containsKey(id);
 	}
 	
-	public static PollutionData getItemPollution(String item)
+	public static PollutionData getItemPollution(String item, String metastring)
 	{
 		if(item == null)
 			return null;
 		
-		if(!EcomodStuff.blacklisted_items.contains(item))
+		if(!EcomodStuff.blacklisted_items.contains(item) && !EcomodStuff.blacklisted_items.contains(item+metastring))
 		{
 			if(EcomodStuff.polluting_items.containsKey(item))
-				return EcomodStuff.polluting_items.get(item).clone();
+			{
+				return EcomodStuff.polluting_items.get(item);
+			}
+			else if(EcomodStuff.polluting_items.containsKey(item+metastring))
+			{
+				return EcomodStuff.polluting_items.get(item+metastring);
+			}
 			else
 				return getSource("expired_item");
 		}
@@ -106,33 +112,32 @@ public class PollutionSourcesConfig
 	{
 		if(item == null)return null;
 		
-		String str = item.getItem().getRegistryName().toString();
-		if(item.getMetadata() != OreDictionary.WILDCARD_VALUE && item.getMetadata() != 0)
-		{
-			str += ":"+item.getMetadata();
-		}
-		
-		return getItemPollution(str);
+		return getItemPollution(item.getItem().getRegistryName().toString(), "@"+item.getMetadata());
 	}
 	
 	public static PollutionData getItemPollution(Item item, int meta)
 	{
-		String str = item.getRegistryName().toString();
-		if(meta != OreDictionary.WILDCARD_VALUE && meta != 0)
-		{
-			str += ":"+meta;
-		}
+		if(item == null)return null;
 		
-		return getItemPollution(str);
+		return getItemPollution(item.getRegistryName().toString(), "@"+meta);
 	}
 	
-	public static PollutionData getSmeltedItemPollution(String item)
+	public static PollutionData getSmeltedItemPollution(String item, String meta)
 	{
 		if(item == null)
 			return null;
 		
+		if(EcomodStuff.smelted_items_pollution == null)
+			return getSource("default_smelted_item_pollution");
+		
 		if(EcomodStuff.smelted_items_pollution.containsKey(item))
+		{
 			return EcomodStuff.smelted_items_pollution.get(item).clone();
+		}
+		else if(EcomodStuff.smelted_items_pollution.containsKey(item+meta))
+		{
+			return EcomodStuff.smelted_items_pollution.get(item+meta).clone();
+		}
 		else
 			return getSource("default_smelted_item_pollution");
 	}
@@ -141,24 +146,14 @@ public class PollutionSourcesConfig
 	{
 		if(item == null)return null;
 		
-		String str = item.getItem().getRegistryName().toString();
-		if(item.getMetadata() != OreDictionary.WILDCARD_VALUE && item.getMetadata() != 0)
-		{
-			str += ":"+item.getMetadata();
-		}
-		
-		return getItemPollution(str);
+		return getSmeltedItemPollution(item.getItem().getRegistryName().toString(), "@"+item.getMetadata());
 	}
 	
 	public static PollutionData getSmeltedItemPollution(Item item, int meta)
 	{
-		String str = item.getRegistryName().toString();
-		if(meta != OreDictionary.WILDCARD_VALUE && meta != 0)
-		{
-			str += ":"+meta;
-		}
+		if(item == null)return null;
 		
-		return getItemPollution(str);
+		return getSmeltedItemPollution(item.getRegistryName().toString(), "@"+meta);
 	}
 	
 	public static PollutionData getSmeltedItemStackPollution(ItemStack is)

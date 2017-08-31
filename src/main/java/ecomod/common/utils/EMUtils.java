@@ -49,6 +49,8 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class EMUtils 
 {
@@ -133,7 +135,12 @@ public class EMUtils
 	{
 		if(mcurl.contains("<MINECRAFT>"))
 		{
-			String mcpath = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();
+			
+			String mcpath = "";
+			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
+				mcpath = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();
+			else
+				mcpath = FMLCommonHandler.instance().getMinecraftServerInstance().getDataDirectory().getAbsolutePath();
 			mcpath = mcpath.substring(0, mcpath.length()-2);
 			mcurl = mcurl.replace("<MINECRAFT>", mcpath);
 		}
@@ -449,5 +456,18 @@ public class EMUtils
 	public static TileEntity get1NearbyTileEntity(World w, BlockPos pos)
 	{
 		return get1NearbyTileEntity(null, w, pos);
+	}
+	
+	public static double mean(Number...numbers)
+	{
+		if(numbers.length == 0)
+			return Double.NaN;
+		double sum = 0;
+		for(Number n : numbers)
+		{
+			sum += (double)n;
+		}
+		
+		return sum/numbers.length;
 	}
 }

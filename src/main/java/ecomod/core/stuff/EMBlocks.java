@@ -65,7 +65,7 @@ public class EMBlocks
 			ib.setRegistryName(EMUtils.resloc("frame"));
 			EMItems.putItem(ib);
 			
-			ModelBakery.registerItemVariants(Item.getItemFromBlock(EcomodBlocks.FRAME), EMUtils.resloc("basic_frame"), EMUtils.resloc("advanced_frame"));
+			EcologyMod.proxy.registerItemVariants(Item.getItemFromBlock(EcomodBlocks.FRAME), EMUtils.resloc("basic_frame"), EMUtils.resloc("advanced_frame"));
 	}
 	
 	public static void doInit()

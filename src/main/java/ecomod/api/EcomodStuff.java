@@ -34,4 +34,6 @@ public class EcomodStuff
 	public static final Capability<IPollution> CAPABILITY_POLLUTION = null;
 	
 	public static CreativeTabs ecomod_creative_tabs = null;
+	
+	public static Map<String, Boolean> additional_blocks_air_penetrating_state = null;
 }

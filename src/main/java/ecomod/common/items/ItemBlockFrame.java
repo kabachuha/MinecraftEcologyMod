@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 public class ItemBlockFrame extends ItemBlock
@@ -30,25 +31,16 @@ public class ItemBlockFrame extends ItemBlock
     public String getUnlocalizedName(ItemStack stack) {
         return super.getUnlocalizedName(stack) + "."+stack.getMetadata();
     }
-	
+
 	@Override
-	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		super.onCreated(stack, worldIn, playerIn);
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		
-		if(worldIn.isRemote)
-			return;
-		
-		//Achievement ach = null;
-		/*
-		if(stack.getMetadata() == 0)
-			ach = EMAchievements.ACHS.get("basic_frame");
-		if(stack.getMetadata() == 1)
-			ach = EMAchievements.ACHS.get("advanced_frame");
-		
-		if(ach != null)
-		if(!playerIn.hasAchievement(ach))
+		if(tab == EcomodStuff.ecomod_creative_tabs)
 		{
-			playerIn.addStat(ach);
-		}*/
+			items.add(new ItemStack(this, 1, 0));//Basic Frame
+			items.add(new ItemStack(this, 1, 1));//Advanced Frame
+		}
 	}
+	
+	
 }

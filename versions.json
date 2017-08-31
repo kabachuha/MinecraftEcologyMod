@@ -1,10 +1,11 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/ecology-mod",
   "promos": {
-    "1.12.1-latest": "1.12.1-1.0.5.0-beta1",
-    "1.12.1-recommended": "1.12.1-1.0.5.0-beta1"
+    "1.12.1-latest": "1.12.1-1.0.6.0-beta1",
+    "1.12.1-recommended": "1.12.1-1.0.6.0-beta1"
   },
   "1.12.1": {
+    "1.12.1-1.0.6.0-beta1": "Fixed error when launching server(#4)\n!!Fixed function which checks air access!!\nFixed item pollution configs\n...",
     "1.12.1-1.0.5.0-beta1": "Added Pollution Analyzer Computer Interface - a tile which provide OpenComputers integration with Pollution Analyzer\nFixed error when travelling to other dimensions\nRemoved pollution caching on the client side.",
     "1.12.1-1.0.4.0-beta1": "Fixed the error with new RF API (Issue #2)",
     "1.12.1-1.0.3.0-beta1": "Updated to MC 1.12.1 + Fixes & Improvements"
