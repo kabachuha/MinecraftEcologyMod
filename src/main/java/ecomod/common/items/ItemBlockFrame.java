@@ -6,9 +6,11 @@ import ecomod.core.stuff.EMAchievements;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 public class ItemBlockFrame extends ItemBlock
@@ -51,4 +53,15 @@ public class ItemBlockFrame extends ItemBlock
 			playerIn.addStat(ach);
 		}
 	}
+
+	@Override
+	public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if(tab == EcomodStuff.ecomod_creative_tabs)
+		{
+			subItems.add(new ItemStack(itemIn, 1, 0));
+			subItems.add(new ItemStack(itemIn, 1, 1));
+		}
+	}
+	
+	
 }

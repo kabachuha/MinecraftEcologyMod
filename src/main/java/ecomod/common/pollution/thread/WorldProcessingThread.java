@@ -80,6 +80,7 @@ public class WorldProcessingThread extends Thread
 		
 		while(!isInterrupted() && manager != null && EcologyMod.ph.threads.containsKey(PollutionUtils.genPMid(manager)) && DimensionManager.getWorld(manager.getDim()) != null && !manager.getWorld().isRemote)
 		{
+			if(manager != null && manager.getWorld().isRemote)
 			while(Minecraft.getMinecraft().isGamePaused())
 				slp(15); //Don't make anything while MC is paused
 			

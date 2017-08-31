@@ -145,4 +145,18 @@ public class CliProxy extends ComProxy
 		super.registerBlockModel(block, meta, model);
 		registerItemModel(Item.getItemFromBlock(block), meta, model);
 	}
+	
+	@Override
+	public void registerItemVariants(Item item, ResourceLocation... names) {
+		super.registerItemVariants(item, names);
+
+		ModelBakery.registerItemVariants(item, names);
+	}
+
+	@Override
+	public void registerItemVariants(Block item, ResourceLocation... names) {
+		super.registerItemVariants(item, names);
+		
+		registerItemVariants(Item.getItemFromBlock(item), names);
+	}
 }

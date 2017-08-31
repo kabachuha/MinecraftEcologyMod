@@ -77,4 +77,14 @@ public class ComProxy
 	public void registerItemModel(Item item, int meta, ResourceLocation model) {
 		
 	}
+	
+	public void registerItemVariants(Item item, ResourceLocation... names)
+	{
+		
+	}
+
+	public void registerItemVariants(Block item, ResourceLocation... names)
+	{
+			
+	}
 }

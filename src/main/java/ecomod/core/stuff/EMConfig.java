@@ -167,6 +167,18 @@ public class EMConfig
 			
 			
 			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
+			
+			EcomodStuff.additional_blocks_air_penetrating_state = new HashMap<String, Boolean>();
+
+			for(String s : config.getStringList("AirPenetrators", "AIR", new String[]{"ecomod:frame"}, ""))
+			{
+				EcomodStuff.additional_blocks_air_penetrating_state.put(s, true);
+			}
+
+			for(String s : config.getStringList("AirSealers", "AIR", new String[]{}, ""))
+			{
+				EcomodStuff.additional_blocks_air_penetrating_state.put(s, false);
+			}
 		}
 		catch(Exception e)
 		{

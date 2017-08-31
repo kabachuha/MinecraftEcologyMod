@@ -69,9 +69,9 @@ public class EMItems
 		GameRegistry.register(item);
 		
 		if(variants != null && variants.length > 0)
-			ModelBakery.registerItemVariants(item, variants);
+			EcologyMod.proxy.registerItemVariants(item, variants);
 		else
-			ModelBakery.registerItemVariants(item, EMUtils.resloc(name));
+			EcologyMod.proxy.registerItemVariants(item, EMUtils.resloc(name));
 		
 		if(model)
 		{
