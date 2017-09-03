@@ -2,11 +2,14 @@ package ecomod.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -36,4 +39,6 @@ public class EcomodStuff
 	public static CreativeTabs ecomod_creative_tabs = null;
 	
 	public static Map<String, Boolean> additional_blocks_air_penetrating_state = null;
+	
+	public static NonNullList<Function<TileEntity, Object[]>> custom_te_pollution_determinants = null;
 }

@@ -1,5 +1,8 @@
 package ecomod.core.stuff;
 
+import java.util.Optional;
+import java.util.function.Function;
+
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.ImmutableList;
@@ -18,6 +21,7 @@ import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -58,6 +62,7 @@ public class EMIntermod
 	public static final String key_add_tepc = "add_to_tepc";
 	public static final String key_remove_tepc = "remove_from_tepc";
 	public static final String blacklist_dropped_item = "blacklist_dropped_item";
+	public static final String key_add_te_pollution_determinant = "add_te_pollution_determinant";
 	
 	public static void processIMC(ImmutableList<IMCMessage> messages)
 	{
@@ -160,7 +165,7 @@ public class EMIntermod
 						
 						if(m.getNBTValue().hasKey("meta"))
 						{
-							str += ":"+m.getNBTValue().getInteger("meta");
+							str += "@"+m.getNBTValue().getInteger("meta");
 						}
 					}
 					
@@ -179,6 +184,21 @@ public class EMIntermod
 				{
 					log.info("Blacklisting Polluting On Expire Item: "+item_string);
 					EcomodStuff.blacklisted_items.add(item_string);
+				}
+			}
+			
+			if(m.key.toLowerCase().contentEquals(key_add_te_pollution_determinant))
+			{
+				Optional<Function<TileEntity, Object[]>> op_func = m.getFunctionValue(TileEntity.class, Object[].class);
+					
+				if(!op_func.isPresent())
+				{
+					log.error("The TE pollution determining function sent by "+m.getSender()+" is invalid!");
+				}
+				else
+				{
+					log.info("Adding custom TileEntity pollution determining function!");
+					EcomodStuff.custom_te_pollution_determinants.add(op_func.get());
 				}
 			}
 		}

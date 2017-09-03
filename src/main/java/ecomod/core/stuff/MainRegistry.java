@@ -1,5 +1,7 @@
 package ecomod.core.stuff;
 
+import java.util.function.Function;
+
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.IPollution;
@@ -18,6 +20,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
@@ -34,6 +38,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -69,6 +74,8 @@ public class MainRegistry
 			EMIntermod.OCpreInit();
 		
 		EMRecipes.doPreInit();
+		
+		EcomodStuff.custom_te_pollution_determinants = NonNullList.<Function<TileEntity, Object[]>>create();
 	}
 	
 	public static void doInit()
@@ -83,7 +90,7 @@ public class MainRegistry
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(EcologyMod.instance, igh);
 		
-		BiomeManager.addBiome(BiomeType.COOL, new BiomeEntry(biome_wasteland, 50));
+		BiomeManager.addBiome(BiomeType.COOL, new BiomeEntry(biome_wasteland, 10));
 		BiomeDictionary.addTypes(biome_wasteland, BiomeDictionary.Type.WASTELAND, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.RARE, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.WET, BiomeDictionary.Type.COLD);
 		BiomeManager.addStrongholdBiome(biome_wasteland);
 		
@@ -100,6 +107,8 @@ public class MainRegistry
 		EMRecipes.doInit();
 		
 		EMTriggers.setup();
+		
+		//FMLInterModComms.sendFunctionMessage(EMConsts.modid, EMIntermod.key_add_te_pollution_determinant, ecomod.test.TEST_TEPollutionDeterminant.class.getName());
 	}
 	
 	public static void doPostInit()
@@ -112,8 +121,6 @@ public class MainRegistry
 			EMIntermod.setup_ic2_support();
 		
 		EMRecipes.doPostInit();
-		
-		//EMAchievements.setup();
 	}
 	
 	@SubscribeEvent

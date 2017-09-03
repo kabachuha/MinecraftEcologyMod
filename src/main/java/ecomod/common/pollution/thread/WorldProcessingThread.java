@@ -8,9 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionMultiplier;
@@ -262,9 +264,46 @@ public class WorldProcessingThread extends Thread
 		
 		for(TileEntity te : tes)
 		{
+			if(te == null || te.isInvalid())
+				continue;
+			
 			int wir = EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr);
 			boolean rain = c.getWorld().isRainingAt(te.getPos());
 			
+			boolean overriden_by_func = false;
+			
+			for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
+			{
+				Object[] func_result = new Object[0];
+				
+				try
+				{
+					func_result = func.apply(te);
+				}
+				catch(Exception e)
+				{
+					EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
+					EcologyMod.log.info(e.toString());
+					e.printStackTrace();
+					continue;
+				}
+
+				if(func_result.length < 3)
+					continue;
+				
+				ret.add(PollutionType.AIR, (double)func_result[0]);
+				ret.add(PollutionType.WATER, (double)func_result[1]);
+				ret.add(PollutionType.SOIL, (double)func_result[2]);
+				
+				if(func_result.length > 3)
+				{
+					if(func_result[3] != null && func_result[3] instanceof Boolean)
+						if(!overriden_by_func)
+							overriden_by_func = (Boolean)func_result[3];
+				}
+			}
+			
+			if(!overriden_by_func)
 			if(te instanceof IPollutionEmitter)
 			{
 				IPollutionEmitter ipe = (IPollutionEmitter) te;
