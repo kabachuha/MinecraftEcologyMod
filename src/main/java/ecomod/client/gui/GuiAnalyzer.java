@@ -29,8 +29,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 public class GuiAnalyzer extends GuiScreen
 {
@@ -49,8 +51,6 @@ public class GuiAnalyzer extends GuiScreen
 	
 	List<IAnalyzerPollutionEffect> effects = new ArrayList<IAnalyzerPollutionEffect>();
 	
-	private static List<String> no_energy_text = new ArrayList<String>();
-	
 	private static boolean inited_first = false;
 	
 	int startIndex;
@@ -64,8 +64,6 @@ public class GuiAnalyzer extends GuiScreen
 		
 		if(!inited_first)
 		{
-			no_energy_text.add("Not enough energy to work!");
-			no_energy_text.add("The energy buffer must be filled completely!");
 			inited_first = true;
 		}
 		
@@ -106,32 +104,32 @@ public class GuiAnalyzer extends GuiScreen
 			return;//Wait for fontRendererObj
 
 		if(pollution == null)
-			this.drawString(fontRenderer, "Energy:", width-110, height-40-1, Color.ORANGE.getRGB());
+			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.energy", new Object[0]), width-110, height-40-1, Color.ORANGE.getRGB());
 		else
-			this.drawStringNoShadow(fontRenderer, "Energy:", width-110, height-40-1, Color.RED.getRGB());
+			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.energy", new Object[0]), width-110, height-40-1, Color.RED.getRGB());
 		
 		this.drawVerticalLine(xt1, 0, height, Color.BLACK.getRGB());
 		this.drawHorizontalLine(xt1, width, buttonAnalyze.y + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
 		this.drawVerticalLine(buttonAnalyze.x-10, 0, buttonAnalyze.y+buttonAnalyze.height+10, Color.DARK_GRAY.getRGB());
 		
-		this.drawString(fontRenderer, "Chunk Position:", xt1+4, 11, Color.CYAN.getRGB());
+		this.drawString(fontRenderer, I18n.format("gui.ecomod.text.chunk_position", new Object[0]), xt1+4, 11, Color.CYAN.getRGB());
 		this.drawString(fontRenderer, te.getChunkCoords().toString(), xt1+4, 21, Color.CYAN.getRGB());
 		
 		if(pollution == null)
 		{
-			this.drawString(fontRenderer, "No data about this chunk was retrieved ", xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 2, Color.MAGENTA.getRGB());
-			this.drawString(fontRenderer, "by this analyzer yet! Analyze this chunk!", xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 11, Color.MAGENTA.getRGB());
+			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.no_data.0", new Object[0]), xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 2, Color.MAGENTA.getRGB());
+			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.no_data.1", new Object[0]), xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 11, Color.MAGENTA.getRGB());
 		}
 		else
 		{
 			int strt = buttonAnalyze.y + buttonAnalyze.height + 10;
 			
-			this.drawStringNoShadow(fontRenderer, "Chunk Pollution:", xt1+4, strt+2, Color.BLACK.getRGB());
+			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.chunk_pollution", new Object[0]), xt1+4, strt+2, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 11, Color.BLACK.getRGB());
 			
 			if(last_update_time != null && last_update_time.getTime() != -1)
-				this.drawStringNoShadow(fontRenderer, "Analyzed: "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
+				this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.analyzed", new Object[0])+" "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 22, Color.BLACK.getRGB());
 /*
@@ -141,18 +139,46 @@ public class GuiAnalyzer extends GuiScreen
 			
 			this.drawStringNoShadow(fontRendererObj, "Soil Pollution: "+pollution.getSoilPollution(), xt1+4, strt+74, new Color(89, 61, 41).getRGB());//0x593d29
 */
-			this.drawStringNoShadow(fontRenderer, ""+pollution.getAirPollution(), xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
+			if(pollution.getAirPollution() < 0.1D)
+				this.drawStringNoShadow(fontRenderer, "0", xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
+			else
+				this.drawStringNoShadow(fontRenderer, ""+pollution.getAirPollution(), xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
 			
-			this.drawStringNoShadow(fontRenderer, ""+pollution.getWaterPollution(), xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
+			if(pollution.getWaterPollution() < 0.1D)
+				this.drawStringNoShadow(fontRenderer, "0", xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
+			else
+				this.drawStringNoShadow(fontRenderer, ""+pollution.getWaterPollution(), xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
 			
-			this.drawStringNoShadow(fontRenderer, ""+pollution.getSoilPollution(), xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
+			if(pollution.getSoilPollution() < 0.1D)
+				this.drawStringNoShadow(fontRenderer, "0", xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
+			else
+				this.drawStringNoShadow(fontRenderer, ""+pollution.getSoilPollution(), xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
 			
-			this.drawStringNoShadow(fontRenderer, "Pollution Effects:", xt1/2-50, 10, Color.BLACK.getRGB());
+			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.pollution_effects", new Object[0]), xt1/2-50, 10, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(0, xt1, buttonAnalyze.y + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
 			
 			GlStateManager.color(1, 1, 1, 1);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(EMUtils.resloc("textures/gui/analyzer/pollution_local/en_us.png"));
+			
+			ResourceLocation lang_texture = EMUtils.resloc("textures/gui/analyzer/pollution_local/"+MinecraftForgeClient.getLocale().getLanguage().toLowerCase()+".png");
+			
+			if(!MinecraftForgeClient.getLocale().toString().toLowerCase().equals("en_us"))
+			{
+				try
+				{
+					IResource ir = Minecraft.getMinecraft().getResourceManager().getResource(lang_texture);
+					if(ir == null || ir.getInputStream() == null || ir.getInputStream().available() <= 0)
+					{
+						lang_texture = EMUtils.resloc("textures/gui/analyzer/pollution_local/en_us.png");
+					}
+				}
+				catch (IOException e)
+				{
+					lang_texture = EMUtils.resloc("textures/gui/analyzer/pollution_local/en_us.png");
+				}
+			}
+			
+			Minecraft.getMinecraft().getTextureManager().bindTexture(lang_texture);
 			this.drawModalRectWithCustomSizedTexture(xt1+4, strt+34, 0, 0, 100, 60, 100, 60);
 			
 			
@@ -165,16 +191,21 @@ public class GuiAnalyzer extends GuiScreen
     	if(mouseX > buttonAnalyze.x && mouseX < buttonAnalyze.x + buttonAnalyze.width && mouseY > buttonAnalyze.y && mouseY < buttonAnalyze.y + buttonAnalyze.height)
 		{
 			if(!buttonAnalyze.enabled)
+			{
+				List<String> no_energy_text = new ArrayList<String>();
+				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.0", new Object[0]));
+				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.1", new Object[0]));
 				this.drawHoveringText(no_energy_text, mouseX, mouseY+10, fontRenderer);
+			}
 		}
 		
 		if(mouseX >= width-110 && mouseX <= width-10 && mouseY >= height-30 && mouseY <= height-10)
 		{
 			List<String> lst = new ArrayList<String>();
 			
-			lst.add("Energy: "+te.getEnergyStored());
-			lst.add("Max energy: "+te.getMaxEnergyStored());
-			lst.add("Filling: "+(int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored()))+"%");
+			lst.add(I18n.format("gui.ecomod.text.energy", new Object[0])+" "+te.getEnergyStored());
+			lst.add(I18n.format("gui.ecomod.text.max_energy", new Object[0])+" "+te.getMaxEnergyStored());
+			lst.add(I18n.format("gui.ecomod.text.filling", new Object[0])+" "+(int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored()))+"%");
 			
 			this.drawHoveringText(lst, mouseX, mouseY);
 		}
@@ -290,7 +321,7 @@ public class GuiAnalyzer extends GuiScreen
     {
     	super.initGui();
     	
-    	this.buttonList.add(buttonAnalyze = new GuiButton(0, width-110, 10, 100, 20, "Analyze Chunk"));
+    	this.buttonList.add(buttonAnalyze = new GuiButton(0, width-110, 10, 100, 20, I18n.format("gui.ecomod.button.analyze_chunk", new Object[0])));
     	
     	this.buttonList.add(buttonUp = new ButtonUpDown(1, (int)(width * 0.66) + 4, height / 2 - (int)(ButtonUpDown.sizeY * 1.5F), true));
     	this.buttonList.add(buttonDown = new ButtonUpDown(2, (int)(width * 0.66) + 4, height / 2 + ButtonUpDown.sizeY, false));

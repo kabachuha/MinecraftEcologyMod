@@ -32,7 +32,7 @@ public class EMConfig
 	
 	public static boolean wptimm = false;
 	
-	public static int wptcd = 180;
+	public static int wptcd = 60;
 	
 	public static String tepcURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/TEPC.json";
 	public static String effectsURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionEffects.json";
@@ -84,6 +84,8 @@ public class EMConfig
 	
 	public static boolean isConcentratedPollutionIC2Fuel = true;
 	
+	public static boolean is_oc_analyzer_interface_crafted_by_right_click = true;
+	
 	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
 	
 	public static void sync()
@@ -107,7 +109,7 @@ public class EMConfig
 			
 			wptimm = config.getBoolean("ImmediateStart", "THREAD", false, "Whether the thread starts without delay", lang("thread.wptimm"));
 			
-			wptcd = config.getInt("Delay", "THREAD", 180, 60, 3600, "The delay between thread runs.", lang("thread.wptcd"));
+			wptcd = config.getInt("Delay", "THREAD", 60, 60, 3600, "The delay between thread runs.", lang("thread.wptcd"));
 			
 			tepcURL = config.getString("TEPC_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/TEPC.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
 			
@@ -144,6 +146,8 @@ public class EMConfig
 			fuel_concentrated_pollution_burn_energy = config.getInt("FuelConcentratedPollutionBurnEnergy", "INTERMOD", 600, 1, Integer.MAX_VALUE, "");
 			
 			isConcentratedPollutionIC2Fuel = config.getBoolean("IsConcentratedPollutionIC2Fuel", "INTERMOD", true, "");
+			
+			is_oc_analyzer_interface_crafted_by_right_click = config.getBoolean("is_oc_analyzer_interface_crafted_by_right_click", "INTERMOD", true, "");
 			
 			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
 			
@@ -232,7 +236,7 @@ public class EMConfig
 		//defs.add(AnalyzerPollutionEffect.createSimpleNull("polluted_water", polluted_water_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("dead_trees", dead_trees_pollution, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_trees", no_trees_pollution, TriggeringType.OR));
-		defs.add(AnalyzerPollutionEffect.createSimpleNull("acid_rain", acid_rain_pollution, TriggeringType.AND));
+		defs.add(AnalyzerPollutionEffect.createSimple("acid_rain", acid_rain_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("wasteland", wasteland_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_plowing", useless_hoe_pollution, TriggeringType.AND));
 		defs.add(AnalyzerPollutionEffect.createSimple("no_animals", no_animals, TriggeringType.OR));

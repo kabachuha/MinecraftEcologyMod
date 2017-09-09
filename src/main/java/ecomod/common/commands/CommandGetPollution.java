@@ -10,6 +10,7 @@ import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -46,7 +47,7 @@ public class CommandGetPollution extends CommandBase {
 		}
 		else
 		{
-			sender.sendMessage(new TextComponentString("Invalid command format!"));
+			throw new WrongUsageException(getUsage(sender), new Object[0]);
 		}
 	}
 

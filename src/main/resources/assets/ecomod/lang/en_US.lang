@@ -94,3 +94,60 @@ achievement.ecomod.analyzer_core=Forewarned Is Forearmed!
 achievement.ecomod.analyzer_core.desc=Craft Analyzer Core(To make a machine click on a machine frame)
 achievement.ecomod.respirator=True Stalking Experience!
 achievement.ecomod.respirator.desc=Craft A Respirator
+
+#Commands
+commands.ecomod.wpt_not_found=WorldProcessingThread for dimension %i was not found!
+
+commands.ecomod.get_tile_id.usage=/getTileEntityID [x] [y] [z] (coords are optional) - gets ID of a TileEntity at the defined pos or just beneath the sender and puts it to the clipboard
+commands.ecomod.get_tile_id.tile_not_found=TileEntity not found at %s!
+
+commands.ecomod.load_pollution_manager.usage=/loadPollutionManager {dimension} - load the dimension's PollutionManager from its default file
+commands.ecomod.load_pollution_manager.fail=Forced loading of a PollutionManager for dimension %i failed!
+
+commands.ecomod.save_pollution_manager.usage=/savePollutionManager {dimension} - save the dimension's pollution manager to its default file
+commands.ecomod.save_pollution_manager.fail=Saving of a PollutionManager for dimension %i failed!
+
+commands.ecomod.clear_pollution_manager.usage=/clearPollutionManager {dimension} - clear the dimension's pollution manager
+
+#For translators: Please, do not translate ADD, REMOVE, SAVE, LOAD, GET (typed in capital letters) because they are names of modes!
+commands.ecomod.tepc.usage=/TEPollutionConfig [ADD|REMOVE|SAVE|LOAD|GET] [tileId] ([air] [water] [soil])
+commands.ecomod.tepc.fail.mode_not_found=Invalid MODE!!! It has to be ADD or REMOVE or SAVE or LOAD or GET.
+commands.ecomod.tepc.fail.not_enough_arguments=Invalid arguments! At least 1 has to be.
+commands.ecomod.tepc.add.fail.args=Invalid arguments! For ADD mode there has to be exactly 5 arguments /TEPollutionConfig ADD [tileId] [air] [water] [soil]
+commands.ecomod.tepc.add.fail=Unable to add TileEntity to TEPollutionConfig!
+commands.ecomod.tepc.add.success=Added to TEPollutionConfig: %s
+commands.ecomod.tepc.remove.fail.args=Invalid arguments! For REMOVE mode there has to be exactly 2 arguments /TEPollutionConfig REMOVE [tileId]
+commands.ecomod.tepc.remove.success=Removed %s from TEPollutionConfig
+commands.ecomod.tepc.remove.fail=Attempted to remove %s from TEPollutionConfig but there is no such entry
+commands.ecomod.tepc.load=Loading TEPollutionConfig from the config file.
+commands.ecomod.tepc.save=Saving TEPollutionConfig to the config file
+commands.ecomod.tepc.save.fail=Failed to save TEPollutionConfig!
+commands.ecomod.tepc.get.fail.args=Invalid arguments! For GET mode there has to be exactly 2 arguments /TEPollutionConfig GET [tileId]
+commands.ecomod.tepc.get.fail=Attempted to get %s from TEPollutionConfig but there is no such entry
+
+#GUI
+gui.ecomod.text.no_energy.0=Not enough energy to work!
+gui.ecomod.text.no_energy.1=The energy buffer must be filled completely!
+gui.ecomod.text.no_data.0=No data about this chunk was retrieved 
+gui.ecomod.text.no_data.1=by this analyzer yet! Analyze this chunk!
+gui.ecomod.text.pollution_effects=Pollution Effects:
+gui.ecomod.text.energy=Energy:
+gui.ecomod.text.max_energy=Max Energy:
+gui.ecomod.text.filling=Filling:
+gui.ecomod.text.chunk_position=Chunk Position:
+gui.ecomod.text.chunk_pollution=Chunk Pollution:
+gui.ecomod.text.analyzed=Analyzed:
+gui.ecomod.button.analyze_chunk=Analyze Chunk
+
+#Tooltips
+tooltip.ecomod.respirator.filter_capacity=Filter Capacity
+tooltip.ecomod.respirator.insert_filter=Insert a filter!
+tooltip.ecomod.more_information=Press SHIFT for more information
+tooltip.ecomod.core.filter=These filters are used by Respirator
+tooltip.ecomod.core.shifted=Right Click '%s' with this item to make a corresponding machine
+tooltip.ecomod.oc.adapter=[EcologyMod]Right Click 'Empty Machine Frame' with this item to make a Pollution Analyzer Computer Interface
+
+#Chat messages
+msg.ecomod.no_eat_with_respirator=You are unable to eat or to drink while wearing a respirator!
+msg.ecomod.bad_sleep=You are feeling ill. Perhaps the air is not clean enough.
+msg.ecomod.polluted_food=You've eaten polluted food!

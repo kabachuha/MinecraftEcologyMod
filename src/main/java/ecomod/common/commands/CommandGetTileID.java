@@ -22,7 +22,7 @@ public class CommandGetTileID extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "/getTileEntityID [x] [y] [z] (coords are optional) - gets ID of the TileEntity at the defined pos or beneath the sender";
+		return "commands.ecomod.get_tile_id.usage";
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class CommandGetTileID extends CommandBase {
 		}
 		else
 		{
-			sender.sendMessage(new TextComponentString("Tile Entity not found! at "+blockpos.toString()));
+			throw new CommandException("commands.ecomod.get_tile_id.tile_not_found", blockpos.toString());
 		}
 	}
 

@@ -89,3 +89,59 @@ achievement.ecomod.analyzer_core=Предупрежден, Значит Воор
 achievement.ecomod.analyzer_core.desc=Соберите Ядро Анализатора(Чтобы создать соответствующей механизм кликните по Основе)
 achievement.ecomod.respirator=Теперь Ты Сталкер!
 achievement.ecomod.respirator.desc=Соберите Противогаз
+
+#Комманды
+commands.ecomod.wpt_not_found=WorldProcessingThread для измерения %i не был найден!
+
+commands.ecomod.get_tile_id.usage=/getTileEntityID [x] [y] [z] (координаты опциональны) -  возвращает индентификатор TileEntity на заданной позиции или прямо под отправителем и помещает его в буфер обмена
+commands.ecomod.get_tile_id.tile_not_found=TileEntity не найден в %s!
+
+commands.ecomod.load_pollution_manager.usage=/loadPollutionManager {измерение} - форсированно загружает Менеджер Загрязнения из файла для требуемого измерения
+commands.ecomod.load_pollution_manager.fail=Форсированная загрузка Менеджера Загрязнения для измерения %i провалилась!
+
+commands.ecomod.save_pollution_manager.usage=/savePollutionManager {измерение} - сохраняет Менеджер Загрязнения в файл для требуемого измерения 
+commands.ecomod.save_pollution_manager.fail=Сохранение Менеджера Загрязнения для измерения %i провалилась!
+
+commands.ecomod.clear_pollution_manager.usage=/clearPollutionManager {dimension} - очистить Менеджер Загрязнения для требуемого измерения
+
+commands.ecomod.tepc.usage=/TEPollutionConfig [ADD|REMOVE|SAVE|LOAD|GET] [tileId] ([air] [water] [soil])
+commands.ecomod.tepc.fail.mode_not_found=Неверный РЕЖИМ!!! Он должен являться или ADD, или REMOVE, или SAVE, или LOAD, или GET.
+commands.ecomod.tepc.fail.not_enough_arguments=Недостаточно параметов!
+commands.ecomod.tepc.add.fail.args=Неправильные параметры! Для режима ADD должно быть ровно 5 аргументов /TEPollutionConfig ADD [tileId] [air] [water] [soil]
+commands.ecomod.tepc.add.fail=Невозможно добавить TileEntity в TEPollutionConfig!
+commands.ecomod.tepc.add.success=Добавлено в TEPollutionConfig: %s
+commands.ecomod.tepc.remove.fail.args=Неправильные параметры! Для режима REMOVE должно быть ровно 2 аргумента /TEPollutionConfig REMOVE [tileId]
+commands.ecomod.tepc.remove.success=Удалено %s из TEPollutionConfig
+commands.ecomod.tepc.remove.fail=Не удалось удалить %s из TEPollutionConfig так как он был не в нём найден.
+commands.ecomod.tepc.load=Загрузка TEPollutionConfig из файла конфигурации.
+commands.ecomod.tepc.save=Сохранение TEPollutionConfig в файл конфигурации.
+commands.ecomod.tepc.save.fail=Неудалось сохранить TEPollutionConfig!
+commands.ecomod.tepc.get.fail.args=Неправильные параметры! Для режима GET должно быть ровно 2 аргумента /TEPollutionConfig GET [tileId]
+commands.ecomod.tepc.get.fail=Не удалось найти %s в TEPollutionConfig.
+
+#Пользовательский Интерфейс
+gui.ecomod.text.no_energy.0=Недостаточно энергии для работы!
+gui.ecomod.text.no_energy.1=Энергитический буфер должен быть полностью заполнен!
+gui.ecomod.text.no_data.0=Данные об этом чанке ещё не были
+gui.ecomod.text.no_data.1=полученны этим анализатором! Анализируйте этот чанк!
+gui.ecomod.text.pollution_effects=Эффекты Загрязнения:
+gui.ecomod.text.energy=Энергия:
+gui.ecomod.text.max_energy=Энергоёмкость:
+gui.ecomod.text.filling=Наполнение:
+gui.ecomod.text.chunk_position=Координаты Чанка:
+gui.ecomod.text.chunk_pollution=Загрязнение Чанка:
+gui.ecomod.text.analyzed=Анализированно:
+gui.ecomod.button.analyze_chunk=Анализ Чанка
+
+#Tooltips
+tooltip.ecomod.respirator.filter_capacity=Работоспособность Фильтра
+tooltip.ecomod.respirator.insert_filter=Вставьте Фильтр!
+tooltip.ecomod.more_information=Нажмите SHIFT для подробностей
+tooltip.ecomod.core.filter=Эти фильтры используются противогазом!
+tooltip.ecomod.core.shifted=Кликните ПКМ по '%s' этим предметом to чтобы сделать соответствующий механизм
+tooltip.ecomod.oc.adapter=[EcologyMod]Кликните ПКМ по 'Основе Машины' этим предметом чтобы сделать Компьютерный Интерфейс Анализатора Загрязнения
+
+#Сообщения
+msg.ecomod.no_eat_with_respirator=Вы не можете есть или пить с надетым противогазом!
+msg.ecomod.bad_sleep=Вы плохо себя чувствуете. Похоже воздух не достаточно чистый.
+msg.ecomod.polluted_food=Вы съели загрязненную пищу!

@@ -5,6 +5,7 @@ import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.NumberInvalidException;
 import net.minecraft.server.MinecraftServer;
 
 public class CommandClearManager extends CommandBase
@@ -17,7 +18,7 @@ public class CommandClearManager extends CommandBase
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "/clearPollutionManager {dimension} - clear the dimension's pollution manager";
+		return "commands.ecomod.clear_pollution_manager.usage";
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class CommandClearManager extends CommandBase
 			}
 			catch (NumberFormatException e)
 			{
-				throw new CommandException("Unable to parse the argument!", args[0]);
+				throw new NumberInvalidException("commands.generic.num.invalid", args[0]);
 			}
 		}
 		else
@@ -46,8 +47,12 @@ public class CommandClearManager extends CommandBase
 		
 		WorldProcessingThread wpt = EcologyMod.ph.getWPT(server.getWorldName()+"_"+dim);
 		
+		if(wpt == null)
+			throw new CommandException("commands.ecomod.wpt_not_found", dim);
+		
 		wpt.slp(10);
 		wpt.getPM().reset();
+		wpt.getScheduledEmissions().clear();
 	}
 
 }

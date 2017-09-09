@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.input.Keyboard;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +28,7 @@ import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.api.pollution.PollutionEmissionEvent;
 import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.client.advancements.triggers.PlayerInPollutionTrigger;
+import ecomod.common.blocks.BlockFrame;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager;
@@ -44,6 +46,7 @@ import ecomod.network.EMPacketString;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.IAnimals;
@@ -66,6 +69,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -80,6 +84,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
@@ -552,7 +557,7 @@ public class PollutionHandler implements IPollutionGetter
 				if(f >= 2)
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("hunger").toString()), 2000, 2));
 			
-				player.sendMessage(new TextComponentString("You are feeling ill. Perhaps the air is not clean enough."));
+				player.sendMessage(new TextComponentTranslation("msg.ecomod.bad_sleep", new Object[0]));
 			
 				if(PollutionEffectsConfig.isEffectActive("poisonous_sleep", data))
 				{
@@ -971,7 +976,7 @@ public class PollutionHandler implements IPollutionGetter
 				if(is.getItem() instanceof ItemFood || is.getItem() instanceof ItemBucketMilk || is.getItem() instanceof ItemPotion)
 				{
 					if(event.getEntityLiving() instanceof EntityPlayer)
-						((EntityPlayer)event.getEntityLiving()).sendMessage(new TextComponentString("You are unable to eat or to drink while wearing a respirator"));
+						((EntityPlayer)event.getEntityLiving()).sendMessage(new TextComponentTranslation("msg.ecomod.no_eat_with_respirator"));
 					event.setDuration(-1);
 					event.setCanceled(true);
 				}
@@ -1039,6 +1044,19 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			
 			dropHandler(event.getEntityLiving().getEntityWorld(), event.getEntityLiving().getPosition(), drps);
+		}
+	}
+	
+	@SubscribeEvent
+	public void itemTooltip(ItemTooltipEvent event)
+	{
+		if(event.getItemStack() != null)
+		{
+			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
+			if(BlockFrame.oc_adapter != null)
+				if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
+					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
 		}
 	}
 	

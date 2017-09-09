@@ -159,6 +159,7 @@ public class BlockFrame extends Block
 					}
 					else
 					{
+						if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
 						if(oc_adapter != null)
 						{
 							if(oc_adapter.getItem() == pi.getItem())

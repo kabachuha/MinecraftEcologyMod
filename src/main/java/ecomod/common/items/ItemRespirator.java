@@ -12,6 +12,7 @@ import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMItems;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -166,12 +167,12 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		{
 			int i = (int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100);
 			if(i == 0)
-				tooltip.add("Insert a filter!");
-			tooltip.add("Filter capacity: "+i+"%");
+				tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter", new Object[0]));
+			tooltip.add(I18n.format("tooltip.ecomod.respirator.filter_capacity", new Object[0]) + ": "+i+"%");
 		}
 		else
 		{
-			tooltip.add("Insert a filter!");
+			tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter", new Object[0]));
 		}
 	}
 	

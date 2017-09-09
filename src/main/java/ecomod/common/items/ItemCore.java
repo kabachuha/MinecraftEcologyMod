@@ -57,17 +57,17 @@ public class ItemCore extends Item
 		
 		if(stack.getMetadata() == 0)
 		{
-			tooltip.add("These filters are used by Respirator");
+			tooltip.add(I18n.format("tooltip.ecomod.core.filter", new Object[0]));
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 		{
 			String s = stack.getMetadata() == 1 ? I18n.format(((ItemBlockFrame)Item.getItemFromBlock(EcomodBlocks.FRAME)).getUnlocalizedName(new ItemStack(EcomodBlocks.FRAME, 1, 1)) + ".name") : I18n.format(((ItemBlockFrame)Item.getItemFromBlock(EcomodBlocks.FRAME)).getUnlocalizedName(new ItemStack(EcomodBlocks.FRAME, 1, 0))+".name", new Object[0]);
-			tooltip.add("Right Click "+s+" with this item to make a corresponding machine");
+			tooltip.add(I18n.format("tooltip.ecomod.core.shifted", s));
 		}
 		else
 		{
-			tooltip.add("<SHIFT for more information>");
+			tooltip.add("<"+I18n.format("tooltip.ecomod.more_information", new Object[0])+">");
 		}
 	}
 

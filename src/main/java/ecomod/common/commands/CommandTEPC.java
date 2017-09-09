@@ -6,9 +6,14 @@ import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.NumberInvalidException;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 public class CommandTEPC extends CommandBase {
 
@@ -19,22 +24,31 @@ public class CommandTEPC extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "/TEPollutionConfig [ADD|REMOVE|SAVE|LOAD|GET] [tileId] ([air] [water] [soil])";
+		return "commands.ecomod.tepc.usage";
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if(args.length < 1)
-			throw new CommandException("Invalid arguments! At least 1 has to be.");
+			throw new CommandException("commands.ecomod.tepc.fail.not_enough_arguments");
 		
-		CTMode mode = CTMode.valueOf(args[0].toLowerCase());
+		CTMode mode;
+		
+		try
+		{
+			mode = CTMode.valueOf(args[0].toLowerCase());
+		}
+		catch(Exception e)
+		{
+			throw new CommandException("commands.ecomod.tepc.fail.mode_not_found");
+		}
 		
 		switch(mode)
 		{
 		case add:
 			if(args.length != 5)
 			{
-				throw new CommandException("Invalid arguments! For ADD mode there has to be exactly 5 arguments /TEPollutionConfig ADD [tileId] [air] [water] [soil]");
+				throw new CommandException("commands.ecomod.tepc.add.fail.args");
 			}
 			
 			String tileId = args[1];
@@ -43,9 +57,32 @@ public class CommandTEPC extends CommandBase {
 			double water = 0.0D;
 			double soil = 0.0D;
 			
-			air = Double.parseDouble(args[2]);
-			water = Double.parseDouble(args[3]);
-			soil = Double.parseDouble(args[4]);
+			try
+			{
+				air = Double.parseDouble(args[2]);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new NumberInvalidException("commands.generic.num.invalid", args[2]);
+			}
+			
+			try
+			{
+				water = Double.parseDouble(args[3]);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new NumberInvalidException("commands.generic.num.invalid", args[3]);
+			}
+			
+			try
+			{
+				soil = Double.parseDouble(args[4]);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new NumberInvalidException("commands.generic.num.invalid", args[4]);
+			}
 			
 			TEPollution tep = null;
 			
@@ -64,19 +101,19 @@ public class CommandTEPC extends CommandBase {
 				
 				
 				EcologyMod.instance.tepc.data.add(tep);
-				sender.sendMessage(new TextComponentString("Added to TEPC: "+tep.toString()));
+				sender.sendMessage(new TextComponentTranslation("commands.ecomod.tepc.add.success", tep.toString()));
 				EcologyMod.log.info("Added to TEPC: "+tep.toString());
 			}
 			else
 			{
-				sender.sendMessage(new TextComponentString("Unable to add TileEntity to TEPollutionConfig."));
+				throw new CommandException("commands.ecomod.tepc.add.fail");
 			}
 			break;
 			
 		case remove:
 			if(args.length != 2)
 			{
-				throw new CommandException("Invalid arguments! For REMOVE mode there has to be exactly 2 arguments /TEPollutionConfig REMOVE [tileId]");
+				throw new CommandException("commands.ecomod.tepc.remove.fail.args");
 			}
 			
 			String tileId1 = args[1];
@@ -84,28 +121,31 @@ public class CommandTEPC extends CommandBase {
 			if(EcologyMod.instance.tepc.hasTile(new ResourceLocation(tileId1)))
 			{
 				EcologyMod.instance.tepc.data.remove(EcologyMod.instance.tepc.getTEP(tileId1));
-				sender.sendMessage(new TextComponentString("Removed "+tileId1+" from TEPollutionConfig"));
+				sender.sendMessage(new TextComponentTranslation("commands.ecomod.tepc.remove.success", tileId1));
 			}
 			else
 			{
-				sender.sendMessage(new TextComponentString("Attempted to remove "+tileId1+" from TEPollutionConfig but there is no such entry"));
+				TextComponentTranslation txt = new TextComponentTranslation("commands.ecomod.tepc.remove.fail", tileId1);
+				txt.setStyle(txt.getStyle().setColor(TextFormatting.RED));
+				sender.sendMessage(txt);
 			}
 			break;
 			
 		case load:
-			sender.sendMessage(new TextComponentString("Loading TEPollutionConfig from the config file."));
+			sender.sendMessage(new TextComponentTranslation("commands.ecomod.tepc.load"));
 			EcologyMod.instance.tepc.load(EcologyMod.instance.tepc.path);
 			break;
 			
 		case save:
-			sender.sendMessage(new TextComponentString("Saving TEPollutionConfig to the config file"));
-			EcologyMod.instance.tepc.save(EcologyMod.instance.tepc.path);
+			sender.sendMessage(new TextComponentTranslation("commands.ecomod.tepc.save"));
+			if(!EcologyMod.instance.tepc.save(EcologyMod.instance.tepc.path))
+				throw new CommandException("commands.ecomod.tepc.save.fail");
 			break;
 			
 		case get:
 			if(args.length != 2)
 			{
-				throw new CommandException("Invalid arguments! For GET mode there has to be exactly 2 arguments /TEPollutionConfig GET [tileId]");
+				throw new CommandException("commands.ecomod.tepc.get.fail.args");
 			}
 			
 			String tileId2 = args[1];
@@ -116,12 +156,14 @@ public class CommandTEPC extends CommandBase {
 			}
 			else
 			{
-				sender.sendMessage(new TextComponentString("Attempted to get "+tileId2+" from TEPollutionConfig but there is no such entry"));
+				TextComponentTranslation txt = new TextComponentTranslation("commands.ecomod.tepc.get.fail", tileId2);
+				txt.setStyle(txt.getStyle().setColor(TextFormatting.RED));
+				sender.sendMessage(txt);
 			}
 			break;
 			
 		default:
-			throw new CommandException("Invalid MODE!!! It has to be ADD or REMOVE or SAVE or LOAD or GET.");
+			throw new CommandException("commands.ecomod.tepc.fail.mode_not_found");
 		}
 	}
 

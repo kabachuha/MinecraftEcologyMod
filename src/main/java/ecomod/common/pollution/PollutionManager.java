@@ -2,6 +2,7 @@ package ecomod.common.pollution;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,7 +79,7 @@ public class PollutionManager
 				
 				if(save.canWrite())
 				{
-					FileUtils.writeStringToFile(save, json);
+					FileUtils.writeStringToFile(save, json, Charset.forName("UTF-8"));
 					return true;
 				}
 				else

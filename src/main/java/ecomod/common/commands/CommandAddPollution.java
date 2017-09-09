@@ -12,6 +12,7 @@ import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -40,6 +41,9 @@ public class CommandAddPollution extends CommandBase {
 		{
 			WorldProcessingThread wpt = EcologyMod.ph.threads.get(key);
 			
+			if(wpt == null)
+				throw new CommandException("commands.ecomod.wpt_not_found", w.provider.getDimension());
+			
 			int x, z;
 			
 			if(args.length == 4)
@@ -56,12 +60,13 @@ public class CommandAddPollution extends CommandBase {
 			}
 			else
 			{
-				sender.sendMessage(new TextComponentString("Invalid command format!"));
-				return;
+				throw new WrongUsageException(getUsage(sender), new Object[0]);
 			}
 			
 			EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Double.parseDouble(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Double.parseDouble(args[1])), true);
 		}
+		else
+			throw new CommandException("commands.ecomod.wpt_not_found", w.provider.getDimension());
 
 	}
 
