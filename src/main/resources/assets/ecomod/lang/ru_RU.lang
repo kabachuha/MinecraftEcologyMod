@@ -91,16 +91,16 @@ achievement.ecomod.respirator=Теперь Ты Сталкер!
 achievement.ecomod.respirator.desc=Соберите Противогаз
 
 #Комманды
-commands.ecomod.wpt_not_found=WorldProcessingThread для измерения %i не был найден!
+commands.ecomod.wpt_not_found=WorldProcessingThread для измерения %s не был найден!
 
 commands.ecomod.get_tile_id.usage=/getTileEntityID [x] [y] [z] (координаты опциональны) -  возвращает индентификатор TileEntity на заданной позиции или прямо под отправителем и помещает его в буфер обмена
 commands.ecomod.get_tile_id.tile_not_found=TileEntity не найден в %s!
 
 commands.ecomod.load_pollution_manager.usage=/loadPollutionManager {измерение} - форсированно загружает Менеджер Загрязнения из файла для требуемого измерения
-commands.ecomod.load_pollution_manager.fail=Форсированная загрузка Менеджера Загрязнения для измерения %i провалилась!
+commands.ecomod.load_pollution_manager.fail=Форсированная загрузка Менеджера Загрязнения для измерения %s провалилась!
 
 commands.ecomod.save_pollution_manager.usage=/savePollutionManager {измерение} - сохраняет Менеджер Загрязнения в файл для требуемого измерения 
-commands.ecomod.save_pollution_manager.fail=Сохранение Менеджера Загрязнения для измерения %i провалилась!
+commands.ecomod.save_pollution_manager.fail=Сохранение Менеджера Загрязнения для измерения %s провалилась!
 
 commands.ecomod.clear_pollution_manager.usage=/clearPollutionManager {dimension} - очистить Менеджер Загрязнения для требуемого измерения
 
@@ -145,3 +145,5 @@ tooltip.ecomod.oc.adapter=[EcologyMod]Кликните ПКМ по 'Основе
 msg.ecomod.no_eat_with_respirator=Вы не можете есть или пить с надетым противогазом!
 msg.ecomod.bad_sleep=Вы плохо себя чувствуете. Похоже воздух не достаточно чистый.
 msg.ecomod.polluted_food=Вы съели загрязненную пищу!
+
+msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod работает не корректно! Во время загрузки ASM трансформеры не сработали правильно для следующих классов: %s. Ищите причину в логах и сообщите её вместе с логом на 

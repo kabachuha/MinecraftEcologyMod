@@ -1,5 +1,5 @@
 {
-  "version": "1.0-1.11.2-1.0.0.0-beta1",
+  "version": "1.1-1.12.1-1.1.0.0",
   "effects": [
     {
       "id": "food_pollution",
@@ -89,7 +89,7 @@
       "id": "acid_rain",
       "header": "ape.ecomod.acid_rain.name",
       "description": "ape.ecomod.acid_rain.desc",
-      "icon": "ecomod:textures/gui/analyzer/icons/null.png",
+      "icon": "ecomod:textures/gui/analyzer/icons/acid_rain.png",
       "triggering_type": "AND",
       "triggerring_pollution": {
         "air": 40000.0,

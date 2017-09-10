@@ -89,17 +89,17 @@ public class PollutionSourcesConfig
 	public static PollutionData getItemPollution(String item, String metastring)
 	{
 		if(item == null)
-			return null;
+			return PollutionData.getEmpty();
 		
 		if(!EcomodStuff.blacklisted_items.contains(item) && !EcomodStuff.blacklisted_items.contains(item+metastring))
 		{
 			if(EcomodStuff.polluting_items.containsKey(item))
 			{
-				return EcomodStuff.polluting_items.get(item);
+				return EcomodStuff.polluting_items.get(item).clone();
 			}
 			else if(EcomodStuff.polluting_items.containsKey(item+metastring))
 			{
-				return EcomodStuff.polluting_items.get(item+metastring);
+				return EcomodStuff.polluting_items.get(item+metastring).clone();
 			}
 			else
 				return getSource("expired_item");
@@ -125,7 +125,7 @@ public class PollutionSourcesConfig
 	public static PollutionData getSmeltedItemPollution(String item, String meta)
 	{
 		if(item == null)
-			return null;
+			return PollutionData.getEmpty();
 		
 		if(EcomodStuff.smelted_items_pollution == null)
 			return getSource("default_smelted_item_pollution");

@@ -34,6 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -43,6 +44,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 
 public class EcomodASMHooks
 {
@@ -181,6 +186,74 @@ public class EcomodASMHooks
 						}
 					}
 				}
+			}
+		}
+		
+		public static void entityItemAttackedAddition(EntityItem entity_item, DamageSource dmg_source)
+		{
+			if(entity_item == null || entity_item.getEntityWorld() == null || entity_item.getEntityWorld().isRemote || dmg_source == null)
+				return;
+			
+			if(!PollutionSourcesConfig.hasSource("expired_item"))
+				return;
+			
+			PollutionData to_emit = PollutionData.getEmpty();
+			
+			if(dmg_source == DamageSource.LAVA)
+			{
+				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem());
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.8).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.9D).multiply(PollutionType.WATER, 0.1F).multiply(PollutionType.SOIL, 0.2F);
+			}
+			else if(dmg_source.isFireDamage())
+			{
+				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem());
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.7).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.8D).multiply(PollutionType.WATER, 0.2F).multiply(PollutionType.SOIL, 0.3F);
+				
+				FluidStack fs = FluidUtil.getFluidContained(entity_item.getItem());
+				
+				if(fs != null)
+				{
+					if(EMConfig.isConcentratedPollutionExplosive)
+					if(fs.getFluid() == EcomodStuff.concentrated_pollution)
+					{
+						if(PollutionSourcesConfig.hasSource("concentrated_pollution_explosion_pollution"))
+						{
+							to_emit.add(PollutionSourcesConfig.getSource("concentrated_pollution_explosion_pollution").multiplyAll(fs.amount / Fluid.BUCKET_VOLUME));
+						}
+						
+						entity_item.getEntityWorld().newExplosion(entity_item, entity_item.posX, entity_item.posY, entity_item.posZ, 3F * (fs.amount / Fluid.BUCKET_VOLUME), true, true);
+					}
+				}
+			}
+			else if(dmg_source.isExplosion())
+			{
+				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem());
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.5).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.4D).multiply(PollutionType.WATER, 0.6F).multiply(PollutionType.SOIL, 0.5F);
+				
+				FluidStack fs = FluidUtil.getFluidContained(entity_item.getItem());
+				
+				if(fs != null)
+				{
+					if(EMConfig.isConcentratedPollutionExplosive)
+					if(fs.getFluid() == EcomodStuff.concentrated_pollution)
+					{
+						if(PollutionSourcesConfig.hasSource("concentrated_pollution_explosion_pollution"))
+						{
+							to_emit.add(PollutionSourcesConfig.getSource("concentrated_pollution_explosion_pollution").multiplyAll(fs.amount / Fluid.BUCKET_VOLUME));
+						}
+						
+						entity_item.getEntityWorld().newExplosion(dmg_source.getTrueSource() == null ? entity_item : dmg_source.getTrueSource(), entity_item.posX, entity_item.posY, entity_item.posZ, 3F * (fs.amount / Fluid.BUCKET_VOLUME), true, true);
+					}
+				}
+			}
+			else
+			{
+				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem()).multiplyAll(0.95F);
+			}
+			
+			if(!to_emit.equals(PollutionData.getEmpty()))
+			{
+				EcomodAPI.emitPollution(entity_item.getEntityWorld(), EMUtils.blockPosToPair(entity_item.getPosition()), to_emit, true);
 			}
 		}
 		

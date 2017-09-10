@@ -318,7 +318,7 @@ public class WorldProcessingThread extends Thread
 						filters++;
 				}
 				
-				ret.add(ipe.pollutionEmission().clone()
+				ret.add(ipe.pollutionEmission(false).clone()
 						.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
 						.multiply(PollutionType.WATER, rain ? 2 : 1).multiply(PollutionType.SOIL, rain ? 1.2F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
 						);

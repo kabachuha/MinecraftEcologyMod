@@ -26,6 +26,7 @@ import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.api.pollution.PollutionEmissionEvent;
+import ecomod.asm.EcomodClassTransformer;
 import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.client.advancements.triggers.PlayerInPollutionTrigger;
 import ecomod.common.blocks.BlockFrame;
@@ -38,6 +39,7 @@ import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
+import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
@@ -68,8 +70,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -682,6 +687,18 @@ public class PollutionHandler implements IPollutionGetter
 				EcologyMod.log.error("Error while sending EMPacketString with mark 'P' to the client!");
 				EcologyMod.log.error(e.toString());
 			}
+			
+			if(EcomodClassTransformer.failed_transformers.size() > 0)
+			{
+				String fails = "";
+				
+				for(String f : EcomodClassTransformer.failed_transformers)
+					fails += f+";";
+				
+				fails = fails.substring(0, fails.length()-1);
+				
+				((EntityPlayerMP)event.getEntity()).sendMessage(new TextComponentTranslation("msg.ecomod.asm_transformers_failed", fails).setStyle(new Style().setColor(TextFormatting.RED)).appendSibling(new TextComponentString(EMConsts.githubURL+"/issues").setStyle(new Style().setUnderlined(true).setColor(TextFormatting.BLUE).setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, EMConsts.githubURL+"/issues")))));
+			}
 		}
 	}
 	
@@ -790,6 +807,9 @@ public class PollutionHandler implements IPollutionGetter
 	@SubscribeEvent
 	public void onFished(ItemFishedEvent event)
 	{
+		if(event.getHookEntity() == null)
+			return;
+		
 		BlockPos pos = new BlockPos(event.getHookEntity().posX, event.getHookEntity().posY, event.getHookEntity().posZ);
 		
 		World w = event.getHookEntity().world;
@@ -1075,7 +1095,7 @@ public class PollutionHandler implements IPollutionGetter
 			return null;
 		
 		if(wpt.getPM().getPollution(chunkx, chunkz) != null)
-			return wpt.getPM().getPollution(chunkx, chunkz).clone();
+			return wpt.getPM().getPollution(chunkx, chunkz);
 		else
 			return null;
 	}

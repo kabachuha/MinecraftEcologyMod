@@ -1,5 +1,8 @@
 package ecomod.asm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.*;
@@ -16,6 +19,8 @@ public class EcomodClassTransformer implements IClassTransformer
 	static Logger log = LogManager.getLogger("EcomodASM");
 	
 	private static final boolean DEBUG = false;
+	
+	public static List<String> failed_transformers = new ArrayList<String>();
 	
 	public EcomodClassTransformer()
 	{
@@ -58,6 +63,9 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.tileentity.TileEntityFurnace", "net.minecraft.tileentity.TileEntityFurnace"))
 			return handleTileFurnace(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "net.minecraft.entity.item.EntityItem", "net.minecraft.entity.item.EntityItem"))
+			return handleEntityItem(name, basicClass);
 			
 		return basicClass;
 	}
@@ -68,11 +76,13 @@ public class EcomodClassTransformer implements IClassTransformer
 		return FMLForgePlugin.RUNTIME_DEOBF ? obf : deobf;
 	}
 	
+	//TODO Embellish handlers!
+	
 	private byte[] handleBlockGrass(String name, byte[] bytecode)
 	{
 		log.info("Transforming "+name);
 		log.info("Initial size: "+bytecode.length+" bytes");
-		
+
 		byte[] bytes = bytecode.clone();
 		
 		try
@@ -109,6 +119,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}
@@ -175,6 +187,7 @@ public class EcomodClassTransformer implements IClassTransformer
 			}
 			else
 			{
+				failed_transformers.add(name);
 				log.error("Not found: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager.bindTexture (Lnet/minecraft/util/ResourceLocation;)V");
 				return bytecode;
 			}
@@ -192,6 +205,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}
@@ -238,6 +253,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}
@@ -286,6 +303,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error(e.toString());
 			e.printStackTrace();
 			
+			failed_transformers.add(name);
+			
 			return bytecode;
 		}
 	}
@@ -332,6 +351,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}
@@ -381,6 +402,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error(e.toString());
 			e.printStackTrace();
 			
+			failed_transformers.add(name);
+			
 			return bytecode;
 		}
 	}
@@ -425,6 +448,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}
@@ -472,6 +497,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}
@@ -548,6 +575,8 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error(e.toString());
 			e.printStackTrace();
 			
+			failed_transformers.add(name);
+			
 			return bytecode;
 		}
 	}
@@ -585,6 +614,89 @@ public class EcomodClassTransformer implements IClassTransformer
 			log.error("Unable to patch "+name+"!");
 			log.error(e.toString());
 			e.printStackTrace();
+			
+			return bytecode;
+		}
+	}
+	
+	private byte[] handleEntityItem(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "attackEntityFrom", "func_70097_a!&!a", "(Lnet/minecraft/util/DamageSource;F)Z", "(Lnet/minecraft/util/DamageSource;F)Z!&!(Lur;F)Z");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new LabelNode());
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 0));
+			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodASMHooks", "entityItemAttackedAddition", "(Lnet/minecraft/entity/item/EntityItem;Lnet/minecraft/util/DamageSource;)V", false));
+			
+			AbstractInsnNode[] ain = mn.instructions.toArray();
+			int insertion_index = -1;
+			
+			for(int i = 0; i < ain.length; i++)
+			{
+				AbstractInsnNode insn = ain[i];
+				
+				if(insn instanceof MethodInsnNode)
+				{
+					MethodInsnNode min = (MethodInsnNode)insn;
+					/*
+					log.info("Method : ");
+					log.info(min.getOpcode());
+					log.info(min.owner);
+					log.info(min.name);
+					log.info(min.desc);
+					log.info(min.itf);
+					*/
+					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/entity/item/EntityItem", "net/minecraft/entity/item/EntityItem!&!"+classNode.name) && equalOneOfNames(min.name, "setDead", "func_110577_a!&!X") && equalOneOfNames(min.desc, "()V", "()V!&!()V") && (min.itf == false))
+					{
+						insertion_index = i;
+						break;
+					}
+				}
+			}
+			
+			if(insertion_index != -1)
+			{
+				mn.instructions.insert(mn.instructions.get(insertion_index), lst);
+			}
+			else
+			{
+				failed_transformers.add(name);
+				log.error("Not found: INVOKEVIRTUAL net/minecraft/entity/item/EntityItem.setDead");
+				return bytecode;
+			}
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			failed_transformers.add(name);
 			
 			return bytecode;
 		}

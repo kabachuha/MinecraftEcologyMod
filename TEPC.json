@@ -390,5 +390,91 @@
         "soil": 30.0
       }
     }
+    //Forestry
+    ,
+    {
+      "id": "minecraft:forestry.fermenter",
+      "emission": {
+        "air": 130.0,
+        "water": 20.0,
+        "soil": 33.0
+      }
+    },
+    {
+      "id": "minecraft:forestry.still",
+      "emission": {
+        "air": 210.0,
+        "water": 30.0,
+        "soil": 38.0
+      }
+    },
+    {
+      "id": "minecraft:forestry.peat",
+      "emission": {
+        "air": 140.0,
+        "water": 20.0,
+        "soil": 33.0
+      }
+    },
+    {
+      "id": "minecraft:forestry.biogas",
+      "emission": {
+        "air": 115.0,
+        "water": 15.0,
+        "soil": 26.0
+      }
+    }
+    //Advanced Generators
+    ,
+    {
+      "id": "minecraft:advgenerators.turbine",
+      "emission": {
+        "air": 175.0,
+        "water": 35.0,
+        "soil": 40.0
+      }
+    }
+    //Actually Additions
+    ,
+    {
+      "id": "actuallyadditions:bioreactor",
+      "emission": {
+        "air": 140.0,
+        "water": 30.0,
+        "soil": 40.0
+      }
+    },
+    {
+      "id": "actuallyadditions:miner",
+      "emission": {
+        "air": 110.0,
+        "water": 50.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "actuallyadditions:oilgenerator",
+      "emission": {
+        "air": 220.0,
+        "water": 60.0,
+        "soil": 75.0
+      }
+    },
+    {
+      "id": "actuallyadditions:furnacedouble",
+      "emission": {
+        "air": 190.0,
+        "water": 19.0,
+        "soil": 47.0
+      }
+    },
+    {
+      "id": "actuallyadditions:grinderdouble",
+      "emission": {
+        "air": 235.0,
+        "water": 28.0,
+        "soil": 46.0
+      }
+    }
   ]
 }

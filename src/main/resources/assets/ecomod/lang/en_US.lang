@@ -96,16 +96,16 @@ achievement.ecomod.respirator=True Stalking Experience!
 achievement.ecomod.respirator.desc=Craft A Respirator
 
 #Commands
-commands.ecomod.wpt_not_found=WorldProcessingThread for dimension %i was not found!
+commands.ecomod.wpt_not_found=WorldProcessingThread for dimension %s was not found!
 
 commands.ecomod.get_tile_id.usage=/getTileEntityID [x] [y] [z] (coords are optional) - gets ID of a TileEntity at the defined pos or just beneath the sender and puts it to the clipboard
 commands.ecomod.get_tile_id.tile_not_found=TileEntity not found at %s!
 
 commands.ecomod.load_pollution_manager.usage=/loadPollutionManager {dimension} - load the dimension's PollutionManager from its default file
-commands.ecomod.load_pollution_manager.fail=Forced loading of a PollutionManager for dimension %i failed!
+commands.ecomod.load_pollution_manager.fail=Forced loading of a PollutionManager for dimension %s failed!
 
 commands.ecomod.save_pollution_manager.usage=/savePollutionManager {dimension} - save the dimension's pollution manager to its default file
-commands.ecomod.save_pollution_manager.fail=Saving of a PollutionManager for dimension %i failed!
+commands.ecomod.save_pollution_manager.fail=Saving of a PollutionManager for dimension %s failed!
 
 commands.ecomod.clear_pollution_manager.usage=/clearPollutionManager {dimension} - clear the dimension's pollution manager
 
@@ -151,3 +151,5 @@ tooltip.ecomod.oc.adapter=[EcologyMod]Right Click 'Empty Machine Frame' with thi
 msg.ecomod.no_eat_with_respirator=You are unable to eat or to drink while wearing a respirator!
 msg.ecomod.bad_sleep=You are feeling ill. Perhaps the air is not clean enough.
 msg.ecomod.polluted_food=You've eaten polluted food!
+
+msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod is not working correctly! During the loading ASM transformers had failed for the following classes: %s. Look for reasons in the log and try to fix them if possible or send your log to 

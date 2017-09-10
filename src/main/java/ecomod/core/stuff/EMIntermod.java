@@ -3,6 +3,7 @@ package ecomod.core.stuff;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 
 import com.google.common.collect.ImmutableList;
