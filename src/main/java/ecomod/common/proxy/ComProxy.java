@@ -5,6 +5,7 @@ import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.core.EMConsts;
+import ecomod.network.EMPacketUpdateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -59,6 +61,11 @@ public class ComProxy
 		
 	}
 	
+	public void openGUIAnalyzer(EntityPlayer player, TileAnalyzer tile)
+	{
+		
+	}
+	
 	public void registerItemModel(Item item, int meta, String model)
 	{
 		
@@ -84,6 +91,11 @@ public class ComProxy
 	}
 	
 	public void registerItemVariants(Block item, ResourceLocation... names)
+	{
+		
+	}
+	
+	public void packetUpdateTE_do_stuff(EMPacketUpdateTileEntity message)
 	{
 		
 	}

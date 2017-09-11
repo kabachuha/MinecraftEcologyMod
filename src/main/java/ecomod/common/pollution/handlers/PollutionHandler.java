@@ -9,7 +9,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.input.Keyboard;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,7 +16,6 @@ import com.google.gson.GsonBuilder;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
-import ecomod.api.capabilities.PollutionProvider;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
@@ -28,12 +26,9 @@ import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.api.pollution.PollutionEmissionEvent;
 import ecomod.asm.EcomodClassTransformer;
 import ecomod.client.advancements.triggers.EMTriggers;
-import ecomod.client.advancements.triggers.PlayerInPollutionTrigger;
-import ecomod.common.blocks.BlockFrame;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
@@ -41,14 +36,11 @@ import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
-import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import ecomod.network.EMPacketHandler;
 import ecomod.network.EMPacketString;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.IAnimals;
@@ -56,7 +48,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemPotion;
@@ -69,7 +60,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -78,8 +68,6 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
@@ -89,7 +77,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
@@ -1064,19 +1051,6 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			
 			dropHandler(event.getEntityLiving().getEntityWorld(), event.getEntityLiving().getPosition(), drps);
-		}
-	}
-	
-	@SubscribeEvent
-	public void itemTooltip(ItemTooltipEvent event)
-	{
-		if(event.getItemStack() != null)
-		{
-			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
-			if(BlockFrame.oc_adapter != null)
-				if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
-					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
 		}
 	}
 	

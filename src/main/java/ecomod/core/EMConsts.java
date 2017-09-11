@@ -13,7 +13,7 @@ public class EMConsts
 	 * 	https://mcforge.readthedocs.io/en/latest/conventions/versioning/
 	 * 
 	 */
-	public static final String version = "1.12.1-1.1.0.0";
+	public static final String version = "1.12.1-1.1.1.0";
 	
 	public static final String deps = "required-after:FML";
 	

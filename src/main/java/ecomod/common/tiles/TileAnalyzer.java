@@ -1,7 +1,5 @@
 package ecomod.common.tiles;
 
-import net.minecraftforge.fml.common.Optional;
-
 import java.util.Date;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,7 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
 
 
-public class TileAnalyzer extends TileEnergy
+public class TileAnalyzer extends TileEnergy implements ITickable
 {
 	public PollutionData pollution = null;
 	public long last_analyzed = -1;
@@ -28,11 +26,6 @@ public class TileAnalyzer extends TileEnergy
 	public TileAnalyzer()
 	{
 		super(EMConfig.analyzer_energy);
-	}
-
-	public String getComponentName()
-	{
-		return "ecomod.analyzer";
 	}
 
 	public PollutionData getPollution()
@@ -45,6 +38,8 @@ public class TileAnalyzer extends TileEnergy
 		if(world.isRemote)
 			return null;
 		
+		sendUpdatePacket();
+		
 		if(energy.getEnergyStored() == energy.getMaxEnergyStored())
 		{
 			if(PollutionUtils.hasSurfaceAccess(getWorld(), getPos()))
@@ -56,7 +51,7 @@ public class TileAnalyzer extends TileEnergy
 				pollution = getPollution();
 			
 				last_analyzed = new Date().getTime();
-			
+				
 				return Pair.of(last_analyzed, pollution);
 			}
 			else
@@ -90,5 +85,19 @@ public class TileAnalyzer extends TileEnergy
 		nbt.setLong("last_analyzed", last_analyzed);
 		
 		return nbt;
+	}
+	
+	int sync_energy = -1;
+
+	@Override
+	public void update() {
+		if(!world.isRemote)
+		{
+			if(energy.getEnergyStored() != sync_energy)
+			{
+				sendUpdatePacket();
+				sync_energy = energy.getEnergyStored();
+			}
+		}
 	}
 }

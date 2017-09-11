@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.input.Keyboard;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,6 +18,7 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.blocks.BlockFrame;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
@@ -28,11 +30,13 @@ import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -339,5 +343,18 @@ public class ClientHandler
 			}
 		}
 		return false;
+	}
+	
+	@SubscribeEvent
+	public void itemTooltip(ItemTooltipEvent event)
+	{
+		if(event.getItemStack() != null)
+		{
+			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
+			if(BlockFrame.oc_adapter != null)
+				if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
+					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
+		}
 	}
 }

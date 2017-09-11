@@ -294,7 +294,7 @@ public class EcomodASMHooks
 
 	                if (flag)
 	                {
-	                    GlStateManager.translate(0.0F, 0.1875F, 0.0F);
+	                    GlStateManager.translate(0.0F, -0.1F, 0.0F);
 	                }
 
 	                minecraft.getItemRenderer().renderItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.HEAD);

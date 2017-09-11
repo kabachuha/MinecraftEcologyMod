@@ -16,7 +16,7 @@ public class EMPacketHandler
 	{
 		reg(EMPacketString.Handler.class, EMPacketString.class, Side.CLIENT);
 		reg(EMPacketString.Handler.class, EMPacketString.class, Side.SERVER);
-		
+		reg(EMPacketUpdateTileEntity.Handler.class, EMPacketUpdateTileEntity.class, Side.CLIENT);
 	}
 	
 	

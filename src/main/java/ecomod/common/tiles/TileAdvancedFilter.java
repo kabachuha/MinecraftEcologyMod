@@ -67,6 +67,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 			}
 			else
 			{
+				sendUpdatePacket();
 				if(isWorking())
 				{
 					if(!was_working)

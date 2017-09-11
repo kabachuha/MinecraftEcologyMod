@@ -5,17 +5,16 @@ import java.util.List;
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.IRespirator;
-import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
-import ecomod.core.EcologyMod;
-import ecomod.core.stuff.EMAchievements;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMItems;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -190,5 +189,12 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		{
 			playerIn.addStat(ach);
 		}*/
+	}
+	
+	private static final String villager_texture = EMUtils.resloc("textures/models/armor/respirator_villager_layer_1.png").toString();
+
+	@Override
+	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+		return entity instanceof EntityVillager || entity instanceof EntityZombieVillager ? villager_texture : super.getArmorTexture(stack, entity, slot, type);
 	}
 }

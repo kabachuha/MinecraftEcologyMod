@@ -4,11 +4,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import ecomod.common.utils.EMEnergyStorage;
 import ecomod.common.utils.EMUtils;
+import ecomod.network.EMPacketHandler;
+import ecomod.network.EMPacketUpdateTileEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 
 @net.minecraftforge.fml.common.Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux")
@@ -118,5 +121,15 @@ public class TileEnergy extends TileEntity implements cofh.redstoneflux.api.IEne
 	public Pair<Integer, Integer> getChunkCoords()
 	{
 		return EMUtils.blockPosToPair(getPos());
+	}
+	
+	public void sendUpdatePacket()
+	{
+		EMPacketHandler.WRAPPER.sendToAllAround(new EMPacketUpdateTileEntity(this), new TargetPoint(this.getWorld().provider.getDimension(), getPos().getX(), getPos().getY(), getPos().getZ(), 6));
+	}
+	
+	public void receiveUpdatePacket(EMPacketUpdateTileEntity packet)
+	{
+		readFromNBT(packet.getData());
 	}
 }
