@@ -328,7 +328,6 @@ public class ClientHandler
 		}
 	}
 	
-	private boolean b = false;
 	private int lasttick = -1;
 	
 	private static final float s0 = 0.3F;
@@ -359,29 +358,6 @@ public class ClientHandler
 				lasttick = event.getEntity().ticksExisted;
 			}
 		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void fogDensity(EntityViewRenderEvent.FogDensity event)
-	{
-		if(smog_intensity.compareTo(0) > 0)
-		{
-			event.setDensity(smog_intensity.floatValue());
-			//event.setCanceled(true);
-			//if(!b)
-				//b = true;
-		}
-		/*else
-		{
-			if(b)
-			{
-				GlStateManager.setFogDensity(1);
-				b = false;
-			}
-		}*/
-		
-		
 	}
 	
 	public boolean client_isEffectActive(String id, PollutionData chunk_pd)
