@@ -86,7 +86,7 @@ public class EMConfig
 	
 	public static boolean is_oc_analyzer_interface_crafted_by_right_click = true;
 	
-	//public static PollutionData indication_dangerous_pollution = new PollutionData(150000, 200000, 150000);
+	public static boolean wasteland_spawns_naturally = false;
 	
 	public static void sync()
 	{
@@ -155,6 +155,8 @@ public class EMConfig
 			
 			filter_energy_per_minute = config.getInt("FilterEnergyPerBlockPerMinute", "TILES", 5000, 0, Integer.MAX_VALUE, "");
 			
+			wasteland_spawns_naturally = config.getBoolean("WastelandSpawnsNaturally", "GENERATION", false, "Does wasteland spawn without any pollution?");
+			
 			double dbls[] = config.get("POLLUTION", "PollutionToFoodPoisonFactors", new double[]{0.01F, 0.01F, 0.03F}).getDoubleList();
 			if(dbls.length == 3)
 			{
@@ -178,7 +180,7 @@ public class EMConfig
 				EcomodStuff.additional_blocks_air_penetrating_state.put(s, true);
 			}
 			
-			for(String s : config.getStringList("AirSealers", "AIR", new String[]{}, ""))
+			for(String s : config.getStringList("AirSealers", "AIR", new String[]{"minecraft:daylight_detector"}, ""))
 			{
 				EcomodStuff.additional_blocks_air_penetrating_state.put(s, false);
 			}

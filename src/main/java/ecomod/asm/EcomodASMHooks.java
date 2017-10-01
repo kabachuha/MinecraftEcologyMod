@@ -306,23 +306,24 @@ public class EcomodASMHooks
 		
 		public static void itemEntityUpdateAddition(EntityItem item)
 		{
+			if(item != null)
 			if(!item.world.isRemote)
 			{
-				if(item.ticksExisted % 100 == 0)
+				if(item.ticksExisted > 0 && item.ticksExisted % 100 == 0)
 				{
 					ItemStack is = item.getItem();
 				
+					if(is != null && !is.isEmpty())
 					if(is.getItem() instanceof ItemFood)
 					{
+						if(EcomodStuff.pollution_effects.containsKey("food_pollution"))
 						if(is.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
 						{
-							if(!EcomodStuff.pollution_effects.containsKey("food_pollution"))
-								return;
-							
 							PollutionData pd = EcologyMod.ph.getPollution(item.getEntityWorld(), EMUtils.blockPosToPair(item.getPosition()));
 							
 							PollutionData trig = EcomodStuff.pollution_effects.get("food_pollution").getTriggerringPollution();
 							
+							if(pd != null && !pd.equals(PollutionData.getEmpty()))
 							if(EcomodStuff.pollution_effects.get("food_pollution").getTriggeringType() == TriggeringType.AND ? pd.compareTo(trig) >= 0 : pd.compareOR(trig) >= 0)
 							{
 								PollutionData delta = pd.clone().add(trig.clone().multiplyAll(-1));

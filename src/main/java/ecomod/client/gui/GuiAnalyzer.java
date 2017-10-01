@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import ecomod.api.EcomodStuff;
@@ -36,9 +38,10 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 public class GuiAnalyzer extends GuiScreen
 {
-	PollutionData pollution = null;//new PollutionData(500000, 400000, 450000);
+	private PollutionData pollution = null;//new PollutionData(500000, 400000, 450000);
 	
-	Date last_update_time = null;
+	private Date last_update_time = null;
+	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat();
 	
 	private GuiButton buttonAnalyze;
@@ -49,11 +52,11 @@ public class GuiAnalyzer extends GuiScreen
 	
 	private TileAnalyzer te;
 	
-	List<IAnalyzerPollutionEffect> effects = new ArrayList<IAnalyzerPollutionEffect>();
+	private List<IAnalyzerPollutionEffect> effects = new ArrayList<IAnalyzerPollutionEffect>();
 	
 	private static boolean inited_first = false;
 	
-	int startIndex;
+	private int startIndex;
 	
 	public GuiAnalyzer(TileAnalyzer tile)
 	{
@@ -211,8 +214,8 @@ public class GuiAnalyzer extends GuiScreen
 		}
     }
 	
-	static final int header_width = 80;
-	static final int icon_size = 50;
+	private static final int header_width = 80;
+	private static final int icon_size = 50;
 	
 	
 	public void drawGrid(int xt1, int startX, int startY, int endX, int endY, int mouseX, int mouseY)
@@ -389,7 +392,82 @@ public class GuiAnalyzer extends GuiScreen
         fontRendererIn.drawString(text, x, y, color);
     }
     
-    private static class ButtonUpDown extends GuiButton
+    
+    
+    @Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		
+		if(effects.size() > 0)
+		{
+			int k = Mouse.getEventDWheel();
+		
+			if(k != 0)
+			{
+				if(k > 0)
+				{
+					if(startIndex >=1)
+					{
+        				startIndex--;
+        				if(buttonUp != null)
+        				{
+        					((ButtonUpDown)buttonUp).activeticks = 20;
+        					buttonUp.playPressSound(this.mc.getSoundHandler());
+        				}
+					}
+				}
+				else
+				{
+					if(startIndex < effects.size() - 2)
+					{
+						startIndex++;
+						if(buttonDown != null)
+						{
+							((ButtonUpDown)buttonDown).activeticks = 20;
+							buttonDown.playPressSound(this.mc.getSoundHandler());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException
+    {
+		if (keyCode == 1 || keyCode == Keyboard.KEY_E)
+        {
+            this.mc.displayGuiScreen((GuiScreen)null);
+
+            if (this.mc.currentScreen == null)
+            {
+                this.mc.setIngameFocus();
+            }
+        }
+		
+		if(keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
+		{
+			actionPerformed(buttonAnalyze);
+			buttonAnalyze.playPressSound(this.mc.getSoundHandler());
+		}
+		
+		if(keyCode == Keyboard.KEY_W || keyCode == Keyboard.KEY_UP)
+		{
+			actionPerformed(buttonUp); 
+			buttonUp.playPressSound(this.mc.getSoundHandler());
+			((ButtonUpDown)buttonUp).activeticks = 20;
+		}
+		
+		if(keyCode == Keyboard.KEY_S || keyCode == Keyboard.KEY_DOWN)
+		{
+			actionPerformed(buttonDown); 
+			buttonDown.playPressSound(this.mc.getSoundHandler());
+			((ButtonUpDown)buttonDown).activeticks = 20;
+		}
+    }
+
+	
+	private static class ButtonUpDown extends GuiButton
     {
     	public ButtonUpDown(int buttonId, int x, int y, boolean up) {
 			super(buttonId, x, y, sizeX, sizeY, "");
@@ -399,6 +477,7 @@ public class GuiAnalyzer extends GuiScreen
 		public static final int sizeX = 22;
     	public static final int sizeY = 14;
     	public boolean isUp;
+    	public int activeticks = 0;
     	
     	@Override
     	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
@@ -406,6 +485,12 @@ public class GuiAnalyzer extends GuiScreen
             if (this.visible)
             {
                 boolean flag = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+                
+                if(activeticks > 0)
+                {
+                	flag = true;
+                	activeticks--;
+                }
                 
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 mc.getTextureManager().bindTexture(new ResourceLocation("ecomod:textures/gui/analyzer/icons/buttons/updown.png"));

@@ -34,6 +34,7 @@ import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
+import ecomod.common.utils.Percentage;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
@@ -88,6 +89,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 
 
@@ -97,6 +99,7 @@ public class PollutionHandler implements IPollutionGetter
 	
 	private Gson gson = new GsonBuilder().serializeNulls().create();
 	
+	@Deprecated
 	public EMPacketString formCachedPollutionToSend(int dim, UUID id, int radius)
 	{/*
 		WorldProcessingThread wpt = getWPT(DimensionManager.getWorld(dim));
@@ -118,6 +121,7 @@ public class PollutionHandler implements IPollutionGetter
 			return null;
 	}
 	
+	@Deprecated
 	public EMPacketString formCachedPollutionToSend(EntityPlayer player, int radius)
 	{/*
 		if(player == null)
@@ -655,9 +659,8 @@ public class PollutionHandler implements IPollutionGetter
 					EMPacketHandler.WRAPPER.sendTo(to_send, (EntityPlayerMP)event.getEntity());
 				}
 				*/
-				boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
 				
-				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+("-" + getVisibleSmogIntensity(event.getWorld(), event.getEntity().getPosition()))), (EntityPlayerMP)event.getEntity());
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone((EntityPlayer)event.getEntity()) ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 				
@@ -702,26 +705,13 @@ public class PollutionHandler implements IPollutionGetter
 		if(world.isRemote)//client side actions are handled in ClientHandler
 			return;
 		
-		/*
-			//1.5 min
-			if((entity.ticksExisted + 1) % 1800 == 0)
-			{
-				if(entity instanceof EntityPlayer)
-				{
-					EMPacketString to_send = EcologyMod.ph.formCachedPollutionToSend((EntityPlayer)event.getEntity(), EMConfig.cached_pollution_radius);
-				
-					if(to_send == null)
-					{
-						EcologyMod.log.error("Unable to make EMPacketString with mark 'P'!!! Unable to form cached pollution for player "+((EntityPlayer)event.getEntity()).getName()+"("+((EntityPlayer)event.getEntity()).getUniqueID().toString()+")");
-					}
-					else
-					{
-						EMPacketHandler.WRAPPER.sendTo(to_send, (EntityPlayerMP)event.getEntity());
-					}
-				}
-			}
-		*/
-			if(((entity.ticksExisted) % 300 == 0))
+		if((entity.ticksExisted) % 60 == 0)
+		{
+			if(entity instanceof EntityPlayerMP)
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(getVisibleSmogIntensity(world, entity.getPosition()).intValue())), (EntityPlayerMP)entity);
+		}
+		
+			if((entity.ticksExisted) % 300 == 0)
 			{
 				if(entity instanceof EntityLivingBase)
 				{
@@ -755,8 +745,6 @@ public class PollutionHandler implements IPollutionGetter
 						BlockPos bp = new BlockPos(entity.posX, entity.posY, entity.posZ);
 						
 						boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
-				
-						EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(inSmog ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 						
 						if(inSmog && PollutionUtils.hasSurfaceAccess(entity.getEntityWorld(), bp))
 						{
@@ -764,15 +752,15 @@ public class PollutionHandler implements IPollutionGetter
 							{
 								EMTriggers.BREATHE_SMOG.trigger((EntityPlayerMP)entity, new Object[]{});
 								
-								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
-								((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
+								((EntityPlayerMP)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
+								((EntityPlayerMP)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
 								
-								if(getPollution(world, EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight()).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
-									((EntityPlayerMP)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
+								if(getPollution(world, EMUtils.blockPosToPair(bp)).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
+									((EntityPlayerMP)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
 							}
 						}
 						
-						EMTriggers.PLAYER_IN_POLLUTION.trigger((EntityPlayerMP)event.getEntity(), new Object[]{});
+						EMTriggers.PLAYER_IN_POLLUTION.trigger((EntityPlayerMP)entity, new Object[]{});
 					}
 					else
 					{
@@ -782,7 +770,7 @@ public class PollutionHandler implements IPollutionGetter
 							{
 								if(!PollutionUtils.isEntityRespirating(entity))
 								{
-									((EntityLivingBase)event.getEntity()).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
+									((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
 								}
 							}
 						}
@@ -1052,6 +1040,77 @@ public class PollutionHandler implements IPollutionGetter
 			
 			dropHandler(event.getEntityLiving().getEntityWorld(), event.getEntityLiving().getPosition(), drps);
 		}
+	}
+	
+	private static final int smog_search_radius = 2;
+	
+	private Percentage getVisibleSmogIntensity(World w, BlockPos bp)
+	{
+		if(!PollutionEffectsConfig.isEffectPresent("smog"))
+			return new Percentage(0);
+		
+		Pair<Integer, Integer> chunkpos = EMUtils.blockPosToPair(bp);
+		
+		if(PollutionEffectsConfig.isEffectActive("smog", getPollution(w, chunkpos)))
+		{
+			return new Percentage(100);
+		}
+		
+		int d_x = 0, d_y = 0, r;
+		boolean found = false;
+		
+		for(r = 1; r <= smog_search_radius; r++)
+		{
+			if(!found)
+			for(d_x = -r; d_x <= r; d_x++)
+			{
+				if(PollutionEffectsConfig.isEffectActive("smog", getPollution(w, EMUtils.offsetPair(chunkpos, d_x, d_y))))
+				{
+					found = true;
+					break;
+				}
+			}
+			
+			if(!found)
+			for(d_y = -r; d_y <= r; d_y++)
+			{
+				if(PollutionEffectsConfig.isEffectActive("smog", getPollution(w, EMUtils.offsetPair(chunkpos, d_x, d_y))))
+				{
+					found = true;
+					break;
+				}
+			}
+			
+			if(!found)
+			for(d_x = r; d_x >= -r; d_x--)
+			{
+				if(PollutionEffectsConfig.isEffectActive("smog", getPollution(w, EMUtils.offsetPair(chunkpos, d_x, d_y))))
+				{
+					found = true;
+					break;
+				}
+			}
+			
+			if(!found)
+			for(d_y = r; d_y >= -r; d_y--)
+			{
+				if(PollutionEffectsConfig.isEffectActive("smog", getPollution(w, EMUtils.offsetPair(chunkpos, d_x, d_y))))
+				{
+					found = true;
+					break;
+				}
+			}
+			
+			if(found)
+				break;
+		}
+		
+		if(found)
+		{
+			return new Percentage(100 / (r * r + 1));
+		}
+		
+		return new Percentage(0);
 	}
 	
 	@Nullable

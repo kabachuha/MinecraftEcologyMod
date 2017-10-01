@@ -60,18 +60,30 @@ public class BlockFluidPollution extends BlockFluidFinite {
 				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("hunger"), 220, 2));
 				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 220, 2));
 				((EntityLivingBase)entityIn).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 180, 1));
-				
-				if(entityIn instanceof EntityPlayer)
-				{
-					//Achievement ach = EMAchievements.ACHS.get("concentrated_pollution");
-				
-					//if(ach != null)
-					//if(!((EntityPlayer)entityIn).hasAchievement(ach))
-					//{
-						//((EntityPlayer)entityIn).addStat(ach);
-					//}
-				}
 			}
 		}
 	}
+	
+	@Override
+	public int tryToFlowVerticallyInto(World world, BlockPos pos, int amtToInput)
+    {
+		BlockPos other = pos.add(0, densityDir, 0);
+        if (other.getY() < 0 || other.getY() >= world.getHeight())
+        { 
+            PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
+            if(adv_filter_redution != null && adv_filter_redution.compareTo(PollutionData.getEmpty()) != 0)
+            {
+            	int amount = this.getQuantaValue(world, pos) * 1000 / this.quantaPerBlock;
+            	
+            	if(amount > 0)
+            		EcomodAPI.emitPollution(world, EMUtils.blockPosToPair(pos), new PollutionData(-adv_filter_redution.getAirPollution() * amount / 2, -adv_filter_redution.getWaterPollution() * amount / 4, 0), true);
+            }
+            
+            world.setBlockToAir(pos);
+            
+            return 0;
+        }
+        
+		return super.tryToFlowVerticallyInto(world, pos, amtToInput);
+    }
 }

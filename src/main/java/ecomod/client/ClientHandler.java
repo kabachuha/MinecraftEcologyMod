@@ -24,6 +24,7 @@ import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.utils.EMUtils;
+import ecomod.common.utils.Percentage;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.network.EMPacketString;
@@ -50,7 +51,9 @@ public class ClientHandler
 	
 	public Map<String, IAnalyzerPollutionEffect> pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
 	
-	public boolean smog = false;
+	public Percentage smog_intensity = Percentage.ZERO;
+	
+	public Percentage required_smog_intensity = Percentage.ZERO;
 	
 	public boolean acid_rain = false;
 	
@@ -80,18 +83,43 @@ public class ClientHandler
 	
 	public void setSmog(String str)
 	{
-		if(str.length() != 1)
+		if(str.length() < 1)
 			return;
+		
+		if(str.equals("-0"))
+		{
+			smog_intensity = Percentage.ZERO;
+			required_smog_intensity = Percentage.ZERO;
+			return;
+		}
+		
+		if(str.equals("-1"))
+		{
+			smog_intensity = Percentage.FULL;
+			required_smog_intensity = Percentage.FULL;
+			return;
+		}
 		
 		try
 		{
-			boolean b = Integer.parseInt(str) != 0;
-		
-			smog = b;
+			boolean force = false;
+			if(str.charAt(0) == '-')
+			{
+				force = true;
+				str = str.substring(1);
+			}
+			
+			int i = Integer.parseUnsignedInt(str);
+			
+			required_smog_intensity = new Percentage(i);
+			
+			if(force)
+			{
+				smog_intensity = new Percentage(i);
+			}
 		}
 		catch (Exception ex)
 		{
-			smog = false;
 		}
 	}
 	
@@ -292,7 +320,7 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogColor(EntityViewRenderEvent.FogColors event)
 	{
-		if(smog)
+		if(smog_intensity.compareTo(0) > 0)
 		{
 			event.setRed(66F/255);
 			event.setGreen(80F/255);
@@ -301,27 +329,59 @@ public class ClientHandler
 	}
 	
 	private boolean b = false;
+	private int lasttick = -1;
+	
+	private static final float s0 = 0.3F;
+	private static final float e0 = 0.2F;
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
 	{
-		if(smog)
+		if(smog_intensity.compareTo(0) > 0)
 		{
-			GlStateManager.setFogDensity(1F);
-			GlStateManager.setFogStart(0.3F); // 0.7
-			GlStateManager.setFogEnd(event.getFarPlaneDistance()*0.2F);
-			if(!b)
-				b = true;
+			float f = event.getFarPlaneDistance();
+			GlStateManager.setFogStart((float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
+			GlStateManager.setFogEnd(e0 * f + (f - e0 * f) * (1 - smog_intensity.floatValue()));
+			GlStateManager.setFogDensity(smog_intensity.floatValue());
 		}
-		else
+		
+		if((event.getEntity() != null && event.getEntity().ticksExisted % 2 == 0) && !Minecraft.getMinecraft().isGamePaused())
+		{
+			if(event.getEntity().ticksExisted != lasttick)
+			{
+				if(smog_intensity.compareTo(required_smog_intensity) < 0)
+					smog_intensity = smog_intensity.add(2);
+		
+				if(smog_intensity.compareTo(required_smog_intensity) > 0)
+					smog_intensity = smog_intensity.add(-2);
+				
+				lasttick = event.getEntity().ticksExisted;
+			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void fogDensity(EntityViewRenderEvent.FogDensity event)
+	{
+		if(smog_intensity.compareTo(0) > 0)
+		{
+			event.setDensity(smog_intensity.floatValue());
+			//event.setCanceled(true);
+			//if(!b)
+				//b = true;
+		}
+		/*else
 		{
 			if(b)
 			{
 				GlStateManager.setFogDensity(1);
 				b = false;
 			}
-		}
+		}*/
+		
+		
 	}
 	
 	public boolean client_isEffectActive(String id, PollutionData chunk_pd)

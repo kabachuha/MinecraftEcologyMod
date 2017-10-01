@@ -14,8 +14,6 @@ import ecomod.common.world.gen.BiomeWasteland;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.crash.CrashReport;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
@@ -28,21 +26,20 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
-import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryInternal;
+import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryManager;
 
 public class MainRegistry
@@ -90,7 +87,8 @@ public class MainRegistry
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(EcologyMod.instance, igh);
 		
-		BiomeManager.addBiome(BiomeType.COOL, new BiomeEntry(biome_wasteland, 10));
+		if(EMConfig.wasteland_spawns_naturally)
+			BiomeManager.addBiome(BiomeType.COOL, new BiomeEntry(biome_wasteland, 10));
 		BiomeDictionary.addTypes(biome_wasteland, BiomeDictionary.Type.WASTELAND, BiomeDictionary.Type.DEAD, BiomeDictionary.Type.SPOOKY, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.RARE, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.WET, BiomeDictionary.Type.COLD);
 		BiomeManager.addStrongholdBiome(biome_wasteland);
 		

@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import ecomod.api.pollution.ITEPollutionConfig;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.utils.EMUtils;
@@ -25,7 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class TEPollutionConfig
+public class TEPollutionConfig implements ITEPollutionConfig
 {
 	public List<TEPollution> data;
 	
@@ -361,5 +362,44 @@ public class TEPollutionConfig
 		{
 			return version;
 		}
+	}
+
+	@Override
+	public boolean containsTile(ResourceLocation id) {
+		return hasTile(id);
+	}
+
+	@Override
+	public PollutionData getTilePollution(ResourceLocation id) {
+		return hasTile(id) ? getTEP(id).getEmission() : PollutionData.getEmpty();
+	}
+
+	@Override
+	public boolean removeTilePollution(ResourceLocation id) {
+		if(hasTile(id))
+		{
+			data.remove(getTEP(id));
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean addTilePollution(ResourceLocation id, PollutionData emission, boolean override) {
+		if(hasTile(id))
+		{
+			if(!override)
+			{
+				return false;
+			}
+			data.remove(getTEP(id));
+		}
+		
+		return data.add(new TEPollution(id.toString(), emission));
+	}
+
+	@Override
+	public String getVersion() {
+		return version;
 	}
 }

@@ -41,6 +41,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class WorldProcessingThread extends Thread
 {
@@ -82,9 +83,15 @@ public class WorldProcessingThread extends Thread
 		
 		while(!isInterrupted() && manager != null && EcologyMod.ph.threads.containsKey(PollutionUtils.genPMid(manager)) && DimensionManager.getWorld(manager.getDim()) != null && !manager.getWorld().isRemote)
 		{
-			if(manager != null && manager.getWorld().isRemote)
+			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
 			while(Minecraft.getMinecraft().isGamePaused())
 				slp(15); //Don't make anything while MC is paused
+			
+			if(manager == null)
+			{
+				shutdown();
+				return;
+			}
 			
 			profiler.profilingEnabled = true;
 			
@@ -92,6 +99,7 @@ public class WorldProcessingThread extends Thread
 			profiler.startSection("WPT_PREPARING_FOR_RUN");
 			int error_counter = 0;
 			isWorking = true;
+
 			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
 			
 			World world = manager.getWorld();

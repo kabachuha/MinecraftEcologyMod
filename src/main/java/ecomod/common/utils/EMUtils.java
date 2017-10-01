@@ -13,6 +13,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
@@ -32,6 +34,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -163,6 +166,11 @@ public class EMUtils
 	public static Pair<Integer, Integer> blockPosToPair(BlockPos pos)
 	{
 		return chunkPosToPair(new ChunkPos(pos));
+	}
+	
+	public static Pair<Integer, Integer> blockPosToPair(Entity entity)
+	{
+		return blockPosToPair(entity.getPosition());
 	}
 	
 	public static ChunkPos pairToChunkPos(Pair<Integer, Integer> pair)
@@ -469,5 +477,52 @@ public class EMUtils
 		}
 		
 		return sum/numbers.length;
+	}
+	
+	public static Pair<Integer, Integer> offsetPair(Pair<Integer, Integer> pair, Pair<Integer, Integer> offset)
+	{
+		return Pair.of(pair.getLeft() + offset.getLeft(), pair.getRight() + offset.getRight());
+	}
+	
+	public static Pair<Integer, Integer> offsetPair(Pair<Integer, Integer> pair, int offx, int offy)
+	{
+		return Pair.of(pair.getLeft() + offx, pair.getRight() + offy);
+	}
+	
+	public static <T> T retLog(T o, Logger log, Level level)
+	{
+		log.log(level, o);
+		return o;
+	}
+	
+	public static <T> T retLog(T o, Logger log)
+	{
+		log.info(o);
+		return o;
+	}
+	
+	public static <T> T retLog(T o)
+	{
+		return retLog(o, EcologyMod.log);
+	}
+	
+	public static <T> T retLog(T o, Level lvl)
+	{
+		return retLog(o, EcologyMod.log, lvl);
+	}
+	
+	public static int square(int x)
+	{
+		return x * x;
+	}
+	
+	public static double square(float x)
+	{
+		return x * x;
+	}
+	
+	public static double square(double x)
+	{
+		return x * x;
 	}
 }

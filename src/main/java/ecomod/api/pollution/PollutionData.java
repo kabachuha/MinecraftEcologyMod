@@ -313,4 +313,9 @@ public class PollutionData implements Comparable
 				setSoilPollution(nbt.getDouble("soil"));
 		}
 	}
+	
+	public boolean isEmpty()
+	{
+		return equals(getEmpty());
+	}
 }

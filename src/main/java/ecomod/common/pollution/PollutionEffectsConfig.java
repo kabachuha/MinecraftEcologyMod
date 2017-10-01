@@ -42,9 +42,14 @@ public class PollutionEffectsConfig
 		}
 	}
 	
+	public static boolean isEffectPresent(String effect_id)
+	{
+		return EcomodStuff.pollution_effects.containsKey(effect_id);
+	}
+	
 	public static boolean isEffectActive(String id, PollutionData chunk_pd)
 	{
-		if(chunk_pd != null)
+		if(chunk_pd != null && !chunk_pd.isEmpty())
 		if(EcomodStuff.pollution_effects.containsKey(id))
 		{
 			IAnalyzerPollutionEffect iape = EcomodStuff.pollution_effects.get(id);

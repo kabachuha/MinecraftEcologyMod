@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
+import ecomod.api.pollution.ITEPollutionConfig;
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
@@ -41,4 +42,6 @@ public class EcomodStuff
 	public static Map<String, Boolean> additional_blocks_air_penetrating_state = null;
 	
 	public static NonNullList<Function<TileEntity, Object[]>> custom_te_pollution_determinants = null;
+	
+	public static ITEPollutionConfig tile_entity_pollution = null;
 }
