@@ -4,7 +4,7 @@ import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
-@IFMLLoadingPlugin.MCVersion("1.12.1")
+@IFMLLoadingPlugin.MCVersion("1.12.2")
 public class EcomodLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
