@@ -21,7 +21,7 @@
     },
     //Immersive Engineering
     {
-      "id": "immersiveengineering:CokeOven",
+      "id": "immersiveengineering:cokeoven",
       "emission": {
         "air": 250.0,
         "water": 12.0,
@@ -29,7 +29,7 @@
       }
     },
     {
-      "id": "immersiveengineering:BlastFurnace",
+      "id": "immersiveengineering:blastfurnace",
       "emission": {
         "air": 222.0,
         "water": 12.0,
@@ -37,7 +37,7 @@
       }
     },
     {
-      "id": "immersiveengineering:BlastFurnaceAdvanced",
+      "id": "immersiveengineering:blastfurnaceadvanced",
       "emission": {
         "air": 186.0,
         "water": 10.0,
@@ -45,15 +45,15 @@
       }
     },
     {
-      "id": "immersiveengineering:AlloySmelter",
+      "id": "immersiveengineering:alloysmelter",
       "emission": {
-        "air": 176,
+        "air": 176.0,
         "water": 10.0,
         "soil": 20.0
       }
     },
     {
-      "id": "immersiveengineering:Crusher",
+      "id": "immersiveengineering:crusher",
       "emission": {
         "air": 199.0,
         "water": 12.0,
@@ -61,7 +61,15 @@
       }
     },
     {
-      "id": "immersiveengineering:Assembler",
+      "id": "immersiveengineering:excavator",
+      "emission": {
+        "air": 280.0,
+        "water": 50.0,
+        "soil": 200.0
+      }
+    },
+    {
+      "id": "immersiveengineering:assembler",
       "emission": {
         "air": 34.0,
         "water": 4.0,
@@ -69,7 +77,7 @@
       }
     },
     {
-      "id": "immersiveengineering:Fermenter",
+      "id": "immersiveengineering:fermenter",
       "emission": {
         "air": 233.0,
         "water": 36.0,
@@ -77,7 +85,7 @@
       }
     },
     {
-      "id": "immersiveengineering:Refinery",
+      "id": "immersiveengineering:refinery",
       "emission": {
         "air": 400.0,
         "water": 50.0,
@@ -85,15 +93,15 @@
       }
     },
     {
-      "id": "immersiveengineering:DieselGenerator",
+      "id": "immersiveengineering:dieselgenerator",
       "emission": {
         "air": 360.0,
-        "water": 10.0,
-        "soil": 60.0
+        "water": 75.0,
+        "soil": 50.0
       }
     },
     {
-      "id": "immersiveengineering:ArcFurnace",
+      "id": "immersiveengineering:arcfurnace",
       "emission": {
         "air": 180.0,
         "water": 3.0,
@@ -474,6 +482,135 @@
         "air": 235.0,
         "water": 28.0,
         "soil": 46.0
+      }
+    },
+    //Mekanism
+    {
+      "id": "minecraft:digitalminer",
+      "emission": {
+        "air": 150.0,
+        "water": 60.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "minecraft:crusher",
+      "emission": {
+        "air": 135.0,
+        "water": 27.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "minecraft:metallurgicinfuser",
+      "emission": {
+        "air": 150.0,
+        "water": 10.0,
+        "soil": 3.0
+      }
+    },
+    {
+      "id": "minecraft:enrichmentchamber",
+      "emission": {
+        "air": 180.0,
+        "water": 12.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "minecraft:osmiumcompressor",
+      "emission": {
+        "air": 70.0,
+        "water": 8.0,
+        "soil": 6.0
+      }
+    },
+    {
+      "id": "minecraft:combiner",
+      "emission": {
+        "air": 95.0,
+        "water": 15.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "minecraft:energizedsmelter",
+      "emission": {
+        "air": 73.0,
+        "water": 10.0,
+        "soil": 4.0
+      }
+    },
+    {
+      "id": "minecraft:purificationchamber",
+      "emission": {
+        "air": 180.0,
+        "water": 60.0,
+        "soil": 20.0
+      }
+    },
+    {
+      "id": "minecraft:precisionsawmill",
+      "emission": {
+        "air": 84.0,
+        "water": 50.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "minecraft:chemicalwasher",
+      "emission": {
+        "air": 42.0,
+        "water": 200.0,
+        "soil": 30.0
+      }
+    },
+    {
+      "id": "minecraft:chemicalinjectionchamber",
+      "emission": {
+        "air": 120.0,
+        "water": 25.0,
+        "soil": 30.0
+      }
+    },
+    {
+      "id": "minecraft:chemicaldissolutionchamber",
+      "emission": {
+        "air": 150.0,
+        "water": 33.0,
+        "soil": 27.0
+      }
+    },
+    {
+      "id": "minecraft:chemicaloxidizer",
+      "emission": {
+        "air": 170.0,
+        "water": 30.0,
+        "soil": 20.0
+      }
+    },
+    {
+      "id": "minecraft:chemicalinfuser",
+      "emission": {
+        "air": 160.0,
+        "water": 24.0,
+        "soil": 16.0
+      }
+    },
+    {
+      "id": "minecraft:fuelwoodheater",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "minecraft:pressurizedreactionchamber",
+      "emission": {
+        "air": 165.0,
+        "water": 55.0,
+        "soil": 38.0
       }
     }
   ]

@@ -9,6 +9,8 @@ import buildcraft.api.tiles.IHasWork;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.IRespirator;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.tiles.compat.CommonCapsWorker;
+import ecomod.core.EMConsts;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -54,6 +56,17 @@ public class PollutionUtils
 		if(te instanceof TileEntityFurnace)
 		{
 			return ((TileEntityFurnace)tile).isBurning();
+		}
+		
+		if(EMConsts.common_caps_compat$IWorker)
+		{
+			if(CommonCapsWorker.CAP_WORKER != null)
+			if(tile.hasCapability(CommonCapsWorker.CAP_WORKER, null))
+			{
+				org.cyclops.commoncapabilities.api.capability.work.IWorker work = tile.getCapability(CommonCapsWorker.CAP_WORKER, null);
+				
+				return work.hasWork() && work.canWork();
+			}
 		}
 		
 		if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))

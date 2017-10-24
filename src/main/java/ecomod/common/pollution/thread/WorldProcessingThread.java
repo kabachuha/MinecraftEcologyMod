@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
@@ -38,9 +39,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class WorldProcessingThread extends Thread
@@ -57,11 +60,10 @@ public class WorldProcessingThread extends Thread
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
-		super();
+		super(SidedThreadGroups.SERVER, "WPT_"+pm.getDim());
 		
 		manager = pm;
-		
-		this.setName("WPT_"+pm.getDim());
+
 		this.setDaemon(true);
 		this.setPriority(2);//2 of 10 
 	}
@@ -101,6 +103,8 @@ public class WorldProcessingThread extends Thread
 			isWorking = true;
 
 			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
+			
+			long timestamp = System.currentTimeMillis();
 			
 			World world = manager.getWorld();
 			
@@ -181,6 +185,8 @@ public class WorldProcessingThread extends Thread
 			}
 			
 			profiler.profilingEnabled = false;
+			
+			EcologyMod.log.info("World processing completed in " + (System.currentTimeMillis() - timestamp) / 1000F + " seconds");
 			
 			slp();
 		}
@@ -266,7 +272,7 @@ public class WorldProcessingThread extends Thread
 	public PollutionData calculateChunkPollution(Chunk c)
 	{
 		profiler.startSection("WPT_CALCULATING_CHUNK_POLLUTION");
-		List<TileEntity> tes = new LinkedList<TileEntity>(c.getTileEntityMap().values());
+		List<TileEntity> tes = new CopyOnWriteArrayList<TileEntity>(c.getTileEntityMap().values());
 		
 		PollutionData ret = new PollutionData();
 		
@@ -366,7 +372,7 @@ public class WorldProcessingThread extends Thread
 	public Map<PollutionType, Float> calculateMultipliers(Chunk c)
 	{
 		profiler.startSection("WPT_CALCULATING_POLLUTION_MULTIPLIERS");
-		List<TileEntity> tes = new LinkedList<TileEntity>(c.getTileEntityMap().values());
+		List<TileEntity> tes = new CopyOnWriteArrayList<TileEntity>(c.getTileEntityMap().values());
 		
 		Map<PollutionType, Float> ret = new HashMap<PollutionType, Float>();
 		
@@ -393,19 +399,25 @@ public class WorldProcessingThread extends Thread
 	public void handleChunk(Chunk c)
 	{
 		profiler.startSection("WPT_HANDLING_CHUNK");
+		
+		if(manager!=null)
 		if(PollutionEffectsConfig.isEffectActive("wasteland", manager.getPollution(c.x, c.z)))
-		for(int i = 0; i < 16; i++)
-			for(int j = 0; j < 16; j++)
-			{
-				if(c.getWorld().rand.nextInt(10) == 0)
-				{
-					int strtx = c.x << 4;
-					int strtz = c.z << 4;
+		{
+			((WorldServer)manager.getWorld()).addScheduledTask(()->{
+				for(int i = 0; i < 16; i++)
+					for(int j = 0; j < 16; j++)
+					{
+						if(c.getWorld().rand.nextInt(10) == 0)
+						{
+							int strtx = c.x << 4;
+							int strtz = c.z << 4;
 					
-					if(c.getBiome(new BlockPos(i + strtx, c.getWorld().getActualHeight(), j + strtz), c.getWorld().getBiomeProvider()) != MainRegistry.biome_wasteland)
-						EMUtils.setBiome(c, MainRegistry.biome_wasteland, i + strtx, j + strtz);
-				}
-			}
+							if(c.getBiome(new BlockPos(i + strtx, c.getWorld().getActualHeight(), j + strtz), c.getWorld().getBiomeProvider()) != MainRegistry.biome_wasteland)
+								EMUtils.setBiome(c, MainRegistry.biome_wasteland, i + strtx, j + strtz);
+						}
+					}
+			});
+		}
 		profiler.endSection();
 	}
 	
@@ -413,6 +425,7 @@ public class WorldProcessingThread extends Thread
 	public void forceSE()
 	{
 		profiler.startSection("WPT_FORCED_HANDLING_SCHEDULED_EMISSIONS");
+		if(manager!=null)
 		if(getScheduledEmissions().size() > 0)
 		{
 			List<ChunkPollution> temp = new ArrayList<ChunkPollution>();

@@ -53,6 +53,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.versioning.ComparableVersion;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class EMUtils 
@@ -86,54 +87,6 @@ public class EMUtils
 		return buffer.toString(); 
 	}
 	
-	public static int compareEcomodVersionsNoMC(String ver1, String ver2)
-	{
-		int strt1 = ver1.indexOf("-")+1;
-		int strt2 = ver2.indexOf("-")+1;
-		
-		ver1 = ver1.substring(strt1);
-		ver2 = ver2.substring(strt2);
-		
-		strt1 = ver1.indexOf("-");
-		strt2 = ver2.indexOf("-");
-		
-		if(strt1 != -1)
-		{
-			ver1 = ver1.split("-")[0];
-		}
-		if(strt2 != -1)
-		{
-			ver2 = ver2.split("-")[0];
-		}
-		
-		return compareVersionsOnlyDots(ver1, ver2);
-	}
-	
-	public static int compareVersionsOnlyDots(String ver1, String ver2)
-	{
-		ver1 = ver1.replace('.', 'Y');
-		ver2 = ver2.replace('.', 'Y');
-		
-		String parts1[] = ver1.split("Y");
-		String parts2[] = ver2.split("Y");
-		
-		if(parts1.length != parts2.length)
-			throw new IllegalArgumentException();
-		
-		for(int i = 0; i < parts1.length; i++)
-		{
-			int x1 = Integer.parseInt(parts1[i]);
-			int x2 = Integer.parseInt(parts2[i]);
-			
-			if(x1 > x2)
-				return 1;
-			if(x1 < x2)
-				return -1;
-		}
-		
-		return 0;
-	}
-	
 	public static String parseMINECRAFTURL(String mcurl)
 	{
 		if(mcurl.contains("<MINECRAFT>"))
@@ -151,11 +104,14 @@ public class EMUtils
 		return mcurl;
 	}
 	
-	public static boolean shouldTEPCupdate(String thi/*s*/, String ne/*w*/)
+	public static boolean shouldTEPCupdate(String thiz, String nev)
 	{
-		if(thi.toLowerCase().contentEquals("custom")) return false;
+		if(thiz.toLowerCase().contentEquals("custom")) return false;
 		
-		return compareVersionsOnlyDots(thi, ne) > 0;
+		ComparableVersion ver1 = new ComparableVersion(thiz);
+		ComparableVersion ver2 = new ComparableVersion(nev);
+		
+		return  ver2.compareTo(ver1) > 0;
 	}
 	
 	public static Pair<Integer, Integer> chunkPosToPair(ChunkPos pos)
@@ -296,15 +252,12 @@ public class EMUtils
 		if(size_x != size_y)//Thus the figure isn't square
 			return false;
 		
-		if(size_x/2 > EMConsts.max_cached_pollution_radius || size_y/2 > EMConsts.max_cached_pollution_radius)
-			return false;
-		
 		
 		for(int i = x_min; i <= x_max; i++)//I is X
 			for(int j = y_min; j <= y_max; j++)//J is Y(z)
 			{
 				while(points.contains(Pair.of(i, j)))
-					points.remove(Pair.of(i, j));//Getting rid of any duplicates if there are.
+					points.remove(Pair.of(i, j));//Getting rid of points within the square.
 			}
 		
 		
@@ -524,5 +477,38 @@ public class EMUtils
 	public static double square(double x)
 	{
 		return x * x;
+	}
+	
+	public static void logIfNotNull(Object o, Logger log, Level lvl)
+	{
+		if(o != null)
+			log.log(lvl, o);
+	}
+	
+	public static void logIfNotNull(PollutionData o, Logger log, Level lvl)
+	{
+		if(o != null && !o.isEmpty())
+			log.log(lvl, o);
+	}
+	
+	public static Class classForNameOrNull(String className)
+	{
+		try
+		{
+			return Class.forName(className);
+		}
+		catch(Exception e)
+		{
+			EcologyMod.log.error("Unable to find the class: "+className);
+			EcologyMod.log.error(e.toString());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void repeat(int times, java.util.function.IntConsumer func)
+	{
+		for(int i = 0; i < times; i++)
+			func.accept(i);
 	}
 }

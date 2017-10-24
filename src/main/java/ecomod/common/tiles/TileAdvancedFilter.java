@@ -10,7 +10,9 @@ import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.common.utils.EMUtils;
+import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMIntermod;
@@ -129,7 +131,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		return ret;
 	}
 	
-	private FluidStack getProduction()
+	public FluidStack getProduction()
 	{
 		PollutionData pd = EcomodAPI.getPollution(getWorld(), this.getChunkCoords().getLeft(), this.getChunkCoords().getRight());
 		
@@ -188,7 +190,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 	@Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || (EMIntermod.CAP_HAS_WORK != null && capability == EMIntermod.CAP_HAS_WORK) || super.hasCapability(capability, facing);
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == EMIntermod.CAP_HAS_WORK || (EMConsts.common_caps_compat$IWorker && capability == CommonCapsWorker.CAP_WORKER)|| super.hasCapability(capability, facing);
     }
 
     @SuppressWarnings("unchecked")
@@ -200,9 +202,12 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
             return (T) tank;
         
         if (net.minecraftforge.fml.common.ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
-        if (EMIntermod.CAP_HAS_WORK != null && capability == EMIntermod.CAP_HAS_WORK)
+        if (capability == EMIntermod.CAP_HAS_WORK)
         	return (T) this;
         
+        if (EMConsts.common_caps_compat$IWorker)
+        if (capability == CommonCapsWorker.CAP_WORKER)
+        	return (T) new CommonCapsWorker.AdvancedFilterWorker(this);
         
         return super.getCapability(capability, facing);
     }

@@ -2,13 +2,16 @@ package ecomod.common.pollution.handlers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.Level;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +23,7 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
+import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
@@ -28,11 +32,13 @@ import ecomod.asm.EcomodClassTransformer;
 import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
+import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
+import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.core.EMConsts;
@@ -56,6 +62,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -69,6 +76,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
@@ -86,9 +94,13 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 
@@ -184,6 +196,9 @@ public class PollutionHandler implements IPollutionGetter
 	
 	public WorldProcessingThread getWPT(World key)
 	{	
+		if(key == null || key.isRemote)
+			return null;
+		
 		return getWPT(PollutionUtils.genPMid(key));
 	}
 	
@@ -1113,6 +1128,124 @@ public class PollutionHandler implements IPollutionGetter
 		return new Percentage(0);
 	}
 	
+	/*
+	 * For searching an error from issue #11
+	 * 
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onWorldTick(TickEvent.WorldTickEvent event)
+	{
+		if(event.world.isRemote || getWPT(event.world) == null)
+			return;
+		
+		if(event.world.rand.nextInt(40) == 3)
+		new Thread(){
+			@Override
+			public void run() {
+				super.run();
+				
+				getWPT(event.world).getLoadedChunks().forEach((chpos) -> {EMUtils.logIfNotNull(calculateChunkPollution(event.world.getChunkFromChunkCoords(chpos.getLeft(), chpos.getRight())), EcologyMod.log, Level.INFO);});
+			}
+			
+			public PollutionData calculateChunkPollution(Chunk c)
+			{
+				List<TileEntity> tes = new ArrayList(c.getTileEntityMap().values())
+				
+				PollutionData ret = new PollutionData();
+				
+				for(TileEntity te : tes)
+				{
+					if(te == null || te.isInvalid())
+						continue;
+					
+					int wir = EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr);
+					boolean rain = c.getWorld().isRainingAt(te.getPos());
+					
+					boolean overriden_by_func = false;
+					
+					for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
+					{
+						Object[] func_result = new Object[0];
+						
+						try
+						{
+							func_result = func.apply(te);
+						}
+						catch(Exception e)
+						{
+							EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
+							EcologyMod.log.info(e.toString());
+							e.printStackTrace();
+							continue;
+						}
+
+						if(func_result.length < 3)
+							continue;
+						
+						ret.add(PollutionType.AIR, (double)func_result[0]);
+						ret.add(PollutionType.WATER, (double)func_result[1]);
+						ret.add(PollutionType.SOIL, (double)func_result[2]);
+						
+						if(func_result.length > 3)
+						{
+							if(func_result[3] != null && func_result[3] instanceof Boolean)
+								if(!overriden_by_func)
+									overriden_by_func = (Boolean)func_result[3];
+						}
+					}
+					
+					if(!overriden_by_func)
+					if(te instanceof IPollutionEmitter)
+					{
+						IPollutionEmitter ipe = (IPollutionEmitter) te;
+						
+						int filters = 0;
+						
+						for(EnumFacing f : EnumFacing.VALUES)
+						{
+							TileEntity tile = c.getWorld().getTileEntity(te.getPos().offset(f));
+							
+							if(tile instanceof TileFilter && ((TileFilter)tile).isWorking())
+								filters++;
+						}
+						
+						ret.add(ipe.pollutionEmission(false).clone()
+								.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
+								.multiply(PollutionType.WATER, rain ? 2 : 1).multiply(PollutionType.SOIL, rain ? 1.2F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
+								);
+					}
+					else
+					{
+						if(EcologyMod.instance.tepc.hasTile(te))
+						{
+							if(PollutionUtils.isTEWorking(c.getWorld(), te))
+							{
+								TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
+								if(tep != null)
+								{
+									int filters = 0;
+									
+									for(EnumFacing f : EnumFacing.VALUES)
+									{
+										TileEntity tile = c.getWorld().getTileEntity(te.getPos().offset(f));
+										
+										if(tile instanceof TileFilter && ((TileFilter)tile).isWorking())
+											filters++;
+									}
+									
+									ret.add(tep.getEmission().clone()
+											.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
+											.multiply(PollutionType.WATER, rain ? 3 : 1).multiply(PollutionType.SOIL, rain ? 1.5F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
+											);
+								}
+							}
+						}
+					}
+				}
+				return ret.multiplyAll(EMConfig.wptcd/60);
+			}
+		}.start();
+	}
+	*/
 	@Nullable
 	@Override
 	public PollutionData getPollution(World w, int chunkx, int chunkz)
@@ -1136,5 +1269,38 @@ public class PollutionHandler implements IPollutionGetter
 	public PollutionData getPollution(World w, Pair<Integer, Integer> pair)
 	{
 		return getPollution(w, pair.getLeft(), pair.getRight());
+	}
+	
+	public static class PollutionHandlerCrashCallable implements ICrashCallable
+	{
+		@Override
+		public String call() throws Exception {
+			PollutionHandler ph = EcologyMod.ph;
+			if(ph != null)
+			{
+				String ret = "";
+				
+				for(String s : ph.threads.keySet())
+				{
+					WorldProcessingThread wpt = ph.threads.get(s);
+					
+					if(wpt != null)
+					{
+						ret += "\n\t"+s+": Working: "+wpt.isWorking()+" |Last Profiler section: "+wpt.profiler.getNameOfLastSection()+"| Interrupted:"+wpt.isInterrupted();
+					}
+				}
+				
+				if(!ret.isEmpty())
+					return ret + "\n";
+			}
+			
+			return null;
+		}
+
+		@Override
+		public String getLabel() {
+			return "[EcologyMod|PollutionHandler] Active WorldProcessingThreads";
+		}
+		
 	}
 }

@@ -126,6 +126,8 @@ public class EcologyMod
 		pec.pushToApi();
 		
 		EMPacketHandler.init();
+		
+		FMLCommonHandler.instance().registerCrashCallable(new PollutionHandler.PollutionHandlerCrashCallable());
 	}
 	
 	@EventHandler

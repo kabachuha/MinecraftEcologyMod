@@ -24,6 +24,7 @@ import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
+import net.minecraftforge.fml.common.versioning.ComparableVersion;
 
 public class PollutionEffectsConfig
 {
@@ -237,22 +238,11 @@ public class PollutionEffectsConfig
 	{
 		if(version.toLowerCase().contentEquals("custom"))return false;
 		
-		if(version.indexOf("-") == -1 || other_version.indexOf("-") == -1)
-			return false;
+		ComparableVersion ver1 = new ComparableVersion(version);
 		
-		String parts[] = version.split("-", 2);
+		ComparableVersion ver2 = new ComparableVersion(other_version);
 		
-		String o_parts[] = other_version.split("-", 2);
-		
-		int flag1 = EMUtils.compareVersionsOnlyDots(o_parts[0], parts[0]);
-		
-		int flag2 = EMUtils.compareEcomodVersionsNoMC(parts[1], o_parts[1]);
-		
-		if(flag1 >= 0)
-			if(flag2 >= 0)
-				return true;
-		
-		return false;
+		return ver2.compareTo(ver1) > 0;
 	}
 	
 	public void load(String cfg_path)

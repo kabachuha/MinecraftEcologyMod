@@ -25,6 +25,7 @@ import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.versioning.ComparableVersion;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class PollutionSourcesConfig
@@ -182,22 +183,10 @@ public class PollutionSourcesConfig
 	{
 		if(version.toLowerCase().contentEquals("custom"))return false;
 		
-		if(version.indexOf("-") == -1 || other_version.indexOf("-") == -1)
-			return false;
+		ComparableVersion ver1 = new ComparableVersion(version);
+		ComparableVersion ver2 = new ComparableVersion(other_version);
 		
-		String parts[] = version.split("-", 2);
-		
-		String o_parts[] = other_version.split("-", 2);
-		
-		int flag1 = EMUtils.compareVersionsOnlyDots(o_parts[0], parts[0]);
-		
-		int flag2 = EMUtils.compareEcomodVersionsNoMC(parts[1], o_parts[1]);
-		
-		if(flag1 >= 0)
-			if(flag2 >= 0)
-				return true;
-		
-		return false;
+		return ver2.compareTo(ver1) > 0;
 	}
 	
 	public boolean save(String cfg_path)

@@ -13,7 +13,8 @@ public class EMConsts
 	 * 	https://mcforge.readthedocs.io/en/latest/conventions/versioning/
 	 * 
 	 */
-	public static final String version = "1.12.2-1.2.0.0";
+	public static final String mcversion = "1.12.2";
+	public static final String version = mcversion + "-1.2.1.0";
 	
 	public static final String deps = "required-after:FML";
 	
@@ -34,14 +35,9 @@ public class EMConsts
 	
 	// Consts
 	
-	/**
-	 * Max cached pollution radius.
-	 * Set to prevent abuse when requesting from server
-	 */
-	public static final int max_cached_pollution_radius = 16;
-	
-	
 	public static final int analyzer_gui_id = 0;
 	
 	public static boolean asm_transformer_inited = false;
+	
+	public static boolean common_caps_compat$IWorker = false;
 }
