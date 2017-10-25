@@ -54,6 +54,12 @@ To make the mod more flexible there are some console commands in the mod.
 
 [Console Commands(wiki)](https://github.com/Artem226/MinecraftEcologyMod/wiki/Console-Commands)
 
+At the moment the mod is translated to the following languages:
+
+1. English
+2. Russian
+3. Chinese
+
 ***
 If you are a modder and you want to interact with EcologyMod or you want to help its development:
 [Modders Info(wiki)](https://github.com/Artem226/MinecraftEcologyMod/wiki/Modders-Info)
