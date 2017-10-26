@@ -1,0 +1,38 @@
+{
+    "rewards": {
+        "recipes": [
+          "ecomod:filter_core",
+          "ecomod:frame"
+        ]
+    },
+    "display": {
+        "icon": {
+            "item": "ecomod:respirator"
+        },
+        "title": {
+            "translate": "advancements.ecomod.root.title"
+        },
+        "description": {
+            "translate": "advancements.ecomod.root.description"
+        },
+        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "first_pollution": {
+            "trigger": "ecomod:player_in_pollution",
+            "conditions": {
+                "chunk_pollution": {
+                    "pollution": {
+                        "air": 7500.0,
+                        "water": 7500.0,
+                        "soil": 7500.0
+                      },
+                    "triggering_type": "OR"
+                }
+            }
+        }
+    },
+    "requirements": [["first_pollution"]]
+}

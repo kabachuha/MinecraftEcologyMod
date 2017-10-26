@@ -1,0 +1,7 @@
+{
+    "parent": "ecomod:block/core",
+    "textures": {
+        "particle": "ecomod:blocks/advanced_filter_core",
+        "0": "ecomod:blocks/advanced_filter_core"
+    }
+}

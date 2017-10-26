@@ -1,0 +1,27 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "rewards": {
+      "recipes": [
+        "ecomod:respirator"
+      ]
+    },
+    "display": {
+        "icon": {
+            "item": "minecraft:air"
+        },
+        "title": {
+            "translate": "achievement.ecomod.smog"
+        },
+        "description": {
+            "translate": "achievement.ecomod.smog.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "smog": {
+            "trigger": "ecomod:breathe_smog"
+        }
+    },
+    "requirements": [["smog"]]
+}

@@ -1,0 +1,23 @@
+{
+    "parent": "ecomod:ecomod/bad_sleep",
+    "display": {
+        "icon": {
+            "item": "minecraft:bed"
+        },
+        "title": {
+            "translate": "achievement.ecomod.poisonous_sleep"
+        },
+        "description": {
+            "translate": "achievement.ecomod.poisonous_sleep.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true,
+        "frame": "challenge"
+    },
+    "criteria": {
+        "poisonous_sleep": {
+            "trigger": "ecomod:poisonous_sleep"
+        }
+    },
+    "requirements": [["poisonous_sleep"]]
+}

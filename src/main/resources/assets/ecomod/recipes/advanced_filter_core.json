@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "AXS",
+      "XCX",
+      "SXS"
+    ],
+    "key": {
+      "X": {
+        "item": "ecomod:craft_ingredient",
+        "data": 1
+      },
+      "C": {
+        "item": "ecomod:core",
+        "data": 0
+      },
+      "S": {
+        "item": "minecraft:sponge",
+        "data": 0
+      },
+      "A": {
+        "item": "ecomod:craft_ingredient",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "ecomod:core",
+      "data": 1
+    }
+}

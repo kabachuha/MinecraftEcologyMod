@@ -1,0 +1,149 @@
+﻿#Блоки
+tile.ecomod.filter.name=Фильтр Загрязнения
+tile.ecomod.advanced_filter.name=Улучшенный Фильтр Загрязнения
+tile.ecomod.analyzer.name=Анализатор Загрязнения
+
+tile.ecomod.frame.0.name=Основа Машины
+tile.ecomod.frame.1.name=Продвинутая Основа Машины
+
+tile.ecomod.block.concentrated_pollution.name=Концентрированное Загрязнение
+fluid.concentrated_pollution=Концентрированное Загрязнение
+
+tile.ecomod.oc_analyzer_adapter.name=Компьютерный Интерфейс Анализатора Загрязнения
+
+#Предметы
+item.ecomod.respirator.name=Противогаз
+
+item.ecomod.core.0.name=Ядро Фильтра
+item.ecomod.core.1.name=Улучшенное Ядро Фильтра
+item.ecomod.core.2.name=Ядро Анализатора
+
+item.ecomod.craft_ingredient.0.name=Поршневой Массив
+item.ecomod.craft_ingredient.1.name=Винт
+
+#Эффекты
+ape.ecomod.food_pollution.name=Загрязнение Еды
+ape.ecomod.smog.name=Смог
+ape.ecomod.bad_sleep.name=Плохой Сон
+ape.ecomod.poisonous_sleep.name=Ядовитый Сон
+ape.ecomod.no_fish.name=Вымирание Рыб
+ape.ecomod.polluted_water.name=Загрязнение Воды
+ape.ecomod.dead_trees.name=Безлистные Деревья
+ape.ecomod.no_trees.name=Обезлесивание
+ape.ecomod.acid_rain.name=Кислотный Дождь
+ape.ecomod.wasteland.name=Опустошение
+ape.ecomod.no_plowing.name=Безплодная Почва
+ape.ecomod.no_animals.name=Вымирание Животных
+ape.ecomod.no_bonemeal.name=Костная мука не работает
+ape.ecomod.no_crops_growing.name=Прекращение Роста Растений
+
+ape.ecomod.effects_not_found.name=[ОШИБКА!] ЭФФЕКТЫ НЕ НАЙДЕНЫ!!!
+ape.ecomod.effects_not_found.desc=Кэш Эффектов Не Был Получен От Сервера! Пожалуйста, Перезайдите На Сервер (Перезагрузите Мир)!!!
+
+ape.ecomod.food_pollution.desc=Урожай и брошенная еда накапливают загрязнение из окружающей среды, если они от нее не изолированы. При поедании они будут отравлять игрока.
+ape.ecomod.smog.desc=Когда загрязнение воздуха соединяется с частицами воды содержащимися в воздухе, образуется плотный ядовитый туман - Смог - отравляющий живые существа. Чтобы защитится от него, наденьте противогаз. Не забудьте запастись фильтрами!
+ape.ecomod.bad_sleep.desc=Вы не можете выспаться из-за загрязнения воздуха.
+ape.ecomod.poisonous_sleep.desc=Во время сна вы можете быть серьёзно отравлены загрязнением!
+ape.ecomod.no_fish.desc=Из-за загрязнения рыбы больше нет в водоёмах. Рыбалка бесполезна.
+ape.ecomod.polluted_water.desc=Из-за высокого загрязнения вода превращается в загрязненную воду, становясь ядовитой и бесполезной.  
+ape.ecomod.dead_trees.desc=Из-за воздушного загрязнения листья на деревьях разлагаются и опадают.  
+ape.ecomod.no_trees.desc=Саженцы больше не могут вырастать в деревья в этой местности.
+ape.ecomod.acid_rain.desc=Дождь, смешанный с загрязнением, становиться кислотным. Он будет отравлять существ, кроме носящих шлем(вместо этого будет усиленно растворяться сам шлем). Также кислотный дождь растворяет листья на деревьях и пашню.
+ape.ecomod.wasteland.desc=Территория превращается в безжизненную пустошь, трава становится грязью и песком, цвет биома сменяется на мрачный. Животные и морские твари не могут появляться здесь.
+ape.ecomod.no_plowing.desc=Почва деградирует. Земля не может быть вспахана и пашня превращается в грязь. 
+ape.ecomod.no_animals.desc=Из-за суровых условий животные больше не могут появляться на этой территории.
+ape.ecomod.no_bonemeal.desc=Так как почва перенасыщена ядовитыми веществами, удобрения бесполезны.
+ape.ecomod.no_crops_growing.desc=Растения не могут продолжить свой рост на этой территории. Но вы можете удобрить их костной мукой, если это ещё возможно.
+
+#Достижения
+advancements.ecomod.root.description=Вы замечаете, что что-то не так с окружающей средой...
+
+achievement.ecomod.disaster=Климатическая Катастрофа!
+achievement.ecomod.disaster.desc=Имейте свыше 1000000 единиц загрязнения каждого типа!
+
+achievement.ecomod.bad_sleep=Беспокойной Ночи!
+achievement.ecomod.bad_sleep.desc=Почувствуйте Тошноту После Сна В Загрязненном Воздухе 
+achievement.ecomod.poisonous_sleep=На Следующее Утро...
+achievement.ecomod.poisonous_sleep.desc=Отравитесь После Сна В Загрязненном Воздухе
+achievement.ecomod.smog=Кхе-Кхе
+achievement.ecomod.smog.desc=Вдохните Смог!
+achievement.ecomod.acid_rain=Это Кислотный Дождь!
+achievement.ecomod.acid_rain.desc=Попадите Под Кислотный Дождь
+achievement.ecomod.no_fish=Ловись Рыбка Большая и Маленькая!
+achievement.ecomod.no_fish.desc=Займитесь Рыбалкой В Безрыбном Водоёме
+achievement.ecomod.polluted_food=Вкуснятина!
+achievement.ecomod.polluted_food.desc=Съешьте Загрязнённую Еду
+achievement.ecomod.very_polluted_food=Это Была Ша(у|ве)рма!?
+achievement.ecomod.very_polluted_food.desc=Съешьте Очень Загрязнённую Еду
+achievement.ecomod.no_bonemeal=Никаких Больше Удобрений!
+achievement.ecomod.no_bonemeal.desc=Попытайтесь Использовать Костную Муку... и Осознайте Что Это Невозможно Из-за Загрязнения
+achievement.ecomod.basic_frame=Основа
+achievement.ecomod.basic_frame.desc=Соберите Основу Машины
+achievement.ecomod.advanced_frame=Игра Стоит Свеч?
+achievement.ecomod.advanced_frame.desc=Соберите Продвинутую Основу Машины
+achievement.ecomod.filter_core=Очиститель Воздуха
+achievement.ecomod.filter_core.desc=Соберите Ядро Фильтра(Чтобы создать соответствующей механизм кликните по Основе)
+achievement.ecomod.advanced_core=Это Уже Что-то!
+achievement.ecomod.advanced_core.desc=Соберите Улучшенное Ядро Фильтра(Чтобы создать соответствующей механизм кликните по Продвинутой Основе)
+achievement.ecomod.analyzer_core=Предупрежден, Значит Вооружён!
+achievement.ecomod.analyzer_core.desc=Соберите Ядро Анализатора(Чтобы создать соответствующей механизм кликните по Основе)
+achievement.ecomod.respirator=Теперь Ты Сталкер!
+achievement.ecomod.respirator.desc=Соберите Противогаз
+
+#Комманды
+commands.ecomod.wpt_not_found=WorldProcessingThread для измерения %s не был найден!
+
+commands.ecomod.get_tile_id.usage=/getTileEntityID [x] [y] [z] (координаты опциональны) -  возвращает индентификатор TileEntity на заданной позиции или прямо под отправителем и помещает его в буфер обмена
+commands.ecomod.get_tile_id.tile_not_found=TileEntity не найден в %s!
+
+commands.ecomod.load_pollution_manager.usage=/loadPollutionManager {измерение} - форсированно загружает Менеджер Загрязнения из файла для требуемого измерения
+commands.ecomod.load_pollution_manager.fail=Форсированная загрузка Менеджера Загрязнения для измерения %s провалилась!
+
+commands.ecomod.save_pollution_manager.usage=/savePollutionManager {измерение} - сохраняет Менеджер Загрязнения в файл для требуемого измерения 
+commands.ecomod.save_pollution_manager.fail=Сохранение Менеджера Загрязнения для измерения %s провалилась!
+
+commands.ecomod.clear_pollution_manager.usage=/clearPollutionManager {dimension} - очистить Менеджер Загрязнения для требуемого измерения
+
+commands.ecomod.tepc.usage=/TEPollutionConfig [ADD|REMOVE|SAVE|LOAD|GET] [tileId] ([air] [water] [soil])
+commands.ecomod.tepc.fail.mode_not_found=Неверный РЕЖИМ!!! Он должен являться или ADD, или REMOVE, или SAVE, или LOAD, или GET.
+commands.ecomod.tepc.fail.not_enough_arguments=Недостаточно параметов!
+commands.ecomod.tepc.add.fail.args=Неправильные параметры! Для режима ADD должно быть ровно 5 аргументов /TEPollutionConfig ADD [tileId] [air] [water] [soil]
+commands.ecomod.tepc.add.fail=Невозможно добавить TileEntity в TEPollutionConfig!
+commands.ecomod.tepc.add.success=Добавлено в TEPollutionConfig: %s
+commands.ecomod.tepc.remove.fail.args=Неправильные параметры! Для режима REMOVE должно быть ровно 2 аргумента /TEPollutionConfig REMOVE [tileId]
+commands.ecomod.tepc.remove.success=Удалено %s из TEPollutionConfig
+commands.ecomod.tepc.remove.fail=Не удалось удалить %s из TEPollutionConfig так как он был не в нём найден.
+commands.ecomod.tepc.load=Загрузка TEPollutionConfig из файла конфигурации.
+commands.ecomod.tepc.save=Сохранение TEPollutionConfig в файл конфигурации.
+commands.ecomod.tepc.save.fail=Неудалось сохранить TEPollutionConfig!
+commands.ecomod.tepc.get.fail.args=Неправильные параметры! Для режима GET должно быть ровно 2 аргумента /TEPollutionConfig GET [tileId]
+commands.ecomod.tepc.get.fail=Не удалось найти %s в TEPollutionConfig.
+
+#Пользовательский Интерфейс
+gui.ecomod.text.no_energy.0=Недостаточно энергии для работы!
+gui.ecomod.text.no_energy.1=Энергитический буфер должен быть полностью заполнен!
+gui.ecomod.text.no_data.0=Данные об этом чанке ещё не были
+gui.ecomod.text.no_data.1=полученны этим анализатором! Анализируйте этот чанк!
+gui.ecomod.text.pollution_effects=Эффекты Загрязнения:
+gui.ecomod.text.energy=Энергия:
+gui.ecomod.text.max_energy=Энергоёмкость:
+gui.ecomod.text.filling=Наполнение:
+gui.ecomod.text.chunk_position=Координаты Чанка:
+gui.ecomod.text.chunk_pollution=Загрязнение Чанка:
+gui.ecomod.text.analyzed=Анализированно:
+gui.ecomod.button.analyze_chunk=Анализ Чанка
+
+#Tooltips
+tooltip.ecomod.respirator.filter_capacity=Работоспособность Фильтра
+tooltip.ecomod.respirator.insert_filter=Вставьте Фильтр!
+tooltip.ecomod.more_information=Нажмите SHIFT для подробностей
+tooltip.ecomod.core.filter=Эти фильтры используются противогазом!
+tooltip.ecomod.core.shifted=Кликните ПКМ по '%s' этим предметом to чтобы сделать соответствующий механизм
+tooltip.ecomod.oc.adapter=[EcologyMod]Кликните ПКМ по 'Основе Машины' этим предметом чтобы сделать Компьютерный Интерфейс Анализатора Загрязнения
+
+#Сообщения
+msg.ecomod.no_eat_with_respirator=Вы не можете есть или пить с надетым противогазом!
+msg.ecomod.bad_sleep=Вы плохо себя чувствуете. Похоже воздух не достаточно чистый.
+msg.ecomod.polluted_food=Вы съели загрязненную пищу!
+
+msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod работает не корректно! Во время загрузки ASM трансформеры не сработали правильно для следующих классов: %s. Ищите причину в логах и сообщите её вместе с логом на 

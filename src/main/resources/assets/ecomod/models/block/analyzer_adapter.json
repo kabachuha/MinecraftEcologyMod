@@ -1,0 +1,8 @@
+{
+    "parent": "ecomod:block/machine_base",
+    "textures": {
+        "particle": "opencomputers:blocks/adapter_side",
+        "0": "opencomputers:blocks/adapter_side",
+        "1": "ecomod:blocks/filter_wall"
+    }
+}

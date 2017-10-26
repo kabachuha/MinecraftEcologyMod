@@ -1,0 +1,7 @@
+{
+    "parent": "ecomod:block/core",
+    "textures": {
+        "particle": "blocks/mushroom_block_inside",
+        "0": "blocks/mushroom_block_inside"
+    }
+}

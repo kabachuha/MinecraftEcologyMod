@@ -1,0 +1,22 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:fishing_rod"
+        },
+        "title": {
+            "translate": "achievement.ecomod.no_fish"
+        },
+        "description": {
+            "translate": "achievement.ecomod.no_fish.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "fishing_failed": {
+            "trigger": "ecomod:no_fish"
+        }
+    },
+    "requirements": [["fishing_failed"]]
+}

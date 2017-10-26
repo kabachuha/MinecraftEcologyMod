@@ -1,0 +1,10 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "ecomod:advanced_filter"
+    },
+    "variants": {
+        "normal": [{}],
+        "inventory": []
+    }
+}

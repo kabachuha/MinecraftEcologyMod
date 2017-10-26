@@ -1,0 +1,17 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "ecomod:basic_frame"
+    },
+    "variants": {
+        "type": {
+            "0": {
+                "model": "ecomod:basic_frame"
+            },
+            "1": {
+                "model": "ecomod:advanced_frame"
+            }
+        },
+        "inventory": [{}]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "parent": "ecomod:ecomod/root",
+    "display": {
+        "icon": {
+            "item": "minecraft:dye",
+            "data": 15
+        },
+        "title": {
+            "translate": "achievement.ecomod.no_bonemeal"
+        },
+        "description": {
+            "translate": "achievement.ecomod.no_bonemeal.desc"
+        },
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "no_bonemeal": {
+            "trigger": "ecomod:no_bonemeal"
+        }
+    },
+    "requirements": [["no_bonemeal"]]
+}

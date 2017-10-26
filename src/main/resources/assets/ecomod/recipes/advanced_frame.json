@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+      "XYX",
+      "YDY",
+      "XYX"
+    ],
+    "key": {
+      "X": {
+        "item": "minecraft:diamond_block"
+      },
+      "Y": {
+        "item": "minecraft:sea_lantern"
+      },
+      "D": {
+        "item": "ecomod:frame",
+        "data": 0
+      }
+    },
+    "result": {
+      "item": "ecomod:frame",
+      "data": 1
+    }
+  }
+  

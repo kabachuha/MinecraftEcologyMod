@@ -1,0 +1,8 @@
+{
+    "parent": "ecomod:block/machine_base",
+    "textures": {
+        "particle": "blocks/mushroom_block_inside",
+        "0": "blocks/mushroom_block_inside",
+        "1": "ecomod:blocks/filter_wall"
+    }
+}

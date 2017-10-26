@@ -1,8 +1,0 @@
-{
-	"parent": "block/cube_bottom_top",
-	"textures": {
-		"side": "ccpm:blocks/advfilterw",
-		"top": "ccpm:blocks/advfilterw",
-		"bottom": "ccpm:blocks/compressor_bottom"
-	}
-}
