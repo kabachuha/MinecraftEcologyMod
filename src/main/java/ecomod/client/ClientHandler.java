@@ -1,5 +1,6 @@
 package ecomod.client;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +29,16 @@ import ecomod.common.utils.Percentage;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.network.EMPacketString;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -320,11 +326,13 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogColor(EntityViewRenderEvent.FogColors event)
 	{
-		if(smog_intensity.compareTo(0) > 0)
+		if(smog_intensity.compareTo(0) > 0 && !Minecraft.getMinecraft().player.isPotionActive(Potion.getPotionFromResourceLocation(new ResourceLocation("blindness").toString())))
 		{
-			event.setRed(66F/255);
-			event.setGreen(80F/255);
-			event.setBlue(67F/255);
+			Vec3d color = EMUtils.lerp(new Vec3d(event.getRed(), event.getGreen(), event.getBlue()), new Vec3d(66F/255, 80F/255, 67F/255), Math.min(smog_intensity.floatValue(), Minecraft.getMinecraft().world.isDaytime() ? 0.9F : 0.55F));
+			
+			event.setRed((float) color.x);
+			event.setGreen((float) color.y);
+			event.setBlue((float) color.z);
 		}
 	}
 	
@@ -337,12 +345,15 @@ public class ClientHandler
 	@SubscribeEvent
 	public void fogRender(EntityViewRenderEvent.RenderFogEvent event)
 	{
-		if(smog_intensity.compareTo(0) > 0)
+		if(smog_intensity.compareTo(0) > 0 && event.getFogMode() != GlStateManager.FogMode.EXP.capabilityId)
 		{
-			float f = event.getFarPlaneDistance();
-			GlStateManager.setFogStart((float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
-			GlStateManager.setFogEnd(e0 * f + (f - e0 * f) * (1 - smog_intensity.floatValue()));
-			GlStateManager.setFogDensity(smog_intensity.floatValue());
+			if(!Minecraft.getMinecraft().player.isPotionActive(Potion.getPotionFromResourceLocation(new ResourceLocation("blindness").toString())))
+			{
+				float f = event.getFarPlaneDistance();
+				GlStateManager.setFogStart((float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
+				GlStateManager.setFogEnd((float) (e0 * f + (f - e0 * f) * (1 - EMUtils.square(smog_intensity.floatValue()))));
+				GlStateManager.setFogDensity(smog_intensity.floatValue());
+			}
 		}
 		
 		if((event.getEntity() != null && event.getEntity().ticksExisted % 2 == 0) && !Minecraft.getMinecraft().isGamePaused())
