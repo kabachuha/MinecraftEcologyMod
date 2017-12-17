@@ -31,6 +31,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
@@ -106,6 +107,9 @@ public class EcologyMod
 		
 		proxy.doPreInit();
 		
+		ProgressManager.ProgressBar bar = ProgressManager.push("EcologyMod data", 3, true);
+		
+		bar.step("Loading TEPollution config");
 		tepc = new TEPollutionConfig();
 		
 		tepc.load(event.getModConfigurationDirectory().getAbsolutePath());
@@ -116,14 +120,19 @@ public class EcologyMod
 		
 		//EMConfig.setupEffects(event.getModConfigurationDirectory().getAbsolutePath());
 		//EMConfig.setupSources(event.getModConfigurationDirectory().getAbsolutePath());
+		bar.step("Loading pollution sources");
 		
 		PollutionSourcesConfig psc = new PollutionSourcesConfig();
 		psc.load(event.getModConfigurationDirectory().getAbsolutePath());
 		psc.pushToApi();
 		
+		bar.step("Loading pollution effects");
+		
 		PollutionEffectsConfig pec = new PollutionEffectsConfig();
 		pec.load(event.getModConfigurationDirectory().getAbsolutePath());
 		pec.pushToApi();
+		
+		ProgressManager.pop(bar);
 		
 		EMPacketHandler.init();
 		

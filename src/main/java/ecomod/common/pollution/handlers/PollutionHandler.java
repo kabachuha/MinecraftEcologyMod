@@ -104,7 +104,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 
-
+//FIXME Put the handlers in order
 public class PollutionHandler implements IPollutionGetter
 {
 	public Map<String, WorldProcessingThread> threads = new HashMap<String, WorldProcessingThread>();
@@ -1126,6 +1126,22 @@ public class PollutionHandler implements IPollutionGetter
 		}
 		
 		return new Percentage(0);
+	}
+	
+	@SubscribeEvent
+	public void onWorldTick(WorldTickEvent event)
+	{
+		World w = event.world;
+		
+		if(!w.isRemote)
+		{
+			WorldProcessingThread wpt = getWPT(w);
+		
+			if(wpt != null)
+			{
+				wpt.isWorldTicking = event.phase == TickEvent.Phase.START;
+			}
+		}
 	}
 	
 	/*

@@ -29,6 +29,7 @@ import ecomod.core.stuff.EMConfig;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 
 public class PollutionManager 
 {
@@ -232,6 +233,7 @@ public class PollutionManager
 	{
 		EcologyMod.log.warn("Pollution manager for dim "+dim+" has been reset!!!");
 		data.clear();
+		world = DimensionManager.getWorld(dim);
 	}
 	
 	public boolean contains(Pair<Integer, Integer> coord)

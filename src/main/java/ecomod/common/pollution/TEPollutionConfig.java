@@ -275,7 +275,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			}
 		}
 		
-		EcologyMod.log.info("[TEPC]Loaded "+tepc.data.size()+" entries");
+		EcologyMod.log.info("[TEPC]Loaded "+data.size()+" entries");
 		
 		if(!save(cfg_path))
 		{

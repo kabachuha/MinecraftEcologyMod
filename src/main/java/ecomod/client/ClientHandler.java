@@ -351,7 +351,7 @@ public class ClientHandler
 			{
 				float f = event.getFarPlaneDistance();
 				GlStateManager.setFogStart((float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
-				GlStateManager.setFogEnd((float) (e0 * f + (f - e0 * f) * (1 - EMUtils.square(smog_intensity.floatValue()))));
+				GlStateManager.setFogEnd((float) (e0 * f + (f - e0 * f) * (1 - Math.pow(smog_intensity.floatValue(), EMConfig.smog_rendering_distance_intensity_exponent))));
 				GlStateManager.setFogDensity(smog_intensity.floatValue());
 			}
 		}
