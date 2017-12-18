@@ -1,12 +1,13 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/ecology-mod",
   "promos": {
-    "1.12.2-latest": "1.12.2-1.2.1.0",
-    "1.12.2-recommended": "1.12.2-1.2.1.0",
+    "1.12.2-latest": "1.12.2-1.2.3.0",
+    "1.12.2-recommended": "1.12.2-1.2.3.0",
     "1.12.1-latest": "1.12.1-1.2.0.0",
     "1.12.1-recommended": "1.12.1-1.2.0.0"
   },
   "1.12.1": {
+    "1.12.2-1.2.3.0": "Data loading progress bar; Threading fixes; WPT timeout delay is configurable now; Other fixes...",
     "1.12.2-1.2.1.0": "Added CommonCapabilities compatibility, Fixed #11(hopefully), \nTEPC: fixed ImmersiveEngineering entries, added a support for Mekanism tiles,\nImproved versionising,\nAdded WorldProcessingThreads crash info and work timer.",
     "1.12.2-1.2.0.0": "Updated to MC 1.12.2",
     "1.12.1-1.2.0.0": "Chinese translation(by xhz313123).\nMore smooth smog.\nProvided TEPC to API\nImproved Analyzer GUI\nWasteland generation was made optional\nWPT fixes\nConcentrated pollution fluid blocks emit pollution when they fly away from a world.\n...",
