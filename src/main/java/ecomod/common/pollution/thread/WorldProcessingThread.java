@@ -25,6 +25,7 @@ import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
+import ecomod.common.utils.WPTProfiler;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.MainRegistry;
@@ -54,8 +55,10 @@ public class WorldProcessingThread extends Thread
 	
 	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<ChunkPollution>();
 	
-	public final Profiler profiler = new Profiler();
+	public final WPTProfiler profiler = new WPTProfiler();
 	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
+	
+	public boolean isWorldTicking = false;
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
@@ -271,12 +274,17 @@ public class WorldProcessingThread extends Thread
 	public PollutionData calculateChunkPollution(Chunk c)
 	{
 		profiler.startSection("WPT_CALCULATING_CHUNK_POLLUTION");
+		
+		waitForTickEnd();
+		
 		List<TileEntity> tes = new CopyOnWriteArrayList<TileEntity>(c.getTileEntityMap().values());
 		
 		PollutionData ret = new PollutionData();
 		
 		for(TileEntity te : tes)
 		{
+			waitForTickEnd();
+			
 			if(te == null || te.isInvalid())
 				continue;
 			
@@ -315,6 +323,8 @@ public class WorldProcessingThread extends Thread
 							overriden_by_func = (Boolean)func_result[3];
 				}
 			}
+			
+			waitForTickEnd();
 			
 			if(!overriden_by_func)
 			if(te instanceof IPollutionEmitter)
@@ -365,7 +375,7 @@ public class WorldProcessingThread extends Thread
 			}
 		}
 		profiler.endSection();
-		return ret.multiplyAll(EMConfig.wptcd/60);
+		return ret.multiplyAll(EMConfig.wptcd/60F);
 	}
 	
 	public Map<PollutionType, Float> calculateMultipliers(Chunk c)
@@ -442,5 +452,18 @@ public class WorldProcessingThread extends Thread
 						}
 		}
 		profiler.endSection();
+	}
+	
+	public void waitForTickEnd()
+	{
+		while(isWorldTicking)
+		try
+		{
+			sleep(5);
+		} 
+		catch (InterruptedException e)
+		{
+			return;
+		}
 	}
 }

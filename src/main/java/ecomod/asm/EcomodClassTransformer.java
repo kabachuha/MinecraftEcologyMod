@@ -660,14 +660,14 @@ public class EcomodClassTransformer implements IClassTransformer
 				if(insn instanceof MethodInsnNode)
 				{
 					MethodInsnNode min = (MethodInsnNode)insn;
-					
+					/*
 					log.info("Method : ");
 					log.info(min.getOpcode());
 					log.info(min.owner);
 					log.info(min.name);
 					log.info(min.desc);
 					log.info(min.itf);
-					
+					*/
 					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/entity/item/EntityItem", "net/minecraft/entity/item/EntityItem!&!"+classNode.name) && equalOneOfNames(min.name, "setDead", "func_110577_a!&!T") && equalOneOfNames(min.desc, "()V", "()V!&!()V") && (min.itf == false))
 					{
 						insertion_index = i;

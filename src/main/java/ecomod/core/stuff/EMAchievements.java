@@ -44,7 +44,7 @@ public class EMAchievements
 		ach("very_polluted_food", -1, -2, new ItemStack(Items.POISONOUS_POTATO),
 				ach("polluted_food", -1, -3, new ItemStack(Items.POISONOUS_POTATO), null)
 				).setSpecial();
-		ach("acid_rain", 0, -3, new ItemStack(Items.WATER_BUCKET), null);
+		ach("acid_rain", 0, -3, null, null);
 		ach("no_fish", 1, -3, new ItemStack(Items.FISH), null);
 		ach("no_bonemeal", 2, -3, new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getMetadata()), null);
 		

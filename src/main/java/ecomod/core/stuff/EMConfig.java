@@ -22,6 +22,7 @@ import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class EMConfig
 {
@@ -88,6 +89,12 @@ public class EMConfig
 	
 	public static boolean wasteland_spawns_naturally = false;
 	
+	public static float smog_rendering_distance_intensity_exponent = 1.4F; 
+	
+	public static int wpt_profiler_timeout_warning = 500;
+	
+	public static int wpt_profiler_critical_timeout_warning = 10000;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -101,7 +108,7 @@ public class EMConfig
 		{
 			config.load();
 			
-			allowedDims = config.get("CORE", "allowedDimensions", allowedDims).getIntList();
+			allowedDims = config.get("CORE", "allowedDimensions", allowedDims, "Dimensions where the pollution system is avaible").getIntList();
 			
 			Arrays.sort(allowedDims);
 			
@@ -110,6 +117,10 @@ public class EMConfig
 			wptimm = config.getBoolean("ImmediateStart", "THREAD", false, "Whether the thread starts without delay", lang("thread.wptimm"));
 			
 			wptcd = config.getInt("Delay", "THREAD", 60, 60, 3600, "The delay between thread runs.", lang("thread.wptcd"));
+			
+			wpt_profiler_timeout_warning = config.getInt("timeoutWarningMillis", "THREAD", 1000, 1, Integer.MAX_VALUE, "Timeout warning for every WPT operation in milliseconds. If you want to disable the warning, make this value big enough.");
+			
+			wpt_profiler_critical_timeout_warning = config.getInt("criticalTimeoutWarinigMillis", "THREAD", 10000, 1, Integer.MAX_VALUE, "Critical timeout WPT warning(milliseconds).");
 			
 			tepcURL = config.getString("TEPC_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/TEPC.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
 			
@@ -125,7 +136,9 @@ public class EMConfig
 			
 			//cached_pollution_radius = config.getInt("CachedPollutionRadius", "CLIENT", 5, 1, EMConsts.max_cached_pollution_radius, "", lang("client.max_cpr"));
 			
-			check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
+			smog_rendering_distance_intensity_exponent = config.getFloat("smog_rendering_distance_intensity_exponent", "CLIENT", 1.4F, 0, 20F, "");
+			
+			//check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
 			
 			enable_advanced_filter = config.getBoolean("EnableAdvancedFilterCrafting", "TILES", true, "");
 			

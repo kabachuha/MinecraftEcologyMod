@@ -3,14 +3,17 @@ package ecomod.common.pollution;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -72,10 +75,22 @@ public class PollutionManager
 					throw new IOException("File PollutionMap.json is a directory! Please, delete it and restart the world!");
 				}
 				
-				if(!save.exists())
-				{
-					save.createNewFile();
-				}
+				if(save.exists())
+ 				{
+					//Create backup file in case of crashing during the writing or just to restore the previous pollution map if something went wrong
+					long last_save_time = save.lastModified();
+					File oldsave = new File(save.getAbsolutePath());
+					File backup = new File(worldPath +"/PollutionMap_backup.json");
+
+					if(backup.exists())
+						backup.delete();
+
+					Files.move(oldsave, backup);
+
+					backup.setLastModified(last_save_time);
+ 				}
+				
+				save.createNewFile();
 				
 				if(save.canWrite())
 				{
@@ -124,7 +139,25 @@ public class PollutionManager
 				}
 				
 				if(!save.exists())
+				{
+					//A warning message
+					EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+					EcologyMod.log.error("The pollution manager save file (dimension "+world.provider.getDimension()+") has not been found! The world pollution is set to the initial state!");
+					EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost infornation about the world pollution.");
+					File backup = new File(worldPath +"/PollutionMap_backup.json");
+
+					if(backup.exists())
+					{
+						EcologyMod.log.warn("!");
+						EcologyMod.log.warn("The PollutionMap_backup.json file(created "+new SimpleDateFormat().format(new Date(backup.lastModified()))+") is found in the save directory! It can be used to restore the previous information by renaming it to 'PollutionMap.json'!");
+						EcologyMod.log.warn(backup.getAbsolutePath());
+						EcologyMod.log.warn("!");
+					}
+
+					EcologyMod.log.error("In that case, please, check the situation!");
+					EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					return false;
+				}
 				
 				if(save.canRead())
 				{
@@ -140,7 +173,7 @@ public class PollutionManager
 			}
 			catch(IOException e)
 			{
-				EcologyMod.log.error("Unable to write data of the pollution manager for dimension "+dim);
+				EcologyMod.log.error("Unable to load data of the pollution manager for dimension "+dim);
 				EcologyMod.log.error(e.toString());
 				
 				e.printStackTrace();
@@ -165,12 +198,13 @@ public class PollutionManager
 			return false;
 		}
 		
-		if(wp == null)
+		if(wp == null || wp.getData() == null)
 			return false;
 		
 		List<ChunkPollution> l = new ArrayList<ChunkPollution>();
 		
 		for(ChunkPollution u : wp.getData())
+			if(u != null)
 			if(!(u.getPollution().getAirPollution() == 0 && u.getPollution().getWaterPollution() == 0 && u.getPollution().getSoilPollution() == 0))
 				l.add(u);
 		
@@ -314,8 +348,8 @@ public class PollutionManager
 	
 	public void do_diffusion()
 	{
-		for(ChunkPollution c : data.toArray(new ChunkPollution[data.size()]))
-			diffuse(c);
+		for(ChunkPollution c : data)
+ 			diffuse(c);
 	}
 	
 	public void diffuse(ChunkPollution c)

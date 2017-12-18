@@ -1,5 +1,7 @@
 package ecomod.core;
 
+import java.util.List;
+
 public class EMConsts
 {
 	//Mod data
@@ -14,7 +16,7 @@ public class EMConsts
 	 * 
 	 */
 	public static final String mcversion = "1.10.2";
-	public static final String version = mcversion + "-1.2.2.0";
+	public static final String version = mcversion + "-1.2.3.0";
 	
 	public static final String deps = "required-after:FML";
 	
@@ -28,12 +30,16 @@ public class EMConsts
 	
 	public static final String projectURL = "https://minecraft.curseforge.com/projects/ecology-mod";
 	
+	public static final String contributors = "Artem226(author/maintainer), xhz313123(Chinese translation) and all feedbackers.";
+	
+	public static final List<String> authors = java.util.Arrays.asList(new String[]{"Artem226"});
+	
 	//Proxies
 	
 	public static final String common_proxy = "ecomod.common.proxy.ComProxy";
 	public static final String client_proxy = "ecomod.client.proxy.CliProxy";
 	
-	// Consts
+	// Consts and global variables
 	
 	public static final int analyzer_gui_id = 0;
 	

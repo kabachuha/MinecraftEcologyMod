@@ -1125,6 +1125,22 @@ public class PollutionHandler implements IPollutionGetter
 		return new Percentage(0);
 	}
 	
+	@SubscribeEvent
+	public void onWorldTick(WorldTickEvent event)
+	{
+		World w = event.world;
+
+		if(!w.isRemote)
+		{
+			WorldProcessingThread wpt = getWPT(w);
+
+			if(wpt != null)
+			{
+				wpt.isWorldTicking = event.phase == TickEvent.Phase.START;
+			}
+		}
+	}
+	
 	/*
 	 * For searching an error from issue #11
 	 * 
