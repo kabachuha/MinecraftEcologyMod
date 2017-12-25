@@ -1,0 +1,20 @@
+{
+  "advanced_filter_working": {
+    "category": "block",
+    "sounds": [
+      {"name": "ecomod:advanced_filter_working", "stream": true}
+    ]
+  },
+  "analyzer": {
+    "category": "block",
+    "sounds": [
+      {"name": "ecomod:analyzer"}
+    ]
+  },
+  "entity.player.breath": {
+    "category": "player",
+    "sounds": [
+      {"name": "ecomod:random/breath"}
+    ]
+  }
+}
