@@ -24,13 +24,9 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 
 public class EMBlocks
 {
-	static List<Block> blocks = new ArrayList<Block>();
 	
 	public static void doPreInit()
 	{
-			blocks.clear();
-			EMItems.items.clear();
-			
 			EcologyMod.log.info("Setuping blocks");
 			
 			EcomodBlocks.inited = true;
@@ -51,12 +47,12 @@ public class EMBlocks
 	public static void regBlock(Block block, String name)
 	{
 		EcologyMod.log.info("Registring block ecomod:"+name);
-		GameRegistry.registerBlock(block, "ecomod:"+name);
+		GameRegistry.registerBlock(block, name);
 	}
 	
 	public static void regBlockWithItem(Block block, Class<? extends ItemBlock> item,String name)
 	{
 		EcologyMod.log.info("Registring block ecomod:"+name);
-		GameRegistry.registerBlock(block, item, "ecomod:"+name);
+		GameRegistry.registerBlock(block, item, name);
 	}
 }

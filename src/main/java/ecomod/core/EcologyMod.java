@@ -64,12 +64,12 @@ public class EcologyMod
 		log = LogManager.getLogger(EMConsts.name);
 		
 		log.info("Preinitialization");
-		
+		/*
 		if(!EMConsts.asm_transformer_inited)
 		{
 			log.fatal("The mod ASM transformer had not been initialized!!! Unable to continue.");
 			throw new NullPointerException("Ecomod ASM transformer had not been initialized!!!");
-		}
+		}*/
 		
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		

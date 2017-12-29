@@ -25,8 +25,6 @@ public class EMItems
 {
 	public static ArmorMaterial RESPIRATOR_MATERIAL = null;
 	
-	public static List<Item> items = new ArrayList<Item>();
-	
 	public static void doPreInit()
 	{
 			EcomodItems.inited = true;
@@ -48,8 +46,8 @@ public class EMItems
 			
 			EcomodItems.RESPIRATOR = new ItemRespirator().setUnlocalizedName(EMConsts.modid+".respirator");
 			
-			GameRegistry.registerItem(EcomodItems.CORE, EMConsts.modid+":core");
-			GameRegistry.registerItem(EcomodItems.CORE, EMConsts.modid+":craft_ingredient");
-			GameRegistry.registerItem(EcomodItems.CORE, EMConsts.modid+":respirator");
+			GameRegistry.registerItem(EcomodItems.CORE, "core");
+			GameRegistry.registerItem(EcomodItems.CRAFT_INGREDIENT, "craft_ingredient");
+			GameRegistry.registerItem(EcomodItems.RESPIRATOR, "respirator");
 	}
 }

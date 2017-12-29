@@ -17,6 +17,7 @@ import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,6 +25,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHasWork
@@ -47,7 +50,13 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 	
 	private boolean was_working = false;
 	private int i1 = 0;
+	
+	@SideOnly(Side.CLIENT)
+	public float vent_rotation = 0F;
 
+	@SideOnly(Side.CLIENT)
+	private float rps = 0F;
+	
 	@Override
 	public void updateEntity()
 	{
@@ -55,6 +64,24 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 		{
 			ticks = 0;
 			i1 = 0;
+		}
+		
+		if(worldObj.isRemote)
+		{
+			if(was_working)
+			{
+				if(rps < EMConfig.advanced_filter_max_rps)
+					rps += 1 / (4F * 20F);
+			}
+			else
+			{
+				if(rps >= 0)
+					rps -= 1 / (2F * 20F);
+			}
+			if(rps < 0)
+				rps = 0;
+			
+			vent_rotation = MathHelper.wrapAngleTo180_float(vent_rotation + 360 * rps / 20F);
 		}
 		
 		if(ticks % (20 * EMConfig.adv_filter_delay_secs) == 0)
@@ -173,6 +200,7 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
     {
         super.readFromNBT(tag);
         tank.readFromNBT(tag);
+        was_working = tag.getBoolean("was_working");
     }
 	
 	@Override
@@ -180,6 +208,7 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
     {
         super.writeToNBT(tag);
         tank.writeToNBT(tag);
+        tag.setBoolean("was_working", was_working);
     }
     
     private static class AdvFilterTank extends FluidTank

@@ -99,6 +99,8 @@ public class EMConfig
 	
 	public static int wasteland_id = 117;
 	
+	public static float advanced_filter_max_rps = 1F;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -141,6 +143,8 @@ public class EMConfig
 			//cached_pollution_radius = config.getInt("CachedPollutionRadius", "CLIENT", 5, 1, EMConsts.max_cached_pollution_radius, "", lang("client.max_cpr"));
 			
 			smog_rendering_distance_intensity_exponent = config.getFloat("smog_rendering_distance_intensity_exponent", "CLIENT", 1.4F, 0, 20F, "");
+			
+			advanced_filter_max_rps = config.getFloat("advanced_filer_vent_rps", "CLIENT", 1F, 0, 60, "Advanced filer's vent maximal rotational frequency(revolutions per second)");
 			
 			//check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
 			

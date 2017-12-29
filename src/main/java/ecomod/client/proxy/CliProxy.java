@@ -4,15 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.client.ClientHandler;
 import ecomod.client.gui.GuiAnalyzer;
+import ecomod.client.renderer.RenderItemCore;
+import ecomod.client.renderer.RendererFramedTile;
+import ecomod.client.renderer.RendererItemCraftIngredient;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
+import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.tiles.TileEnergy;
+import ecomod.common.tiles.TileFilter;
+import ecomod.common.tiles.TileFrame;
+import ecomod.common.tiles.compat.TileAnalyzerAdapter;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
@@ -23,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 
@@ -49,7 +60,14 @@ public class CliProxy extends ComProxy
 	@Override
 	public void doInit()
 	{
-
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFilter.class, new RendererFramedTile(0));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAnalyzer.class, new RendererFramedTile(2));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedFilter.class, new RendererFramedTile(1));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAnalyzerAdapter.class, new RendererFramedTile(3));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFrame.class, new RendererFramedTile(-1));
+		
+		MinecraftForgeClient.registerItemRenderer(EcomodItems.CRAFT_INGREDIENT, new RendererItemCraftIngredient());
+		MinecraftForgeClient.registerItemRenderer(EcomodItems.CORE, new RenderItemCore());
 	}
 	
 	@Override

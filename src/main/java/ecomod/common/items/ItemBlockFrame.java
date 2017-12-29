@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 
 public class ItemBlockFrame extends ItemBlock
 {
-	public ItemBlockFrame() {
-		super(EcomodBlocks.FRAME);
+	public ItemBlockFrame(Block b) {
+		super(b);
 		
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);

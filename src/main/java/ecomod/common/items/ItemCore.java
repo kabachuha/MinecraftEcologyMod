@@ -4,18 +4,32 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.core.stuff.EMAchievements;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class ItemCore extends Item
 {
+	@SideOnly(Side.CLIENT)
+	protected IIcon filer_icon;
+	
+	@SideOnly(Side.CLIENT)
+	protected IIcon advanced_filter_icon;
+	
+	@SideOnly(Side.CLIENT)
+	protected IIcon analyzer_icon;
 
 	public ItemCore() {
 		super();
@@ -89,5 +103,24 @@ public class ItemCore extends Item
 		}*/
 	}
 	
-	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIconFromDamage(int meta) {
+		if(meta == 0)
+			return filer_icon;
+		if(meta == 1)
+			return advanced_filter_icon;
+		if(meta == 2)
+			return analyzer_icon;
+		
+		return super.getIconFromDamage(meta);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IIconRegister reg) {
+		filer_icon = reg.registerIcon("ecomod:filter_core");
+		advanced_filter_icon = reg.registerIcon("ecomod:advanced_filter_core");
+		analyzer_icon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("mushroom_block_inside");
+	}
 }

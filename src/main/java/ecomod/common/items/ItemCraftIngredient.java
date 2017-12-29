@@ -2,13 +2,21 @@ package ecomod.common.items;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ecomod.api.EcomodStuff;
+import net.minecraft.block.BlockPistonBase;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 public class ItemCraftIngredient extends Item
 {
+	@SideOnly(Side.CLIENT)
+	protected IIcon vent_icon;
+	
 	public ItemCraftIngredient() {
 		super();
 		this.setHasSubtypes(true);
@@ -34,4 +42,24 @@ public class ItemCraftIngredient extends Item
 			subItems.add(new ItemStack(this, 1, 1));//Vent
 		}
 	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIconFromDamage(int meta) {
+		if(meta == 1)
+			return vent_icon;
+		
+		if(meta == 2)
+			return BlockPistonBase.getPistonBaseIcon("piston_side");
+		
+		return super.getIconFromDamage(meta);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IIconRegister reg) {
+		vent_icon = reg.registerIcon("ecomod:vent_s");
+	}
+	
+	
 }

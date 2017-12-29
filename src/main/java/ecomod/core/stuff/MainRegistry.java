@@ -82,7 +82,7 @@ public class MainRegistry
 		
 		EcologyMod.log.info("Wasteland ID : "+biome_wasteland.biomeID);
 		
-		if(Loader.isModLoaded("ic2"))
+		if(Loader.isModLoaded("IC2"))
 			EMIntermod.init_ic2_support();
 		
 		EMRecipes.doInit();

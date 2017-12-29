@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
@@ -140,13 +141,13 @@ public class EMUtils
 	
 	public static int countWaterInRadius(World w, EMBlockPos center, int radius)
 	{
-		Iterable<EMBlockPos> blocks = EMBlockPos.getAllInBox(center.add(-radius, -radius, -radius), center.add(radius, radius, radius));
+		Iterator<EMBlockPos> blocks = EMBlockPos.getAllInBox(center.add(-radius, -radius, -radius), center.add(radius, radius, radius)).iterator();
 		
 		int ret = 0;
 		
-		for(EMBlockPos bp : blocks)
-			if(isBlockWater(w, bp))
-				ret++;
+		//while(blocks.hasNext())
+		//	if(isBlockWater(w, blocks.next()))
+		//		ret++;FIXME
 		
 		return ret;
 	}

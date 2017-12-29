@@ -7,21 +7,26 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.common.items.ItemCore;
+import ecomod.common.tiles.TileFrame;
 import ecomod.core.EMConsts;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockFrame extends Block
+public class BlockFrame extends Block implements ITileEntityProvider
 {
 	public static ItemStack oc_adapter = null;
 	
@@ -170,5 +175,62 @@ public class BlockFrame extends Block
 	@Override
 	public String getUnlocalizedName() {
 		return EMConsts.modid+".frame";
+	}
+
+	public IIcon icon$basic_frame_1;
+	public IIcon icon$basic_frame_2;
+	public IIcon icon$advanced_frame_1;
+	public IIcon icon$advanced_frame_2;
+
+	@Override
+	public IIcon getIcon(int side, int meta)
+	{
+		if(meta == 0)
+			return icon$basic_frame_1;
+		
+		if(meta == 1)
+			return icon$advanced_frame_1;
+		
+		if(meta == 2)
+			return icon$basic_frame_2;
+		
+		if(meta == 3)
+			return icon$advanced_frame_2;
+		
+		return super.getIcon(side, meta);
+	}
+
+
+	@Override
+	public void registerBlockIcons(IIconRegister reg)
+	{
+		icon$basic_frame_1 = reg.registerIcon("ecomod:basic_frame_1");
+		icon$basic_frame_2 = reg.registerIcon("ecomod:basic_frame_2");
+		icon$advanced_frame_1 = reg.registerIcon("ecomod:advanced_frame_1");
+		icon$advanced_frame_2 = reg.registerIcon("ecomod:advanced_frame_2");
+	}
+	
+	@Override
+    public int getRenderBlockPass()
+    {
+        return 0;
+    }
+	
+	@Override
+	public int getRenderType()
+    {
+        return 226;
+    }
+	
+	@Override
+	public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+	
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta)
+	{
+		return new TileFrame();
 	}
 }

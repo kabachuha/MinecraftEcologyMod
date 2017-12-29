@@ -11,5 +11,6 @@ public class EMTiles
 		GameRegistry.registerTileEntity(TileFilter.class, EMUtils.resloc("tile_filter").toString());
 		GameRegistry.registerTileEntity(TileAdvancedFilter.class, EMUtils.resloc("tile_advanced_filter").toString());
 		GameRegistry.registerTileEntity(TileAnalyzer.class, EMUtils.resloc("tile_analyzer").toString());
+		GameRegistry.registerTileEntity(TileFrame.class, EMUtils.resloc("frame").toString());
 	}
 }

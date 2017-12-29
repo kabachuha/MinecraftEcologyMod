@@ -1,5 +1,7 @@
 package ecomod.common.blocks;
 
+import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.core.EMConsts;
@@ -14,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -68,5 +71,29 @@ public class BlockAnalyzer extends Block implements ITileEntityProvider {
 	public String getUnlocalizedName()
 	{
 		return EMConsts.modid+".analyzer";
+	}
+	
+	@Override
+    public int getRenderBlockPass()
+    {
+        return 0;
+    }
+	
+	@Override
+	public int getRenderType()
+    {
+        return 2634;
+    }
+	
+	@Override
+	public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+	
+	@Override
+	public IIcon getIcon(int side, int meta)
+	{
+		return EcomodBlocks.FRAME.getIcon(side, 0);
 	}
 }

@@ -1,5 +1,7 @@
 package ecomod.common.blocks;
 
+import ecomod.api.EcomodBlocks;
+import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.common.tiles.TileFilter;
 import ecomod.core.EMConsts;
@@ -10,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -57,5 +60,29 @@ public class BlockFilter extends Block implements ITileEntityProvider {
 	@Override
 	public String getUnlocalizedName() {
 		return EMConsts.modid+".filter";
+	}
+	
+	@Override
+    public int getRenderBlockPass()
+    {
+        return 0;
+    }
+	
+	@Override
+	public int getRenderType()
+    {
+        return 2634;
+    }
+	
+	@Override
+	public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+	
+	@Override
+	public IIcon getIcon(int side, int meta)
+	{
+		return EcomodBlocks.FRAME.getIcon(side, 0);
 	}
 }

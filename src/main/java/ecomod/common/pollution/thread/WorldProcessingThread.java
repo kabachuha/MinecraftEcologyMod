@@ -97,10 +97,13 @@ public class WorldProcessingThread extends Thread
 				return;
 			}
 			
+			System.gc();
+			
 			profiler.profilingEnabled = true;
 			
 			//delta.clear();
 			profiler.startSection("WPT_PREPARING_FOR_RUN");
+			
 			int error_counter = 0;
 			isWorking = true;
 
@@ -123,6 +126,7 @@ public class WorldProcessingThread extends Thread
 				try
 				{
 					temp = new ArrayList<ChunkPollution>();
+					//EcologyMod.log.info("Processing "+c.xPosition+";"+c.zPosition);
 					PollutionData d = calculateChunkPollution(c);
 					Map<PollutionType, Float> m = calculateMultipliers(c);	
 					
@@ -160,6 +164,8 @@ public class WorldProcessingThread extends Thread
 					profiler.endSection();
 					
 					handleChunk(c);
+					
+					//EcologyMod.log.info("Processed");
 				}
 				catch (Exception e)
 				{
@@ -189,6 +195,8 @@ public class WorldProcessingThread extends Thread
 			profiler.profilingEnabled = false;
 			
 			EcologyMod.log.info("World processing completed in " + (System.currentTimeMillis() - timestamp) / 1000F + " seconds");
+			
+			System.gc();
 			
 			slp();
 		}
