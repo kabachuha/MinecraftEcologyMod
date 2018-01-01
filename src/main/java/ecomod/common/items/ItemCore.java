@@ -33,19 +33,17 @@ public class ItemCore extends Item
 
 	public ItemCore() {
 		super();
+		
+		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
-
 	}
 	
 	@Override
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems) {
-		if(tab == EcomodStuff.ecomod_creative_tabs)
-		{
-			subItems.add(new ItemStack(this, 1, 0));//Filter Core
-			subItems.add(new ItemStack(this, 1, 1));//Advanced Filter Core
-			subItems.add(new ItemStack(this, 1, 2));//Analyzer Core
-		}
+		subItems.add(new ItemStack(this, 1, 0));//Filter Core
+		subItems.add(new ItemStack(this, 1, 1));//Advanced Filter Core
+		subItems.add(new ItemStack(this, 1, 2));//Analyzer Core
 	}
 	
 	public int getMetadata(int damage)

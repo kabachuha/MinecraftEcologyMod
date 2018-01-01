@@ -84,6 +84,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World worldIn, int x, int y, int z, EntityPlayer player, int meta, float hitx, float hity, float hitz)
 	{
+		meta = worldIn.getBlockMetadata(x, y, z);
 		if(!worldIn.isRemote)
 		{
 			if(player != null)
@@ -98,7 +99,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 						{
 							if(pi.getItemDamage() == 0)//Filter
 							{
-								worldIn.playAuxSFX(1029, x, y, z, 0);
+								worldIn.playAuxSFX(1021, x, y, z, 0);
 								
 								worldIn.setBlock(x, y, z, EcomodBlocks.FILTER);
 								
@@ -113,7 +114,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 							
 							if(pi.getItemDamage() == 2)//Analyzer
 							{
-								worldIn.playAuxSFX(1029, x, y, z, 0);
+								worldIn.playAuxSFX(1021, x, y, z, 0);
 								
 								worldIn.setBlock(x, y, z, EcomodBlocks.ANALYZER);
 								
@@ -130,7 +131,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 						{
 							if(pi.getItemDamage() == 1 && EMConfig.enable_advanced_filter)//Advanced Filter
 							{
-								worldIn.playAuxSFX(1029, x, y, z, 0);
+								worldIn.playAuxSFX(1021, x, y, z, 0);
 								
 								worldIn.setBlock(x, y, z, EcomodBlocks.ADVANCED_FILTER);
 								
@@ -151,7 +152,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 						{
 							if(oc_adapter.getItem() == pi.getItem())
 							{
-								worldIn.playAuxSFX(1029, x, y, z, 0);
+								worldIn.playAuxSFX(1021, x, y, z, 0);
 								
 								worldIn.setBlock(x, y, z, EcomodBlocks.OC_ANALYZER_ADAPTER);
 								
@@ -174,7 +175,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 
 	@Override
 	public String getUnlocalizedName() {
-		return EMConsts.modid+".frame";
+		return "tile."+EMConsts.modid+".frame";
 	}
 
 	public IIcon icon$basic_frame_1;

@@ -53,6 +53,10 @@ public class PollutionManager
 	{
 		WorldPollution wp = new WorldPollution();
 		
+		for(ChunkPollution p : data)
+			if(p.getPollution().getAirPollution() < 5 && p.getPollution().getWaterPollution() < 5 && p.getPollution().getSoilPollution() < 5)
+				data.remove(p);
+		
 		wp.setData(data.toArray(new ChunkPollution[data.size()]));
 		
 		EcologyMod.log.info("Serializing and saving pollution manager for dimension "+dim);
@@ -300,7 +304,7 @@ public class PollutionManager
 	
 	public boolean addPollutionIfLoaded(int x, int z, PollutionData delta)
 	{
-		if(world.getChunkFromChunkCoords(x, z).isChunkLoaded)
+		if(world.getChunkProvider().chunkExists(x, z))
 		{
 			setChunkPollution(Pair.of(x, z), getPollution(Pair.of(x, z)).add(delta));
 			return true;

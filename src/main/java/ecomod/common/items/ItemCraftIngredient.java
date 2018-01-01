@@ -19,9 +19,10 @@ public class ItemCraftIngredient extends Item
 	
 	public ItemCraftIngredient() {
 		super();
+		
+		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 		this.setCreativeTab(EcomodStuff.ecomod_creative_tabs);
-		
 	}
 	
 	public int getMetadata(int damage)
@@ -36,11 +37,8 @@ public class ItemCraftIngredient extends Item
 	
 	@Override
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems) {
-		if(tab == EcomodStuff.ecomod_creative_tabs)
-		{
-			subItems.add(new ItemStack(this, 1, 0));//Pistons Array
-			subItems.add(new ItemStack(this, 1, 1));//Vent
-		}
+		subItems.add(new ItemStack(this, 1, 0));//Pistons Array
+		subItems.add(new ItemStack(this, 1, 1));//Vent
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -7,7 +7,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
-import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;

@@ -3,12 +3,13 @@ package ecomod.common.items;
 import java.util.List;
 
 import ecomod.api.EcomodStuff;
-import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.IRespirator;
+import ecomod.client.renderer.RenderRespirator;
 import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMItems;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class ItemRespirator extends ItemArmor implements IRespirator, IRenderableHeadArmor
+public class ItemRespirator extends ItemArmor implements IRespirator
 {
 	public ItemRespirator() {
 		super(EMItems.RESPIRATOR_MATERIAL, 1, 0);
@@ -186,10 +187,24 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		}*/
 	}
 	
+	private static final String armor_texture = EMUtils.resloc("textures/models/armor/respirator_layer_1.png").toString();
 	private static final String villager_texture = EMUtils.resloc("textures/models/armor/respirator_villager_layer_1.png").toString();
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-		return entity instanceof EntityVillager || (entity instanceof EntityZombie && ((EntityZombie)entity).isVillager()) ? villager_texture : super.getArmorTexture(stack, entity, slot, type);
+		return entity instanceof EntityVillager || (entity instanceof EntityZombie && ((EntityZombie)entity).isVillager()) ? villager_texture : armor_texture;
 	}
+
+	@Override
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, int armorSlot)
+	{
+		if(armorSlot == 0)
+		{
+			return new RenderRespirator(entityLiving, itemStack);
+		}
+		
+		return null;
+	}
+	
+	
 }

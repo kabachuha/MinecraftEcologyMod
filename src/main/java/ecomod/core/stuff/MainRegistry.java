@@ -98,7 +98,7 @@ public class MainRegistry
 		
 		EMIntermod.thermal_expansion_imc();
 		
-		if(Loader.isModLoaded("ic2"))
+		if(Loader.isModLoaded("IC2"))
 			EMIntermod.setup_ic2_support();
 		
 		EMRecipes.doPostInit();

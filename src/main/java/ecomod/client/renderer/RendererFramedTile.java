@@ -261,7 +261,7 @@ public class RendererFramedTile extends TileEntitySpecialRenderer
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
 			GL11.glPushMatrix();
-			GL11.glTranslated(x+0.25D + 1/32F, y+0.25D + 1/32F, z+0.5D);
+			GL11.glTranslated(x+0.25D + 1/32F + 1/128F, y+0.25D + 1/32F, z+0.5D);
 			renderVent(tess, tile.vent_rotation, dir, icon, 1F);
 			GL11.glPopMatrix();
 		}
@@ -273,19 +273,23 @@ public class RendererFramedTile extends TileEntitySpecialRenderer
 		
 		GL11.glTranslatef(t * dir.offsetX, t * dir.offsetY, t * dir.offsetZ);
 		
-		GL11.glScalef(0.45F, 0.45F, 0.45F);
+		GL11.glScalef(0.4F, 0.4F, 0.4F);
 		
 		GL11.glPushMatrix();
 		
 		if (dir == ForgeDirection.UP || dir == ForgeDirection.DOWN)
 		{
 			GL11.glRotatef(90F, 1, 0, 0);
-			GL11.glTranslatef(0F, -0.5F, -0.5F);
+			GL11.glTranslatef(0.025F, -0.5F, -0.5F);
 		}
 		else if(dir == ForgeDirection.EAST || dir == ForgeDirection.WEST)
 		{
 			GL11.glRotatef(90, 0, 1, 0);
-			GL11.glTranslatef(-0.5F, 0, 0.5F);
+			GL11.glTranslatef(-0.5F, 0.05F, 0.5F);
+		}
+		else
+		{
+			GL11.glTranslatef(0.03F, 0.03F, 0);
 		}
 		
 		GL11.glPushMatrix();

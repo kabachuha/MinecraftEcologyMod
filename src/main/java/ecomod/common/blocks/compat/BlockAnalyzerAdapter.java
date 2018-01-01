@@ -53,6 +53,6 @@ public class BlockAnalyzerAdapter extends Block implements ITileEntityProvider {
     
     public String getUnlocalizedName()
     {
-    	return EMConsts.modid + ".oc_analyzer_adapter";
+    	return "tile."+EMConsts.modid + ".oc_analyzer_adapter";
     }
 }

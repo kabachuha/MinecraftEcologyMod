@@ -60,6 +60,8 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
+		
 		if(ticks > (20 * EMConfig.adv_filter_delay_secs) && (ticks - i1) > 340)
 		{
 			ticks = 0;

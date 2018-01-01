@@ -59,7 +59,7 @@ public class BlockFilter extends Block implements ITileEntityProvider {
 	
 	@Override
 	public String getUnlocalizedName() {
-		return EMConsts.modid+".filter";
+		return "tile."+EMConsts.modid+".filter";
 	}
 	
 	@Override

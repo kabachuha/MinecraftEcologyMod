@@ -99,7 +99,7 @@ public class EMConfig
 	
 	public static int wasteland_id = 117;
 	
-	public static float advanced_filter_max_rps = 1F;
+	public static float advanced_filter_max_rps = 2F;
 	
 	public static void sync()
 	{
@@ -144,7 +144,7 @@ public class EMConfig
 			
 			smog_rendering_distance_intensity_exponent = config.getFloat("smog_rendering_distance_intensity_exponent", "CLIENT", 1.4F, 0, 20F, "");
 			
-			advanced_filter_max_rps = config.getFloat("advanced_filer_vent_rps", "CLIENT", 1F, 0, 60, "Advanced filer's vent maximal rotational frequency(revolutions per second)");
+			advanced_filter_max_rps = config.getFloat("advanced_filer_vent_rps", "CLIENT", 2F, 0, 60, "Advanced filer's vent maximal rotational frequency(revolutions per second)");
 			
 			//check_client_pollution = config.getBoolean("CheckClientPollution", "CLIENT", true, "Determines whether the pollution data received from the server should be validated. When unabled the 'client' performance could be improved but the EcologyMod client part might be destabilized! Thus it is not recommended!", lang("client.shouldcheck"));
 			

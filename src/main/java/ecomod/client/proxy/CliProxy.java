@@ -12,6 +12,7 @@ import ecomod.api.EcomodStuff;
 import ecomod.client.ClientHandler;
 import ecomod.client.gui.GuiAnalyzer;
 import ecomod.client.renderer.RenderItemCore;
+import ecomod.client.renderer.RendererFramedItem;
 import ecomod.client.renderer.RendererFramedTile;
 import ecomod.client.renderer.RendererItemCraftIngredient;
 import ecomod.common.pollution.PollutionManager;
@@ -30,6 +31,7 @@ import ecomod.network.EMPacketUpdateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -68,6 +70,12 @@ public class CliProxy extends ComProxy
 		
 		MinecraftForgeClient.registerItemRenderer(EcomodItems.CRAFT_INGREDIENT, new RendererItemCraftIngredient());
 		MinecraftForgeClient.registerItemRenderer(EcomodItems.CORE, new RenderItemCore());
+		
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.FILTER), new RendererFramedItem());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.ADVANCED_FILTER), new RendererFramedItem());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.ANALYZER), new RendererFramedItem());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.FRAME), new RendererFramedItem());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.OC_ANALYZER_ADAPTER), new RendererFramedItem());
 	}
 	
 	@Override

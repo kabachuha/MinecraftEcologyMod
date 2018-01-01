@@ -87,6 +87,8 @@ public class TileAnalyzer extends TileEnergy
 
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
+		
 		if(!worldObj.isRemote)
 		{
 			if(energy.getEnergyStored() != sync_energy)

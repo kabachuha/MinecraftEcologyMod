@@ -1,5 +1,7 @@
 package ecomod.common.world;
 
+import java.awt.Color;
+
 import ecomod.common.utils.EMUtils;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.client.Minecraft;
@@ -22,5 +24,11 @@ public class FluidPollution extends Fluid
 		this.setViscosity(800);
 		
 		this.setRarity(EnumRarity.rare);
+	}
+
+	@Override
+	public int getColor()
+	{
+		return new Color(56, 83, 56).getRGB();
 	}
 }

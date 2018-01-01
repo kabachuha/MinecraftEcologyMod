@@ -70,7 +70,7 @@ public class BlockAnalyzer extends Block implements ITileEntityProvider {
 	
 	public String getUnlocalizedName()
 	{
-		return EMConsts.modid+".analyzer";
+		return "tile."+EMConsts.modid+".analyzer";
 	}
 	
 	@Override

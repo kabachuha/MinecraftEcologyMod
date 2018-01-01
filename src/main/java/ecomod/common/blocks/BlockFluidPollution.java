@@ -97,7 +97,7 @@ public class BlockFluidPollution extends BlockFluidFinite {
 
 	@Override
 	public String getUnlocalizedName() {
-		return EMConsts.modid+".block."+EcomodStuff.concentrated_pollution.getName();
+		return "tile."+EMConsts.modid+".block."+EcomodStuff.concentrated_pollution.getName();
 	}
 
 	@SideOnly(Side.CLIENT)

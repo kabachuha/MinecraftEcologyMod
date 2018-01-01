@@ -55,7 +55,7 @@ public class BlockAdvancedFilter extends Block implements ITileEntityProvider{
 	
 	public String getUnlocalizedName()
 	{
-		return EMConsts.modid+".advanced_filter";
+		return "tile."+EMConsts.modid+".advanced_filter";
 	}
 	
 	@Override

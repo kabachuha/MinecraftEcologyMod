@@ -35,11 +35,8 @@ public class ItemBlockFrame extends ItemBlock
 
 	@Override
 	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems) {
-		if(tab == EcomodStuff.ecomod_creative_tabs)
-		{
-			subItems.add(new ItemStack(this, 1, 0));//Basic Frame
-			subItems.add(new ItemStack(this, 1, 1));//Advanced Frame
-		}
+		subItems.add(new ItemStack(this, 1, 0));//Basic Frame
+		subItems.add(new ItemStack(this, 1, 1));//Advanced Frame
 	}
 	
 	
