@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodItems;
+import ecomod.common.blocks.BlockFrame;
 import ecomod.common.tiles.TileAdvancedFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -187,12 +188,14 @@ public class RendererFramedTile extends TileEntitySpecialRenderer
 		Tessellator tess = Tessellator.instance;
 		GL11.glPushMatrix();
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(type == 2 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(type == 2 || type == 3 ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
 		
 		IIcon texture;
 		
 		if(type == 2)
 			texture = EcomodItems.CORE.getIconFromDamage(2);
+		else if(type == 3 && BlockFrame.oc_adapter != null)
+			texture = BlockFrame.oc_adapter.getIcon(2, 0);
 		else
 			texture = EcomodItems.CORE.getIconFromDamage(0);
 		

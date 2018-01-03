@@ -45,7 +45,7 @@ public class EMAchievements
 				).setSpecial();
 		ach("acid_rain", 0, -3, null, null);
 		ach("no_fish", 1, -3, new ItemStack(Items.fish), null);
-		ach("no_bonemeal", 2, -3, new ItemStack(Items.dye, 1, 0), null);
+		ach("no_bonemeal", 2, -3, new ItemStack(Items.dye, 1, 15), null);
 		
 		ECOMOD_ACHIEVEMENTS = new AchievementPage(EMConsts.name, ACHS.values().toArray(new Achievement[ACHS.size()]));
 		AchievementPage.registerAchievementPage(ECOMOD_ACHIEVEMENTS);

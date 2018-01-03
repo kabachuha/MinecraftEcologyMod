@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodItems;
+import ecomod.common.blocks.BlockFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -63,13 +64,13 @@ public class RendererFramedItem implements IItemRenderer {
 		
 			GL11.glTranslatef(0.25F, 0.25F, 0.25F);
 		
-			Minecraft.getMinecraft().getTextureManager().bindTexture(item.getItem() == Item.getItemFromBlock(EcomodBlocks.ANALYZER) ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(((EcomodBlocks.OC_ANALYZER_ADAPTER != null && item.getItem() == Item.getItemFromBlock(EcomodBlocks.OC_ANALYZER_ADAPTER)) || item.getItem() == Item.getItemFromBlock(EcomodBlocks.ANALYZER)) ? TextureMap.locationBlocksTexture : TextureMap.locationItemsTexture);
 		
 			IIcon texture;
 			
-			if(EcomodBlocks.OC_ANALYZER_ADAPTER != null && item.getItem() == Item.getItemFromBlock(EcomodBlocks.OC_ANALYZER_ADAPTER))
+			if(EcomodBlocks.OC_ANALYZER_ADAPTER != null && item.getItem() == Item.getItemFromBlock(EcomodBlocks.OC_ANALYZER_ADAPTER) && BlockFrame.oc_adapter != null)
 			{
-				texture = EcomodItems.CORE.getIconFromDamage(0);
+				texture = BlockFrame.oc_adapter.getIcon(2, 0);
 			}
 			else if(item.getItem() == Item.getItemFromBlock(EcomodBlocks.ANALYZER))
 				texture = EcomodItems.CORE.getIconFromDamage(2);

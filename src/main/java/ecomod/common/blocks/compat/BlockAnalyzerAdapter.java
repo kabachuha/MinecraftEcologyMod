@@ -55,4 +55,22 @@ public class BlockAnalyzerAdapter extends Block implements ITileEntityProvider {
     {
     	return "tile."+EMConsts.modid + ".oc_analyzer_adapter";
     }
+    
+    @Override
+    public int getRenderBlockPass()
+    {
+        return 0;
+    }
+	
+	@Override
+	public int getRenderType()
+    {
+        return 2634;
+    }
+	
+	@Override
+	public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 }

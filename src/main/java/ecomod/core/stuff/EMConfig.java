@@ -35,9 +35,9 @@ public class EMConfig
 	
 	public static int wptcd = 60;
 	
-	public static String tepcURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/TEPC.json";
-	public static String effectsURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/PollutionEffects.json";
-	public static String sourcesURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/PollutionSources.json";
+	public static String tepcURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/TEPC.json";
+	public static String effectsURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/PollutionEffects.json";
+	public static String sourcesURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/PollutionSources.json";
 	
 	public static float filter_adjacent_tiles_redution = 0.06F;
 	
@@ -101,6 +101,8 @@ public class EMConfig
 	
 	public static float advanced_filter_max_rps = 2F;
 	
+	public static boolean enable_sponge_recipe = true;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -128,11 +130,11 @@ public class EMConfig
 			
 			wpt_profiler_critical_timeout_warning = config.getInt("criticalTimeoutWarinigMillis", "THREAD", 10000, 1, Integer.MAX_VALUE, "Critical timeout WPT warning(milliseconds).");
 			
-			tepcURL = config.getString("TEPC_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/TEPC.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
+			tepcURL = config.getString("TEPC_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/TEPC.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
 			
-			effectsURL= config.getString("POLLUTION_EFFECTS_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/PollutionEffects.json", "A URL to the PollutionEffectsConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionEffectsConfig is remotely located you should have a connection to its location! When you are playing on a server you will receive its version of PollutionEffectsConfig.");
+			effectsURL= config.getString("POLLUTION_EFFECTS_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/PollutionEffects.json", "A URL to the PollutionEffectsConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionEffectsConfig is remotely located you should have a connection to its location! When you are playing on a server you will receive its version of PollutionEffectsConfig.");
 			
-			sourcesURL= config.getString("POLLUTION_SOURCES_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/PollutionSources.json", "A URL to the PollutionSourcesConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionSourcesConfig is remotely located you should have a connection to its location! When you are playing on a server you will use its version of PollutionSourcesConfig.");
+			sourcesURL= config.getString("POLLUTION_SOURCES_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/master/PollutionSources.json", "A URL to the PollutionSourcesConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionSourcesConfig is remotely located you should have a connection to its location! When you are playing on a server you will use its version of PollutionSourcesConfig.");
 			
 			filter_adjacent_tiles_redution = config.getFloat("FilterAdjacentTilesRedution", "POLLUTION", 0.06F, 0, 1, "", lang("pollution.filter"));
 			
@@ -171,6 +173,8 @@ public class EMConfig
 			is_oc_analyzer_interface_crafted_by_right_click = config.getBoolean("is_oc_analyzer_interface_crafted_by_right_click", "INTERMOD", true, "");
 			
 			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
+			
+			enable_sponge_recipe = config.getBoolean("EnableSpongeRecipe", "ITEMS", true, "Enable sponge crafting recipe");
 			
 			food_polluting_factor = config.getFloat("FoodPollutiingFactor", "POLLUTION", 0.001F, 0, 1, "");
 			

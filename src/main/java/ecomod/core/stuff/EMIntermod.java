@@ -43,7 +43,7 @@ public class EMIntermod
 			log.info("Adding to Buildcraft fuels");
 			if(BuildcraftFuelRegistry.fuel != null)
 			{
-				BuildcraftFuelRegistry.fuel.addFuel(EcomodStuff.concentrated_pollution, EMConfig.fuel_concentrated_pollution_burn_energy, EMConfig.fuel_concentrated_pollution_burn_time);
+				BuildcraftFuelRegistry.fuel.addFuel((buildcraft.api.fuels.IFuel)EcomodStuff.concentrated_pollution);
 			}
 		}
 	}
@@ -191,7 +191,7 @@ public class EMIntermod
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("fluidName", EcomodStuff.concentrated_pollution.getName());
 		nbt.setInteger("energy", EMConfig.fuel_concentrated_pollution_burn_energy);
-		FMLInterModComms.sendMessage("thermalexpansion", "addcompressionfuel", nbt);
+		FMLInterModComms.sendMessage("ThermalExpansion", "CompressionFuel", nbt);
 	}
 	
 	public static void setup_ic2_support()

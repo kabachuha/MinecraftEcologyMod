@@ -12,6 +12,7 @@ import ecomod.core.stuff.EMItems;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
@@ -206,5 +207,19 @@ public class ItemRespirator extends ItemArmor implements IRespirator
 		return null;
 	}
 	
-	
+	@Override
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+    {
+        int i = EntityLiving.getArmorPosition(stack) - 1;
+        ItemStack itemstack1 = player.getCurrentArmor(i);
+
+        if (itemstack1 == null)
+        {
+        	player.setCurrentItemOrArmor(i + 1, stack.copy());
+        	stack.stackSize = 0;
+        	world.playSoundEffect(player.posX, player.posY, player.posZ, "ecomod:entity.player.breath", 1F, 1.0F);
+        }
+
+        return stack;
+    }
 }

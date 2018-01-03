@@ -10,7 +10,7 @@ public class EcomodLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{/*FIXME "ecomod.asm.EcomodClassTransformer"*/};
+		return new String[]{"ecomod.asm.EcomodClassTransformer"};
 	}
 
 	@Override

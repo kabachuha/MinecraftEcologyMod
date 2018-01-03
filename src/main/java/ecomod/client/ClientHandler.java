@@ -35,6 +35,7 @@ import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -388,7 +389,7 @@ public class ClientHandler
 		{
 			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
 			if(BlockFrame.oc_adapter != null)
-				if(event.itemStack.getItem() == BlockFrame.oc_adapter.getItem())
+				if(event.itemStack.getItem() == Item.getItemFromBlock(BlockFrame.oc_adapter))
 					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 						event.toolTip.add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
 		}

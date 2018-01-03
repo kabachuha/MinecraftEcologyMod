@@ -7,9 +7,11 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.client.gui.EMGuiHandler;
+import ecomod.common.blocks.BlockFrame;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.world.FluidPollution;
 import ecomod.common.world.gen.BiomeWasteland;
@@ -60,6 +62,8 @@ public class MainRegistry
 		
 		EMRecipes.doPreInit();
 		
+		EMIntermod.thermal_expansion_imc();
+		
 		EcomodStuff.custom_te_pollution_determinants = new ArrayList<Function<TileEntity, Object[]>>();
 	}
 	
@@ -96,10 +100,13 @@ public class MainRegistry
 	{
 		EMIntermod.registerBCFuels();
 		
-		EMIntermod.thermal_expansion_imc();
-		
 		if(Loader.isModLoaded("IC2"))
 			EMIntermod.setup_ic2_support();
+		
+		if(Loader.isModLoaded("OpenComputers|Core"))
+		{
+			BlockFrame.oc_adapter = GameRegistry.findBlock("OpenComputers", "adapter");
+		}
 		
 		EMRecipes.doPostInit();
 	}

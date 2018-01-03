@@ -23,9 +23,16 @@ public class EMRecipes
 	public static void doInit()
 	{
 		EcologyMod.log.info("Registering recipes");
+		
+		//Sponge
+		if(EMConfig.enable_sponge_recipe)
+		GameRegistry.addRecipe(new ShapedOreRecipe(
+				new ItemStack(Blocks.sponge, 1, 0), new Object[]{"SWV", "WOW", "VWS", 'W', new ItemStack(Blocks.wool, 1, 4), 'V', new ItemStack(Items.water_bucket), 'S', "sand", 'O', new ItemStack(EcomodItems.CRAFT_INGREDIENT, 1, 0)}
+				));
+		
 		// Frames
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(EcomodBlocks.FRAME, 1, 0), new Object[]{"XYX", "YDY", "XYX", 'X', "blockIron", 'Y', new ItemStack(Blocks.stained_hardened_clay, 1, 7), 'D', "gemDiamond"}
+				new ItemStack(EcomodBlocks.FRAME, 1, 0), new Object[]{"XYX", "YDY", "XYX", 'X', "blockIron", 'Y', new ItemStack(Blocks.stained_hardened_clay, 1, 8), 'D', "gemDiamond"}
 				));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
 				new ItemStack(EcomodBlocks.FRAME, 1, 1), new Object[]{"XYX", "YDY", "XYX", 'X', "blockDiamond", 'Y', Items.blaze_rod, 'D', new ItemStack(EcomodBlocks.FRAME, 1, 0)}
@@ -41,7 +48,7 @@ public class EMRecipes
 		
 		// Machine cores
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(EcomodItems.CORE, 1, 0), new Object[]{"LCL", "KSW", "LXL", 'L', "treeLeaves", 'C', "blockCoal", 'K', Blocks.clay, 'S', "blockSlime", 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'X', "sand"}
+				new ItemStack(EcomodItems.CORE, 1, 0), new Object[]{"LCL", "KSW", "LXL", 'L', "treeLeaves", 'C', "blockCoal", 'K', Blocks.clay, 'S', "slimeball", 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'X', "sand"}
 		));
 		GameRegistry.addRecipe(new ShapedOreRecipe(
 				new ItemStack(EcomodItems.CORE, 1, 1), new Object[]{"AXS", "XCX", "SXS", 'C', new ItemStack(EcomodItems.CORE, 1, 0), 'X', new ItemStack(EcomodItems.CRAFT_INGREDIENT, 1, 1), 'A', new ItemStack(EcomodItems.CRAFT_INGREDIENT, 1, 0), 'S', new ItemStack(Blocks.sponge, 1, 0)}
@@ -53,7 +60,7 @@ public class EMRecipes
 		
 		//Respirator
 		GameRegistry.addRecipe(new ShapedOreRecipe(
-				new ItemStack(EcomodItems.RESPIRATOR, 1, 0), new Object[]{"LHL", "GWG", "FVF", 'L', "leather", 'H', Items.leather_helmet, 'G', "paneGlassColorless", 'F', EcomodBlocks.FILTER, 'V', new ItemStack(EcomodItems.CRAFT_INGREDIENT, 1, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)}
+				new ItemStack(EcomodItems.RESPIRATOR, 1, 0), new Object[]{"LHL", "GWG", "FVF", 'L', Items.leather, 'H', Items.leather_helmet, 'G', "paneGlassColorless", 'F', EcomodBlocks.FILTER, 'V', new ItemStack(EcomodItems.CRAFT_INGREDIENT, 1, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)}
 		));
 	}
 	

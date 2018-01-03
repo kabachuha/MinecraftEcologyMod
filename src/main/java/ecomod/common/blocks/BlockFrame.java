@@ -28,7 +28,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockFrame extends Block implements ITileEntityProvider
 {
-	public static ItemStack oc_adapter = null;
+	public static Block oc_adapter = null;
 	
 	//Meta: 0 - Basic, 1 - Advanced
 	
@@ -150,7 +150,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 						if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
 						if(oc_adapter != null)
 						{
-							if(oc_adapter.getItem() == pi.getItem())
+							if(Item.getItemFromBlock(oc_adapter) == pi.getItem())
 							{
 								worldIn.playAuxSFX(1021, x, y, z, 0);
 								

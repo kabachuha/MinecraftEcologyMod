@@ -6,6 +6,7 @@ import java.util.List;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Loader;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
@@ -15,6 +16,7 @@ import ecomod.client.renderer.RenderItemCore;
 import ecomod.client.renderer.RendererFramedItem;
 import ecomod.client.renderer.RendererFramedTile;
 import ecomod.client.renderer.RendererItemCraftIngredient;
+import ecomod.client.renderer.RendererItemRespirator;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
@@ -65,7 +67,8 @@ public class CliProxy extends ComProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFilter.class, new RendererFramedTile(0));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAnalyzer.class, new RendererFramedTile(2));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedFilter.class, new RendererFramedTile(1));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAnalyzerAdapter.class, new RendererFramedTile(3));
+		if(Loader.isModLoaded("OpenComputers|Core"))
+			ClientRegistry.bindTileEntitySpecialRenderer(TileAnalyzerAdapter.class, new RendererFramedTile(3));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFrame.class, new RendererFramedTile(-1));
 		
 		MinecraftForgeClient.registerItemRenderer(EcomodItems.CRAFT_INGREDIENT, new RendererItemCraftIngredient());
@@ -76,6 +79,8 @@ public class CliProxy extends ComProxy
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.ANALYZER), new RendererFramedItem());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.FRAME), new RendererFramedItem());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(EcomodBlocks.OC_ANALYZER_ADAPTER), new RendererFramedItem());
+		
+		MinecraftForgeClient.registerItemRenderer(EcomodItems.RESPIRATOR, new RendererItemRespirator());
 	}
 	
 	@Override

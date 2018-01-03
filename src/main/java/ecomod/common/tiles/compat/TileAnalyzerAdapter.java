@@ -178,7 +178,7 @@ public class TileAnalyzerAdapter extends TileEntityEnvironment implements Analyz
 
 	@Override
 	public void updateEntity() {
-		
+		super.updateEntity();
 		
 	}
 

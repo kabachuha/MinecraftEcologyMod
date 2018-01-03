@@ -89,6 +89,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
@@ -346,10 +347,12 @@ public class PollutionHandler implements IPollutionGetter
 				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(new EMBlockPos(ei)), PollutionSourcesConfig.getItemStackPollution(is).multiply(PollutionType.WATER, isInWater ? 2 : 1), true);
 			}
 			
-			//if(is.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
-			//{FIXME
-			//	EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(new EMBlockPos(ei)), is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution(), true);
-			//}
+			if(is.hasTagCompound() && is.getTagCompound().hasKey("food_pollution"))
+			{
+				PollutionData f_poll = new PollutionData();
+				f_poll.readFromNBT(is.getTagCompound().getCompoundTag("food_pollution"));
+				EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(new EMBlockPos(ei)), f_poll, true);
+			}
 			
 			if(is.hasTagCompound())
 			{
@@ -502,19 +505,6 @@ public class PollutionHandler implements IPollutionGetter
 			}
 		}
 	}
-	
-	/* FIXME!
-	@SubscribeEvent
-	public void onPotionBrewed(PlayerBrewedPotionEvent event)
-	{
-		if(event.isCanceled())return;
-		
-		World w = event.getEntityPlayer().getEntityWorld();
-		
-		if(w.isRemote)return;
-		
-		EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getEntityPlayer().getPosition()), PollutionSourcesConfig.getSource("brewing_potion_pollution"), true);
-	}*/
 	
 	@SubscribeEvent
 	public void onTreeGrow(SaplingGrowTreeEvent event)
@@ -830,47 +820,6 @@ public class PollutionHandler implements IPollutionGetter
 		}
 	}
 	
-	/* FIXME
-	@SubscribeEvent
-	public void onCropGrow(BlockEvent.CropGrowEvent.Pre event)
-	{
-		if(!event.getWorld().isRemote)
-		{FIXME
-			PollutionData pollution = getPollution(event.getWorld(), EMUtils.blockPosToPair(event.getPos()));
-			
-			if(pollution != null && pollution.compareTo(PollutionData.getEmpty()) != 0 && pollution.getSoilPollution() > 1)
-			if(PollutionEffectsConfig.isEffectActive("no_plowing", pollution))
-			{FIXME
-				if(PollutionUtils.hasSurfaceAccess(event.getWorld(), event.getPos()))
-					event.setResult(Result.DENY);
-			}FIXME
-			else
-			{
-				if(PollutionUtils.hasSurfaceAccess(event.getWorld(), event.getPos()))
-				if(EcomodStuff.pollution_effects.containsKey("no_crops_growing"))
-				{FIXME
-					PollutionData effectPoll = EcomodStuff.pollution_effects.get("no_crops_growing").getTriggerringPollution();
-					
-					for(PollutionType type : PollutionType.values())
-					{FIXME
-						if(effectPoll.get(type) > 1 && pollution.get(type) > 1)
-						{
-							double k = effectPoll.get(type) / pollution.get(type);
-							
-							k = Math.max(k, 1);
-					
-							if(event.getWorld().rand.nextInt((int)k) == 0)
-							{
-								event.setResult(Result.DENY);
-								return;
-							}
-						}FIXME
-					}
-				}
-			}FIXME TODO
-		}
-	}*/
-	
 	@SubscribeEvent
 	public void onBlockDrops(BlockEvent.HarvestDropsEvent event)
 	{
@@ -882,28 +831,6 @@ public class PollutionHandler implements IPollutionGetter
 			}
 		}
 	}
-	/*FIXME TODO!
-	@SubscribeEvent 
-	public void onEntityUseItem(LivingEntityUseItemEvent.Start event)
-	{
-		if(event.getEntityLiving() != null && event.getItem() != null)
-		if(!event.getEntityLiving().getEntityWorld().isRemote)
-		{
-			ItemStack is = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-			
-			if(is != null && is.stackSize > 0 && is.getItem() == EcomodItems.RESPIRATOR)
-			{FIXME
-				is = event.getItem();
-				if(is.getItem() instanceof ItemFood || is.getItem() instanceof ItemBucketMilk || is.getItem() instanceof ItemPotion)
-				{
-					if(event.getEntityLiving() instanceof EntityPlayer)
-						((EntityPlayer)event.getEntityLiving()).addChatMessage(new TextComponentTranslation("msg.ecomod.no_eat_with_respirator"));
-					event.setDuration(-1);
-					event.setCanceled(true);
-				}
-			}
-		}
-	}*/
 	
 	public void dropHandler(World w, EMBlockPos pos, List<ItemStack> drops)
 	{
@@ -940,15 +867,52 @@ public class PollutionHandler implements IPollutionGetter
 			
 				delta.multiply(PollutionType.SOIL, in ? 1F : 0.2F);
 			}
-			/*FIXME TODO!
+
 			for(ItemStack is : drops)
 			{
-				if(is.hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
+				if(is.getItem() instanceof ItemFood)
 				{
-					is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).setPollution(is.getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution().add(delta.multiplyAll(EMConfig.food_polluting_factor * 2)));
+					NBTTagCompound tag = is.getTagCompound();
+					if(tag == null)
+						tag = new NBTTagCompound();
+					
+					NBTTagCompound p_tag = new NBTTagCompound();
+					
+					if(tag.hasKey("food_pollution"))
+						p_tag = tag.getCompoundTag("food_pollution");
+					
+					PollutionData itempollution = new PollutionData();
+					itempollution.readFromNBT(p_tag);
+					itempollution.add(delta.multiplyAll(EMConfig.food_polluting_factor * 2));
+					itempollution.writeToNBT(p_tag);
+					
+					tag.setTag("food_pollution", p_tag);
+					
+					is.setTagCompound(tag);
 				}
-			}*/
+			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerUsesItem(PlayerUseItemEvent.Start event)
+	{
+		if(event.entityPlayer != null && event.item != null)
+			if(!event.entityPlayer.getEntityWorld().isRemote)
+			{
+				ItemStack is = event.entityPlayer.getEquipmentInSlot(4);
+				
+				if(is != null && is.stackSize > 0 && is.getItem() == EcomodItems.RESPIRATOR)
+				{
+					is = event.item;
+					if(is.getItem() instanceof ItemFood || is.getItem() instanceof ItemBucketMilk || is.getItem() instanceof ItemPotion)
+					{
+						event.entityPlayer.addChatMessage(new ChatComponentTranslation("msg.ecomod.no_eat_with_respirator"));
+						event.duration = -1;
+						event.setCanceled(true);
+					}
+				}
+			}
 	}
 	
 	@SubscribeEvent

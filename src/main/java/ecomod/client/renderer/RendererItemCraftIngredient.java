@@ -115,7 +115,7 @@ public class RendererItemCraftIngredient implements IItemRenderer
 					return;
 				}
 				
-				GL11.glTranslatef(0F, 0.2F, 0F);
+				GL11.glTranslatef(-0.05F, 0.2F, -0.05F);
 				
 				GL11.glRotated((Minecraft.getMinecraft().theWorld.getWorldTime() % rotational_period_ticks) * 360 / rotational_period_ticks, 0, 0, 1);
 				

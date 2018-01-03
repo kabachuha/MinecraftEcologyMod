@@ -16,7 +16,7 @@ public class RenderRespirator extends ModelBiped
 		super(1.0F);
 		
 		this.bipedHead.addChild(setupRespirator());
-		
+		if(entity != null && entity.isSneaking())bipedHead.offsetY = 0.05F;
 		this.bipedBody.isHidden = true;
 		this.bipedCloak.isHidden = true;
 		this.bipedEars.isHidden = true;
@@ -29,6 +29,11 @@ public class RenderRespirator extends ModelBiped
 	
 	public ModelRenderer setupRespirator()
 	{
+		return setupRespirator(true);
+	}
+	
+	public ModelRenderer setupRespirator(boolean rotate)
+	{
 		ModelRenderer respirator = new ModelRenderer(this, "respirator"){
 			@Override
 			public void render(float scale)
@@ -36,12 +41,16 @@ public class RenderRespirator extends ModelBiped
 				super.render(scale * 0.5F);
 		    }
 		};
-		respirator.offsetX = -0.25F;
-		respirator.offsetY = -0.5F/16F;
-		respirator.offsetZ = -4.21F/16F;
 		
-		respirator.rotateAngleY = (float)Math.PI;
-		respirator.rotateAngleZ = (float)Math.PI;
+		if(rotate)
+		{
+			respirator.offsetX = -0.25F;
+			respirator.offsetY = -0.5F/16F;
+			respirator.offsetZ = -4.21F/16F;
+		
+			respirator.rotateAngleY = (float)Math.PI;
+			respirator.rotateAngleZ = (float)Math.PI;
+		}
 		//Respirator base:
 		
 		respirator.cubeList.add(new ModelBox(respirator, 0, 20, -1, -4, 0, 18, 6, 4, 1F));//Base
@@ -61,6 +70,13 @@ public class RenderRespirator extends ModelBiped
 		l_filter.offsetY = -0.25F;
 		l_filter.offsetZ = 0.35F;
 		
+		if(!rotate)
+		{
+			l_filter.offsetY = -0.5F;
+			l_filter.offsetX = 0.7F;
+			l_filter.offsetZ = 0.7F;
+		}
+		
 		l_filter.addBox(0, 0, 0, 6, 6, 4, 1F);
 		
 		respirator.addChild(l_filter);
@@ -72,6 +88,13 @@ public class RenderRespirator extends ModelBiped
 		r_filter.offsetX = 0.0F;
 		r_filter.offsetY = -0.25F;
 		r_filter.offsetZ = 0.2F;
+		
+		if(!rotate)
+		{
+			r_filter.offsetY = -0.5F;
+			r_filter.offsetX = 0.05F;
+			r_filter.offsetZ = 0.45F;
+		}
 		
 		r_filter.addBox(0, 0, 0, 6, 6, 4, 1F);
 		
