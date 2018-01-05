@@ -53,13 +53,13 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId = args[1];
 			
-			double air = 0.0D;
-			double water = 0.0D;
-			double soil = 0.0D;
+			float air = 0.0F;
+			float water = 0.0F;
+			float soil = 0.0F;
 			
 			try
 			{
-				air = Double.parseDouble(args[2]);
+				air = Float.parseFloat(args[2]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -68,7 +68,7 @@ public class CommandTEPC extends CommandBase {
 			
 			try
 			{
-				water = Double.parseDouble(args[3]);
+				water = Float.parseFloat(args[3]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -77,7 +77,7 @@ public class CommandTEPC extends CommandBase {
 			
 			try
 			{
-				soil = Double.parseDouble(args[4]);
+				soil = Float.parseFloat(args[4]);
 			}
 			catch (NumberFormatException e)
 			{

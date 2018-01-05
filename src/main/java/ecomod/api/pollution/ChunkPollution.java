@@ -136,4 +136,23 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	{
 		return new ChunkPos(chunkX, chunkZ);
 	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj != null && obj instanceof ChunkPollution)
+		{
+			ChunkPollution p = (ChunkPollution)obj;
+			return chunkX == p.chunkX && chunkZ == p.chunkZ && pollution.equals(p.pollution);
+		}
+		return false;
+	}
+
+	@Override
+	public int compareTo(Pair<Pair<Integer, Integer>, PollutionData> other)
+	{
+		return pollution.compareTo(other.getRight());
+	}
+	
+	
 }

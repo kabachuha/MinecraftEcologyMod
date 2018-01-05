@@ -44,6 +44,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -353,6 +354,7 @@ public class ClientHandler
 				GlStateManager.setFogStart((float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
 				GlStateManager.setFogEnd((float) (e0 * f + (f - e0 * f) * (1 - Math.pow(smog_intensity.floatValue(), EMConfig.smog_rendering_distance_intensity_exponent))));
 				GlStateManager.setFogDensity(smog_intensity.floatValue());
+				event.setResult(Result.ALLOW);
 			}
 		}
 		

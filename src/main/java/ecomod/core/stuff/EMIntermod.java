@@ -117,7 +117,7 @@ public class EMIntermod
 				
 				if(id.length() > 0 && !(air == 0 && water == 0 && soil == 0))
 				{
-					tep = new TEPollution(id, new PollutionData(air, water, soil));
+					tep = new TEPollution(id, new PollutionData((float)air, (float)water, (float)soil));
 				}
 				
 				if(tep != null)

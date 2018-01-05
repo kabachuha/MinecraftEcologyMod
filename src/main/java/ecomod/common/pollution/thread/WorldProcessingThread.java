@@ -314,9 +314,9 @@ public class WorldProcessingThread extends Thread
 				if(func_result.length < 3)
 					continue;
 				
-				ret.add(PollutionType.AIR, (double)func_result[0]);
-				ret.add(PollutionType.WATER, (double)func_result[1]);
-				ret.add(PollutionType.SOIL, (double)func_result[2]);
+				ret.add(PollutionType.AIR, (float)func_result[0]);
+				ret.add(PollutionType.WATER, (float)func_result[1]);
+				ret.add(PollutionType.SOIL, (float)func_result[2]);
 				
 				if(func_result.length > 3)
 				{

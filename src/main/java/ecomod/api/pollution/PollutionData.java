@@ -9,13 +9,13 @@ import net.minecraft.nbt.NBTTagList;
 public class PollutionData implements Comparable
 {
 	@SerializedName("air")
-	private double air_pollution;
+	private float air_pollution;
 	
 	@SerializedName("water")
-	private double water_pollution;
+	private float water_pollution;
 	
 	@SerializedName("soil")
-	private double soil_pollution;
+	private float soil_pollution;
 	
 	public enum PollutionType
 	{
@@ -35,7 +35,7 @@ public class PollutionData implements Comparable
 		soil_pollution = p.getSoilPollution();
 	}
 	
-	public PollutionData(double air, double water, double soil)
+	public PollutionData(float air, float water, float soil)
 	{
 		air_pollution = air;
 		water_pollution = water;
@@ -47,46 +47,46 @@ public class PollutionData implements Comparable
 	/**
 	 * @return the air_pollution
 	 */
-	public double getAirPollution() {
+	public float getAirPollution() {
 		return air_pollution;
 	}
 
 	/**
 	 * @param air_pollution the air_pollution to set
 	 */
-	public void setAirPollution(double air_pollution) {
+	public void setAirPollution(float air_pollution) {
 		this.air_pollution = air_pollution;
 	}
 
 	/**
 	 * @return the water_pollution
 	 */
-	public double getWaterPollution() {
+	public float getWaterPollution() {
 		return water_pollution;
 	}
 
 	/**
 	 * @param water_pollution the water_pollution to set
 	 */
-	public void setWaterPollution(double water_pollution) {
+	public void setWaterPollution(float water_pollution) {
 		this.water_pollution = water_pollution;
 	}
 
 	/**
 	 * @return the soil_pollution
 	 */
-	public double getSoilPollution() {
+	public float getSoilPollution() {
 		return soil_pollution;
 	}
 
 	/**
 	 * @param soil_pollution the soil_pollution to set
 	 */
-	public void setSoilPollution(double soil_pollution) {
+	public void setSoilPollution(float soil_pollution) {
 		this.soil_pollution = soil_pollution;
 	}
 	
-	public double get(PollutionType type)
+	public float get(PollutionType type)
 	{
 		switch(type)
 		{
@@ -101,7 +101,7 @@ public class PollutionData implements Comparable
 		return 0;
 	}
 	
-	public PollutionData set(PollutionType type, double toset)
+	public PollutionData set(PollutionType type, float toset)
 	{
 		switch(type)
 		{
@@ -127,7 +127,7 @@ public class PollutionData implements Comparable
 		return this;
 	}
 	
-	public PollutionData add(PollutionType type, double amount)
+	public PollutionData add(PollutionType type, float amount)
 	{
 		switch(type)
 		{
@@ -144,7 +144,7 @@ public class PollutionData implements Comparable
 		return this;
 	}
 	
-	public PollutionData addAll(double amount)
+	public PollutionData addAll(float amount)
 	{
 		air_pollution += amount;
 		water_pollution += amount;
@@ -224,7 +224,7 @@ public class PollutionData implements Comparable
 	
 	public static PollutionData getEmpty()
 	{
-		return new PollutionData(0.0D,0.0D,0.0D);
+		return new PollutionData(0.0F,0.0F,0.0F);
 	}
 	
 	public PollutionData clone()
@@ -279,7 +279,7 @@ public class PollutionData implements Comparable
 	public void writeByteBuf(ByteBuf bb)
 	{
 		for(PollutionType t : PollutionType.values())
-			bb.writeDouble(get(t));
+			bb.writeFloat(get(t));
 	}
 	
 	public static PollutionData fromByteBuf(ByteBuf bb)
@@ -287,11 +287,12 @@ public class PollutionData implements Comparable
 		PollutionData ret = getEmpty();
 		
 		for(PollutionType t : PollutionType.values())
-			ret.set(t, bb.readDouble());
+			ret.set(t, bb.readFloat());
 		
 		return ret;
 	}
 	
+	//Leave NBT as double to avoid version conflict
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setDouble("air", getAirPollution());
@@ -306,11 +307,11 @@ public class PollutionData implements Comparable
 		if(nbt != null)
 		{
 			if(nbt.hasKey("air"))
-				setAirPollution(nbt.getDouble("air"));
+				setAirPollution((float)nbt.getDouble("air"));
 			if(nbt.hasKey("water"))
-				setWaterPollution(nbt.getDouble("water"));
+				setWaterPollution((float)nbt.getDouble("water"));
 			if(nbt.hasKey("soil"))
-				setSoilPollution(nbt.getDouble("soil"));
+				setSoilPollution((float)nbt.getDouble("soil"));
 		}
 	}
 	

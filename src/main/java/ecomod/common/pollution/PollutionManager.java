@@ -55,6 +55,10 @@ public class PollutionManager
 	{
 		WorldPollution wp = new WorldPollution();
 		
+		for(ChunkPollution p : data)
+			if(p.getPollution().getAirPollution() < EMConfig.pollution_precision && p.getPollution().getWaterPollution() < EMConfig.pollution_precision && p.getPollution().getSoilPollution() < EMConfig.pollution_precision)
+				data.remove(p);
+		
 		wp.setData(data.toArray(new ChunkPollution[data.size()]));
 		
 		EcologyMod.log.info("Serializing and saving pollution manager for dimension "+dim);

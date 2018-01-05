@@ -66,6 +66,9 @@ public class EcomodClassTransformer implements IClassTransformer
 		
 		if(strictCompareByEnvironment(name, "net.minecraft.entity.item.EntityItem", "net.minecraft.entity.item.EntityItem"))
 			return handleEntityItem(name, basicClass);
+		
+		if(strictCompareByEnvironment(name, "org.blockartistry.DynSurround.client.weather.WeatherProperties", "org.blockartistry.DynSurround.client.weather.WeatherProperties"))
+			return handle_DynamicSurroundings_getRainTexture(name, basicClass);
 			
 		return basicClass;
 	}
@@ -697,6 +700,51 @@ public class EcomodClassTransformer implements IClassTransformer
 			e.printStackTrace();
 			
 			failed_transformers.add(name);
+			
+			return bytecode;
+		}
+	}
+	
+	private byte[] handle_DynamicSurroundings_getRainTexture(String name, byte[] bytecode)
+	{
+		log.info("Transforming "+name);
+		log.info("Initial size: "+bytecode.length+" bytes");
+		
+		byte[] bytes = bytecode.clone();
+		
+		try
+		{
+			ClassNode classNode = new ClassNode();
+			ClassReader classReader = new ClassReader(bytes);
+			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
+			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+			
+			if(DEBUG)
+				printClassInfo(name, classNode);
+			
+			MethodNode mn = getMethod(classNode, "getRainTexture", "getRainTexture", "()Lnet/minecraft/util/ResourceLocation;", "()Lnet/minecraft/util/ResourceLocation;");
+			
+			InsnList lst = new InsnList();
+			
+			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ecomod/asm/EcomodASMHooks", "getRainTexture", "(Lnet/minecraft/util/ResourceLocation;)Lnet/minecraft/util/ResourceLocation;", false));
+			
+			mn.instructions.insert(mn.instructions.getLast().getPrevious().getPrevious(), lst);
+			
+			classNode.accept(cw);
+			bytes = cw.toByteArray();
+			
+			log.info("Transformed "+name);
+			log.info("Final size: "+bytes.length+" bytes");
+		
+			return bytes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to patch "+name+"!");
+			log.error(e.toString());
+			e.printStackTrace();
+			
+			//Not critical. failed_transformers.add(name);
 			
 			return bytecode;
 		}

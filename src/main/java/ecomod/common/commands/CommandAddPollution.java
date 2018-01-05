@@ -63,7 +63,7 @@ public class CommandAddPollution extends CommandBase {
 				throw new WrongUsageException(getUsage(sender), new Object[0]);
 			}
 			
-			EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Double.parseDouble(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Double.parseDouble(args[1])), true);
+			EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Float.parseFloat(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Float.parseFloat(args[1])), true);
 		}
 		else
 			throw new CommandException("commands.ecomod.wpt_not_found", w.provider.getDimension());

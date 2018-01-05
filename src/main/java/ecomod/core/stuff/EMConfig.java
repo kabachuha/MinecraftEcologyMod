@@ -94,6 +94,8 @@ public class EMConfig
 	
 	public static int wpt_profiler_critical_timeout_warning = 10000;
 	
+	public static float pollution_precision = 5.0F;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -120,6 +122,8 @@ public class EMConfig
 			wpt_profiler_timeout_warning = config.getInt("timeoutWarningMillis", "THREAD", 1000, 1, Integer.MAX_VALUE, "Timeout warning for every WPT operation in milliseconds. If you want to disable the warning, make this value big enough.");
 			
 			wpt_profiler_critical_timeout_warning = config.getInt("criticalTimeoutWarinigMillis", "THREAD", 10000, 1, Integer.MAX_VALUE, "Critical timeout WPT warning(milliseconds).");
+			
+			pollution_precision = config.getFloat("PollutionDataPrecision", "THREAD", 5.0F, 0, 10000F, "Pollution values(full pollution) below this point are rounded to zero for optimization purposes.");
 			
 			tepcURL = config.getString("TEPC_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/TEPC.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
 			
@@ -268,17 +272,17 @@ public class EMConfig
 	
 	public static void setupSources(String cfg_dir)
 	{
-		PollutionData adv_filter_redution = new PollutionData(-4.5, -0.5, -0.5);
-		PollutionData item_expire_pollution = new PollutionData(0, 0.0625D, 0.125D);
-		PollutionData explosion_pollution = new PollutionData(20.5, 6.25, 8.25);
-		PollutionData concentrated_pollution_explosion_pollution = new PollutionData(50,5,10);
-		PollutionData bonemeal_pollution = new PollutionData(1, 1, 2);
-		PollutionData pollution_per_potion_brewed = new PollutionData(6, 0, 0);
-		PollutionData pollution_reduced_by_tree = new PollutionData(-22, -3, -17);
-		PollutionData hoe_plowing_reducion = new PollutionData(0,0,-1);
-		PollutionData fire_pollution = new PollutionData(3.5, 0, 0);
-		PollutionData leaves_redution = new PollutionData(-20, 0, 0);
-		PollutionData smelted_item_pollution = new PollutionData(3, 0.6, 1.9);
+		PollutionData adv_filter_redution = new PollutionData(-4.5F, -0.5F, -0.5F);
+		PollutionData item_expire_pollution = new PollutionData(0F, 0.0625F, 0.125F);
+		PollutionData explosion_pollution = new PollutionData(20.5F, 6.25F, 8.25F);
+		PollutionData concentrated_pollution_explosion_pollution = new PollutionData(50F,5F,10F);
+		PollutionData bonemeal_pollution = new PollutionData(1F, 1F, 2F);
+		PollutionData pollution_per_potion_brewed = new PollutionData(6F, 0F, 0F);
+		PollutionData pollution_reduced_by_tree = new PollutionData(-22F, -3F, -17F);
+		PollutionData hoe_plowing_reducion = new PollutionData(0F,0F,-1F);
+		PollutionData fire_pollution = new PollutionData(3.5F, 0F, 0F);
+		PollutionData leaves_redution = new PollutionData(-20F, 0F, 0F);
+		PollutionData smelted_item_pollution = new PollutionData(3F, 0.6F, 1.9F);
 		
 		List<String> item_blacklist = new ArrayList<String>();
 		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));

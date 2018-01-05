@@ -202,12 +202,12 @@ public class EcomodASMHooks
 			if(dmg_source == DamageSource.LAVA)
 			{
 				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem());
-				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.8).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.9D).multiply(PollutionType.WATER, 0.1F).multiply(PollutionType.SOIL, 0.2F);
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.8F).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.9F).multiply(PollutionType.WATER, 0.1F).multiply(PollutionType.SOIL, 0.2F);
 			}
 			else if(dmg_source.isFireDamage())
 			{
 				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem());
-				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.7).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.8D).multiply(PollutionType.WATER, 0.2F).multiply(PollutionType.SOIL, 0.3F);
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.7F).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.8F).multiply(PollutionType.WATER, 0.2F).multiply(PollutionType.SOIL, 0.3F);
 				
 				FluidStack fs = FluidUtil.getFluidContained(entity_item.getItem());
 				
@@ -228,7 +228,7 @@ public class EcomodASMHooks
 			else if(dmg_source.isExplosion())
 			{
 				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getItem());
-				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.5).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.4D).multiply(PollutionType.WATER, 0.6F).multiply(PollutionType.SOIL, 0.5F);
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.5F).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.4F).multiply(PollutionType.WATER, 0.6F).multiply(PollutionType.SOIL, 0.5F);
 				
 				FluidStack fs = FluidUtil.getFluidContained(entity_item.getItem());
 				
@@ -414,4 +414,8 @@ public class EcomodASMHooks
 			}
 		}
 		
+		public static ResourceLocation getRainTexture(ResourceLocation original)
+		{
+			return EcologyMod.proxy.getClientHandler().acid_rain ? rain_texture : original;
+		}
 }

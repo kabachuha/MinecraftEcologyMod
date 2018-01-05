@@ -511,4 +511,10 @@ public class EMUtils
 		for(int i = 0; i < times; i++)
 			func.accept(i);
 	}
+	
+	//For optimization
+	public static <T, V> boolean arePairsEqual(Pair<T, V> par_1, Pair<T, V> par_2)
+	{
+		return par_1.getLeft() == par_2.getLeft() && par_1.getRight() == par_2.getRight();
+	}
 }
