@@ -1,6 +1,7 @@
 package ecomod.common.pollution.handlers;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,11 +24,13 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.IGarbage;
+import ecomod.api.pollution.IPollutionAffector;
 import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.api.pollution.PollutionEmissionEvent;
+import ecomod.api.pollution.PositionedPollutionEmissionEvent;
 import ecomod.asm.EcomodClassTransformer;
 import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.common.pollution.PollutionEffectsConfig;
@@ -41,6 +44,7 @@ import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
+import ecomod.common.utils.PositionedEmissionObject;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
@@ -107,109 +111,21 @@ import net.minecraftforge.fml.relauncher.Side;
 //FIXME Put the handlers in order
 public class PollutionHandler implements IPollutionGetter
 {
-	public Map<String, WorldProcessingThread> threads = new HashMap<String, WorldProcessingThread>();
+	public Map<Integer, WorldProcessingThread> threads = new HashMap<Integer, WorldProcessingThread>();
 	
 	private Gson gson = new GsonBuilder().serializeNulls().create();
-	
-	@Deprecated
-	public EMPacketString formCachedPollutionToSend(int dim, UUID id, int radius)
-	{/*
-		WorldProcessingThread wpt = getWPT(DimensionManager.getWorld(dim));
-		
-		if(wpt != null)
-		{
-			EntityPlayer p = wpt.getPM().getWorld().getPlayerEntityByUUID(id);
-			
-			if(p == null)
-			{
-				EcologyMod.log.error("Player not found when forming pollution data to be cached!");
-				
-				return null;
-			}
-			
-			return formCachedPollutionToSend(p, radius);
-		}
-		else*/
-			return null;
-	}
-	
-	@Deprecated
-	public EMPacketString formCachedPollutionToSend(EntityPlayer player, int radius)
-	{/*
-		if(player == null)
-		{
-			EcologyMod.log.error("Player not found when forming pollution data to be cached!");
-			
-			return null;
-		}
-		
-		WorldProcessingThread wpt = getWPT(player.world);
-		
-		ChunkPos chpos = new ChunkPos(player.chunkCoordX, player.chunkCoordZ);
-		
-		List<ChunkPollution> list = new ArrayList<ChunkPollution>();
-		
-		for (int i = chpos.x - radius; i <= chpos.x + radius; i++) 
-			for (int j = chpos.z - radius; j <= chpos.z + radius; j++)
-			{
-				list.add(wpt.getPM().getChunkPollution(Pair.of(i, j)));
-			}
-		
-		if(EMUtils.isSquareChunkPollution(list))
-		{
-			WorldPollution wp = new WorldPollution();
-			
-			wp.setData(list.toArray(new ChunkPollution[list.size()]));
-			
-			String json = gson.toJson(wp, WorldPollution.class);
-			
-			json = json.replace('\"', 'Q');
-			
-			json = json.replace(':', 'k');
-			
-			json = json.replace('{', 'O');
-			
-			json = json.replace('}', 'C');
-			
-			json = json.substring(9, json.length() - 2);
-			
-			json = json.replaceAll("QpollutionQkOQairQk0.0,QwaterQk0.0,QsoilQk0.0C", "pn");
-			
-			json = json.replaceAll("chunkX", "N");
-			
-			json = json.replaceAll("chunkZ", "M");
-			
-			json = "P"+json;
-			
-			//EcologyMod.log.info(json);
-			
-			if(json != "P")
-				return new EMPacketString(json);
-		}
-		else
-		{
-			EcologyMod.log.error("Unable to form pollution data to be send to a client!");
-		}*/
-		
-		return null;
-	}
 	
 	public WorldProcessingThread getWPT(World key)
 	{	
 		if(key == null || key.isRemote)
 			return null;
 		
-		return getWPT(PollutionUtils.genPMid(key));
+		return getWPT(key.provider.getDimension());
 	}
 	
-	public WorldProcessingThread getWPT(String key)
+	public WorldProcessingThread getWPT(int dim)
 	{
-		if(threads.containsKey(key))
-		{
-			return threads.get(key);
-		}
-		
-		return null;
+		return threads.get(dim);
 	}
 	
 	//World handlers
@@ -223,32 +139,31 @@ public class PollutionHandler implements IPollutionGetter
 			return;
 		}
 		
+		int dim = w.provider.getDimension();
 		
 		boolean b1 = false;
 		
 		for(int i : EMConfig.allowedDims)
-			if(i == w.provider.getDimension())
+			if(i == dim)
 				b1 = true;
 		
 		if(!b1)
 			return;
 		
-		
-		String key = PollutionUtils.genPMid(w);
-		
-		if(threads.containsKey(key) && PollutionUtils.genPMid(threads.get(key).getPM()) == key)
+		if(threads.containsKey(dim) && threads.get(dim).getPM().getWorld().getWorldInfo().getWorldName().equals(w.getWorldInfo().getWorldName()))
 		{
+			EcologyMod.log.error("Unable to start a new WorldProcessingThread because it already exists!");
 			return;
 		}
 		
 		PollutionManager pm = new PollutionManager(w);
 		
-		EcologyMod.log.info("Creating PollutionManager for "+key);
+		EcologyMod.log.info("Creating PollutionManager for dimension "+dim);
 		
 		if(pm.load())
 		{
 			WorldProcessingThread thr = new WorldProcessingThread(pm);
-			threads.put(PollutionUtils.genPMid(pm), thr);
+			threads.put(w.provider.getDimension(), thr);
 			thr.start();
 		}
 		else
@@ -256,7 +171,7 @@ public class PollutionHandler implements IPollutionGetter
 			//EcologyMod.log.error("Unable to load the pollution manager and start the thread for dim "+w.provider.getDimension());
 			pm = new PollutionManager(w);
 			WorldProcessingThread thr = new WorldProcessingThread(pm);
-			threads.put(PollutionUtils.genPMid(pm), thr);
+			threads.put(w.provider.getDimension(), thr);
 			thr.start();
 		}
 	}
@@ -275,28 +190,28 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
+		int dim = w.provider.getDimension();
 		
-		String key = PollutionUtils.genPMid(w);
-		
-		if(threads.containsKey(key))
+		if(threads.containsKey(dim))
 		{
+			WorldProcessingThread t = threads.get(dim);
 			try
 			{
-				synchronized(threads.get(key))
+				synchronized(t)
 				{
-					threads.get(key).notify();
+					t.notify();
 					
-					threads.get(key).forceSE();
+					t.forceSE();
 				}
 			}
 			catch(Exception e)
 			{
-				EcologyMod.log.error("Unable to force sheduled emissions handling for "+threads.get(key).getName()+" because of" + e.toString());
+				EcologyMod.log.error("Unable to force sheduled emissions handling for "+t.getName()+" because of" + e.toString());
 				e.printStackTrace();
 			}
 			finally
 			{
-				threads.get(key).shutdown();
+				t.shutdown();
 			}
 		}
 	}
@@ -304,27 +219,28 @@ public class PollutionHandler implements IPollutionGetter
 	public void onServerStopping()
 	{
 		EcologyMod.log.info("Server is stopping... Shutting down WorldProcessingThreads...");
-		for(String s : threads.keySet())
+		for(int dim : threads.keySet())
 		{
-			if(threads.get(s) != null)
+			if(threads.get(dim) != null)
 			{
+				WorldProcessingThread t = threads.get(dim);
 				try
 				{
-					synchronized(threads.get(s))
+					synchronized(t)
 					{
-						threads.get(s).notify();
+						t.notify();
 				
-						threads.get(s).forceSE();
+						t.forceSE();
 					}
 				}
 				catch(Exception e)
 				{
-					EcologyMod.log.error("Unable to force sheduled emissions handling for "+threads.get(s).getName()+" because of " + e.toString());
+					EcologyMod.log.error("Unable to force sheduled emissions handling for "+t.getName()+" because of " + e.toString());
 					e.printStackTrace();
 				}
 				finally
 				{
-					threads.get(s).shutdown();
+					t.shutdown();
 				}
 			}
 		}
@@ -339,17 +255,16 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		int dim = w.provider.getDimension();
 		
-		if(threads.containsKey(key))
+		if(threads.containsKey(dim))
 		{
-			WorldProcessingThread wpt = threads.get(key);
+			WorldProcessingThread wpt = threads.get(dim);
 		
 			Pair<Integer, Integer> coord = Pair.of(event.getChunk().x, event.getChunk().z);
 		
 			if(!wpt.getLoadedChunks().contains(coord))
 				wpt.getLoadedChunks().add(coord);
-			
 		}
 	}
 	
@@ -361,11 +276,11 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		int dim = w.provider.getDimension();
 		
-		if(threads.containsKey(key))
+		if(threads.containsKey(dim))
 		{
-			WorldProcessingThread wpt = threads.get(key);
+			WorldProcessingThread wpt = threads.get(dim);
 		
 			Pair<Integer, Integer> coord = Pair.of(event.getChunk().x, event.getChunk().z);
 		
@@ -382,13 +297,13 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		int dim = w.provider.getDimension();
 		
 		//EcologyMod.log.info(event.getEmission().toString());
 		
-		if(threads.containsKey(key))
+		if(threads.containsKey(dim))
 		{
-			WorldProcessingThread wpt = threads.get(key);
+			WorldProcessingThread wpt = threads.get(dim);
 			
 			if(event.isScheduled())
 			{
@@ -401,6 +316,136 @@ public class PollutionHandler implements IPollutionGetter
 		}
 	}
 	
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onPositionedEmission(PositionedPollutionEmissionEvent event)
+	{
+		World w = event.getWorld();
+		
+		if(!w.isRemote)
+		{
+			WorldProcessingThread wpt = getWPT(w);
+			
+			if(wpt != null)
+			{
+				BlockPos pos = new BlockPos(event.getX(), event.getY(), event.getZ());
+		
+				int wir = EMUtils.countWaterInRadius(w, pos, EMConfig.wpr);
+				boolean rain = w.isRainingAt(pos);
+		
+				int filters = 0;
+		
+				for(EnumFacing f : EnumFacing.VALUES)
+				{
+					TileEntity tile = w.getTileEntity(pos.offset(f));
+			
+					if(tile instanceof IPollutionAffector)
+						((IPollutionAffector)tile).handleEmission(pos, event.getEmission());
+				}
+		
+				event.getEmission().multiply(PollutionType.WATER, rain ? 3 : 1).multiply(PollutionType.SOIL, rain ? 1.5F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir);
+			
+				if(event.isScheduled())
+				{
+					wpt.getPositionedEmissions().add(new PositionedEmissionObject(pos, event.getEmission()));
+				}
+				else
+				{
+					wpt.getPM().addPollution(event.getX() >> 4, event.getZ() >> 4, event.getEmission());
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onWorldTickTiles(TickEvent.WorldTickEvent event)
+	{
+		if (event.phase == TickEvent.Phase.START && !event.world.isRemote && threads.containsKey(event.world.provider.getDimension()))
+		{
+			if(threads.get(event.world.provider.getDimension()).should_update_tiles)
+			{
+				List<TileEntity> tiles = event.world.tickableTileEntities;
+				
+				try
+				{
+					for(TileEntity te : tiles)
+					{
+						if(te.isInvalid())
+							continue;
+						
+						PollutionData pollution = PollutionData.getEmpty();
+						
+						boolean overriden_by_func = false;
+						
+						for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
+						{
+							Object[] func_result = new Object[0];
+							
+							try
+							{
+								func_result = func.apply(te);
+							}
+							catch(Exception e)
+							{
+								EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
+								EcologyMod.log.info(e.toString());
+								e.printStackTrace();
+								continue;
+							}
+							
+							if(func_result.length < 3)
+								continue;
+							
+							pollution.add(PollutionType.AIR, (float)func_result[0]);
+							pollution.add(PollutionType.WATER, (float)func_result[1]);
+							pollution.add(PollutionType.SOIL, (float)func_result[2]);
+							
+							if(func_result.length > 3)
+							{
+								if(func_result[3] != null && func_result[3] instanceof Boolean)
+									if(!overriden_by_func)
+										overriden_by_func = (Boolean)func_result[3];
+							}
+						}
+						
+						if(!overriden_by_func)
+							if(te instanceof IPollutionEmitter)
+							{
+								pollution.add(((IPollutionEmitter)te).pollutionEmission(false));
+							}
+							else
+							{
+								if(EcologyMod.instance.tepc.hasTile(te))
+								{
+									if(PollutionUtils.isTEWorking(event.world, te))
+									{
+										TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
+										if(tep != null)
+										{
+											pollution.add(tep.getEmission());
+										}
+									}
+								}
+							}
+						
+						EcomodAPI.emitPollutionPositioned(event.world, te.getPos(), pollution.multiplyAll(EMConfig.wptcd/60F), true);
+					}
+				}
+                catch(ConcurrentModificationException e)
+				{
+                    e.printStackTrace();
+                }
+				catch(Exception e)
+				{
+					EcologyMod.log.error(e.toString());
+					e.printStackTrace();
+				}
+				finally
+				{
+					threads.get(event.world.provider.getDimension()).should_update_tiles = false;
+				}
+			}
+		}
+	}
 	
 	//Pollution sources
 
@@ -609,17 +654,11 @@ public class PollutionHandler implements IPollutionGetter
 	{
 		World w = event.getWorld();
 		
-		if(w.isRemote)return;
-		
-		String key = PollutionUtils.genPMid(w);
-		
-		WorldProcessingThread wpt = getWPT(key);
+		WorldProcessingThread wpt = getWPT(w);
 		
 		if(wpt == null)return;
 		
 		PollutionData data = wpt.getPM().getChunkPollution(EMUtils.blockPosToPair(event.getPos())).getPollution();
-		
-		EcologyMod.log.info(data.toString());
 		
 		if(PollutionEffectsConfig.isEffectActive("no_trees", data))
 		{
@@ -1128,140 +1167,6 @@ public class PollutionHandler implements IPollutionGetter
 		return new Percentage(0);
 	}
 	
-	@SubscribeEvent
-	public void onWorldTick(WorldTickEvent event)
-	{
-		World w = event.world;
-		
-		if(!w.isRemote)
-		{
-			WorldProcessingThread wpt = getWPT(w);
-		
-			if(wpt != null)
-			{
-				wpt.isWorldTicking = event.phase == TickEvent.Phase.START;
-			}
-		}
-	}
-	
-	/*
-	 * For searching an error from issue #11
-	 * 
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onWorldTick(TickEvent.WorldTickEvent event)
-	{
-		if(event.world.isRemote || getWPT(event.world) == null)
-			return;
-		
-		if(event.world.rand.nextInt(40) == 3)
-		new Thread(){
-			@Override
-			public void run() {
-				super.run();
-				
-				getWPT(event.world).getLoadedChunks().forEach((chpos) -> {EMUtils.logIfNotNull(calculateChunkPollution(event.world.getChunkFromChunkCoords(chpos.getLeft(), chpos.getRight())), EcologyMod.log, Level.INFO);});
-			}
-			
-			public PollutionData calculateChunkPollution(Chunk c)
-			{
-				List<TileEntity> tes = new ArrayList(c.getTileEntityMap().values())
-				
-				PollutionData ret = new PollutionData();
-				
-				for(TileEntity te : tes)
-				{
-					if(te == null || te.isInvalid())
-						continue;
-					
-					int wir = EMUtils.countWaterInRadius(c.getWorld(), te.getPos(), EMConfig.wpr);
-					boolean rain = c.getWorld().isRainingAt(te.getPos());
-					
-					boolean overriden_by_func = false;
-					
-					for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
-					{
-						Object[] func_result = new Object[0];
-						
-						try
-						{
-							func_result = func.apply(te);
-						}
-						catch(Exception e)
-						{
-							EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
-							EcologyMod.log.info(e.toString());
-							e.printStackTrace();
-							continue;
-						}
-
-						if(func_result.length < 3)
-							continue;
-						
-						ret.add(PollutionType.AIR, (double)func_result[0]);
-						ret.add(PollutionType.WATER, (double)func_result[1]);
-						ret.add(PollutionType.SOIL, (double)func_result[2]);
-						
-						if(func_result.length > 3)
-						{
-							if(func_result[3] != null && func_result[3] instanceof Boolean)
-								if(!overriden_by_func)
-									overriden_by_func = (Boolean)func_result[3];
-						}
-					}
-					
-					if(!overriden_by_func)
-					if(te instanceof IPollutionEmitter)
-					{
-						IPollutionEmitter ipe = (IPollutionEmitter) te;
-						
-						int filters = 0;
-						
-						for(EnumFacing f : EnumFacing.VALUES)
-						{
-							TileEntity tile = c.getWorld().getTileEntity(te.getPos().offset(f));
-							
-							if(tile instanceof TileFilter && ((TileFilter)tile).isWorking())
-								filters++;
-						}
-						
-						ret.add(ipe.pollutionEmission(false).clone()
-								.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
-								.multiply(PollutionType.WATER, rain ? 2 : 1).multiply(PollutionType.SOIL, rain ? 1.2F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
-								);
-					}
-					else
-					{
-						if(EcologyMod.instance.tepc.hasTile(te))
-						{
-							if(PollutionUtils.isTEWorking(c.getWorld(), te))
-							{
-								TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
-								if(tep != null)
-								{
-									int filters = 0;
-									
-									for(EnumFacing f : EnumFacing.VALUES)
-									{
-										TileEntity tile = c.getWorld().getTileEntity(te.getPos().offset(f));
-										
-										if(tile instanceof TileFilter && ((TileFilter)tile).isWorking())
-											filters++;
-									}
-									
-									ret.add(tep.getEmission().clone()
-											.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
-											.multiply(PollutionType.WATER, rain ? 3 : 1).multiply(PollutionType.SOIL, rain ? 1.5F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
-											);
-								}
-							}
-						}
-					}
-				}
-				return ret.multiplyAll(EMConfig.wptcd/60);
-			}
-		}.start();
-	}
-	*/
 	@Nullable
 	@Override
 	public PollutionData getPollution(World w, int chunkx, int chunkz)
@@ -1296,7 +1201,7 @@ public class PollutionHandler implements IPollutionGetter
 			{
 				String ret = "";
 				
-				for(String s : ph.threads.keySet())
+				for(int s : ph.threads.keySet())
 				{
 					WorldProcessingThread wpt = ph.threads.get(s);
 					

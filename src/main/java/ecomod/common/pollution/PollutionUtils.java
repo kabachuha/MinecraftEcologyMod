@@ -33,16 +33,6 @@ import net.minecraftforge.fml.common.ModAPIManager;
 
 public class PollutionUtils
 {
-	public static String genPMid(World w)
-	{
-		return w.getWorldInfo().getWorldName()+"_"+w.provider.getDimension();
-	}
-	
-	public static String genPMid(PollutionManager pm)
-	{
-		return pm == null ? "null" : pm.getWorld().getWorldInfo().getWorldName()+"_"+pm.getWorld().provider.getDimension();
-	}
-	
 	public static Chunk coordsToChunk(World w, Pair<Integer, Integer> coord)
 	{
 		return w.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());

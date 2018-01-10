@@ -410,7 +410,7 @@ public class EcomodASMHooks
 				}
 				*/
 				
-				EcomodAPI.emitPollution(furnace.getWorld(), EMUtils.blockPosToPair(furnace.getPos()), PollutionSourcesConfig.getSmeltedItemStackPollution(ingr), true);
+				EcomodAPI.emitPollutionPositioned(furnace.getWorld(), furnace.getPos(), PollutionSourcesConfig.getSmeltedItemStackPollution(ingr), true);
 			}
 		}
 		

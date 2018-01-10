@@ -232,6 +232,16 @@ public class PollutionData implements Comparable
 		return new PollutionData(air_pollution, water_pollution, soil_pollution);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(air_pollution);
+		result = prime * result + Float.floatToIntBits(soil_pollution);
+		result = prime * result + Float.floatToIntBits(water_pollution);
+		return result;
+	}
+
 	public boolean equals(Object pd)
 	{
 		if(!(pd instanceof PollutionData))

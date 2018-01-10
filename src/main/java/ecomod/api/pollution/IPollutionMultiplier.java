@@ -1,11 +1,9 @@
 package ecomod.api.pollution;
 
 /**
- * FIXME add docs
- * 
- * @since 1.0.1112.0
+ * #TODO
  */
-public interface IPollutionMultiplier
+public interface IPollutionMultiplier//Is this necessary?
 {
 	public float pollutionFactor(PollutionData.PollutionType type);
 }

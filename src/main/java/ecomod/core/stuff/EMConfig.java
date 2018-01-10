@@ -40,13 +40,15 @@ public class EMConfig
 	
 	public static float filter_adjacent_tiles_redution = 0.06F;
 	
-	public static int filter_energy_per_minute = 5000;
+	public static int filter_energy_per_emission = 5000;
 	
 	public static int adv_filter_energy = 70000;
 	
 	public static int adv_filter_capacity = 5000;
 	
 	public static int adv_filter_delay_secs = 5;
+	
+	public static float advanced_filter_max_rps = 2F;
 	
 	public static boolean enable_advanced_filter = true;
 	
@@ -169,7 +171,9 @@ public class EMConfig
 			
 			food_polluting_factor = config.getFloat("FoodPollutiingFactor", "POLLUTION", 0.001F, 0, 1, "");
 			
-			filter_energy_per_minute = config.getInt("FilterEnergyPerBlockPerMinute", "TILES", 5000, 0, Integer.MAX_VALUE, "");
+			filter_energy_per_emission = config.getInt("FilterEnergyPerNearbyPollutionEmission", "TILES", 5000, 0, Integer.MAX_VALUE, "");
+			
+			advanced_filter_max_rps = config.getFloat("advanced_filer_vent_rps", "CLIENT", 2F, 0, 60, "Advanced filer's vent maximal rotational frequency(revolutions per second)");
 			
 			wasteland_spawns_naturally = config.getBoolean("WastelandSpawnsNaturally", "GENERATION", false, "Does wasteland spawn without any pollution?");
 			

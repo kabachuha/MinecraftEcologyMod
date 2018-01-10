@@ -361,6 +361,8 @@ public class PollutionManager
 	
 	public void diffuse(ChunkPollution c)
 	{
+		if(custom_diffuse())
+			return;
 		int i = c.getX();
 		int j = c.getZ();
 		
@@ -381,10 +383,43 @@ public class PollutionManager
         addPollutionIfLoaded(i, j, to_spread.multiplyAll(count));
 	}
 	
+	protected boolean custom_diffuse()
+	{
+		return false;//EcomodCompat handler will be injected here
+	}
 	
 	
-	
-	//Just for serialization
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + dim;
+		result = prime * result + ((world == null) ? 0 : world.getWorldInfo().getWorldName().hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PollutionManager other = (PollutionManager) obj;
+		if (dim != other.dim)
+			return false;
+		if (world == null) {
+			if (other.world != null)
+				return false;
+		} else if (!world.getWorldInfo().getWorldName().equals(other.world.getWorldInfo().getWorldName()))
+			return false;
+		return true;
+	}
+
+
+		//Just for serialization
 		public static class WorldPollution
 		{
 			private ChunkPollution[] data;

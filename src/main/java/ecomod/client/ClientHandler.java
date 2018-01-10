@@ -19,6 +19,7 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
+import ecomod.client.renderer.RenderAdvancedFilter;
 import ecomod.common.blocks.BlockFrame;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
@@ -43,6 +44,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -405,5 +407,12 @@ public class ClientHandler
 					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
 		}
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(TextureStitchEvent.Pre event)
+	{
+		 RenderAdvancedFilter.vent_s = event.getMap().registerSprite(EMUtils.resloc("items/vent_s"));
 	}
 }

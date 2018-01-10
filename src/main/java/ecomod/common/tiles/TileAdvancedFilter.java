@@ -21,12 +21,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWork
@@ -51,6 +54,12 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 	
 	private boolean was_working = false;
 	private int i1 = 0;
+	
+	@SideOnly(Side.CLIENT)
+	public float vent_rotation = 0F;
+
+	@SideOnly(Side.CLIENT)
+	private float rps = 0F;
 
 	@Override
 	public void update()
@@ -59,6 +68,24 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		{
 			ticks = 0;
 			i1 = 0;
+		}
+		
+		if(getWorld().isRemote)
+		{
+			if(was_working)
+			{
+				if(rps < EMConfig.advanced_filter_max_rps)
+					rps += 1 / (4F * 20F);
+			}
+			else
+			{
+				if(rps >= 0)
+					rps -= 1 / (2F * 20F);
+			}
+			if(rps < 0)
+				rps = 0;
+			
+			vent_rotation = MathHelper.wrapDegrees(vent_rotation + 360 * rps / 20F);
 		}
 		
 		if(ticks % (20 * EMConfig.adv_filter_delay_secs) == 0)
@@ -177,6 +204,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
     {
         super.readFromNBT(tag);
         tank.readFromNBT(tag);
+        was_working = tag.getBoolean("was_working");
     }
 	
 	@Override
@@ -184,6 +212,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
     {
         tag = super.writeToNBT(tag);
         tank.writeToNBT(tag);
+        tag.setBoolean("was_working", was_working);
         return tag;
     }
 	
