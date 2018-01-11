@@ -597,4 +597,20 @@ public class EMUtils
 
         t.draw();
     }
+    
+    @Nullable
+    public static TileEntity getLoadedTileEntityAt(World world, BlockPos pos)
+    {
+        for (int j2 = 0; j2 < world.loadedTileEntityList.size(); ++j2)
+        {
+            TileEntity tileentity2 = world.loadedTileEntityList.get(j2);
+
+            if (!tileentity2.isInvalid() && tileentity2.getPos().equals(pos))
+            {
+                return tileentity2;
+            }
+        }
+
+        return null;
+    }
 }

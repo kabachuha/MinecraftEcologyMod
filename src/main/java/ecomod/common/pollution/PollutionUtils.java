@@ -1,6 +1,7 @@
 package ecomod.common.pollution;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -11,6 +12,7 @@ import ecomod.api.pollution.IRespirator;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.core.EMConsts;
+import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -40,41 +42,39 @@ public class PollutionUtils
 	
 	public static boolean isTEWorking(World w, TileEntity te)
 	{	
-		TileEntity tile = w.getTileEntity(te.getPos());
-		
-		//TODO add more checks
-		if(te instanceof TileEntityFurnace)
-		{
-			return ((TileEntityFurnace)tile).isBurning();
-		}
-		
-		if(EMConsts.common_caps_compat$IWorker)
-		{
-			if(CommonCapsWorker.CAP_WORKER != null)
-			if(tile.hasCapability(CommonCapsWorker.CAP_WORKER, null))
+			//TODO add more checks
+			if(te instanceof TileEntityFurnace)
 			{
-				org.cyclops.commoncapabilities.api.capability.work.IWorker work = tile.getCapability(CommonCapsWorker.CAP_WORKER, null);
+				return ((TileEntityFurnace)te).isBurning();
+			}
+		
+			if(EMConsts.common_caps_compat$IWorker)
+			{
+				if(CommonCapsWorker.CAP_WORKER != null)
+					if(te.hasCapability(CommonCapsWorker.CAP_WORKER, null))
+					{
+						org.cyclops.commoncapabilities.api.capability.work.IWorker work = te.getCapability(CommonCapsWorker.CAP_WORKER, null);
 				
-				return work.hasWork() && work.canWork();
+						return work.hasWork() && work.canWork();
+					}
 			}
-		}
 		
-		if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
-		{
-			if(EMIntermod.CAP_HAS_WORK != null)
-			if(tile.hasCapability(EMIntermod.CAP_HAS_WORK, null))
+			if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
 			{
-				IHasWork ihw = tile.getCapability(EMIntermod.CAP_HAS_WORK, null);
-				return ihw.hasWork();
+				if(EMIntermod.CAP_HAS_WORK != null)
+					if(te.hasCapability(EMIntermod.CAP_HAS_WORK, null))
+					{
+						IHasWork ihw = te.getCapability(EMIntermod.CAP_HAS_WORK, null);
+						return ihw.hasWork();
+					}
+					else
+					{
+						if(te instanceof IHasWork)
+						{
+							return ((IHasWork)te).hasWork();
+						}
+					}
 			}
-			else
-			{
-				if(tile instanceof IHasWork)
-				{
-					return ((IHasWork)tile).hasWork();
-				}
-			}
-		}
 		
 		return true;
 	}

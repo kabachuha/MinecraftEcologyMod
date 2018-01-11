@@ -57,4 +57,6 @@ public class BlockFilter extends Block implements ITileEntityProvider {
 	{
 		return new TileFilter();
 	}
+	
+	
 }

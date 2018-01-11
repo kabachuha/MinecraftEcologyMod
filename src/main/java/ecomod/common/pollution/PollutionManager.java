@@ -361,7 +361,7 @@ public class PollutionManager
 	
 	public void diffuse(ChunkPollution c)
 	{
-		if(custom_diffuse())
+		if(custom_diffuse(c))
 			return;
 		int i = c.getX();
 		int j = c.getZ();
@@ -383,7 +383,7 @@ public class PollutionManager
         addPollutionIfLoaded(i, j, to_spread.multiplyAll(count));
 	}
 	
-	protected boolean custom_diffuse()
+	protected boolean custom_diffuse(ChunkPollution c)
 	{
 		return false;//EcomodCompat handler will be injected here
 	}

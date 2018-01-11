@@ -52,13 +52,11 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		return isWorking();
 	}
 	
-	private boolean was_working = false;
+	public boolean was_working = false;
 	private int i1 = 0;
 	
-	@SideOnly(Side.CLIENT)
 	public float vent_rotation = 0F;
 
-	@SideOnly(Side.CLIENT)
 	private float rps = 0F;
 
 	@Override

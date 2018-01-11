@@ -34,6 +34,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -105,6 +106,8 @@ public class MainRegistry
 		EMRecipes.doInit();
 		
 		EMTriggers.setup();
+		
+		FMLInterModComms.sendMessage("waila", "register", "ecomod.core.stuff.compat.EMWailaHandler.callbackRegister");
 		
 		//FMLInterModComms.sendFunctionMessage(EMConsts.modid, EMIntermod.key_add_te_pollution_determinant, ecomod.test.TEST_TEPollutionDeterminant.class.getName());
 	}

@@ -299,8 +299,6 @@ public class PollutionHandler implements IPollutionGetter
 		
 		int dim = w.provider.getDimension();
 		
-		//EcologyMod.log.info(event.getEmission().toString());
-		
 		if(threads.containsKey(dim))
 		{
 			WorldProcessingThread wpt = threads.get(dim);
@@ -336,7 +334,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 				for(EnumFacing f : EnumFacing.VALUES)
 				{
-					TileEntity tile = w.getTileEntity(pos.offset(f));
+					TileEntity tile = EMUtils.getLoadedTileEntityAt(w, pos.offset(f));
 			
 					if(tile instanceof IPollutionAffector)
 						((IPollutionAffector)tile).handleEmission(pos, event.getEmission());
@@ -365,86 +363,92 @@ public class PollutionHandler implements IPollutionGetter
 			{
 				List<TileEntity> tiles = event.world.tickableTileEntities;
 				
-				try
+				processTiles(event.world, tiles, 0);
+					
+				threads.get(event.world.provider.getDimension()).should_update_tiles = false;
+			}
+		}
+	}
+	
+	private void processTiles(World world, final List<TileEntity> tiles, final int start_index)
+	{
+		int i = 0;
+		try
+		{
+			for(i = start_index; i < tiles.size(); i++)
+			{
+				TileEntity te = tiles.get(i);
+				
+				if(te.isInvalid())
+					continue;
+					
+				PollutionData pollution = PollutionData.getEmpty();
+					
+				boolean overriden_by_func = false;
+					
+				for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
 				{
-					for(TileEntity te : tiles)
+					Object[] func_result = new Object[0];
+						
+					try
 					{
-						if(te.isInvalid())
-							continue;
+						func_result = func.apply(te);
+					}
+					catch(Exception e)
+					{
+						EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
+						EcologyMod.log.info(e.toString());
+						e.printStackTrace();
+						continue;
+					}
 						
-						PollutionData pollution = PollutionData.getEmpty();
+					if(func_result.length < 3)
+						continue;
 						
-						boolean overriden_by_func = false;
+					pollution.add(PollutionType.AIR, (float)func_result[0]);
+					pollution.add(PollutionType.WATER, (float)func_result[1]);
+					pollution.add(PollutionType.SOIL, (float)func_result[2]);
 						
-						for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
+					if(func_result.length > 3)
+					{
+						if(func_result[3] != null && func_result[3] instanceof Boolean)
+							if(!overriden_by_func)
+								overriden_by_func = (Boolean)func_result[3];
+					}
+				}
+				
+				if(!overriden_by_func)
+						if(te instanceof IPollutionEmitter)
 						{
-							Object[] func_result = new Object[0];
-							
-							try
-							{
-								func_result = func.apply(te);
-							}
-							catch(Exception e)
-							{
-								EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
-								EcologyMod.log.info(e.toString());
-								e.printStackTrace();
-								continue;
-							}
-							
-							if(func_result.length < 3)
-								continue;
-							
-							pollution.add(PollutionType.AIR, (float)func_result[0]);
-							pollution.add(PollutionType.WATER, (float)func_result[1]);
-							pollution.add(PollutionType.SOIL, (float)func_result[2]);
-							
-							if(func_result.length > 3)
-							{
-								if(func_result[3] != null && func_result[3] instanceof Boolean)
-									if(!overriden_by_func)
-										overriden_by_func = (Boolean)func_result[3];
-							}
+							pollution.add(((IPollutionEmitter)te).pollutionEmission(false));
 						}
-						
-						if(!overriden_by_func)
-							if(te instanceof IPollutionEmitter)
+						else
+						{
+							if(EcologyMod.instance.tepc.hasTile(te))
 							{
-								pollution.add(((IPollutionEmitter)te).pollutionEmission(false));
-							}
-							else
-							{
-								if(EcologyMod.instance.tepc.hasTile(te))
+								if(PollutionUtils.isTEWorking(world, te))
 								{
-									if(PollutionUtils.isTEWorking(event.world, te))
+									TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
+									if(tep != null)
 									{
-										TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
-										if(tep != null)
-										{
-											pollution.add(tep.getEmission());
-										}
+										pollution.add(tep.getEmission());
 									}
 								}
 							}
-						
-						EcomodAPI.emitPollutionPositioned(event.world, te.getPos(), pollution.multiplyAll(EMConfig.wptcd/60F), true);
-					}
+						}
+					
+					EcomodAPI.emitPollutionPositioned(world, te.getPos(), pollution.multiplyAll(EMConfig.wptcd/60F), true);
 				}
-                catch(ConcurrentModificationException e)
-				{
-                    e.printStackTrace();
-                }
-				catch(Exception e)
-				{
-					EcologyMod.log.error(e.toString());
-					e.printStackTrace();
-				}
-				finally
-				{
-					threads.get(event.world.provider.getDimension()).should_update_tiles = false;
-				}
-			}
 		}
+		catch(Exception ex)
+		{
+			EcologyMod.log.warn("Caught an exception while processing a TileEntity "+TileEntity.getKey(tiles.get(i).getClass()).toString()+" at pos "+tiles.get(i).getPos().toString());
+			EcologyMod.log.warn(ex.toString());
+			ex.printStackTrace();
+		}
+		
+		if(i < tiles.size() - 1)
+			processTiles(world, tiles, i+1);
 	}
 	
 	//Pollution sources
