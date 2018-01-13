@@ -1,12 +1,14 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/ecology-mod",
   "promos": {
-    "1.12.2-latest": "1.12.2-1.3.0.0",
-    "1.12.2-recommended": "1.12.2-1.3.0.0",
+    "1.12.2-latest": "1.12.2-1.4.1.0",
+    "1.12.2-recommended": "1.12.2-1.4.1.0",
     "1.12.1-latest": "1.12.1-1.2.0.0",
     "1.12.1-recommended": "1.12.1-1.2.0.0"
   },
   "1.12.2": {
+    "1.12.2-1.4.1.0": "1.4.1.0:\nFixed advanced filter crash(#23);\nSome optimization improvements;\nWaila integration.",
+    "1.12.2-1.4.0.0": "1.4.0.0:\nMajor threading fix(in attempt to fix #22, thread concurrency error);\nRemoved a one annoying debug message;\nImproved advanced filter renderer: vents rotate only when working;\nSome API changes.",
     "1.12.2-1.3.0.0": "Optimization update:\nPollution data storage type changed from double (64 bits) to float (32 bits), thus reducing the memory usage;\nOptimized WorldProcessingThread's work;\nSmall pollution values(lower than 5.0, by default) are being cleared from memory, reducing RAM and disk memory usage;\nFixed smog and acid rain renderers when DynamicSurroundings are installed.",
     "1.12.2-1.2.3.0": "Data loading progress bar; Threading fixes; WPT timeout delay is configurable now; Other fixes...",
     "1.12.2-1.2.1.0": "Added CommonCapabilities compatibility, Fixed #11(hopefully), \nTEPC: fixed ImmersiveEngineering entries, added a support for Mekanism tiles,\nImproved versionising,\nAdded WorldProcessingThreads crash info and work timer.",
