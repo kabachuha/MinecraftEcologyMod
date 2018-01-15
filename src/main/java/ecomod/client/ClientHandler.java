@@ -197,7 +197,7 @@ public class ClientHandler
 	public void setEffects(String str)
 	{
 		pollution_effects.clear();
-		Effects t = null;
+		Effects t;
 		EcologyMod.log.info("Receiving Pollution Effects Config from the server...");
 		try
 		{

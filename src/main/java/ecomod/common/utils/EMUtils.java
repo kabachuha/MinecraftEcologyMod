@@ -60,7 +60,7 @@ public class EMUtils
 	
 	public static String getString(URL url) throws IOException
 	{
-		StringBuffer buffer = null;
+		StringBuffer buffer;
 		EcologyMod.log.info("Connecting to: "+url.toString());
 		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 		String inputLine;
@@ -82,7 +82,7 @@ public class EMUtils
 		if(mcurl.contains("<MINECRAFT>"))
 		{
 			
-			String mcpath = "";
+			String mcpath;
 			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
 				mcpath = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();
 			else

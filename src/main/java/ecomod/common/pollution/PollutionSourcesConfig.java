@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 
 public class PollutionSourcesConfig
 {
-	public String version = "";
+	public String version;
 	
 	public List<String> blacklisted_items;
 	

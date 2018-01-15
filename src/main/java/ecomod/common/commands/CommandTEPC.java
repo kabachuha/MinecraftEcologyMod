@@ -51,9 +51,9 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId = args[1];
 			
-			float air = 0.0F;
-			float water = 0.0F;
-			float soil = 0.0F;
+			float air;
+			float water;
+			float soil;
 			
 			try
 			{

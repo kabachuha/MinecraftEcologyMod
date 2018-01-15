@@ -1,6 +1,5 @@
 package ecomod.client.advancements.util;
 
-import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.ICriterionInstance;
@@ -9,13 +8,14 @@ import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class TriggerBase<I extends ICriterionInstance> implements ICriterionTrigger<I>
 {
 	public final ResourceLocation id;
 	
-	private final Map<PlayerAdvancements, ListenersBase<I>> listeners = Maps.newHashMap();
+	private final Map<PlayerAdvancements, ListenersBase<I>> listeners = new HashMap<>();
 	
 	public TriggerBase(ResourceLocation criterionIn) {
 		id = criterionIn;

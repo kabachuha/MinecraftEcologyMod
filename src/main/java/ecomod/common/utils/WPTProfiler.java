@@ -1,7 +1,5 @@
 package ecomod.common.utils;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.profiler.Profiler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -9,9 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -23,15 +19,15 @@ public class WPTProfiler extends Profiler
 {
 	private static final Logger LOGGER = LogManager.getLogger();
     /** List of parent sections */
-    private final List<String> sectionList = Lists.newArrayList();
+    private final List<String> sectionList = new ArrayList<>();
     /** List of timestamps (System.nanoTime) */
-    private final List<Long> timestampList = Lists.newArrayList();
+    private final List<Long> timestampList = new ArrayList<>();
     /** Flag profiling enabled */
     public boolean profilingEnabled;
     /** Current profiling section */
     private String profilingSection = "";
     /** Profiling map */
-    private final Map<String, Long> profilingMap = Maps.newHashMap();
+    private final Map<String, Long> profilingMap = new HashMap<>();
 
     /**
      * Clear profiling.
@@ -119,7 +115,7 @@ public class WPTProfiler extends Profiler
         {
             long i = this.profilingMap.getOrDefault("root", 0L);
             long j = this.profilingMap.getOrDefault(profilerName, -1L);
-            List<Profiler.Result> list = Lists.newArrayList();
+            List<Profiler.Result> list = new ArrayList<>();
 
             if (!profilerName.isEmpty())
             {
