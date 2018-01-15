@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,7 +91,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			TEPollutionConfig tepc = new TEPollutionConfig();
 			
-			tepc.data = new ArrayList(Arrays.asList(t.getCfg()));
+			tepc.data = new ArrayList<>(Arrays.asList(t.getCfg()));
 			tepc.version = t.getVersion();
 			
 			return tepc;
@@ -148,7 +149,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else
@@ -194,7 +195,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -228,7 +229,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			return false;
 		
 		this.version = t.getVersion();
-		this.data = new ArrayList(Arrays.asList(t.getCfg()));
+		this.data = new ArrayList<>(Arrays.asList(t.getCfg()));
 		
 		return true;
 	}

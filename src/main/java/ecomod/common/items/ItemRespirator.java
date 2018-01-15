@@ -56,49 +56,28 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 			
 			if(nbt != null)
 			{
-				int nf;
-			
-				if(nbt.hasKey("filter"))
+				int filter = nbt.getInteger("filter");
+				if(filter > 0)
 				{
-					if(nbt.getInteger("filter") > 0)
-					{
-						if(decr)
-							nbt.setInteger("filter", nbt.getInteger("filter")-(entity.getHealth() >= entity.getMaxHealth()/2 ? 1 : 2));
-						
-						return true;
-					}
-					else
-					{
-						int k = getFilterInInventory(player);
-						
-						if(k != -1)
-						{
-							ItemStack stk = player.inventory.getStackInSlot(k);
-							stk.shrink(1);
-							player.inventory.setInventorySlotContents(k, stk);
-							
-							nbt.setInteger("filter", EMConfig.filter_durability);
-							
-							stack.setTagCompound(nbt);
-							
-							return true;
-						}
-					}
+					if(decr)
+						nbt.setInteger("filter", filter-(entity.getHealth() >= entity.getMaxHealth()/2 ? 1 : 2));
+
+					return true;
 				}
 				else
 				{
 					int k = getFilterInInventory(player);
-					
+
 					if(k != -1)
 					{
 						ItemStack stk = player.inventory.getStackInSlot(k);
 						stk.shrink(1);
 						player.inventory.setInventorySlotContents(k, stk);
-						
+
 						nbt.setInteger("filter", EMConfig.filter_durability);
-						
+
 						stack.setTagCompound(nbt);
-						
+
 						return true;
 					}
 				}
@@ -131,11 +110,8 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
         {
             ItemStack itemstack = player.inventory.getStackInSlot(i);
             
-            if(!itemstack.isEmpty())
-            	if(itemstack.getItem() instanceof ItemCore && itemstack.getMetadata() == 0)
-            	{
-            		return i;
-            	}
+            if(!itemstack.isEmpty() && itemstack.getItem() instanceof ItemCore && itemstack.getMetadata() == 0)
+            	return i;
         }
 		
 		return -1;

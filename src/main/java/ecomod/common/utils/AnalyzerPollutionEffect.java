@@ -84,7 +84,7 @@ public class AnalyzerPollutionEffect implements IAnalyzerPollutionEffect
 
 	@Override
 	public ResourceLocation getIcon() {
-		if(icon == "")
+		if(icon == null || icon.equals(""))
 			return IAnalyzerPollutionEffect.BLANK_ICON;
 		
 		return new ResourceLocation(icon);

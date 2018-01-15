@@ -134,7 +134,7 @@ public class PollutionManager
             {
                 EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 EcologyMod.log.error("The pollution manager save file (dimension "+world.provider.getDimension()+") has not been found! The world pollution is set to the initial state!");
-                EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost infornation about the world pollution.");
+                EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost information about the world pollution.");
                 File backup = new File(worldPath +"/PollutionMap_backup.json");
 
                 if(backup.exists())
@@ -152,7 +152,7 @@ public class PollutionManager
 
             if(save.canRead())
             {
-                json = FileUtils.readFileToString(save);
+                json = FileUtils.readFileToString(save, Charset.defaultCharset());
 
                 if(json == null)
                     return false;
@@ -224,19 +224,17 @@ public class PollutionManager
 	
 	public boolean contains(Pair<Integer, Integer> coord)
 	{
-			for(ChunkPollution cp : data)
-				if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-					return true;
-		
+		for(ChunkPollution cp : data)
+			if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+				return true;
 		return false;
 	}
 	
 	public ChunkPollution getChunkPollution(Pair<Integer, Integer> coord)
 	{
-				for(ChunkPollution cp : data)
-					if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
-						return cp;
-		
+		for(ChunkPollution cp : data)
+			if(cp.getX() == coord.getLeft() && cp.getZ() == coord.getRight())
+				return cp;
 		return new ChunkPollution(coord.getLeft(), coord.getRight(), PollutionData.getEmpty());
 	}
 	
@@ -376,8 +374,7 @@ public class PollutionManager
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + dim;
-		result = prime * result + (world == null ? 0 : world.getWorldInfo().getWorldName().hashCode());
-		return result;
+		return prime * result + (world == null ? 0 : world.getWorldInfo().getWorldName().hashCode());
 	}
 
 
@@ -417,7 +414,4 @@ public class PollutionManager
 				this.data = chunks;
 			}
 		}
-
-		
-		
 }

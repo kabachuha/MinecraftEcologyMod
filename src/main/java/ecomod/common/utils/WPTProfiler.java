@@ -77,14 +77,7 @@ public class WPTProfiler extends Profiler
             this.sectionList.remove(this.sectionList.size() - 1);
             long k = i - j;
 
-            if (this.profilingMap.containsKey(this.profilingSection))
-            {
-                this.profilingMap.put(this.profilingSection, this.profilingMap.get(this.profilingSection) + k);
-            }
-            else
-            {
-                this.profilingMap.put(this.profilingSection, k);
-            }
+            this.profilingMap.put(this.profilingSection, this.profilingMap.getOrDefault(this.profilingSection, 0L) + k);
 
             if (k > EMConfig.wpt_profiler_timeout_warning * 1000000L)
             {

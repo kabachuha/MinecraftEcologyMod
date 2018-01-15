@@ -88,28 +88,28 @@ public class PollutionUtils
 	{
 		if(was_at.contains(bp))
 			return false;
-		
-		if(w.canSeeSky(bp) && isBlockHollow(w, bp.up(), EnumFacing.UP))
-			return true;
-		
-		if(isBlockHollow(w, bp.up(), EnumFacing.UP))
-			if(hasSurfaceAccess(w, bp.up(), was_at))
+
+		BlockPos bpup = bp.up();
+		if(w.canSeeSky(bp))
+		{
+			if (isBlockHollow(w, bpup, EnumFacing.UP))
 				return true;
+		}
+		else if(isBlockHollow(w, bpup, EnumFacing.UP) && hasSurfaceAccess(w, bpup, was_at))
+			return true;
 		
 		for(EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
 			BlockPos b = bp.offset(facing);
-			if(isBlockHollow(w, b, facing))
+			if(!was_at.contains(b) && isBlockHollow(w, b, facing))
 			{
-					if(w.canSeeSky(b))
-					{
+				if(w.canSeeSky(b))
+					return true;
+				else {
+					BlockPos bup = b.up();
+					if (isBlockHollow(w, bup, EnumFacing.UP) && hasSurfaceAccess(w, bup, was_at))
 						return true;
-					}
-					else if(isBlockHollow(w, b.up(), EnumFacing.UP))
-					{
-						if(hasSurfaceAccess(w, b.up(), was_at))
-							return true;
-					}
+				}
 			}
 		}
 			
@@ -162,7 +162,7 @@ public class PollutionUtils
 	 */
 	public static int isBlockAirPenetratorCFG(IBlockState ibs)
 	{
-		if(ibs == null || ibs.getBlock() == null)
+		if(ibs == null)
 			return 0;
 		
 		String searchkey = ibs.getBlock().getRegistryName().toString();
@@ -170,22 +170,12 @@ public class PollutionUtils
 		
 		if(EcomodStuff.additional_blocks_air_penetrating_state == null)
 			return 0;
-		
-		if(EcomodStuff.additional_blocks_air_penetrating_state.containsKey(searchkey))
-		{
-			if(EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey))
-				return 1;
-			else
-				return -1;
-		}
-		else if(EcomodStuff.additional_blocks_air_penetrating_state.containsKey(searchkey+searchmeta))
-		{
-			if(EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey+searchmeta))
-				return 1;
-			else
-				return -1;
-		}
-		
+		Boolean statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey);
+		if(statekey != null)
+			return statekey ? 1 : -1;
+		statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey + searchmeta);
+		if (statekey != null)
+			return statekey ? 1 : -1;
 		return 0;
 	}
 	
@@ -199,18 +189,8 @@ public class PollutionUtils
 		return isEntityRespirating(entity, true);
 	}
 	
-	public static boolean isEntityRespirating(EntityLivingBase entity, boolean decr)
-	{
+	public static boolean isEntityRespirating(EntityLivingBase entity, boolean decr) {
 		ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		
-		if(is != null)
-		{
-			if(is.getItem() instanceof IRespirator)
-			{
-				return ((IRespirator)is.getItem()).isRespirating(entity, is, decr);
-			}
-		}
-		
-		return false;
+		return is.getItem() instanceof IRespirator && ((IRespirator) is.getItem()).isRespirating(entity, is, decr);
 	}
 }

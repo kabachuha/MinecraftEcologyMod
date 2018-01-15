@@ -1,6 +1,6 @@
 package ecomod.core;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EMConsts
@@ -34,7 +34,7 @@ public class EMConsts
 	
 	public static final String contributors = "Artem226(author/maintainer), xhz313123(Chinese translation) and all feedbackers.";
 	
-	public static final List<String> authors = Arrays.asList("Artem226");
+	public static final List<String> authors = Collections.singletonList("Artem226");
 	
 	//Proxies
 	

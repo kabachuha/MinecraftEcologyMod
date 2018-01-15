@@ -81,7 +81,6 @@ public class EMUtils
 	{
 		if(mcurl.contains("<MINECRAFT>"))
 		{
-			
 			String mcpath;
 			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
 				mcpath = Minecraft.getMinecraft().mcDataDir.getAbsolutePath();

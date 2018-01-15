@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,7 +96,7 @@ public class PollutionEffectsConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -162,7 +163,7 @@ public class PollutionEffectsConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else

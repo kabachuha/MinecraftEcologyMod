@@ -25,7 +25,7 @@ public class EMBlocks
 			blocks.clear();
 			EMItems.items.clear();
 			
-			EcologyMod.log.info("Setuping blocks");
+			EcologyMod.log.info("Setting blocks");
 			
 			EcomodBlocks.inited = true;
 			EcomodBlocks.FILTER = new BlockFilter().setUnlocalizedName(EMConsts.modid+".filter");

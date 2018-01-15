@@ -53,7 +53,7 @@ public class CommandAddPollution extends CommandBase {
 		}
 		else
 		{
-				throw new WrongUsageException(getUsage(sender));
+			throw new WrongUsageException(getUsage(sender));
 		}
 			
 		EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Float.parseFloat(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Float.parseFloat(args[1])), true);

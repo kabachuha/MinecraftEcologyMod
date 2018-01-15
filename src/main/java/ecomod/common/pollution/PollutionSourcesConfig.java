@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -213,7 +214,7 @@ public class PollutionSourcesConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else
@@ -313,7 +314,7 @@ public class PollutionSourcesConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -464,7 +465,7 @@ public class PollutionSourcesConfig
 		
 		static List<StrPD> mapToStrPDList(Map<String, PollutionData> map)
 		{
-			List ret = new ArrayList<StrPD>();
+			List<StrPD> ret = new ArrayList<>();
 			
 			for(Entry<String, PollutionData> e : map.entrySet())
 			{

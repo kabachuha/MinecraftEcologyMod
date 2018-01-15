@@ -181,7 +181,7 @@ public class EMConfig
 			}
 			else
 			{
-				EcologyMod.log.error("Unable to read PollutionToFoodPoisonFactors property from the config!!! Using default value"+new double[]{0.001F, 0.01F, 0.03F}.toString());
+				EcologyMod.log.error("Unable to read PollutionToFoodPoisonFactors property from the config!!! Using default value"+ Arrays.toString(new double[]{0.001F, 0.01F, 0.03F}));
 			}
 			
 			

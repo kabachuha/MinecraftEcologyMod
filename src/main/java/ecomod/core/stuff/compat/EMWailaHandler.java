@@ -20,7 +20,7 @@ import java.util.List;
 public class EMWailaHandler implements IWailaDataProvider
 {
 	@Override
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currentTip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		TileEntity tile = accessor.getTileEntity();
 		
@@ -28,16 +28,16 @@ public class EMWailaHandler implements IWailaDataProvider
 		{
 			if(tile instanceof TileEnergy)
 			{
-				currenttip.add("Energy: "+TextFormatting.YELLOW.toString()+((TileEnergy)tile).getEnergyStored() +" / "+((TileEnergy)tile).getMaxEnergyStored()+" RF");
+				currentTip.add("Energy: "+TextFormatting.YELLOW+((TileEnergy)tile).getEnergyStored() +" / "+((TileEnergy)tile).getMaxEnergyStored()+" RF");
 			}
 			if(tile instanceof TileAdvancedFilter)
 			{
-				currenttip.add(I18n.translateToLocal(EcomodStuff.concentrated_pollution.getUnlocalizedName()) + ' ' + ((TileAdvancedFilter)tile).tank.getFluidAmount() + " / " + ((TileAdvancedFilter)tile).tank.getCapacity()+" mb");
-				currenttip.add(((TileAdvancedFilter)tile).was_working ? TextFormatting.GREEN.toString()+"Working" : TextFormatting.RED.toString()+"Not "+TextFormatting.RED.toString()+"Working");
+				currentTip.add(I18n.translateToLocal(EcomodStuff.concentrated_pollution.getUnlocalizedName()) + ' ' + ((TileAdvancedFilter)tile).tank.getFluidAmount() + " / " + ((TileAdvancedFilter)tile).tank.getCapacity()+" mb");
+				currentTip.add(((TileAdvancedFilter)tile).was_working ? TextFormatting.GREEN+"Working" : TextFormatting.RED+"Not Working");
 			}
 		}
 		
-		return currenttip;
+		return currentTip;
 	}
 
 	public static void callbackRegister(IWailaRegistrar registrar)
