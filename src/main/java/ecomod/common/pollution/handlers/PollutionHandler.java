@@ -590,14 +590,14 @@ public class PollutionHandler implements IPollutionGetter
 			{
 				EMTriggers.BAD_SLEEP.trigger((EntityPlayerMP) player);
 				
-				float f = (float) (data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1);
+				float f = data.getAirPollution()/EcomodStuff.pollution_effects.get("bad_sleep").getTriggerringPollution().getAirPollution() + 1;
 			
 				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("nausea").toString()), f<10 ? (int)(250*f) : 2500, 1));
 				player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("weakness").toString()), 2000, (int)f));
 				if(f >= 2)
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(new ResourceLocation("hunger").toString()), 2000, 2));
 			
-				player.sendMessage(new TextComponentTranslation("msg.ecomod.bad_sleep", new Object[0]));
+				player.sendMessage(new TextComponentTranslation("msg.ecomod.bad_sleep"));
 			
 				if(PollutionEffectsConfig.isEffectActive("poisonous_sleep", data))
 				{
@@ -698,17 +698,17 @@ public class PollutionHandler implements IPollutionGetter
 				}
 				*/
 				
-				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+("-" + getVisibleSmogIntensity(event.getWorld(), event.getEntity().getPosition()))), (EntityPlayerMP)event.getEntity());
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('>' +("-" + getVisibleSmogIntensity(event.getWorld(), event.getEntity().getPosition()))), (EntityPlayerMP)event.getEntity());
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone((EntityPlayer)event.getEntity()) ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 				
-				EcologyMod.log.info("Serializing and sending Pollution Effects Config to the Player: "+((EntityPlayerMP)event.getEntity()).getName()+"("+((EntityPlayerMP)event.getEntity()).getUniqueID() + ")");
+				EcologyMod.log.info("Serializing and sending Pollution Effects Config to the Player: "+ event.getEntity().getName()+ '(' + event.getEntity().getUniqueID() + ')');
 				
 				Effects t = new Effects("", EcomodStuff.pollution_effects.values().toArray(new IAnalyzerPollutionEffect[EcomodStuff.pollution_effects.values().size()]));
 				
 				String json = gson.toJson(t, Effects.class);
 				
-				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("E"+json), (EntityPlayerMP)event.getEntity());
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('E' +json), (EntityPlayerMP)event.getEntity());
 			}
 			catch (Exception e)
 			{
@@ -719,13 +719,13 @@ public class PollutionHandler implements IPollutionGetter
 			if(EcomodClassTransformer.failed_transformers.size() > 0)
 			{
 				String fails = "";
-				
+
 				for(String f : EcomodClassTransformer.failed_transformers)
-					fails += f+";";
-				
+					fails += f+ ';';
+
 				fails = fails.substring(0, fails.length()-1);
 				
-				((EntityPlayerMP)event.getEntity()).sendMessage(new TextComponentTranslation("msg.ecomod.asm_transformers_failed", fails).setStyle(new Style().setColor(TextFormatting.RED)).appendSibling(new TextComponentString(EMConsts.githubURL+"/issues").setStyle(new Style().setUnderlined(true).setColor(TextFormatting.BLUE).setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, EMConsts.githubURL+"/issues")))));
+				event.getEntity().sendMessage(new TextComponentTranslation("msg.ecomod.asm_transformers_failed", fails).setStyle(new Style().setColor(TextFormatting.RED)).appendSibling(new TextComponentString(EMConsts.githubURL+"/issues").setStyle(new Style().setUnderlined(true).setColor(TextFormatting.BLUE).setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, EMConsts.githubURL+"/issues")))));
 			}
 		}
 	}
@@ -790,11 +790,11 @@ public class PollutionHandler implements IPollutionGetter
 							{
 								EMTriggers.BREATHE_SMOG.trigger((EntityPlayerMP)entity, new Object[]{});
 								
-								((EntityPlayerMP)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
-								((EntityPlayerMP)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
+								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
+								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
 								
 								if(getPollution(world, EMUtils.blockPosToPair(bp)).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
-									((EntityPlayerMP)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
+									entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
 							}
 						}
 						
@@ -808,7 +808,7 @@ public class PollutionHandler implements IPollutionGetter
 							{
 								if(!PollutionUtils.isEntityRespirating(entity))
 								{
-									((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
+									entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
 								}
 							}
 						}
@@ -845,16 +845,12 @@ public class PollutionHandler implements IPollutionGetter
 		}
 	}
 	
-	public boolean isEntityInSmog(EntityLivingBase player)
-	{
+	public boolean isEntityInSmog(EntityLivingBase player) {
 		BlockPos bp = new BlockPos(player.posX, player.posY, player.posZ);
-		
+
 		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
-		
-		if(pollution!=null && pollution != PollutionData.getEmpty())
-			return PollutionEffectsConfig.isEffectActive("smog", pollution);
-		
-		return false;
+
+		return pollution != null && pollution != PollutionData.getEmpty() && PollutionEffectsConfig.isEffectActive("smog", pollution);
 	}
 
 	public boolean isPlayerInAcidRainZone(EntityLivingBase player)
@@ -1003,7 +999,7 @@ public class PollutionHandler implements IPollutionGetter
 				if(is.getItem() instanceof ItemFood || is.getItem() instanceof ItemBucketMilk || is.getItem() instanceof ItemPotion)
 				{
 					if(event.getEntityLiving() instanceof EntityPlayer)
-						((EntityPlayer)event.getEntityLiving()).sendMessage(new TextComponentTranslation("msg.ecomod.no_eat_with_respirator"));
+						event.getEntityLiving().sendMessage(new TextComponentTranslation("msg.ecomod.no_eat_with_respirator"));
 					event.setDuration(-1);
 					event.setCanceled(true);
 				}
@@ -1190,7 +1186,7 @@ public class PollutionHandler implements IPollutionGetter
 				}
 				
 				if(!ret.isEmpty())
-					return ret + "\n";
+					return ret + '\n';
 			}
 			
 			return null;

@@ -217,7 +217,7 @@ public class PollutionData implements Comparable
 	@Override
 	public String toString()
 	{
-		return "{\"air\" : "+air_pollution+", \"water\" : "+water_pollution+", \"soil\" : "+soil_pollution+"}";
+		return "{\"air\" : "+air_pollution+", \"water\" : "+water_pollution+", \"soil\" : "+soil_pollution+ '}';
 	}
 	
 	public static PollutionData getEmpty()

@@ -7,7 +7,6 @@ import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -80,7 +79,7 @@ public class BlockFrame extends Block
 	
 	protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {TYPE});
+        return new BlockStateContainer(this, TYPE);
     }
 	
 	public boolean isOpaqueCube(IBlockState state)

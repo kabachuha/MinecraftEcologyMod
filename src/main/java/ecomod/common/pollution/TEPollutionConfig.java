@@ -120,7 +120,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid + "/TEPollutionConfig.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid + "/TEPollutionConfig.json";
 		
 		File f = new File(cfg_path);
 		
@@ -169,7 +169,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid +"/TEPollutionConfig.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid +"/TEPollutionConfig.json";
 		
 		EcologyMod.log.info("Trying to load TEPC from file");
 		
@@ -250,7 +250,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+")");
+				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+ ')');
 			}
 		}
 		else
@@ -311,7 +311,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		
 		public String toString()
 		{
-			return "{\"id\" = \""+id+"\", \"emission\" : "+emission.toString()+"}";
+			return "{\"id\" = \""+id+"\", \"emission\" : "+emission.toString()+ '}';
 		}
 		
 		public static TEPollution fromJson(String json)

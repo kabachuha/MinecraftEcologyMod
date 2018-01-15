@@ -21,7 +21,7 @@ public class PollutionProvider implements ICapabilitySerializable<NBTTagCompound
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		return capability == POLLUTION_CAP ? POLLUTION_CAP.<T> cast(this.instance) : null;
+		return capability == POLLUTION_CAP ? POLLUTION_CAP.cast(this.instance) : null;
 	}
 
 	@Override

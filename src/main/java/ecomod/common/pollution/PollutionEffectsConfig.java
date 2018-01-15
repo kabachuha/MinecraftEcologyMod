@@ -70,7 +70,7 @@ public class PollutionEffectsConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionEffects.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid + "/PollutionEffects.json";
 		
 		EcologyMod.log.info("Trying to load PollutionEffects from file");
 		
@@ -136,7 +136,7 @@ public class PollutionEffectsConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionEffects.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid + "/PollutionEffects.json";
 		
 		File f = new File(cfg_path);
 		
@@ -256,7 +256,7 @@ public class PollutionEffectsConfig
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the PollutionEffects for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+")");
+				throw new NullPointerException("Impossible to load the PollutionEffects for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+ ')');
 			}
 		}
 		else

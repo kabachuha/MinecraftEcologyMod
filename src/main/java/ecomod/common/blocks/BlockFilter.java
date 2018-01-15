@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -46,7 +45,7 @@ public class BlockFilter extends Block implements ITileEntityProvider {
     @Override
     public BlockStateContainer createBlockState()
     {
-		return new BlockStateContainer(this, new IProperty[0]);
+		return new BlockStateContainer(this);
     }
 
 

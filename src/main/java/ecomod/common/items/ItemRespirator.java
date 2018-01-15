@@ -164,14 +164,14 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		
 		if(nbt != null && nbt.hasKey("filter"))
 		{
-			int i = (int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100);
+			int i = (int)((float)Math.max(nbt.getInteger("filter"), 0) /EMConfig.filter_durability * 100);
 			if(i == 0)
-				tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter", new Object[0]));
-			tooltip.add(I18n.format("tooltip.ecomod.respirator.filter_capacity", new Object[0]) + ": "+i+"%");
+				tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter"));
+			tooltip.add(I18n.format("tooltip.ecomod.respirator.filter_capacity") + ": "+i+ '%');
 		}
 		else
 		{
-			tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter", new Object[0]));
+			tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter"));
 		}
 	}
 	

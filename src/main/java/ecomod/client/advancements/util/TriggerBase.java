@@ -15,7 +15,7 @@ public abstract class TriggerBase<I extends ICriterionInstance> implements ICrit
 {
 	public final ResourceLocation id;
 	
-	private final Map<PlayerAdvancements, ListenersBase<I>> listeners = Maps.<PlayerAdvancements, ListenersBase<I>>newHashMap();
+	private final Map<PlayerAdvancements, ListenersBase<I>> listeners = Maps.newHashMap();
 	
 	public TriggerBase(ResourceLocation criterionIn) {
 		id = criterionIn;

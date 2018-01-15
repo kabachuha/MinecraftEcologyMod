@@ -42,7 +42,7 @@ public class CommandGetPollution extends CommandBase {
 		}
 		else
 		{
-			throw new WrongUsageException(getUsage(sender), new Object[0]);
+			throw new WrongUsageException(getUsage(sender));
 		}
 	}
 

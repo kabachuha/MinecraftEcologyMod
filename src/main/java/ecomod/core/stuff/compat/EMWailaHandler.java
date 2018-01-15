@@ -32,7 +32,7 @@ public class EMWailaHandler implements IWailaDataProvider
 			}
 			if(tile instanceof TileAdvancedFilter)
 			{
-				currenttip.add(I18n.translateToLocal(EcomodStuff.concentrated_pollution.getUnlocalizedName()) + " " + ((TileAdvancedFilter)tile).tank.getFluidAmount() + " / " + ((TileAdvancedFilter)tile).tank.getCapacity()+" mb");
+				currenttip.add(I18n.translateToLocal(EcomodStuff.concentrated_pollution.getUnlocalizedName()) + ' ' + ((TileAdvancedFilter)tile).tank.getFluidAmount() + " / " + ((TileAdvancedFilter)tile).tank.getCapacity()+" mb");
 				currenttip.add(((TileAdvancedFilter)tile).was_working ? TextFormatting.GREEN.toString()+"Working" : TextFormatting.RED.toString()+"Not "+TextFormatting.RED.toString()+"Working");
 			}
 		}

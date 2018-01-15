@@ -156,7 +156,7 @@ public class EcomodASMHooks
 						worldIn.setBlockState(pos, iblockstate);
 						AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(worldIn, pos).offset(pos);
 
-						for (Entity entity : worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb))
+						for (Entity entity : worldIn.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb))
 						{
 					       	entity.setPosition(entity.posX, axisalignedbb.maxY, entity.posZ);
 						}
@@ -176,7 +176,7 @@ public class EcomodASMHooks
 							worldIn.setBlockState(pos, iblockstate);
 							AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(worldIn, pos).offset(pos);
 
-							for (Entity entity : worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb))
+							for (Entity entity : worldIn.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb))
 							{
 						       	entity.setPosition(entity.posX, axisalignedbb.maxY, entity.posZ);
 							}
@@ -376,7 +376,7 @@ public class EcomodASMHooks
 					
 					if(m >= 60)
 					{
-						player.sendMessage(new TextComponentTranslation("msg.ecomod.polluted_food", new Object[0]).setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
+						player.sendMessage(new TextComponentTranslation("msg.ecomod.polluted_food").setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), m, Math.min(k, 2)));
 						player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), m, Math.min(k, 2)));
 						

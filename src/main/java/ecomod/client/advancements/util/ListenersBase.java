@@ -13,7 +13,7 @@ import java.util.Set;
 public class ListenersBase<I extends ICriterionInstance>
 {
 	private final PlayerAdvancements playerAdvancements;
-	private final Set<ICriterionTrigger.Listener<I>> listeners = Sets.<ICriterionTrigger.Listener<I>>newHashSet();
+	private final Set<ICriterionTrigger.Listener<I>> listeners = Sets.newHashSet();
 	
 	public ListenersBase(PlayerAdvancements playerAdvancementsIn)
     {
@@ -42,11 +42,11 @@ public class ListenersBase<I extends ICriterionInstance>
 		
 		 for (ICriterionTrigger.Listener<I> listener : this.listeners)
          {
-			 if (((ITestable)(I)listener.getCriterionInstance()).test(player, args))
+			 if (((ITestable) listener.getCriterionInstance()).test(player, args))
              {
                  if (list == null)
                  {
-                     list = Lists.<ICriterionTrigger.Listener<I>>newArrayList();
+                     list = Lists.newArrayList();
                  }
 
                  list.add(listener);

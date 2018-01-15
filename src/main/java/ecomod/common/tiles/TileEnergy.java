@@ -26,12 +26,8 @@ public class TileEnergy extends TileEntity implements cofh.redstoneflux.api.IEne
 	}
 	
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		if(capability == CapabilityEnergy.ENERGY)
-			return true;
-		
-		return super.hasCapability(capability, facing);
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
 	
 	@Override

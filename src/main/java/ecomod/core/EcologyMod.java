@@ -2,7 +2,6 @@ package ecomod.core;
 
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
-import ecomod.api.pollution.IPollutionGetter;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.TEPollutionConfig;
@@ -66,7 +65,7 @@ public class EcologyMod
 		
 		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());
 		
-		new File(event.getModConfigurationDirectory().getAbsolutePath()+"/"+EMConsts.modid).mkdirs();
+		new File(event.getModConfigurationDirectory().getAbsolutePath()+ '/' +EMConsts.modid).mkdirs();
 		
 		EMConfig.config = cfg;
 		
@@ -85,7 +84,7 @@ public class EcologyMod
 		
 		ph = new PollutionHandler();
 		
-		EcomodAPI.pollution_getter = (IPollutionGetter)ph;
+		EcomodAPI.pollution_getter = ph;
 		
 		MinecraftForge.EVENT_BUS.register(ph);
 		MinecraftForge.TERRAIN_GEN_BUS.register(ph);

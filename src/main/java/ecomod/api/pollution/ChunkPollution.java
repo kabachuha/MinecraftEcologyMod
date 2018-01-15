@@ -90,7 +90,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	
 	public String toString()
 	{
-		return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+"}";
+		return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+ '}';
 	}
 	
 	public void writeByteBuf(ByteBuf bb)

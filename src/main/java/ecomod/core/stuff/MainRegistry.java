@@ -16,7 +16,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -36,8 +35,6 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-
-import java.util.function.Function;
 
 public class MainRegistry
 {
@@ -69,7 +66,7 @@ public class MainRegistry
 		
 		EMRecipes.doPreInit();
 		
-		EcomodStuff.custom_te_pollution_determinants = NonNullList.<Function<TileEntity, Object[]>>create();
+		EcomodStuff.custom_te_pollution_determinants = NonNullList.create();
 	}
 	
 	public static void doInit()

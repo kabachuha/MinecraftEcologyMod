@@ -23,15 +23,15 @@ public class WPTProfiler extends Profiler
 {
 	private static final Logger LOGGER = LogManager.getLogger();
     /** List of parent sections */
-    private final List<String> sectionList = Lists.<String>newArrayList();
+    private final List<String> sectionList = Lists.newArrayList();
     /** List of timestamps (System.nanoTime) */
-    private final List<Long> timestampList = Lists.<Long>newArrayList();
+    private final List<Long> timestampList = Lists.newArrayList();
     /** Flag profiling enabled */
     public boolean profilingEnabled;
     /** Current profiling section */
     private String profilingSection = "";
     /** Profiling map */
-    private final Map<String, Long> profilingMap = Maps.<String, Long>newHashMap();
+    private final Map<String, Long> profilingMap = Maps.newHashMap();
 
     /**
      * Clear profiling.
@@ -52,7 +52,7 @@ public class WPTProfiler extends Profiler
         {
             if (!this.profilingSection.isEmpty())
             {
-                this.profilingSection = this.profilingSection + ".";
+                this.profilingSection = this.profilingSection + '.';
             }
 
             this.profilingSection = this.profilingSection + name;
@@ -102,7 +102,7 @@ public class WPTProfiler extends Profiler
                 LOGGER.error("(Configured critical timeout warning triggering delay {} ms)", EMConfig.wpt_profiler_critical_timeout_warning);
             }
 
-            this.profilingSection = this.sectionList.isEmpty() ? "" : (String)this.sectionList.get(this.sectionList.size() - 1);
+            this.profilingSection = this.sectionList.isEmpty() ? "" : this.sectionList.get(this.sectionList.size() - 1);
         }
     }
 
@@ -113,7 +113,7 @@ public class WPTProfiler extends Profiler
     {
         if (!this.profilingEnabled)
         {
-            return Collections.<Profiler.Result>emptyList();
+            return Collections.emptyList();
         }
         else
         {
@@ -123,14 +123,14 @@ public class WPTProfiler extends Profiler
 
             if (!profilerName.isEmpty())
             {
-                profilerName = profilerName + ".";
+                profilerName = profilerName + '.';
             }
 
             long k = 0L;
 
             for (String s : this.profilingMap.keySet())
             {
-                if (s.length() > profilerName.length() && s.startsWith(profilerName) && s.indexOf(".", profilerName.length() + 1) < 0)
+                if (s.length() > profilerName.length() && s.startsWith(profilerName) && s.indexOf('.', profilerName.length() + 1) < 0)
                 {
                     k += this.profilingMap.get(s);
                 }
@@ -150,7 +150,7 @@ public class WPTProfiler extends Profiler
 
             for (String s1 : this.profilingMap.keySet())
             {
-                if (s1.length() > profilerName.length() && s1.startsWith(profilerName) && s1.indexOf(".", profilerName.length() + 1) < 0)
+                if (s1.length() > profilerName.length() && s1.startsWith(profilerName) && s1.indexOf('.', profilerName.length() + 1) < 0)
                 {
                     long l = this.profilingMap.get(s1);
                     double d0 = (double)l * 100.0D / (double)k;
@@ -187,7 +187,7 @@ public class WPTProfiler extends Profiler
 
     public String getNameOfLastSection()
     {
-        return this.sectionList.isEmpty() ? "[UNKNOWN]" : (String)this.sectionList.get(this.sectionList.size() - 1);
+        return this.sectionList.isEmpty() ? "[UNKNOWN]" : this.sectionList.get(this.sectionList.size() - 1);
     }
 
     @SideOnly(Side.CLIENT)

@@ -393,7 +393,7 @@ public class ClientHandler
 			if(BlockFrame.oc_adapter != null)
 				if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
 					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
+						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter"));
 		}
 	}
 	

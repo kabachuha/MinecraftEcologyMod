@@ -48,7 +48,7 @@ public class CommandGetTileID extends CommandBase {
 			String s = TileEntity.getKey(tile.getClass()).toString();
 			sender.sendMessage(new TextComponentString(s));
 			if(sender instanceof EntityPlayerMP)
-				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("#"+s), getCommandSenderAsPlayer(sender));
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('#' +s), getCommandSenderAsPlayer(sender));
 		}
 		else
 		{

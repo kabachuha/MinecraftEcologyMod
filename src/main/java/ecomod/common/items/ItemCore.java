@@ -44,7 +44,7 @@ public class ItemCore extends Item
 	
 	@Override
     public String getUnlocalizedName(ItemStack stack) {
-        return super.getUnlocalizedName(stack) + "."+stack.getMetadata();
+        return super.getUnlocalizedName(stack) + '.' +stack.getMetadata();
     }
 	
 	
@@ -55,17 +55,17 @@ public class ItemCore extends Item
 		
 		if(stack.getMetadata() == 0)
 		{
-			tooltip.add(I18n.format("tooltip.ecomod.core.filter", new Object[0]));
+			tooltip.add(I18n.format("tooltip.ecomod.core.filter"));
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
 		{
-			String s = stack.getMetadata() == 1 ? I18n.format(((ItemBlockFrame)Item.getItemFromBlock(EcomodBlocks.FRAME)).getUnlocalizedName(new ItemStack(EcomodBlocks.FRAME, 1, 1)) + ".name") : I18n.format(((ItemBlockFrame)Item.getItemFromBlock(EcomodBlocks.FRAME)).getUnlocalizedName(new ItemStack(EcomodBlocks.FRAME, 1, 0))+".name", new Object[0]);
+			String s = stack.getMetadata() == 1 ? I18n.format(((ItemBlockFrame)Item.getItemFromBlock(EcomodBlocks.FRAME)).getUnlocalizedName(new ItemStack(EcomodBlocks.FRAME, 1, 1)) + ".name") : I18n.format(((ItemBlockFrame)Item.getItemFromBlock(EcomodBlocks.FRAME)).getUnlocalizedName(new ItemStack(EcomodBlocks.FRAME, 1, 0))+".name");
 			tooltip.add(I18n.format("tooltip.ecomod.core.shifted", s));
 		}
 		else
 		{
-			tooltip.add("<"+I18n.format("tooltip.ecomod.more_information", new Object[0])+">");
+			tooltip.add('<' +I18n.format("tooltip.ecomod.more_information", new Object[0])+ '>');
 		}
 	}
 

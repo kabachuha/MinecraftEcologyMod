@@ -92,7 +92,7 @@ public class WorldProcessingThread extends Thread
 			int error_counter = 0;
 			isWorking = true;
 
-			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
+			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+ ')');
 			
 			long timestamp = System.currentTimeMillis();
 			
@@ -153,7 +153,7 @@ public class WorldProcessingThread extends Thread
 				}
 				catch (Exception e)
 				{
-					EcologyMod.log.error("Caught an exception while processing chunk ("+c.x+";"+c.z+")!");
+					EcologyMod.log.error("Caught an exception while processing chunk ("+c.x+ ';' +c.z+")!");
 					EcologyMod.log.error(e.toString());
 					e.printStackTrace();
 					
@@ -188,7 +188,7 @@ public class WorldProcessingThread extends Thread
 	
 	public void shutdown()
 	{
-		EcologyMod.log.info("["+this.getName()+"]Carefully shuting down...");
+		EcologyMod.log.info('[' +this.getName()+"]Carefully shuting down...");
 		
 		if(profiler.profilingEnabled)
 		{
@@ -213,7 +213,7 @@ public class WorldProcessingThread extends Thread
 		
 		System.gc();
 		
-		EcologyMod.log.info("["+this.getName()+"]Shutted down.");
+		EcologyMod.log.info('[' +this.getName()+"]Shutted down.");
 		
 		//Bye, bye
 		interrupt();

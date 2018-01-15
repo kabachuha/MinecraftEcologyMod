@@ -100,32 +100,32 @@ public class GuiAnalyzer extends GuiScreen
 			return;//Wait for fontRendererObj
 
 		if(pollution == null)
-			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.energy", new Object[0]), width-110, height-40-1, Color.ORANGE.getRGB());
+			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.energy"), width-110, height-40-1, Color.ORANGE.getRGB());
 		else
-			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.energy", new Object[0]), width-110, height-40-1, Color.RED.getRGB());
+			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.energy"), width-110, height-40-1, Color.RED.getRGB());
 		
 		this.drawVerticalLine(xt1, 0, height, Color.BLACK.getRGB());
 		this.drawHorizontalLine(xt1, width, buttonAnalyze.y + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
 		this.drawVerticalLine(buttonAnalyze.x-10, 0, buttonAnalyze.y+buttonAnalyze.height+10, Color.DARK_GRAY.getRGB());
 		
-		this.drawString(fontRenderer, I18n.format("gui.ecomod.text.chunk_position", new Object[0]), xt1+4, 11, Color.CYAN.getRGB());
+		this.drawString(fontRenderer, I18n.format("gui.ecomod.text.chunk_position"), xt1+4, 11, Color.CYAN.getRGB());
 		this.drawString(fontRenderer, te.getChunkCoords().toString(), xt1+4, 21, Color.CYAN.getRGB());
 		
 		if(pollution == null)
 		{
-			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.no_data.0", new Object[0]), xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 2, Color.MAGENTA.getRGB());
-			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.no_data.1", new Object[0]), xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 11, Color.MAGENTA.getRGB());
+			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.no_data.0"), xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 2, Color.MAGENTA.getRGB());
+			this.drawString(fontRenderer, I18n.format("gui.ecomod.text.no_data.1"), xt1+4, buttonAnalyze.y + buttonAnalyze.height + 10 + 11, Color.MAGENTA.getRGB());
 		}
 		else
 		{
 			int strt = buttonAnalyze.y + buttonAnalyze.height + 10;
 			
-			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.chunk_pollution", new Object[0]), xt1+4, strt+2, Color.BLACK.getRGB());
+			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.chunk_pollution"), xt1+4, strt+2, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 11, Color.BLACK.getRGB());
 			
 			if(last_update_time != null && last_update_time.getTime() != -1)
-				this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.analyzed", new Object[0])+" "+DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
+				this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.analyzed", new Object[0])+ ' ' +DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 22, Color.BLACK.getRGB());
 /*
@@ -138,19 +138,19 @@ public class GuiAnalyzer extends GuiScreen
 			if(pollution.getAirPollution() < 0.1D)
 				this.drawStringNoShadow(fontRenderer, "0", xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
 			else
-				this.drawStringNoShadow(fontRenderer, ""+pollution.getAirPollution(), xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
+				this.drawStringNoShadow(fontRenderer, Float.toString(pollution.getAirPollution()), xt1+4+105, strt+42, new Color(255, 255, 126).getRGB());
 			
 			if(pollution.getWaterPollution() < 0.1D)
 				this.drawStringNoShadow(fontRenderer, "0", xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
 			else
-				this.drawStringNoShadow(fontRenderer, ""+pollution.getWaterPollution(), xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
+				this.drawStringNoShadow(fontRenderer, Float.toString(pollution.getWaterPollution()), xt1+4+105, strt+62, new Color(60, 212, 252).getRGB());
 			
 			if(pollution.getSoilPollution() < 0.1D)
 				this.drawStringNoShadow(fontRenderer, "0", xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
 			else
-				this.drawStringNoShadow(fontRenderer, ""+pollution.getSoilPollution(), xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
+				this.drawStringNoShadow(fontRenderer, Float.toString(pollution.getSoilPollution()), xt1+4+105, strt+82, new Color(89, 61, 41).getRGB());
 			
-			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.pollution_effects", new Object[0]), xt1/2-50, 10, Color.BLACK.getRGB());
+			this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.pollution_effects"), xt1/2-50, 10, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(0, xt1, buttonAnalyze.y + buttonAnalyze.height + 10, Color.DARK_GRAY.getRGB());
 			
@@ -189,8 +189,8 @@ public class GuiAnalyzer extends GuiScreen
 			if(!buttonAnalyze.enabled)
 			{
 				List<String> no_energy_text = new ArrayList<>();
-				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.0", new Object[0]));
-				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.1", new Object[0]));
+				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.0"));
+				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.1"));
 				this.drawHoveringText(no_energy_text, mouseX, mouseY+10, fontRenderer);
 			}
 		}
@@ -199,9 +199,9 @@ public class GuiAnalyzer extends GuiScreen
 		{
 			List<String> lst = new ArrayList<>();
 			
-			lst.add(I18n.format("gui.ecomod.text.energy", new Object[0])+" "+te.getEnergyStored());
-			lst.add(I18n.format("gui.ecomod.text.max_energy", new Object[0])+" "+te.getMaxEnergyStored());
-			lst.add(I18n.format("gui.ecomod.text.filling", new Object[0])+" "+(int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored()))+"%");
+			lst.add(I18n.format("gui.ecomod.text.energy", new Object[0])+ ' ' +te.getEnergyStored());
+			lst.add(I18n.format("gui.ecomod.text.max_energy", new Object[0])+ ' ' +te.getMaxEnergyStored());
+			lst.add(I18n.format("gui.ecomod.text.filling", new Object[0])+ ' ' +(int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored()))+ '%');
 			
 			this.drawHoveringText(lst, mouseX, mouseY);
 		}
@@ -238,13 +238,13 @@ public class GuiAnalyzer extends GuiScreen
         				this.drawVerticalLine(drawStartX + 50, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());
         				
         				//drawString(fontRendererObj, I18n.format(iape.getHeader(), new Object[0]), drawStartX + 51 + 4, drawStartY + 4, Color.ORANGE.getRGB());
-        				this.fontRenderer.drawSplitString(I18n.format(iape.getHeader(), new Object[0]), drawStartX + 51 + 4, drawStartY + 4, header_width,Color.ORANGE.getRGB());
+        				this.fontRenderer.drawSplitString(I18n.format(iape.getHeader()), drawStartX + 51 + 4, drawStartY + 4, header_width,Color.ORANGE.getRGB());
         				
         				this.drawVerticalLine(drawStartX + 50 + header_width, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());
         				
         				//Description
         				int textStartX = drawStartX + 51 + header_width + 4;
-        				this.fontRenderer.drawSplitString(I18n.format(iape.getDescription(), new Object[0]), textStartX, drawStartY + 4, endX-4-textStartX, Color.WHITE.getRGB());
+        				this.fontRenderer.drawSplitString(I18n.format(iape.getDescription()), textStartX, drawStartY + 4, endX-4-textStartX, Color.WHITE.getRGB());
         				
         				//Splitting line
         				this.drawHorizontalLine(drawStartX, endX, drawStartY + 50, Color.DARK_GRAY.getRGB());
@@ -260,7 +260,7 @@ public class GuiAnalyzer extends GuiScreen
         {
         	if(button.id == 0)
         	{
-        		EMPacketHandler.WRAPPER.sendToServer(new EMPacketString("A"+te.getPos().getX()+";"+te.getPos().getY()+";"+te.getPos().getZ()+";"+te.getWorld().provider.getDimension()));
+        		EMPacketHandler.WRAPPER.sendToServer(new EMPacketString("A"+te.getPos().getX()+ ';' +te.getPos().getY()+ ';' +te.getPos().getZ()+ ';' +te.getWorld().provider.getDimension()));
         	}
         	
         	if(button.id == 1)
@@ -317,7 +317,7 @@ public class GuiAnalyzer extends GuiScreen
     {
     	super.initGui();
     	
-    	this.buttonList.add(buttonAnalyze = new GuiButton(0, width-110, 10, 100, 20, I18n.format("gui.ecomod.button.analyze_chunk", new Object[0])));
+    	this.buttonList.add(buttonAnalyze = new GuiButton(0, width-110, 10, 100, 20, I18n.format("gui.ecomod.button.analyze_chunk")));
     	
     	this.buttonList.add(buttonUp = new ButtonUpDown(1, (int)(width * 0.66) + 4, height / 2 - (int)(ButtonUpDown.sizeY * 1.5F), true));
     	this.buttonList.add(buttonDown = new ButtonUpDown(2, (int)(width * 0.66) + 4, height / 2 + ButtonUpDown.sizeY, false));
@@ -430,7 +430,7 @@ public class GuiAnalyzer extends GuiScreen
     {
 		if (keyCode == 1 || keyCode == Keyboard.KEY_E)
         {
-            this.mc.displayGuiScreen((GuiScreen)null);
+            this.mc.displayGuiScreen(null);
 
             if (this.mc.currentScreen == null)
             {

@@ -119,7 +119,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -175,7 +175,7 @@ public class EcomodClassTransformer implements IClassTransformer
 					log.info(min.desc);
 					log.info(min.itf);
 					*/
-					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/client/renderer/texture/TextureManager", "net/minecraft/client/renderer/texture/TextureManager!&!cdr") && equalOneOfNames(min.name, "bindTexture", "func_110577_a!&!a") && equalOneOfNames(min.desc, "(Lnet/minecraft/util/ResourceLocation;)V", "(Lnet/minecraft/util/ResourceLocation;)V!&!(Lnf;)V") && (!min.itf))
+					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/client/renderer/texture/TextureManager", "net/minecraft/client/renderer/texture/TextureManager!&!cdr") && equalOneOfNames(min.name, "bindTexture", "func_110577_a!&!a") && equalOneOfNames(min.desc, "(Lnet/minecraft/util/ResourceLocation;)V", "(Lnet/minecraft/util/ResourceLocation;)V!&!(Lnf;)V") && !min.itf)
 					{
 						log.info("FOUND: INVOKEVIRTUAL net/minecraft/client/renderer/texture/TextureManager(cdr) bindTexture(a) (Lnet/minecraft/util/ResourceLocation;)V!&!(Lnf;)V  !!!!!");
 						insertion_index = i;
@@ -205,7 +205,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -253,7 +253,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -302,7 +302,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -351,7 +351,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -401,7 +401,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -448,7 +448,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -497,7 +497,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -574,7 +574,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -614,7 +614,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -666,7 +666,7 @@ public class EcomodClassTransformer implements IClassTransformer
 					log.info(min.desc);
 					log.info(min.itf);
 					*/
-					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/entity/item/EntityItem", "net/minecraft/entity/item/EntityItem!&!"+classNode.name) && equalOneOfNames(min.name, "setDead", "func_110577_a!&!X") && equalOneOfNames(min.desc, "()V", "()V!&!()V") && (!min.itf))
+					if(min.getOpcode() == Opcodes.INVOKEVIRTUAL && equalOneOfNames(min.owner, "net/minecraft/entity/item/EntityItem", "net/minecraft/entity/item/EntityItem!&!"+classNode.name) && equalOneOfNames(min.name, "setDead", "func_110577_a!&!X") && equalOneOfNames(min.desc, "()V", "()V!&!()V") && !min.itf)
 					{
 						insertion_index = i;
 						break;
@@ -695,7 +695,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			
@@ -740,7 +740,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+"!");
+			log.error("Unable to patch "+name+ '!');
 			log.error(e.toString());
 			e.printStackTrace();
 			

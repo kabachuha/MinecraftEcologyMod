@@ -68,7 +68,7 @@ public class EMIntermod
 		
 		for(IMCMessage m : messages)
 		{
-			log.info("Processing "+m.getSender() + "#" +m.key+"->"+(m.isStringMessage() ? m.getStringValue() : m.isNBTMessage() ? m.getNBTValue().toString() : m.isItemStackMessage() ? m.getItemStackValue().toString() : m.isResourceLocationMessage() ? m.getResourceLocationValue().toString() : "....."));
+			log.info("Processing "+m.getSender() + '#' +m.key+"->"+(m.isStringMessage() ? m.getStringValue() : m.isNBTMessage() ? m.getNBTValue().toString() : m.isItemStackMessage() ? m.getItemStackValue().toString() : m.isResourceLocationMessage() ? m.getResourceLocationValue().toString() : "....."));
 			if(m.key.toLowerCase().contentEquals(key_add_tepc))
 			{
 				TEPollution tep = null;
@@ -98,7 +98,7 @@ public class EMIntermod
 				{
 					String val[];
 					
-					if(m.getStringValue().lastIndexOf(";") == -1 || (val = m.getStringValue().split(";")).length != 4)
+					if(m.getStringValue().lastIndexOf(';') == -1 || (val = m.getStringValue().split(";")).length != 4)
 					{
 						log.info("Unable to add "+m.getStringValue()+" because of invalid format. The message value has to be splitted by semicolons into 4 parts ('id', 'air', 'water', 'soil')");
 						continue;

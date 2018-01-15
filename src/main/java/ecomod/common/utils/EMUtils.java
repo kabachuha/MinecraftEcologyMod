@@ -156,7 +156,7 @@ public class EMUtils
 		b[(z & 0xf) << 4 | x & 0xf] = cbiome;
 		c.setBiomeArray(b);
 		
-		EMPacketHandler.WRAPPER.sendToDimension(new EMPacketString("*"+x+";"+z+";"+Biome.getIdForBiome(biome)), c.getWorld().provider.getDimension());
+		EMPacketHandler.WRAPPER.sendToDimension(new EMPacketString("*"+x+ ';' +z+ ';' +Biome.getIdForBiome(biome)), c.getWorld().provider.getDimension());
 	}
 	
 	public static PollutionData pollutionDataFromJSON(String json, PollutionData failture_data)
