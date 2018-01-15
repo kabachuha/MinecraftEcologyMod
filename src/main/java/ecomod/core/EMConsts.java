@@ -17,7 +17,7 @@ public class EMConsts
 	 * 
 	 */
 	public static final String mcversion = "1.12.2";
-	public static final String version = mcversion + "-1.4.1.0";
+	public static final String version = mcversion + "-1.4.2.0";
 	
 	public static final String deps = "required-after:FML";
 	

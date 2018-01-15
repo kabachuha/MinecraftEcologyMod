@@ -1,9 +1,5 @@
 package ecomod.common.tiles;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import buildcraft.api.tiles.IHasWork;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -13,26 +9,23 @@ import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWork
+@net.minecraftforge.fml.common.Optional.Interface(iface = "buildcraft.api.tiles.IHasWork", modid = "buildcraft")
+public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcraft.api.tiles.IHasWork
 {
 	public FluidTank tank;
 	
@@ -46,7 +39,6 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		tank.setTileEntity(this);
 	}
 
-	@Override
 	public boolean hasWork()
 	{
 		return isWorking();
