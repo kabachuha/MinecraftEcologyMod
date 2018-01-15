@@ -125,7 +125,7 @@ public class GuiAnalyzer extends GuiScreen
 			this.drawHorizontalLine(xt1, width, strt + 11, Color.BLACK.getRGB());
 			
 			if(last_update_time != null && last_update_time.getTime() != -1)
-				this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.analyzed", new Object[0])+ ' ' +DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
+				this.drawStringNoShadow(fontRenderer, I18n.format("gui.ecomod.text.analyzed")+ ' ' +DATE_FORMAT.format(last_update_time), xt1+4, strt+13, Color.BLACK.getRGB());
 			
 			this.drawHorizontalLine(xt1, width, strt + 22, Color.BLACK.getRGB());
 /*
@@ -199,9 +199,9 @@ public class GuiAnalyzer extends GuiScreen
 		{
 			List<String> lst = new ArrayList<>();
 			
-			lst.add(I18n.format("gui.ecomod.text.energy", new Object[0])+ ' ' +te.getEnergyStored());
-			lst.add(I18n.format("gui.ecomod.text.max_energy", new Object[0])+ ' ' +te.getMaxEnergyStored());
-			lst.add(I18n.format("gui.ecomod.text.filling", new Object[0])+ ' ' +(int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored()))+ '%');
+			lst.add(I18n.format("gui.ecomod.text.energy")+ ' ' +te.getEnergyStored());
+			lst.add(I18n.format("gui.ecomod.text.max_energy")+ ' ' +te.getMaxEnergyStored());
+			lst.add(I18n.format("gui.ecomod.text.filling")+ ' ' +(int)(100 * ((float)te.getEnergyStored()/te.getMaxEnergyStored()))+ '%');
 			
 			this.drawHoveringText(lst, mouseX, mouseY);
 		}
@@ -237,7 +237,7 @@ public class GuiAnalyzer extends GuiScreen
         				//Header
         				this.drawVerticalLine(drawStartX + 50, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());
         				
-        				//drawString(fontRendererObj, I18n.format(iape.getHeader(), new Object[0]), drawStartX + 51 + 4, drawStartY + 4, Color.ORANGE.getRGB());
+        				//drawString(fontRendererObj, I18n.format(iape.getHeader()), drawStartX + 51 + 4, drawStartY + 4, Color.ORANGE.getRGB());
         				this.fontRenderer.drawSplitString(I18n.format(iape.getHeader()), drawStartX + 51 + 4, drawStartY + 4, header_width,Color.ORANGE.getRGB());
         				
         				this.drawVerticalLine(drawStartX + 50 + header_width, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());

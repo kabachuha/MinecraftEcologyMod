@@ -65,7 +65,7 @@ public class ItemCore extends Item
 		}
 		else
 		{
-			tooltip.add('<' +I18n.format("tooltip.ecomod.more_information", new Object[0])+ '>');
+			tooltip.add('<' +I18n.format("tooltip.ecomod.more_information")+ '>');
 		}
 	}
 
