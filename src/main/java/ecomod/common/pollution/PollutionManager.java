@@ -120,8 +120,6 @@ public class PollutionManager
 		
 		String json;
 		
-		WorldPollution wp = new WorldPollution();
-		
 		File file = world.getSaveHandler().getWorldDirectory();
 		
 		if(file != null)
@@ -184,7 +182,8 @@ public class PollutionManager
 			EcologyMod.log.fatal("There is no world save directory!!!");
 			return false;
 		}
-		
+
+		WorldPollution wp;
 		try
 		{
 			wp = gson.fromJson(json, WorldPollution.class);

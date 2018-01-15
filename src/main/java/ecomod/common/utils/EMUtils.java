@@ -151,8 +151,7 @@ public class EMUtils
 	public static void setBiome(Chunk c, Biome biome, int x, int z)
 	{
 		byte[] b = c.getBiomeArray();
-		byte cbiome = b[(z & 0xf) << 4 | x & 0xf];
-		cbiome = (byte)(Biome.getIdForBiome(biome) & 0xff);
+		byte cbiome = (byte)(Biome.getIdForBiome(biome) & 0xff);
 		b[(z & 0xf) << 4 | x & 0xf] = cbiome;
 		c.setBiomeArray(b);
 		

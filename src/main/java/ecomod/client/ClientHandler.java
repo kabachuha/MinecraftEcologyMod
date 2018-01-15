@@ -242,8 +242,7 @@ public class ClientHandler
 		Chunk chunk = w.getChunkFromBlockCoords(new BlockPos(x,w.getActualHeight(),z));
 		
 		byte[] biome = chunk.getBiomeArray();
-		int cbiome = biome[(z & 0xf) << 4 | x & 0xf];
-		cbiome = id & 0xff;
+		int cbiome = id & 0xff;
 		biome[(z & 0xf) << 4 | x & 0xf] = (byte) cbiome;
 		
 		chunk.setBiomeArray(biome);
@@ -352,10 +351,10 @@ public class ClientHandler
 		{
 			if(event.getEntity().ticksExisted != lasttick)
 			{
-				if(smog_intensity.compareTo(required_smog_intensity) < 0)
+				int compared = smog_intensity.compareTo(required_smog_intensity);
+				if(compared < 0)
 					smog_intensity = smog_intensity.add(2);
-		
-				if(smog_intensity.compareTo(required_smog_intensity) > 0)
+				else if(compared > 0)
 					smog_intensity = smog_intensity.add(-2);
 				
 				lasttick = event.getEntity().ticksExisted;

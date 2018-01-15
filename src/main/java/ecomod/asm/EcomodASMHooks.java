@@ -194,7 +194,7 @@ public class EcomodASMHooks
 			if(!PollutionSourcesConfig.hasSource("expired_item"))
 				return;
 			
-			PollutionData to_emit = PollutionData.getEmpty();
+			PollutionData to_emit;
 			
 			if(dmg_source == DamageSource.LAVA)
 			{

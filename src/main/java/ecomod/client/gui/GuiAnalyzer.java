@@ -175,7 +175,7 @@ public class GuiAnalyzer extends GuiScreen
 			}
 			
 			Minecraft.getMinecraft().getTextureManager().bindTexture(lang_texture);
-			this.drawModalRectWithCustomSizedTexture(xt1+4, strt+34, 0, 0, 100, 60, 100, 60);
+			drawModalRectWithCustomSizedTexture(xt1+4, strt+34, 0, 0, 100, 60, 100, 60);
 			
 			
 			updateEffects();
@@ -232,7 +232,7 @@ public class GuiAnalyzer extends GuiScreen
         				GlStateManager.color(1, 1, 1, 1);
         				
         				Minecraft.getMinecraft().getTextureManager().bindTexture(iape.getIcon() == null ? IAnalyzerPollutionEffect.BLANK_ICON : iape.getIcon());
-        				this.drawModalRectWithCustomSizedTexture(drawStartX, drawStartY, 0, 0, icon_size, icon_size, icon_size, icon_size);
+        				drawModalRectWithCustomSizedTexture(drawStartX, drawStartY, 0, 0, icon_size, icon_size, icon_size, icon_size);
         				
         				//Header
         				this.drawVerticalLine(drawStartX + 50, drawStartY-1, drawStartY + 50, Color.DARK_GRAY.getRGB());
@@ -258,22 +258,19 @@ public class GuiAnalyzer extends GuiScreen
     {
         if (button.enabled && button.visible)
         {
-        	if(button.id == 0)
-        	{
-        		EMPacketHandler.WRAPPER.sendToServer(new EMPacketString("A"+te.getPos().getX()+ ';' +te.getPos().getY()+ ';' +te.getPos().getZ()+ ';' +te.getWorld().provider.getDimension()));
-        	}
-        	
-        	if(button.id == 1)
-        	{
-        		if(startIndex >=1)
-        			startIndex--;
-        	}
-        	
-        	if(button.id == 2)
-        	{
-        		if(startIndex < effects.size() - 2)
-        			startIndex++;
-        	}
+			switch (button.id) {
+				case 0:
+					EMPacketHandler.WRAPPER.sendToServer(new EMPacketString("A" + te.getPos().getX() + ';' + te.getPos().getY() + ';' + te.getPos().getZ() + ';' + te.getWorld().provider.getDimension()));
+					break;
+				case 1:
+					if (startIndex >= 1)
+						startIndex--;
+					break;
+				case 2:
+					if (startIndex < effects.size() - 2)
+						startIndex++;
+					break;
+			}
         }
     }
 	

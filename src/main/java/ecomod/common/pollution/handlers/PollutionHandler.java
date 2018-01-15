@@ -368,7 +368,7 @@ public class PollutionHandler implements IPollutionGetter
 					
 				for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
 				{
-					Object[] func_result = new Object[0];
+					Object[] func_result;
 						
 					try
 					{
