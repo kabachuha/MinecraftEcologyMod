@@ -163,7 +163,7 @@ public class GuiAnalyzer extends GuiScreen
 				try
 				{
 					IResource ir = Minecraft.getMinecraft().getResourceManager().getResource(lang_texture);
-					if(ir == null || ir.getInputStream() == null || ir.getInputStream().available() <= 0)
+					if(ir.getInputStream().available() <= 0)
 					{
 						lang_texture = EMUtils.resloc("textures/gui/analyzer/pollution_local/en_us.png");
 					}

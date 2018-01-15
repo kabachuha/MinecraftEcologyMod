@@ -29,11 +29,11 @@ public class CommandGetPollution extends CommandBase {
 	{
 		World w = server.getEntityWorld();
 		
-		if(w == null || w.isRemote)return;
-		
-		
+		if(w.isRemote)return;
+
+
 		if(args.length == 2)
-		{	
+		{
 			sender.sendMessage(new TextComponentString(EcomodAPI.getPollution(w, Integer.parseInt(args[0]), Integer.parseInt(args[1])).toString()));
 		}
 		else if (args.length == 0)

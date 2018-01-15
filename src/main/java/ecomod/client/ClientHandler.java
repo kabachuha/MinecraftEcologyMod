@@ -386,15 +386,12 @@ public class ClientHandler
 	@SubscribeEvent
 	public void itemTooltip(ItemTooltipEvent event)
 	{
-		if(event.getItemStack() != null)
-		{
-			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
-			if(BlockFrame.oc_adapter != null)
-				if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
-					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter"));
-		}
-	}
+        if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click)
+        if(BlockFrame.oc_adapter != null)
+            if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
+                if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+                    event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter"));
+    }
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)

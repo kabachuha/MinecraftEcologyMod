@@ -37,10 +37,7 @@ public class CommandLoadManager extends CommandBase {
 		}
 		else
 		{
-			if(sender != null && sender.getEntityWorld() != null)
-			{
-				dim = sender.getEntityWorld().provider.getDimension();
-			}
+			dim = sender.getEntityWorld().provider.getDimension();
 		}
 		
 		WorldProcessingThread wpt = EcologyMod.ph.getWPT(dim);

@@ -106,7 +106,7 @@ public class BlockFrame extends Block
 			{
 				ItemStack pi = playerIn.getHeldItem(hand);
 				
-				if(pi != null && !pi.isEmpty())
+				if(!pi.isEmpty())
 				{
 					if(pi.getItem() instanceof ItemCore)
 					{

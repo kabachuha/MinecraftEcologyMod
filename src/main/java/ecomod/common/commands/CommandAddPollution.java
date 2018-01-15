@@ -30,7 +30,7 @@ public class CommandAddPollution extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		World w = server.getEntityWorld();
 		
-		if(w == null || w.isRemote)return;
+		if(w.isRemote)return;
 		
 		WorldProcessingThread wpt = EcologyMod.ph.getWPT(w);
 			

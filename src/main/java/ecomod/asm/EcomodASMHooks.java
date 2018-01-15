@@ -188,7 +188,7 @@ public class EcomodASMHooks
 		
 		public static void entityItemAttackedAddition(EntityItem entity_item, DamageSource dmg_source)
 		{
-			if(entity_item == null || entity_item.getEntityWorld() == null || entity_item.getEntityWorld().isRemote || dmg_source == null)
+			if(entity_item == null || entity_item.getEntityWorld().isRemote || dmg_source == null)
 				return;
 			
 			if(!PollutionSourcesConfig.hasSource("expired_item"))
@@ -310,7 +310,7 @@ public class EcomodASMHooks
 				{
 					ItemStack is = item.getItem();
 				
-					if(is != null && !is.isEmpty())
+					if(!is.isEmpty())
 					if(is.getItem() instanceof ItemFood)
 					{
 						if(EcomodStuff.pollution_effects.containsKey("food_pollution"))

@@ -749,72 +749,69 @@ public class PollutionHandler implements IPollutionGetter
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+ getVisibleSmogIntensity(world, entity.getPosition()).intValue()), (EntityPlayerMP)entity);
 		}
 		
-			if(entity.ticksExisted % 300 == 0)
-			{
-				if(entity instanceof EntityLivingBase)
-				{
-					if(isPlayerInAcidRainZone(entity))
-					{
-						if(entity.world.isRainingAt(entity.getPosition()))
-						{
-							ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-						
-							if(is != null && !is.isEmpty())
-							{
-								if(is.isItemStackDamageable())
-									is.damageItem((int) (EMConfig.acid_rain_item_deterioriation_factor * is.getMaxDamage()), entity);
-							}
-							else
-							{
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 300, 1));
-							}
-							
-							if(entity instanceof EntityPlayer)
-							{
-								EMTriggers.ACID_RAIN.trigger((EntityPlayerMP)entity);
-							}
-						}
-					}
-					
-					if(entity instanceof EntityPlayer)
-					{
-						EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone(entity) ? 1 : 0)), (EntityPlayerMP)entity);
-						
-						BlockPos bp = new BlockPos(entity.posX, entity.posY, entity.posZ);
-						
-						boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
-						
-						if(inSmog && PollutionUtils.hasSurfaceAccess(entity.getEntityWorld(), bp))
-						{
-							if(!PollutionUtils.isEntityRespirating(entity))
-							{
-								EMTriggers.BREATHE_SMOG.trigger((EntityPlayerMP)entity, new Object[]{});
-								
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
-								entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
-								
-								if(getPollution(world, EMUtils.blockPosToPair(bp)).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
-									entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
-							}
-						}
-						
-						EMTriggers.PLAYER_IN_POLLUTION.trigger((EntityPlayerMP)entity, new Object[]{});
-					}
-					else
-					{
-						if(entity.getEntityWorld().rand.nextInt(10) == 0)
-						{
-							if(isEntityInSmog(entity))
-							{
-								if(!PollutionUtils.isEntityRespirating(entity))
-								{
-									entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
-								}
-							}
-						}
-					}
-				}
-			}
+		if(entity.ticksExisted % 300 == 0)
+		{
+			if(isPlayerInAcidRainZone(entity))
+            {
+                if(entity.world.isRainingAt(entity.getPosition()))
+                {
+                    ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+
+                    if(!is.isEmpty())
+                    {
+                        if(is.isItemStackDamageable())
+                            is.damageItem((int) (EMConfig.acid_rain_item_deterioriation_factor * is.getMaxDamage()), entity);
+                    }
+                    else
+                    {
+                        entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 300, 1));
+                    }
+
+                    if(entity instanceof EntityPlayer)
+                    {
+                        EMTriggers.ACID_RAIN.trigger((EntityPlayerMP)entity);
+                    }
+                }
+            }
+
+			if(entity instanceof EntityPlayer)
+            {
+                EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone(entity) ? 1 : 0)), (EntityPlayerMP)entity);
+
+                BlockPos bp = new BlockPos(entity.posX, entity.posY, entity.posZ);
+
+                boolean inSmog = isEntityInSmog((EntityPlayerMP)event.getEntity());
+
+                if(inSmog && PollutionUtils.hasSurfaceAccess(entity.getEntityWorld(), bp))
+                {
+                    if(!PollutionUtils.isEntityRespirating(entity))
+                    {
+                        EMTriggers.BREATHE_SMOG.trigger((EntityPlayerMP)entity, new Object[]{});
+
+                        entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("nausea"), 200, 0));
+                        entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 180, 0));
+
+                        if(getPollution(world, EMUtils.blockPosToPair(bp)).clone().getAirPollution() / EcomodStuff.pollution_effects.get("smog").getTriggerringPollution().getAirPollution()  >= 2)
+                            entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("wither"), 160, 1));
+                    }
+                }
+
+                EMTriggers.PLAYER_IN_POLLUTION.trigger((EntityPlayerMP)entity, new Object[]{});
+            }
+            else
+            {
+                if(entity.getEntityWorld().rand.nextInt(10) == 0)
+                {
+                    if(isEntityInSmog(entity))
+                    {
+                        if(!PollutionUtils.isEntityRespirating(entity))
+                        {
+                            entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("poison"), 200, 1));
+                        }
+                    }
+                }
+            }
+		}
 	}
 	
 	@SubscribeEvent
@@ -916,21 +913,18 @@ public class PollutionHandler implements IPollutionGetter
 			EcologyMod.log.info(nfe.toString());
 			return;
 		}
-		
-		if(bp != null)
-		{
-			MinecraftServer mcserver = FMLCommonHandler.instance().getMinecraftServerInstance();
-			
-			WorldServer ws = mcserver.getWorld(dim);
-			
-			TileEntity te = ws.getTileEntity(bp);
-			
-			if(te != null)
-			if(te instanceof TileAnalyzer)
-			{
-				((TileAnalyzer)te).analyze();
-			}
-		}
+
+		MinecraftServer mcserver = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+		WorldServer ws = mcserver.getWorld(dim);
+
+		TileEntity te = ws.getTileEntity(bp);
+
+		if(te != null)
+        if(te instanceof TileAnalyzer)
+        {
+            ((TileAnalyzer)te).analyze();
+        }
 	}
 	
 	@SubscribeEvent
@@ -988,7 +982,7 @@ public class PollutionHandler implements IPollutionGetter
 	@SubscribeEvent 
 	public void onEntityUseItem(LivingEntityUseItemEvent.Start event)
 	{
-		if(event.getEntityLiving() != null && event.getItem() != null)
+		if(event.getEntityLiving() != null)
 		if(!event.getEntityLiving().getEntityWorld().isRemote)
 		{
 			ItemStack is = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.HEAD);

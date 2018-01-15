@@ -60,56 +60,53 @@ public class PollutionManager
 		String json = gson.toJson(wp, WorldPollution.class);
 		
 		File file = world.getSaveHandler().getWorldDirectory();
-		
-		if(file != null)
-		{
-			try
-			{
-				String worldPath = file.getAbsolutePath();
-				
-				File save = new File(worldPath +"/PollutionMap.json");
-				
-				if(save.isDirectory())
-				{
-					throw new IOException("File PollutionMap.json is a directory! Please, delete it and restart the world!");
-				}
-				
-				if(save.exists())
-				{
-					//Create backup file in case of crashing during the writing or just to restore the previous pollution map if something went wrong
-					long last_save_time = save.lastModified();
-					File oldsave = new File(save.getAbsolutePath());
-					File backup = new File(worldPath +"/PollutionMap_backup.json");
-					
-					if(backup.exists())
-						backup.delete();
-					
-					Files.move(oldsave, backup);
-					
-					backup.setLastModified(last_save_time);
-				}
-				
-				save.createNewFile();
-				
-				if(save.canWrite())
-				{
-					FileUtils.writeStringToFile(save, json, Charset.forName("UTF-8"));
-					return true;
-				}
-				else
-				{
-					throw new IOException("The save file is not writable!!!");
-				}
-			}
-			catch(IOException e)
-			{
-				EcologyMod.log.error("Unable to write data of the pollution manager for dimension "+dim);
-				EcologyMod.log.error(e.toString());
-				
-				e.printStackTrace();
-			}
-		}
-		
+
+		try
+        {
+            String worldPath = file.getAbsolutePath();
+
+            File save = new File(worldPath +"/PollutionMap.json");
+
+            if(save.isDirectory())
+            {
+                throw new IOException("File PollutionMap.json is a directory! Please, delete it and restart the world!");
+            }
+
+            if(save.exists())
+            {
+                //Create backup file in case of crashing during the writing or just to restore the previous pollution map if something went wrong
+                long last_save_time = save.lastModified();
+                File oldsave = new File(save.getAbsolutePath());
+                File backup = new File(worldPath +"/PollutionMap_backup.json");
+
+                if(backup.exists())
+                    backup.delete();
+
+                Files.move(oldsave, backup);
+
+                backup.setLastModified(last_save_time);
+            }
+
+            save.createNewFile();
+
+            if(save.canWrite())
+            {
+                FileUtils.writeStringToFile(save, json, Charset.forName("UTF-8"));
+                return true;
+            }
+            else
+            {
+                throw new IOException("The save file is not writable!!!");
+            }
+        }
+        catch(IOException e)
+        {
+            EcologyMod.log.error("Unable to write data of the pollution manager for dimension "+dim);
+            EcologyMod.log.error(e.toString());
+
+            e.printStackTrace();
+        }
+
 		return false;
 	}
 	
@@ -121,67 +118,59 @@ public class PollutionManager
 		String json;
 		
 		File file = world.getSaveHandler().getWorldDirectory();
-		
-		if(file != null)
-		{
-			try
-			{
-				String worldPath = file.getAbsolutePath();
-				
-				File save = new File(worldPath + "/PollutionMap.json");
-				
-				if(save.isDirectory())
-				{
-					throw new IOException("File PollutionMap.json is a directory! Please, delete it and reload world!");
-				}
-				
-				if(!save.exists())
-				{
-					EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-					EcologyMod.log.error("The pollution manager save file (dimension "+world.provider.getDimension()+") has not been found! The world pollution is set to the initial state!");
-					EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost infornation about the world pollution.");
-					File backup = new File(worldPath +"/PollutionMap_backup.json");
-					
-					if(backup.exists())
-					{
-						EcologyMod.log.warn("!");
-						EcologyMod.log.warn("The PollutionMap_backup.json file(created "+new SimpleDateFormat().format(new Date(backup.lastModified()))+") is found in the save directory! It can be used to restore the previous information by renaming it to 'PollutionMap.json'!");
-						EcologyMod.log.warn(backup.getAbsolutePath());
-						EcologyMod.log.warn("!");
-					}
-					
-					EcologyMod.log.error("In that case, please, check the situation!");
-					EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-					return false;
-				}
-				
-				if(save.canRead())
-				{
-					json = FileUtils.readFileToString(save);
-					
-					if(json == null)
-						return false;
-				}
-				else
-				{
-					throw new IOException("The save file is not readable!!!");
-				}
-			}
-			catch(IOException e)
-			{
-				EcologyMod.log.error("Unable to load data of the pollution manager for dimension "+dim);
-				EcologyMod.log.error(e.toString());
-				
-				e.printStackTrace();
-				
-				return false;
-			}
-		}
-		else
-		{
-			EcologyMod.log.fatal("There is no world save directory!!!");
-			return false;
-		}
+
+		try
+        {
+            String worldPath = file.getAbsolutePath();
+
+            File save = new File(worldPath + "/PollutionMap.json");
+
+            if(save.isDirectory())
+            {
+                throw new IOException("File PollutionMap.json is a directory! Please, delete it and reload world!");
+            }
+
+            if(!save.exists())
+            {
+                EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                EcologyMod.log.error("The pollution manager save file (dimension "+world.provider.getDimension()+") has not been found! The world pollution is set to the initial state!");
+                EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost infornation about the world pollution.");
+                File backup = new File(worldPath +"/PollutionMap_backup.json");
+
+                if(backup.exists())
+                {
+                    EcologyMod.log.warn("!");
+                    EcologyMod.log.warn("The PollutionMap_backup.json file(created "+new SimpleDateFormat().format(new Date(backup.lastModified()))+") is found in the save directory! It can be used to restore the previous information by renaming it to 'PollutionMap.json'!");
+                    EcologyMod.log.warn(backup.getAbsolutePath());
+                    EcologyMod.log.warn("!");
+                }
+
+                EcologyMod.log.error("In that case, please, check the situation!");
+                EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                return false;
+            }
+
+            if(save.canRead())
+            {
+                json = FileUtils.readFileToString(save);
+
+                if(json == null)
+                    return false;
+            }
+            else
+            {
+                throw new IOException("The save file is not readable!!!");
+            }
+        }
+        catch(IOException e)
+        {
+            EcologyMod.log.error("Unable to load data of the pollution manager for dimension "+dim);
+            EcologyMod.log.error(e.toString());
+
+            e.printStackTrace();
+
+            return false;
+        }
 
 		WorldPollution wp;
 		try
