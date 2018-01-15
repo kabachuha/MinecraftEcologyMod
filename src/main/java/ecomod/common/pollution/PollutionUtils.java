@@ -23,8 +23,8 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.ModAPIManager;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class PollutionUtils
 {
@@ -35,39 +35,39 @@ public class PollutionUtils
 	
 	public static boolean isTEWorking(World w, TileEntity te)
 	{	
-			//TODO add more checks
-			if(te instanceof TileEntityFurnace)
-			{
-				return ((TileEntityFurnace)te).isBurning();
-			}
-		
-			if(EMConsts.common_caps_compat$IWorker)
-			{
-				if(CommonCapsWorker.CAP_WORKER != null)
-					if(te.hasCapability(CommonCapsWorker.CAP_WORKER, null))
-					{
-						org.cyclops.commoncapabilities.api.capability.work.IWorker work = te.getCapability(CommonCapsWorker.CAP_WORKER, null);
-				
-						return work.hasWork() && work.canWork();
-					}
-			}
-		
-			if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
-			{
-				if(EMIntermod.CAP_HAS_WORK != null)
-					if(te.hasCapability(EMIntermod.CAP_HAS_WORK, null))
-					{
-						IHasWork ihw = te.getCapability(EMIntermod.CAP_HAS_WORK, null);
-						return ihw.hasWork();
-					}
-					else
-					{
-						if(te instanceof IHasWork)
-						{
-							return ((IHasWork)te).hasWork();
-						}
-					}
-			}
+        //TODO add more checks
+        if(te instanceof TileEntityFurnace)
+        {
+            return ((TileEntityFurnace)te).isBurning();
+        }
+
+        if(EMConsts.common_caps_compat$IWorker)
+        {
+            if(CommonCapsWorker.CAP_WORKER != null)
+                if(te.hasCapability(CommonCapsWorker.CAP_WORKER, null))
+                {
+                    org.cyclops.commoncapabilities.api.capability.work.IWorker work = te.getCapability(CommonCapsWorker.CAP_WORKER, null);
+
+                    return work.hasWork() && work.canWork();
+                }
+        }
+
+        if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
+        {
+            if(EMIntermod.CAP_HAS_WORK != null)
+                if(te.hasCapability(EMIntermod.CAP_HAS_WORK, null))
+                {
+                    IHasWork ihw = te.getCapability(EMIntermod.CAP_HAS_WORK, null);
+                    return ihw.hasWork();
+                }
+                else
+                {
+                    if(te instanceof IHasWork)
+                    {
+                        return ((IHasWork)te).hasWork();
+                    }
+                }
+        }
 		
 		return true;
 	}
@@ -84,24 +84,27 @@ public class PollutionUtils
 	}
 	
 	
-	private static boolean hasSurfaceAccess(World w, BlockPos bp, List<BlockPos> was_at)
+	private static boolean hasSurfaceAccess(World w, BlockPos bp, HashMap<Long, HashSet<Integer>> was_at)
 	{
-		if(was_at.contains(bp))
+		long xz = (long)bp.getX() << 32 | bp.getZ() & 0xffffffffL;
+        HashSet<Integer> ys = was_at.get(xz);
+		if(ys != null && ys.contains(bp.getY()))
 			return false;
 
 		BlockPos bpup = bp.up();
-		if(w.canSeeSky(bp))
-		{
+		if(w.canSeeSky(bp)) {
 			if (isBlockHollow(w, bpup, EnumFacing.UP))
 				return true;
-		}
-		else if(isBlockHollow(w, bpup, EnumFacing.UP) && hasSurfaceAccess(w, bpup, was_at))
+		} else if(isBlockHollow(w, bpup, EnumFacing.UP) && hasSurfaceAccess(w, bpup, was_at))
 			return true;
 		
 		for(EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
 			BlockPos b = bp.offset(facing);
-			if(!was_at.contains(b) && isBlockHollow(w, b, facing))
+            HashSet<Integer> bys = was_at.get((long)b.getX() << 32 | b.getZ() & 0xffffffffL);
+			if (bys != null && bys.contains(b.getY()))
+				continue;
+			if(isBlockHollow(w, b, facing))
 			{
 				if(w.canSeeSky(b))
 					return true;
@@ -112,8 +115,13 @@ public class PollutionUtils
 				}
 			}
 		}
-			
-		was_at.add(bp);
+
+		if(ys == null) {
+			ys = new HashSet<>();
+			ys.add(bp.getY());
+			was_at.put(xz, ys);
+		} else
+			ys.add(bp.getY());
 		return false;
 	}
 	
@@ -130,28 +138,22 @@ public class PollutionUtils
 		
 		if(aabb == null || aabb == Block.NULL_AABB)
 			return true;
-		
+
 		if(aabb == Block.FULL_BLOCK_AABB)
 			return false;
-		
-		double l = aabb.maxX - aabb.minX;
-        double h = aabb.maxY - aabb.minY;
-        double w = aabb.maxZ - aabb.minZ;
-		
 
 		if(direction.getAxis() == Axis.X)
-		{
-			return h < 0.9D || w < 0.9D;
+        {
+			return aabb.maxY - aabb.minY < 0.9D || aabb.maxZ - aabb.minZ < 0.9D;
 		}
 		else if(direction.getAxis() == Axis.Y)
 		{
-			return l < 0.9D || w < 0.9D;
+			return aabb.maxX - aabb.minX < 0.9D || aabb.maxZ - aabb.minZ < 0.9D;
 		}
 		else if(direction.getAxis() == Axis.Z)
 		{
-			return h < 0.9D || l < 0.9D;
+			return aabb.maxY - aabb.minY < 0.9D || aabb.maxX - aabb.minX < 0.9D;
 		}
-
 		return false;
 	}
 	
@@ -162,17 +164,13 @@ public class PollutionUtils
 	 */
 	public static int isBlockAirPenetratorCFG(IBlockState ibs)
 	{
-		if(ibs == null)
+		if(ibs == null || EcomodStuff.additional_blocks_air_penetrating_state == null)
 			return 0;
-		
 		String searchkey = ibs.getBlock().getRegistryName().toString();
-		String searchmeta ="@"+ibs.getBlock().getMetaFromState(ibs);
-		
-		if(EcomodStuff.additional_blocks_air_penetrating_state == null)
-			return 0;
 		Boolean statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey);
 		if(statekey != null)
 			return statekey ? 1 : -1;
+		String searchmeta ="@"+ibs.getBlock().getMetaFromState(ibs);
 		statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey + searchmeta);
 		if (statekey != null)
 			return statekey ? 1 : -1;
@@ -180,8 +178,8 @@ public class PollutionUtils
 	}
 	
 	public static boolean hasSurfaceAccess(World w, BlockPos bp)
-	{	
-		return hasSurfaceAccess(w, bp, new ArrayList<>());
+	{
+        return hasSurfaceAccess(w, bp, new HashMap<>());
 	}
 	
 	public static boolean isEntityRespirating(EntityLivingBase entity)

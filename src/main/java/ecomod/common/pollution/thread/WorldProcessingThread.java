@@ -346,16 +346,16 @@ public class WorldProcessingThread extends Thread
 		profiler.startSection("WPT_FORCED_HANDLING_SCHEDULED_EMISSIONS");
 		if(manager!=null)
 		{
-		if(getScheduledEmissions().size() > 0)
-		{
-			for(final ChunkPollution p : getScheduledEmissions())
-				manager.addPollution(p.getKey(), p.getValue());
-		}
-		if(positioned_emissions.size() > 0)
-		{
-			for(final PositionedEmissionObject peo : positioned_emissions)
-				manager.addPollution(peo.getChunkX(), peo.getChunkZ(), peo.getValue());
-		}
+			if(getScheduledEmissions().size() > 0)
+			{
+				for(final ChunkPollution p : getScheduledEmissions())
+					manager.addPollution(p.getKey(), p.getValue());
+			}
+			if(positioned_emissions.size() > 0)
+			{
+				for(final PositionedEmissionObject peo : positioned_emissions)
+					manager.addPollution(peo.getChunkX(), peo.getChunkZ(), peo.getValue());
+			}
 		}
 		profiler.endSection();
 	}

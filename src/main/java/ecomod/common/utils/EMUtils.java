@@ -384,18 +384,12 @@ public class EMUtils
 			TileEntity te = w.getTileEntity(pos.offset(ef));
 			if(te != null)
 			{
-				if(ret == null)
-				{
-					if(id == null || TileEntity.getKey(te.getClass()).toString().equals(id.toString()))
-						ret = te;
-				}
-				else
-				{
-					if(id == null || TileEntity.getKey(te.getClass()).toString().equals(id.toString()))
-					{
-						return null;
-					}
-				}
+                if(id == null || TileEntity.getKey(te.getClass()).toString().equals(id.toString())) {
+                    if (ret == null)
+                        ret = te;
+                    else
+                        return null;
+                }
 			}
 		}
 			
