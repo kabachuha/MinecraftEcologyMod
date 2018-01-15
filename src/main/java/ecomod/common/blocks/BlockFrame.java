@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockFrame extends Block
 {
 	@ItemStackHolder("opencomputers:adapter")
-	public static ItemStack oc_adapter = null;
+	public static ItemStack oc_adapter;
 	
 	//0 - Basic, 1 - Advanced
 	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 1);

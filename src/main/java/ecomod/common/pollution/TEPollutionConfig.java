@@ -320,8 +320,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			try
 			{
-				TEPollution tep = gson.fromJson(json, TEPollution.class);
-				return tep;
+				return gson.fromJson(json, TEPollution.class);
 			}
 			catch (JsonSyntaxException e)
 			{

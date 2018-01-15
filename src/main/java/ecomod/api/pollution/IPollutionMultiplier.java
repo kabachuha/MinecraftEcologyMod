@@ -5,5 +5,5 @@ package ecomod.api.pollution;
  */
 public interface IPollutionMultiplier//Is this necessary?
 {
-	public float pollutionFactor(PollutionData.PollutionType type);
+	float pollutionFactor(PollutionData.PollutionType type);
 }

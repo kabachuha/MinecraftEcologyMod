@@ -32,7 +32,7 @@ public class EcomodAPI
 	 */
 	public static boolean emitPollution(World world, Pair<Integer,Integer> chunkLoc, PollutionData emission, boolean scheduled)
 	{
-		if(emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0)) return false;
+		if(emission == null || emission.compareTo(PollutionData.getEmpty()) == 0) return false;
 		
 		PollutionEmissionEvent em = new PollutionEmissionEvent(world, chunkLoc.getLeft(), chunkLoc.getRight(), emission, scheduled);
 		// less precise calculations - more performance
@@ -41,14 +41,14 @@ public class EcomodAPI
 	
 	public static boolean emitPollutionPositioned(World world, BlockPos pos, PollutionData emission, boolean scheduled)
 	{
-		if(world.isRemote || emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0))return false;
+		if(world.isRemote || emission == null || emission.compareTo(PollutionData.getEmpty()) == 0)return false;
 		
 		PositionedPollutionEmissionEvent event = new PositionedPollutionEmissionEvent(world, pos.getX(), pos.getY(), pos.getZ(), emission, scheduled);
 		// more precise calculations - less performance
 		return MinecraftForge.EVENT_BUS.post(event);
 	}
 	
-	public static IPollutionGetter pollution_getter = null;
+	public static IPollutionGetter pollution_getter;
 	
 	@Nullable
 	public static PollutionData getPollution(World w, int chunkX, int chunkZ)

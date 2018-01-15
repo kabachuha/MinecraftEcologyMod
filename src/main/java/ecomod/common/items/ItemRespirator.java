@@ -63,7 +63,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 					if(nbt.getInteger("filter") > 0)
 					{
 						if(decr)
-							nbt.setInteger("filter", nbt.getInteger("filter")-((entity.getHealth() >= (entity.getMaxHealth()/2)) ? 1 : 2));
+							nbt.setInteger("filter", nbt.getInteger("filter")-(entity.getHealth() >= entity.getMaxHealth()/2 ? 1 : 2));
 						
 						return true;
 					}
@@ -148,7 +148,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		
 		if(!world.isRemote)
 		{
-			if(player.ticksExisted % (player.getHealth() >= (player.getMaxHealth() / 2) ? 60 : 30) == 0)
+			if(player.ticksExisted % (player.getHealth() >= player.getMaxHealth() / 2 ? 60 : 30) == 0)
 			{
 				if(PollutionUtils.isEntityRespirating(player, false))
 					world.playSound(null, new BlockPos(player.posX, player.posY, player.posZ), SoundEvents.ENTITY_PLAYER_BREATH, SoundCategory.PLAYERS, 1.5F, 0.35F+world.rand.nextInt(35)/100F);

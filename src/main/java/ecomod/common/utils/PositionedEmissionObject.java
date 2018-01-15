@@ -37,8 +37,8 @@ public class PositionedEmissionObject extends Pair<BlockPos, PollutionData>
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((emission == null) ? 0 : emission.hashCode());
-		result = prime * result + ((position == null) ? 0 : position.hashCode());
+		result = prime * result + (emission == null ? 0 : emission.hashCode());
+		result = prime * result + (position == null ? 0 : position.hashCode());
 		return result;
 	}
 
@@ -57,11 +57,8 @@ public class PositionedEmissionObject extends Pair<BlockPos, PollutionData>
 		} else if (!emission.equals(other.emission))
 			return false;
 		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
-		return true;
+			return other.position == null;
+		} else return position.equals(other.position);
 	}
 	
 	public int getChunkX()

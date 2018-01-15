@@ -11,13 +11,13 @@ import javax.annotation.Nonnull;
  * <br>
  */
 public interface ITEPollutionConfig {
-	public boolean containsTile(@Nonnull ResourceLocation id);
+	boolean containsTile(@Nonnull ResourceLocation id);
 	
-	public PollutionData getTilePollution(@Nonnull ResourceLocation id);
+	PollutionData getTilePollution(@Nonnull ResourceLocation id);
 	
-	public boolean removeTilePollution(@Nonnull ResourceLocation id);
+	boolean removeTilePollution(@Nonnull ResourceLocation id);
 	
-	public boolean addTilePollution(@Nonnull ResourceLocation id, @Nonnull PollutionData emission, boolean override);
+	boolean addTilePollution(@Nonnull ResourceLocation id, @Nonnull PollutionData emission, boolean override);
 	
-	public String getVersion();
+	String getVersion();
 }

@@ -28,13 +28,13 @@ public class PollutionSourcesConfig
 {
 	public String version = "";
 	
-	public List<String> blacklisted_items = null;
+	public List<String> blacklisted_items;
 	
-	public Map<String, PollutionData> polluting_items = null;
+	public Map<String, PollutionData> polluting_items;
 	
-	public Map<String, PollutionData> pollution_sources = null;
+	public Map<String, PollutionData> pollution_sources;
 	
-	public Map<String, PollutionData> smelted_items_pollution = null;
+	public Map<String, PollutionData> smelted_items_pollution;
 	
 	public PollutionSourcesConfig()
 	{

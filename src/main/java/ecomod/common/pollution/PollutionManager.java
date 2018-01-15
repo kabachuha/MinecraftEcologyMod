@@ -388,7 +388,7 @@ public class PollutionManager
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + dim;
-		result = prime * result + ((world == null) ? 0 : world.getWorldInfo().getWorldName().hashCode());
+		result = prime * result + (world == null ? 0 : world.getWorldInfo().getWorldName().hashCode());
 		return result;
 	}
 
@@ -405,11 +405,8 @@ public class PollutionManager
 		if (dim != other.dim)
 			return false;
 		if (world == null) {
-			if (other.world != null)
-				return false;
-		} else if (!world.getWorldInfo().getWorldName().equals(other.world.getWorldInfo().getWorldName()))
-			return false;
-		return true;
+			return other.world == null;
+		} else return world.getWorldInfo().getWorldName().equals(other.world.getWorldInfo().getWorldName());
 	}
 
 

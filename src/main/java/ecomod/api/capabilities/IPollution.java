@@ -14,11 +14,11 @@ import java.util.concurrent.Callable;
  */
 public interface IPollution
 {
-	public PollutionData getPollution();
+	PollutionData getPollution();
 	
-	public void setPollution(PollutionData new_data);
+	void setPollution(PollutionData new_data);
 	
-	public static class Storage implements Capability.IStorage<IPollution>
+	class Storage implements Capability.IStorage<IPollution>
 	{
 
 		@Override
@@ -47,7 +47,7 @@ public interface IPollution
 		
 	}
 	
-	public static class Factory implements Callable<IPollution>
+	class Factory implements Callable<IPollution>
 	{
 		@Override
 		public IPollution call() throws Exception {

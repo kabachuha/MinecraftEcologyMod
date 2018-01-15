@@ -31,9 +31,9 @@ import java.util.List;
 
 public class GuiAnalyzer extends GuiScreen
 {
-	private PollutionData pollution = null;//new PollutionData(500000, 400000, 450000);
+	private PollutionData pollution;//new PollutionData(500000, 400000, 450000);
 	
-	private Date last_update_time = null;
+	private Date last_update_time;
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat();
 	
@@ -47,7 +47,7 @@ public class GuiAnalyzer extends GuiScreen
 	
 	private List<IAnalyzerPollutionEffect> effects = new ArrayList<>();
 	
-	private static boolean inited_first = false;
+	private static boolean inited_first;
 	
 	private int startIndex;
 	
@@ -470,7 +470,7 @@ public class GuiAnalyzer extends GuiScreen
 		public static final int sizeX = 22;
     	public static final int sizeY = 14;
     	public boolean isUp;
-    	public int activeticks = 0;
+    	public int activeticks;
     	
     	@Override
     	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class EMItems 
 {
-	public static ArmorMaterial RESPIRATOR_MATERIAL = null;
+	public static ArmorMaterial RESPIRATOR_MATERIAL;
 	
 	public static List<Item> items = new ArrayList<>();
 	

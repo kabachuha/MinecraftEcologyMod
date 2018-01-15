@@ -54,7 +54,7 @@ public class ClientHandler
 	
 	public Percentage required_smog_intensity = Percentage.ZERO;
 	
-	public boolean acid_rain = false;
+	public boolean acid_rain;
 	
 	public boolean requestForNearbyPollution()
 	{
@@ -129,9 +129,7 @@ public class ClientHandler
 		
 		try
 		{
-			boolean b = Integer.parseInt(str) != 0;
-		
-			acid_rain = b;
+			acid_rain = Integer.parseInt(str) != 0;
 		}
 		catch (Exception ex)
 		{
@@ -350,7 +348,7 @@ public class ClientHandler
 			}
 		}
 		
-		if((event.getEntity() != null && event.getEntity().ticksExisted % 2 == 0) && !Minecraft.getMinecraft().isGamePaused())
+		if(event.getEntity() != null && event.getEntity().ticksExisted % 2 == 0 && !Minecraft.getMinecraft().isGamePaused())
 		{
 			if(event.getEntity().ticksExisted != lasttick)
 			{

@@ -19,9 +19,9 @@ public class TileFilter extends TileEnergy implements IPollutionAffector
 	{
 		if(world.isRemote) return emission;
 		
-		if(getPos().distanceSq(pos) <= 1 && energy.getEnergyStored() >= (int)(EMConfig.filter_energy_per_emission))
+		if(getPos().distanceSq(pos) <= 1 && energy.getEnergyStored() >= EMConfig.filter_energy_per_emission)
 		{
-			energy.extractEnergyNotOfficially((int)(EMConfig.filter_energy_per_emission), false);
+			energy.extractEnergyNotOfficially(EMConfig.filter_energy_per_emission, false);
 				
 			return emission.multiply(PollutionType.AIR, emission.getAirPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_redution).multiply(PollutionType.WATER, emission.getWaterPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_redution / 2).multiply(PollutionType.SOIL, emission.getSoilPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_redution / 3);
 		}

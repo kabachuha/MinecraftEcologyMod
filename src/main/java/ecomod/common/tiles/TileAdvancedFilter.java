@@ -29,7 +29,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 {
 	public FluidTank tank;
 	
-	public int ticks = 0;
+	public int ticks;
 	
 	public TileAdvancedFilter()
 	{
@@ -44,17 +44,17 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 		return isWorking();
 	}
 	
-	public boolean was_working = false;
-	private int i1 = 0;
+	public boolean was_working;
+	private int i1;
 	
-	public float vent_rotation = 0F;
+	public float vent_rotation;
 
-	private float rps = 0F;
+	private float rps;
 
 	@Override
 	public void update()
 	{
-		if(ticks > (20 * EMConfig.adv_filter_delay_secs) && (ticks - i1) > 340)
+		if(ticks > 20 * EMConfig.adv_filter_delay_secs && ticks - i1 > 340)
 		{
 			ticks = 0;
 			i1 = 0;
@@ -118,7 +118,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 		if(!world.isRemote)
 				if(was_working)
 				{
-					if((ticks - i1) % (340) == 0)//17*20
+					if((ticks - i1) % 340 == 0)//17*20
 						world.playSound(null, getPos(), EcomodStuff.advanced_filter_working, SoundCategory.BLOCKS, 2F, 1F);
 				}
 		
@@ -137,7 +137,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 		ret &= world.isBlockPowered(getPos());
 		
 		if(ret)
-		ret &= this.getEnergyStored() >= (EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs);
+		ret &= this.getEnergyStored() >= EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs;
 		
 		if(ret)
 		ret &= getProduction() != null;

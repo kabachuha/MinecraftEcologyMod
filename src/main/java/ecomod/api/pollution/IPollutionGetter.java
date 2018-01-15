@@ -14,5 +14,5 @@ import javax.annotation.Nullable;
 public interface IPollutionGetter
 {
 	@Nullable
-	public PollutionData getPollution(World w, int chunkx, int chunkz);
+    PollutionData getPollution(World w, int chunkx, int chunkz);
 }

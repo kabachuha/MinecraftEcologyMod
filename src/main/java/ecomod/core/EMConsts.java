@@ -45,7 +45,7 @@ public class EMConsts
 	
 	public static final int analyzer_gui_id = 0;
 	
-	public static boolean asm_transformer_inited = false;
+	public static boolean asm_transformer_inited;
 	
-	public static boolean common_caps_compat$IWorker = false;
+	public static boolean common_caps_compat$IWorker;
 }

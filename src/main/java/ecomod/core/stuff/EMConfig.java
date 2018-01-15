@@ -23,7 +23,7 @@ public class EMConfig
 	
 	public static int[] allowedDims = new int[]{0};
 	
-	public static boolean wptimm = false;
+	public static boolean wptimm;
 	
 	public static int wptcd = 60;
 	
@@ -81,7 +81,7 @@ public class EMConfig
 	
 	public static boolean is_oc_analyzer_interface_crafted_by_right_click = true;
 	
-	public static boolean wasteland_spawns_naturally = false;
+	public static boolean wasteland_spawns_naturally;
 	
 	public static float smog_rendering_distance_intensity_exponent = 1.4F; 
 	
@@ -280,9 +280,8 @@ public class EMConfig
 		PollutionData fire_pollution = new PollutionData(3.5F, 0F, 0F);
 		PollutionData leaves_redution = new PollutionData(-20F, 0F, 0F);
 		PollutionData smelted_item_pollution = new PollutionData(3F, 0.6F, 1.9F);
-		
-		List<String> item_blacklist = new ArrayList<>();
-		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));
+
+		List<String> item_blacklist = Arrays.asList("minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds");
 		
 		PollutionSourcesConfig psc = new PollutionSourcesConfig();
 		psc.blacklisted_items.addAll(item_blacklist);

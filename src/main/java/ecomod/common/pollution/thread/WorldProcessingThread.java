@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class WorldProcessingThread extends Thread
 {
 	private PollutionManager manager;
-	private boolean isWorking = false;
+	private boolean isWorking;
 	
 	private List<Pair<Integer, Integer>> loadedChunks = new CopyOnWriteArrayList<>();
 	
@@ -45,7 +45,7 @@ public class WorldProcessingThread extends Thread
 	public final WPTProfiler profiler = new WPTProfiler();
 	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
 	
-	public volatile boolean should_update_tiles = false;
+	public volatile boolean should_update_tiles;
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
@@ -391,11 +391,8 @@ public class WorldProcessingThread extends Thread
 			return false;
 		WorldProcessingThread other = (WorldProcessingThread) obj;
 		if (manager == null) {
-			if (other.manager != null)
-				return false;
-		} else if (!manager.equals(other.manager))
-			return false;
-		return true;
+			return other.manager == null;
+		} else return manager.equals(other.manager);
 	}
 	
 	

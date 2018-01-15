@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class TileAnalyzer extends TileEnergy implements ITickable
 {
-	public PollutionData pollution = null;
+	public PollutionData pollution;
 	public long last_analyzed = -1;
 	
 	public TileAnalyzer()

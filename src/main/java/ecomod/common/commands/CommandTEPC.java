@@ -165,7 +165,7 @@ public class CommandTEPC extends CommandBase {
 		}
 	}
 
-	private static enum CTMode
+	private enum CTMode
 	{
 		add,
 		remove,

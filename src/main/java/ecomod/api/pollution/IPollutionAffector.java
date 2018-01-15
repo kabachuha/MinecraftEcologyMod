@@ -9,5 +9,5 @@ import net.minecraft.util.math.BlockPos;
  */
 public interface IPollutionAffector
 {
-	public PollutionData handleEmission(BlockPos pos, PollutionData emission);
+	PollutionData handleEmission(BlockPos pos, PollutionData emission);
 }

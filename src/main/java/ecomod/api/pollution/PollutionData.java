@@ -245,7 +245,7 @@ public class PollutionData implements Comparable
 		if(!(pd instanceof PollutionData))
 			return false;
 		
-		PollutionData d = ((PollutionData)pd);
+		PollutionData d = (PollutionData)pd;
 		
 		return d.getAirPollution() == getAirPollution() && d.getWaterPollution() == getWaterPollution() && d.getSoilPollution() == getSoilPollution();
 	}
@@ -256,7 +256,7 @@ public class PollutionData implements Comparable
 	@Override
 	public int compareTo(Object o)
 	{
-		PollutionData pd = ((PollutionData)o);
+		PollutionData pd = (PollutionData)o;
 		
 		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
 			return 0;

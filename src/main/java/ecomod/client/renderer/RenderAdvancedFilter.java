@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderAdvancedFilter extends TileEntitySpecialRenderer<TileAdvancedFilter>
 {
-	public static TextureAtlasSprite vent_s = null;
+	public static TextureAtlasSprite vent_s;
 	
 	@Override
 	public void render(TileAdvancedFilter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

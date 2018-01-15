@@ -60,7 +60,7 @@ public class BlockAnalyzer extends Block implements ITileEntityProvider {
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-	    	if(player == null ? true : !player.isSneaking())
+	    	if(player == null || !player.isSneaking())
 	    	{
 	    		if(!world.isRemote)
 	    		{

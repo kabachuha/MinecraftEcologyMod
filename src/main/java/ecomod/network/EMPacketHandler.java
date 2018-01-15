@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class EMPacketHandler
 {
 	public static final SimpleNetworkWrapper WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(EMConsts.modid);
-	public static int id = 0;
+	public static int id;
 	
 	public static void init()
 	{

@@ -743,13 +743,13 @@ public class PollutionHandler implements IPollutionGetter
 		if(world.isRemote)//client side actions are handled in ClientHandler
 			return;
 		
-		if((entity.ticksExisted) % 60 == 0)
+		if(entity.ticksExisted % 60 == 0)
 		{
 			if(entity instanceof EntityPlayerMP)
-				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+(getVisibleSmogIntensity(world, entity.getPosition()).intValue())), (EntityPlayerMP)entity);
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString(">"+ getVisibleSmogIntensity(world, entity.getPosition()).intValue()), (EntityPlayerMP)entity);
 		}
 		
-			if((entity.ticksExisted) % 300 == 0)
+			if(entity.ticksExisted % 300 == 0)
 			{
 				if(entity instanceof EntityLivingBase)
 				{
@@ -852,10 +852,7 @@ public class PollutionHandler implements IPollutionGetter
 		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
 		
 		if(pollution!=null && pollution != PollutionData.getEmpty())
-			if(PollutionEffectsConfig.isEffectActive("smog", pollution))
-			{
-					return true;
-			}
+			return PollutionEffectsConfig.isEffectActive("smog", pollution);
 		
 		return false;
 	}
@@ -869,10 +866,7 @@ public class PollutionHandler implements IPollutionGetter
 			PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
 		
 			if(pollution!=null && pollution != PollutionData.getEmpty())
-				if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
-				{
-						return true;
-				}
+				return PollutionEffectsConfig.isEffectActive("acid_rain", pollution);
 		}
 		
 		return false;

@@ -18,30 +18,30 @@ import java.util.function.Function;
 
 public class EcomodStuff
 {
-	public static Fluid concentrated_pollution = null;
+	public static Fluid concentrated_pollution;
 	
-	public static SoundEvent advanced_filter_working = null;
-	public static SoundEvent analyzer = null;
+	public static SoundEvent advanced_filter_working;
+	public static SoundEvent analyzer;
 	
-	public static Map<String, IAnalyzerPollutionEffect> pollution_effects = null;
+	public static Map<String, IAnalyzerPollutionEffect> pollution_effects;
 	
-	public static Map<String, PollutionData> pollution_sources = null;
+	public static Map<String, PollutionData> pollution_sources;
 	
 	//Format:  item_registry_name:[meta(optional)]
-	public static List<String> blacklisted_items = null;
+	public static List<String> blacklisted_items;
 	
-	public static Map<String, PollutionData> polluting_items = null;
+	public static Map<String, PollutionData> polluting_items;
 	
-	public static Map<String, PollutionData> smelted_items_pollution = null;
+	public static Map<String, PollutionData> smelted_items_pollution;
 	
 	@CapabilityInject(IPollution.class)
 	public static final Capability<IPollution> CAPABILITY_POLLUTION = null;
 	
-	public static CreativeTabs ecomod_creative_tabs = null;
+	public static CreativeTabs ecomod_creative_tabs;
 	
-	public static Map<String, Boolean> additional_blocks_air_penetrating_state = null;
+	public static Map<String, Boolean> additional_blocks_air_penetrating_state;
 	
-	public static NonNullList<Function<TileEntity, Object[]>> custom_te_pollution_determinants = null;
+	public static NonNullList<Function<TileEntity, Object[]>> custom_te_pollution_determinants;
 	
-	public static ITEPollutionConfig tile_entity_pollution = null;
+	public static ITEPollutionConfig tile_entity_pollution;
 }

@@ -85,7 +85,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	
 	public static boolean coordEquals(ChunkPollution f, ChunkPollution s)
 	{
-		return (f.getX() == s.getX()) && (f.getZ() == s.getZ());
+		return f.getX() == s.getX() && f.getZ() == s.getZ();
 	}
 	
 	public String toString()

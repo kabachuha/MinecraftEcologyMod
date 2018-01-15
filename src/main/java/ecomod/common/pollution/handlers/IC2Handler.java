@@ -15,7 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class IC2Handler
 {
-	private Class NUKE_CLASS = null;
+	private Class NUKE_CLASS;
 	
 	public IC2Handler()
 	{
