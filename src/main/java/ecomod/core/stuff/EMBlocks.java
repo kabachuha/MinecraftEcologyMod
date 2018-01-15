@@ -64,7 +64,7 @@ public class EMBlocks
 	
 	public static void regBlock(Block block, String name)
 	{
-		EcologyMod.log.info("Registring block ecomod:"+name);
+		EcologyMod.log.info("Registering block ecomod:"+name);
 		regBlockNoItem(block, name);
 		
 		ItemBlock ib = new ItemBlock(block);
@@ -88,12 +88,12 @@ public class EMBlocks
 		blocks.add(block);
 		
 		if(model)
-			EcologyMod.proxy.putBlockToBeRegistred(block);
+			EcologyMod.proxy.putBlockToBeRegistered(block);
 	}
 	
 	public static void register(RegistryEvent.Register<Block> event)
 	{
-		EcologyMod.log.info("Registring Blocks");
+		EcologyMod.log.info("Registering Blocks");
 		
 		if(blocks.isEmpty())
 			doPreInit();

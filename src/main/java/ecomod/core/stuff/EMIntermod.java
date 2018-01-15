@@ -101,7 +101,7 @@ public class EMIntermod
 					
 					if(m.getStringValue().lastIndexOf(';') == -1 || (val = m.getStringValue().split(";")).length != 4)
 					{
-						log.info("Unable to add "+m.getStringValue()+" because of invalid format. The message value has to be splitted by semicolons into 4 parts ('id', 'air', 'water', 'soil')");
+						log.info("Unable to add "+m.getStringValue()+" because of invalid format. The message value has to be split by semicolons into 4 parts ('id', 'air', 'water', 'soil')");
 						continue;
 					}
 					
@@ -212,7 +212,7 @@ public class EMIntermod
 	
 	public static void setup_ic2_support()
 	{
-		log.info("Setuping IC2 support");
+		log.info("Setting up IC2 support");
 		if(EMConfig.isConcentratedPollutionIC2Fuel)
 		{
 			ic2.api.recipe.Recipes.fluidHeatGenerator.addFluid(EcomodStuff.concentrated_pollution.getName(), 40, EMConfig.fuel_concentrated_pollution_burn_energy / 15);

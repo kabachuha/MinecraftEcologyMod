@@ -25,12 +25,12 @@ public class ComProxy
 		
 	}
 	
-	public void putBlockToBeRegistred(Block b)
+	public void putBlockToBeRegistered(Block b)
 	{
 		
 	}
 	
-	public void putItemToBeRegistred(Item item)
+	public void putItemToBeRegistered(Item item)
 	{
 		
 	}

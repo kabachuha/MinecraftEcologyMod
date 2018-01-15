@@ -120,7 +120,7 @@ public class MainRegistry
 	@SubscribeEvent
 	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
 	{
-		EcologyMod.log.info("Registring Sounds");
+		EcologyMod.log.info("Registering Sounds");
 		event.getRegistry().register(EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")).setRegistryName(EMUtils.resloc("advanced_filter_working")));
 		event.getRegistry().register(EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")).setRegistryName(EMUtils.resloc("analyzer")));
 	}
@@ -128,7 +128,7 @@ public class MainRegistry
 	@SubscribeEvent
 	public static void registerBiomes(RegistryEvent.Register<Biome> event)
 	{
-		EcologyMod.log.info("Registring Biomes");
+		EcologyMod.log.info("Registering Biomes");
 		event.getRegistry().register(biome_wasteland.setRegistryName(EMUtils.resloc("wasteland")));
 	}
 	

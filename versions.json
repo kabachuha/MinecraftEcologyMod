@@ -16,7 +16,7 @@
   },
   "1.12.1": {
     "1.12.1-1.2.0.0": "Chinese translation(by xhz313123).\nMore smooth smog.\nProvided TEPC to API\nImproved Analyzer GUI\nWasteland generation was made optional\nWPT fixes\nConcentrated pollution fluid blocks emit pollution when they fly away from a world.\n...",
-    "1.12.1-1.1.1.0": "Imporatant networking fixes! + fixed respirator render on villagers.",
+    "1.12.1-1.1.1.0": "Important networking fixes! + fixed respirator render on villagers.",
     "1.12.1-1.1.0.0": "Extended localization capabilities\nAdded item burn pollution\nAdded acid rain effect icon\nDefault WPT delay is set to 60 seconds\nMore entries in TEPollutionConfig",
     "1.12.1-1.0.6.0-beta1": "Fixed error when launching server(#4)\n!!Fixed function which checks air access!!\nFixed item pollution configs\n...",
     "1.12.1-1.0.5.0-beta1": "Added Pollution Analyzer Computer Interface - a tile which provide OpenComputers integration with Pollution Analyzer\nFixed error when travelling to other dimensions\nRemoved pollution caching on the client side.",

@@ -125,7 +125,7 @@ public class EcomodASMHooks
                             if(PollutionEffectsConfig.isEffectActive("dead_trees", pollution))
                                 worldIn.setBlockToAir(pos);
                             else if(worldIn.rand.nextInt(50)==0)
-                                EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_redution"), true);
+                                EcomodAPI.emitPollution(worldIn, EMUtils.blockPosToPair(pos), PollutionSourcesConfig.getSource("leaves_reduction"), true);
                     }
                 }
             }

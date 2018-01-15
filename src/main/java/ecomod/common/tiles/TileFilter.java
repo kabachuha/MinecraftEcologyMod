@@ -23,7 +23,7 @@ public class TileFilter extends TileEnergy implements IPollutionAffector
 		{
 			energy.extractEnergyNotOfficially(EMConfig.filter_energy_per_emission, false);
 				
-			return emission.multiply(PollutionType.AIR, emission.getAirPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_redution).multiply(PollutionType.WATER, emission.getWaterPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_redution / 2).multiply(PollutionType.SOIL, emission.getSoilPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_redution / 3);
+			return emission.multiply(PollutionType.AIR, emission.getAirPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_reduction).multiply(PollutionType.WATER, emission.getWaterPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_reduction / 2).multiply(PollutionType.SOIL, emission.getSoilPollution() <= 0 ? 1 : 1 - EMConfig.filter_adjacent_tiles_reduction / 3);
 		}
 		
 		return emission;

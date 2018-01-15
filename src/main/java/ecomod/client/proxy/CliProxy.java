@@ -77,13 +77,13 @@ public class CliProxy extends ComProxy
 	}
 	
 	@Override
-	public void putBlockToBeRegistred(Block b)
+	public void putBlockToBeRegistered(Block b)
 	{
 		blocks.add(b);
 	}
 	
 	@Override
-	public void putItemToBeRegistred(Item item)
+	public void putItemToBeRegistered(Item item)
 	{
 		items.add(item);
 	}

@@ -55,7 +55,7 @@ public class EcologyMod
 	{
 		log = LogManager.getLogger(EMConsts.name);
 		
-		log.info("Preinitialization");
+		log.info("PreInitialization");
 		
 		if(!EMConsts.asm_transformer_inited)
 		{
@@ -144,7 +144,7 @@ public class EcologyMod
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		log.info("Postinitialization");
+		log.info("PostInitialization");
 		
 		MainRegistry.doPostInit();
 	}

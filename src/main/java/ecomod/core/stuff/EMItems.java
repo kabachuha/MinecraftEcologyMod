@@ -29,7 +29,7 @@ public class EMItems
 	{
 			EcomodItems.inited = true;
 			
-			EcologyMod.log.info("Setuping items");
+			EcologyMod.log.info("Setting up items");
 			
 			EcomodItems.CORE = new ItemCore().setUnlocalizedName(EMConsts.modid+".core");
 			
@@ -83,13 +83,13 @@ public class EMItems
 		
 		if(model)
 		{
-			EcologyMod.proxy.putItemToBeRegistred(item);
+			EcologyMod.proxy.putItemToBeRegistered(item);
 		}
 	}
 	
 	public static void register(RegistryEvent.Register<Item> event)
 	{
-		EcologyMod.log.info("Registring Items");
+		EcologyMod.log.info("Registering Items");
 		if(items.isEmpty())
 			doPreInit();
 		

@@ -188,7 +188,7 @@ public class WorldProcessingThread extends Thread
 	
 	public void shutdown()
 	{
-		EcologyMod.log.info('[' +this.getName()+"]Carefully shuting down...");
+		EcologyMod.log.info('[' +this.getName()+"]Carefully shutting down...");
 		
 		if(profiler.profilingEnabled)
 		{
@@ -213,7 +213,7 @@ public class WorldProcessingThread extends Thread
 		
 		System.gc();
 		
-		EcologyMod.log.info('[' +this.getName()+"]Shutted down.");
+		EcologyMod.log.info('[' +this.getName()+"]Shut down.");
 		
 		//Bye, bye
 		interrupt();

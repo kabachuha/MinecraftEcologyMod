@@ -186,7 +186,7 @@ public class PollutionHandler implements IPollutionGetter
 			}
 			catch(Exception e)
 			{
-				EcologyMod.log.error("Unable to force sheduled emissions handling for "+t.getName()+" because of" + e.toString());
+				EcologyMod.log.error("Unable to force scheduled emissions handling for "+t.getName()+" because of" + e);
 				e.printStackTrace();
 			}
 			finally
@@ -215,7 +215,7 @@ public class PollutionHandler implements IPollutionGetter
 				}
 				catch(Exception e)
 				{
-					EcologyMod.log.error("Unable to force sheduled emissions handling for "+t.getName()+" because of " + e.toString());
+					EcologyMod.log.error("Unable to force scheduled emissions handling for "+t.getName()+" because of " + e);
 					e.printStackTrace();
 				}
 				finally
@@ -422,7 +422,7 @@ public class PollutionHandler implements IPollutionGetter
 		}
 		catch(Exception ex)
 		{
-			EcologyMod.log.warn("Caught an exception while processing a TileEntity "+TileEntity.getKey(tiles.get(i).getClass()).toString()+" at pos "+tiles.get(i).getPos().toString());
+			EcologyMod.log.warn("Caught an exception while processing a TileEntity "+TileEntity.getKey(tiles.get(i).getClass())+" at pos "+tiles.get(i).getPos());
 			EcologyMod.log.warn(ex.toString());
 			ex.printStackTrace();
 		}
@@ -563,7 +563,7 @@ public class PollutionHandler implements IPollutionGetter
 		}
 		else
 		{
-			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("hoe_plowing_reducion"), true);
+			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("hoe_plowing_reduction"), true);
 		}
 		
 	}
@@ -650,7 +650,7 @@ public class PollutionHandler implements IPollutionGetter
 		}
 		else
 		{
-			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("tree_growing_pollution_redution"), true);
+			EcomodAPI.emitPollution(w, EMUtils.blockPosToPair(event.getPos()), PollutionSourcesConfig.getSource("tree_growing_pollution_reduction"), true);
 		}
 	}
 	

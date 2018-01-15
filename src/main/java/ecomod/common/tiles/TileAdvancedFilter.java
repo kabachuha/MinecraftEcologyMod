@@ -97,7 +97,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 					
 					if(energy.extractEnergyNotOfficially(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
 					{
-						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_redution"), false);
+						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_reduction"), false);
 					
 						tank.fillInternal(getProduction(), true);
 					
@@ -157,24 +157,24 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 		
 		FluidStack ret = new FluidStack(EcomodStuff.concentrated_pollution, 0);
 		
-		PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
+		PollutionData adv_filter_reduction = PollutionSourcesConfig.getSource("advanced_filter_reduction");
 		
 		for(PollutionType type : PollutionType.values())
 		{
-			if(pd.get(type) >= adv_filter_redution.get(type))
+			if(pd.get(type) >= adv_filter_reduction.get(type))
 			{
 				switch(type)
 				{
 					case AIR:
-						ret.amount += adv_filter_redution.get(type);
+						ret.amount += adv_filter_reduction.get(type);
 						break;
 						
 					case WATER:
-						ret.amount += adv_filter_redution.get(type) * 2;
+						ret.amount += adv_filter_reduction.get(type) * 2;
 						break;
 						
 					case SOIL:
-						ret.amount += adv_filter_redution.get(type) * 4;
+						ret.amount += adv_filter_reduction.get(type) * 4;
 						break;
 				}
 			}

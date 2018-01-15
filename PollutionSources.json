@@ -1,5 +1,5 @@
 {
-  "version": "1.1-1.11.2-1.0.1.0-beta1",
+  "version": "1.2-1.12.1-1.4.2.0",
   "sources": [
     {
       "id": "bonemeal_pollution",
@@ -26,7 +26,7 @@
       }
     },
     {
-      "id": "tree_growing_pollution_redution",
+      "id": "tree_growing_pollution_reduction",
       "pollution": {
         "air": -22.0,
         "water": -3.0,
@@ -34,7 +34,7 @@
       }
     },
     {
-      "id": "hoe_plowing_reducion",
+      "id": "hoe_plowing_reduction",
       "pollution": {
         "air": 0.0,
         "water": 0.0,
@@ -42,7 +42,7 @@
       }
     },
     {
-      "id": "leaves_redution",
+      "id": "leaves_reduction",
       "pollution": {
         "air": -14.5,
         "water": 0.0,
@@ -74,7 +74,7 @@
       }
     },
     {
-      "id": "advanced_filter_redution",
+      "id": "advanced_filter_reduction",
       "pollution": {
         "air": -4.5,
         "water": -0.5,

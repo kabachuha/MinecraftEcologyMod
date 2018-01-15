@@ -78,6 +78,14 @@ public class EcomodClassTransformer implements IClassTransformer
 	{
 		return FMLForgePlugin.RUNTIME_DEOBF ? obf : deobf;
 	}
+
+	private void patchFailed(String name, Exception e) {
+		log.error("Unable to patch "+name+ '!');
+		log.error(e.toString());
+		e.printStackTrace();
+
+		failed_transformers.add(name);
+	}
 	
 	//TODO Embellish handlers!
 	
@@ -119,12 +127,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -205,12 +208,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -253,12 +251,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -302,12 +295,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -351,12 +339,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -401,12 +384,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -448,12 +426,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -497,12 +470,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -574,12 +542,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
@@ -695,12 +658,7 @@ public class EcomodClassTransformer implements IClassTransformer
 		}
 		catch(Exception e)
 		{
-			log.error("Unable to patch "+name+ '!');
-			log.error(e.toString());
-			e.printStackTrace();
-			
-			failed_transformers.add(name);
-			
+			patchFailed(name, e);
 			return bytecode;
 		}
 	}
