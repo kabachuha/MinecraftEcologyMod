@@ -1,9 +1,8 @@
 package ecomod.api.pollution;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.ChunkPos;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 {
@@ -59,7 +58,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	}
 
 	/**
-	 * @param chunkY the chunkY to set
+	 * @param chunkZ the chunkZ to set
 	 */
 	public void setZ(int chunkZ) {
 		this.chunkZ = chunkZ;

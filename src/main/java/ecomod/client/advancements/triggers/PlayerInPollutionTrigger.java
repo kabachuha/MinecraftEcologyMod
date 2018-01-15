@@ -2,13 +2,10 @@ package ecomod.client.advancements.triggers;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-
 import ecomod.client.advancements.predicates.PollutionPredicate;
 import ecomod.client.advancements.util.ITestable;
 import ecomod.client.advancements.util.TriggerBase;
 import ecomod.common.utils.EMUtils;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;

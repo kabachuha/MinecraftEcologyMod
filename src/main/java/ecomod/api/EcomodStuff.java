@@ -1,9 +1,5 @@
 package ecomod.api;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.ITEPollutionConfig;
@@ -15,6 +11,10 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fluids.Fluid;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class EcomodStuff
 {

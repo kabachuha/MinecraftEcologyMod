@@ -1,47 +1,21 @@
 package ecomod.common.pollution.thread;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
-
-import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.ChunkPollution;
-import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionMultiplier;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionUtils;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
-import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.PositionedEmissionObject;
 import ecomod.common.utils.WPTProfiler;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.MainRegistry;
-import ecomod.network.EMPacketHandler;
-import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -49,17 +23,24 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WorldProcessingThread extends Thread
 {
 	private PollutionManager manager;
 	private boolean isWorking = false;
 	
-	private List<Pair<Integer, Integer>> loadedChunks = new CopyOnWriteArrayList<Pair<Integer,Integer>>();
+	private List<Pair<Integer, Integer>> loadedChunks = new CopyOnWriteArrayList<>();
 	
-	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<ChunkPollution>();
+	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<>();
 	
-	private List<PositionedEmissionObject> positioned_emissions = new CopyOnWriteArrayList<PositionedEmissionObject>();
+	private List<PositionedEmissionObject> positioned_emissions = new CopyOnWriteArrayList<>();
 	
 	public final WPTProfiler profiler = new WPTProfiler();
 	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
@@ -119,12 +100,12 @@ public class WorldProcessingThread extends Thread
 			
 			World world = manager.getWorld();
 			
-			List<Chunk> chks = new ArrayList<Chunk>();
+			List<Chunk> chks = new ArrayList<>();
 			
 			for(Pair<Integer, Integer> c : loadedChunks)
 				chks.add(PollutionUtils.coordsToChunk(world, c));
 			
-			List<ChunkPollution> temp = /*Collections.synchronizedList(*/new ArrayList<ChunkPollution>()/*)*/;
+			List<ChunkPollution> temp = /*Collections.synchronizedList(*/new ArrayList<>()/*)*/;
 			profiler.endSection();
 			
 			for(Chunk c : chks)
@@ -133,7 +114,7 @@ public class WorldProcessingThread extends Thread
 					continue;
 				try
 				{
-					temp = new ArrayList<ChunkPollution>();
+					temp = new ArrayList<>();
 					PollutionData d = calculateChunkPollution(c);
 					Map<PollutionType, Float> m = calculateMultipliers(c);	
 					
@@ -310,9 +291,9 @@ public class WorldProcessingThread extends Thread
 	public Map<PollutionType, Float> calculateMultipliers(Chunk c)
 	{
 		profiler.startSection("WPT_CALCULATING_POLLUTION_MULTIPLIERS");
-		List<TileEntity> tes = new CopyOnWriteArrayList<TileEntity>(c.getTileEntityMap().values());
+		List<TileEntity> tes = new CopyOnWriteArrayList<>(c.getTileEntityMap().values());
 		
-		Map<PollutionType, Float> ret = new HashMap<PollutionType, Float>();
+		Map<PollutionType, Float> ret = new HashMap<>();
 		
 		//Multipliers
 		float mA = 1, mW = 1, mS = 1;

@@ -1,10 +1,8 @@
 package ecomod.api.pollution;
 
 import com.google.gson.annotations.SerializedName;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public class PollutionData implements Comparable
 {

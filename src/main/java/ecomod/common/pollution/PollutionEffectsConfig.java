@@ -1,19 +1,8 @@
 package ecomod.common.pollution;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect;
@@ -25,6 +14,15 @@ import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import net.minecraftforge.fml.common.versioning.ComparableVersion;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PollutionEffectsConfig
 {
@@ -33,7 +31,7 @@ public class PollutionEffectsConfig
 	
 	public String version = "1.0-"+EMConsts.version;
 	
-	public List<IAnalyzerPollutionEffect> effects = new ArrayList<IAnalyzerPollutionEffect>();
+	public List<IAnalyzerPollutionEffect> effects = new ArrayList<>();
 	
 	public void pushToApi()
 	{

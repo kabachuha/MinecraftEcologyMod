@@ -1,20 +1,5 @@
 package ecomod.client.gui;
 
-import java.awt.Color;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
@@ -28,13 +13,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.awt.*;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class GuiAnalyzer extends GuiScreen
 {
@@ -52,7 +45,7 @@ public class GuiAnalyzer extends GuiScreen
 	
 	private TileAnalyzer te;
 	
-	private List<IAnalyzerPollutionEffect> effects = new ArrayList<IAnalyzerPollutionEffect>();
+	private List<IAnalyzerPollutionEffect> effects = new ArrayList<>();
 	
 	private static boolean inited_first = false;
 	
@@ -195,7 +188,7 @@ public class GuiAnalyzer extends GuiScreen
 		{
 			if(!buttonAnalyze.enabled)
 			{
-				List<String> no_energy_text = new ArrayList<String>();
+				List<String> no_energy_text = new ArrayList<>();
 				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.0", new Object[0]));
 				no_energy_text.add(I18n.format("gui.ecomod.text.no_energy.1", new Object[0]));
 				this.drawHoveringText(no_energy_text, mouseX, mouseY+10, fontRenderer);
@@ -204,7 +197,7 @@ public class GuiAnalyzer extends GuiScreen
 		
 		if(mouseX >= width-110 && mouseX <= width-10 && mouseY >= height-30 && mouseY <= height-10)
 		{
-			List<String> lst = new ArrayList<String>();
+			List<String> lst = new ArrayList<>();
 			
 			lst.add(I18n.format("gui.ecomod.text.energy", new Object[0])+" "+te.getEnergyStored());
 			lst.add(I18n.format("gui.ecomod.text.max_energy", new Object[0])+" "+te.getMaxEnergyStored());

@@ -1,17 +1,17 @@
 package ecomod.asm;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.objectweb.asm.*;
-import org.objectweb.asm.tree.*;
-
 import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.classloading.FMLForgePlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EcomodClassTransformer implements IClassTransformer
 {
@@ -20,7 +20,7 @@ public class EcomodClassTransformer implements IClassTransformer
 	
 	private static final boolean DEBUG = false;
 	
-	public static List<String> failed_transformers = new ArrayList<String>();
+	public static List<String> failed_transformers = new ArrayList<>();
 	
 	public EcomodClassTransformer()
 	{

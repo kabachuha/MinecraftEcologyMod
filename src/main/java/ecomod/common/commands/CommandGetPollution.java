@@ -1,12 +1,7 @@
 package ecomod.common.commands;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.EcomodAPI;
-import ecomod.common.pollution.PollutionUtils;
-import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.utils.EMUtils;
-import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

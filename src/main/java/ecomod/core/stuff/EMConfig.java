@@ -1,27 +1,20 @@
 package ecomod.core.stuff;
 
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gson.*;
-
-import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
-import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.utils.AnalyzerPollutionEffect;
-import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class EMConfig
 {
@@ -52,7 +45,7 @@ public class EMConfig
 	
 	public static boolean enable_advanced_filter = true;
 	
-	public static List<String> item_blacklist = new ArrayList<String>();
+	public static List<String> item_blacklist = new ArrayList<>();
 	
 	public static int wpr = 1;
 	
@@ -192,8 +185,8 @@ public class EMConfig
 			}
 			
 			
-			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
-			EcomodStuff.additional_blocks_air_penetrating_state = new HashMap<String, Boolean>();
+			EcomodStuff.pollution_effects = new HashMap<>();
+			EcomodStuff.additional_blocks_air_penetrating_state = new HashMap<>();
 			
 			for(String s : config.getStringList("AirPenetrators", "AIR", new String[]{"ecomod:frame"}, ""))
 			{
@@ -247,7 +240,7 @@ public class EMConfig
 		
 		PollutionData no_trees_pollution = new PollutionData(200000, 400000, 200000);
 		
-		List<AnalyzerPollutionEffect> defs = new ArrayList<AnalyzerPollutionEffect>();
+		List<AnalyzerPollutionEffect> defs = new ArrayList<>();
 		
 		defs.add(AnalyzerPollutionEffect.createSimple("food_pollution", food_pollution_start, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("smog", smog_pollution, TriggeringType.AND));
@@ -288,7 +281,7 @@ public class EMConfig
 		PollutionData leaves_redution = new PollutionData(-20F, 0F, 0F);
 		PollutionData smelted_item_pollution = new PollutionData(3F, 0.6F, 1.9F);
 		
-		List<String> item_blacklist = new ArrayList<String>();
+		List<String> item_blacklist = new ArrayList<>();
 		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));
 		
 		PollutionSourcesConfig psc = new PollutionSourcesConfig();

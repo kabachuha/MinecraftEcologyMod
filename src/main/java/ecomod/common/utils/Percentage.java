@@ -58,7 +58,7 @@ public class Percentage extends Number implements Comparable
 		if(o instanceof Percentage)
 		{
 			Percentage other = (Percentage)o;
-			return byteValue() == other.byteValue() ? 0 : byteValue() < other.byteValue() ? -1 : 1;
+			return Byte.compare(byteValue(), other.byteValue());
 		}
 		else if(o instanceof Integer || o instanceof Long)//Whole numbers
 		{
@@ -85,11 +85,11 @@ public class Percentage extends Number implements Comparable
 		}
 		else if(o instanceof Integer || o instanceof Long)
 		{
-			return intValue() == ((Integer)o).intValue();
+			return intValue() == (Integer) o;
 		}
 		else if(o instanceof Float || o instanceof Double)
 		{
-			return floatValue() == ((Float)o).floatValue();
+			return floatValue() == (Float) o;
 		}
 		
 		return false;

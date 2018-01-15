@@ -1,39 +1,22 @@
 package ecomod.client;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.input.Keyboard;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
-import ecomod.api.EcomodBlocks;
-import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.client.renderer.RenderAdvancedFilter;
 import ecomod.common.blocks.BlockFrame;
-import ecomod.common.pollution.PollutionEffectsConfig;
-import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
-import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.network.EMPacketString;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
@@ -50,6 +33,13 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //Client side handler!
 public class ClientHandler
@@ -58,7 +48,7 @@ public class ClientHandler
 	
 	public Gson gson = new GsonBuilder().create();
 	
-	public Map<String, IAnalyzerPollutionEffect> pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
+	public Map<String, IAnalyzerPollutionEffect> pollution_effects = new HashMap<>();
 	
 	public Percentage smog_intensity = Percentage.ZERO;
 	
@@ -71,7 +61,7 @@ public class ClientHandler
 		return false;
 	}
 	
-	private List<ChunkPollution> polls = new ArrayList<ChunkPollution>();
+	private List<ChunkPollution> polls = new ArrayList<>();
 	
 	public PollutionData getLocalPollutionAtChunk(Pair<Integer, Integer> chunk_pos)
 	{/*
@@ -127,7 +117,7 @@ public class ClientHandler
 				smog_intensity = new Percentage(i);
 			}
 		}
-		catch (Exception ex)
+		catch (Exception ignored)
 		{
 		}
 	}
@@ -236,7 +226,7 @@ public class ClientHandler
 		if(str.isEmpty())
 			return;
 		
-		if(str.indexOf(";") == -1)
+		if(!str.contains(";"))
 			return;
 		
 		String args[] = str.split(";");

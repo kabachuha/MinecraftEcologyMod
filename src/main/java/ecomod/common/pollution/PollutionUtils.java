@@ -1,23 +1,15 @@
 package ecomod.common.pollution;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import buildcraft.api.tiles.IHasWork;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.IRespirator;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,12 +18,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.ModAPIManager;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PollutionUtils
 {
@@ -198,7 +191,7 @@ public class PollutionUtils
 	
 	public static boolean hasSurfaceAccess(World w, BlockPos bp)
 	{	
-		return hasSurfaceAccess(w, bp, new ArrayList<BlockPos>());
+		return hasSurfaceAccess(w, bp, new ArrayList<>());
 	}
 	
 	public static boolean isEntityRespirating(EntityLivingBase entity)

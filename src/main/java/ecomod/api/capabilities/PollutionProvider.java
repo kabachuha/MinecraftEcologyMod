@@ -1,6 +1,5 @@
 package ecomod.api.capabilities;
 
-import ecomod.api.EcomodStuff;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;

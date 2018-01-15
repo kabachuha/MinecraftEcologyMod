@@ -1,7 +1,5 @@
 package ecomod.core.stuff.compat;
 
-import java.util.List;
-
 import ecomod.api.EcomodStuff;
 import ecomod.common.blocks.BlockAdvancedFilter;
 import ecomod.common.blocks.BlockAnalyzer;
@@ -16,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
+
+import java.util.List;
 
 public class EMWailaHandler implements IWailaDataProvider
 {

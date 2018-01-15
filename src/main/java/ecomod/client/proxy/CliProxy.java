@@ -1,16 +1,9 @@
 package ecomod.client.proxy;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ecomod.api.EcomodBlocks;
-import ecomod.api.EcomodItems;
-import ecomod.api.EcomodStuff;
 import ecomod.client.ClientHandler;
 import ecomod.client.gui.GuiAnalyzer;
 import ecomod.client.renderer.RenderAdvancedFilter;
-import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.tiles.TileAnalyzer;
@@ -22,15 +15,11 @@ import ecomod.network.EMPacketUpdateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -41,17 +30,17 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CliProxy extends ComProxy
 {
 	ClientHandler handler;
 	
-	List<Block> blocks = new ArrayList<Block>();
-	List<Item> items = new ArrayList<Item>();
+	List<Block> blocks = new ArrayList<>();
+	List<Item> items = new ArrayList<>();
 	
 	@Override
 	public ClientHandler getClientHandler()
@@ -108,14 +97,7 @@ public class CliProxy extends ComProxy
 		
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(EMConsts.modid+":fluid" ,((IFluidBlock)fluidBlock).getFluid().getName());
 		
-		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
-        {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack)
-            {
-                return modelResourceLocation;
-            }
-        });
+		ModelLoader.setCustomMeshDefinition(item, stack -> modelResourceLocation);
 
 		ModelLoader.setCustomStateMapper(fluidBlock, new StateMapperBase() {
 			@Override

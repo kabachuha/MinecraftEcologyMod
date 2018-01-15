@@ -2,7 +2,6 @@ package ecomod.client.advancements.util;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-
 import ecomod.common.utils.EMUtils;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;

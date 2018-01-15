@@ -1,11 +1,8 @@
 package ecomod.common.commands;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
@@ -14,8 +11,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class CommandAddPollution extends CommandBase {
 

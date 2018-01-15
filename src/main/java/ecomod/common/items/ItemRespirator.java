@@ -1,7 +1,5 @@
 package ecomod.common.items;
 
-import java.util.List;
-
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.IRespirator;
@@ -24,6 +22,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemRespirator extends ItemArmor implements IRespirator, IRenderableHeadArmor
 {

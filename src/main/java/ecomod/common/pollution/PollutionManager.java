@@ -1,35 +1,29 @@
 package ecomod.common.pollution;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
-
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.thread.WorldProcessingThread;
-import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PollutionManager 
 {
@@ -45,7 +39,7 @@ public class PollutionManager
 		
 		dim = w.provider.getDimension();
 		
-		data = new CopyOnWriteArrayList<ChunkPollution>();
+		data = new CopyOnWriteArrayList<>();
 	}
 	
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -205,7 +199,7 @@ public class PollutionManager
 		if(wp == null || wp.getData() == null)
 			return false;
 		
-		List<ChunkPollution> l = new ArrayList<ChunkPollution>();
+		List<ChunkPollution> l = new ArrayList<>();
 		
 		for(ChunkPollution u : wp.getData())
 			if(u != null)

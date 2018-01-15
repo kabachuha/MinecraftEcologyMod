@@ -1,9 +1,8 @@
 package ecomod.common.utils;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class PositionedEmissionObject extends Pair<BlockPos, PollutionData>
 {

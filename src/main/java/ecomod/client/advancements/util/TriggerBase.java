@@ -1,18 +1,15 @@
 package ecomod.client.advancements.util;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-
 import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.critereon.AbstractCriterionInstance;
-import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.Map;
 
 public abstract class TriggerBase<I extends ICriterionInstance> implements ICriterionTrigger<I>
 {
@@ -26,15 +23,9 @@ public abstract class TriggerBase<I extends ICriterionInstance> implements ICrit
 	
 	public void addListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<I> listener)
     {
-		ListenersBase<I> triglisteners = this.listeners.get(playerAdvancementsIn);
+		ListenersBase<I> triglisteners = this.listeners.computeIfAbsent(playerAdvancementsIn, ListenersBase::new);
 
-        if (triglisteners == null)
-        {
-        	triglisteners = new ListenersBase<I>(playerAdvancementsIn);
-            this.listeners.put(playerAdvancementsIn, triglisteners);
-        }
-
-        triglisteners.add(listener);
+		triglisteners.add(listener);
     }
 
     public void removeListener(PlayerAdvancements playerAdvancementsIn, ICriterionTrigger.Listener<I> listener)

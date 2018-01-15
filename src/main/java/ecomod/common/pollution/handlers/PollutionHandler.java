@@ -1,47 +1,24 @@
 package ecomod.common.pollution.handlers;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.Level;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
-import ecomod.api.pollution.ChunkPollution;
-import ecomod.api.pollution.IGarbage;
-import ecomod.api.pollution.IPollutionAffector;
-import ecomod.api.pollution.IPollutionEmitter;
-import ecomod.api.pollution.IPollutionGetter;
-import ecomod.api.pollution.PollutionData;
+import ecomod.api.pollution.*;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.api.pollution.PollutionEmissionEvent;
-import ecomod.api.pollution.PositionedPollutionEmissionEvent;
 import ecomod.asm.EcomodClassTransformer;
 import ecomod.client.advancements.triggers.EMTriggers;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionEffectsConfig.Effects;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
-import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.common.utils.PositionedEmissionObject;
@@ -66,7 +43,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -80,7 +56,6 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.brewing.PlayerBrewedPotionEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
@@ -103,15 +78,20 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 
 //FIXME Put the handlers in order
 public class PollutionHandler implements IPollutionGetter
 {
-	public Map<Integer, WorldProcessingThread> threads = new HashMap<Integer, WorldProcessingThread>();
+	public Map<Integer, WorldProcessingThread> threads = new HashMap<>();
 	
 	private Gson gson = new GsonBuilder().serializeNulls().create();
 	
@@ -1089,7 +1069,7 @@ public class PollutionHandler implements IPollutionGetter
 		if(event.getEntityLiving() != null)
 		if(!event.getEntityLiving().getEntityWorld().isRemote)
 		{
-			List<ItemStack> drps = new ArrayList<ItemStack>();
+			List<ItemStack> drps = new ArrayList<>();
 			for(EntityItem ei : event.getDrops())
 			{
 				if(ei.getItem().getItem() instanceof ItemFood)

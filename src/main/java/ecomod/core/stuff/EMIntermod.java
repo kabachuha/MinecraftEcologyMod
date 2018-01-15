@@ -1,15 +1,8 @@
 package ecomod.core.stuff;
 
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-
-import com.google.common.collect.ImmutableList;
-
 import buildcraft.api.fuels.BuildcraftFuelRegistry;
 import buildcraft.api.tiles.IHasWork;
+import com.google.common.collect.ImmutableList;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -26,12 +19,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.API;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.LogManager;
+
+import java.util.Optional;
+import java.util.function.Function;
 
 public class EMIntermod
 {

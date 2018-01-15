@@ -1,8 +1,5 @@
 package ecomod.core.stuff;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ecomod.api.EcomodItems;
 import ecomod.common.items.ItemCore;
 import ecomod.common.items.ItemCraftIngredient;
@@ -10,25 +7,23 @@ import ecomod.common.items.ItemRespirator;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EMItems 
 {
 	public static ArmorMaterial RESPIRATOR_MATERIAL = null;
 	
-	public static List<Item> items = new ArrayList<Item>();
+	public static List<Item> items = new ArrayList<>();
 	
 	public static void doPreInit()
 	{

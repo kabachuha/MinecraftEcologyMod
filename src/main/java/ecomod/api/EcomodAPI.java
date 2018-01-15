@@ -1,9 +1,5 @@
 package ecomod.api;
 
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.IPollutionGetter;
@@ -15,6 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
 
 public class EcomodAPI
 {

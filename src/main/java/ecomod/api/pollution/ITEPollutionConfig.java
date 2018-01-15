@@ -1,8 +1,8 @@
 package ecomod.api.pollution;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 /**
  * Used to provide API access to TEPollutionConfig values.

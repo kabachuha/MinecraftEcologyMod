@@ -1,14 +1,6 @@
 package ecomod.common.tiles.compat;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
-import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
@@ -17,23 +9,18 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Analyzable;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.ComponentHost;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.network.ManagedPeripheral;
-import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.TileEntityEnvironment;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 
@@ -158,7 +145,7 @@ public class TileAnalyzerAdapter extends TileEntityEnvironment implements Analyz
 			TileAnalyzer ta = getAnalyzer();
 			if(ta.pollution != null)
 			{
-				List<String> effs = new ArrayList<String>();
+				List<String> effs = new ArrayList<>();
 				for(String s : EcomodStuff.pollution_effects.keySet())
 				{
 					if(PollutionEffectsConfig.isEffectActive(s, ta.pollution))

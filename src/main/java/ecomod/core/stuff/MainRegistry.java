@@ -1,7 +1,5 @@
 package ecomod.core.stuff;
 
-import java.util.function.Function;
-
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.IPollution;
@@ -38,10 +36,8 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryInternal;
-import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.registries.RegistryManager;
+
+import java.util.function.Function;
 
 public class MainRegistry
 {

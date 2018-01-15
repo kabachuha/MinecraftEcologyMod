@@ -1,19 +1,14 @@
 package ecomod.client.advancements.util;
 
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import ecomod.core.EcologyMod;
 import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.entity.player.EntityPlayerMP;
+
+import java.util.List;
+import java.util.Set;
 
 public class ListenersBase<I extends ICriterionInstance>
 {

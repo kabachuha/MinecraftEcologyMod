@@ -1,12 +1,7 @@
 package ecomod.common.items;
 
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
-import ecomod.core.stuff.EMAchievements;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,6 +10,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import org.lwjgl.input.Keyboard;
+
+import java.util.List;
 
 public class ItemCore extends Item
 {

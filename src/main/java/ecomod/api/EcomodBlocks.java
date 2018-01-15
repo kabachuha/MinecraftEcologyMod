@@ -1,7 +1,6 @@
 package ecomod.api;
 
 import net.minecraft.block.Block;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
 public class EcomodBlocks
 {

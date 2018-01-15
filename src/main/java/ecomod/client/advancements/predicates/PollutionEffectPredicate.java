@@ -1,16 +1,14 @@
 package ecomod.client.advancements.predicates;
 
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import ecomod.client.advancements.util.ITestable;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.JsonUtils;
+
+import javax.annotation.Nullable;
 
 public class PollutionEffectPredicate implements ITestable
 {

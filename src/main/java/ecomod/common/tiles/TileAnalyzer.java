@@ -1,9 +1,5 @@
 package ecomod.common.tiles;
 
-import java.util.Date;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -16,6 +12,9 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentString;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Date;
 
 
 public class TileAnalyzer extends TileEnergy implements ITickable

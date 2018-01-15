@@ -1,22 +1,5 @@
 package ecomod.core.stuff;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
-import ecomod.api.EcomodBlocks;
-import ecomod.api.EcomodItems;
-import ecomod.api.EcomodStuff;
-import ecomod.core.EMConsts;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
-
 public class EMAchievements
 {/*
 	public static AchievementPage ECOMOD_ACHIEVEMENTS = null;
