@@ -30,7 +30,7 @@ public class EcomodAPI
 	 * @see net.minecraft.world.chunk.Chunk
 	 * @see ecomod.api.pollution.PollutionData  
 	 */
-	public static boolean emitPollution(World world, Pair<Integer,Integer> chunkLoc, PollutionData emission, boolean scheduled)
+	public static boolean emitPollution(World world, Pair<Integer, Integer> chunkLoc, PollutionData emission, boolean scheduled)
 	{
 		if(emission == null || emission.compareTo(PollutionData.getEmpty()) == 0) return false;
 		

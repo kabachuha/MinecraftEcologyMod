@@ -55,7 +55,7 @@ public class EcomodASMHooks
         {
             if(worldIn.canSeeSky(pos.up()))
             {
-                PollutionData pd = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
+                PollutionData pd = EcomodAPI.getPollution(worldIn, pos.getX() >> 4, pos.getZ() >> 4);
                 if(pd != null)
                 if(PollutionEffectsConfig.isEffectActive("wasteland", pd))
                 {
@@ -106,7 +106,7 @@ public class EcomodASMHooks
             {
                 if(worldIn.rand.nextInt(30) == 0)
                 {
-                    PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
+                    PollutionData pollution = EcomodAPI.getPollution(worldIn, pos.getX() >> 4, pos.getZ() >> 4);
 
                     if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
                         if(PollutionEffectsConfig.isEffectActive("acid_rain", pollution))
@@ -119,7 +119,7 @@ public class EcomodASMHooks
                 {
                     if(PollutionUtils.hasSurfaceAccess(worldIn, pos))
                     {
-                        PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
+                        PollutionData pollution = EcomodAPI.getPollution(worldIn, pos.getX() >> 4, pos.getZ() >> 4);
 
                         if(pollution!=null && pollution.compareTo(PollutionData.getEmpty()) != 0)
                             if(PollutionEffectsConfig.isEffectActive("dead_trees", pollution))
@@ -136,7 +136,7 @@ public class EcomodASMHooks
     {
         if(!worldIn.isRemote)
         {
-            PollutionData pollution = EcomodAPI.getPollution(worldIn, EMUtils.blockPosToPair(pos).getLeft(), EMUtils.blockPosToPair(pos).getRight());
+            PollutionData pollution = EcomodAPI.getPollution(worldIn, pos.getX() >> 4, pos.getZ() >> 4);
 
             if(PollutionEffectsConfig.isEffectActive("no_plowing", pollution))
             {

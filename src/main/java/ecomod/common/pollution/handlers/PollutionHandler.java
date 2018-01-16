@@ -516,7 +516,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		PollutionData data = getPollution(w, EMUtils.blockPosToPair(event.getPos()).getLeft(), EMUtils.blockPosToPair(event.getPos()).getRight());
+		PollutionData data = getPollution(w, event.getPos().getX() >> 4, event.getPos().getZ() >> 4);
 		
 		if(PollutionEffectsConfig.isEffectActive("no_bonemeal", data))
 		{
@@ -554,7 +554,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(w.isRemote)return;
 		
-		PollutionData data = getPollution(w, EMUtils.blockPosToPair(event.getPos()).getLeft(), EMUtils.blockPosToPair(event.getPos()).getRight());
+		PollutionData data = getPollution(w, event.getPos().getX() >> 4, event.getPos().getZ() >> 4);
 		
 		if(PollutionEffectsConfig.isEffectActive("no_plowing", data))
 		{
@@ -580,7 +580,7 @@ public class PollutionHandler implements IPollutionGetter
 		if(w.isRemote)return;
 
 		
-		PollutionData data = getPollution(w, EMUtils.blockPosToPair(player.getPosition()).getLeft(), EMUtils.blockPosToPair(player.getPosition()).getRight());
+		PollutionData data = getPollution(w, player.getPosition().getX() >> 4, player.getPosition().getZ() >> 4);
 		
 		if(!event.updateWorld())
 		if(PollutionEffectsConfig.isEffectActive("bad_sleep", data))
@@ -845,7 +845,7 @@ public class PollutionHandler implements IPollutionGetter
 	public boolean isEntityInSmog(EntityLivingBase player) {
 		BlockPos bp = new BlockPos(player.posX, player.posY, player.posZ);
 
-		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
+		PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), bp.getX() >> 4, bp.getZ() >> 4);
 
 		return pollution != null && pollution != PollutionData.getEmpty() && PollutionEffectsConfig.isEffectActive("smog", pollution);
 	}
@@ -856,7 +856,7 @@ public class PollutionHandler implements IPollutionGetter
 		
 		if(player.world.isRaining())
 		{
-			PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), EMUtils.blockPosToPair(bp).getLeft(), EMUtils.blockPosToPair(bp).getRight());
+			PollutionData pollution = EcomodAPI.getPollution(player.getEntityWorld(), bp.getX() >> 4, bp.getZ() >> 4);
 		
 			if(pollution!=null && pollution != PollutionData.getEmpty())
 				return PollutionEffectsConfig.isEffectActive("acid_rain", pollution);

@@ -239,7 +239,7 @@ public class WorldProcessingThread extends Thread
 		return isWorking;
 	}
 	
-	public List<Pair<Integer,Integer>> getLoadedChunks()
+	public List<Pair<Integer, Integer>> getLoadedChunks()
 	{
 		return loadedChunks;
 	}
