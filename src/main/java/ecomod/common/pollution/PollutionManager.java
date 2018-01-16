@@ -48,7 +48,7 @@ public class PollutionManager
 	public boolean save()
 	{
 		WorldPollution wp = new WorldPollution();
-		
+
 		for(ChunkPollution p : data)
 			if(p.getPollution().getAirPollution() < EMConfig.pollution_precision && p.getPollution().getWaterPollution() < EMConfig.pollution_precision && p.getPollution().getSoilPollution() < EMConfig.pollution_precision)
 				data.remove(p);
@@ -186,13 +186,22 @@ public class PollutionManager
 		
 		if(wp == null || wp.getData() == null)
 			return false;
-		
+
 		List<ChunkPollution> l = new ArrayList<>();
 		
 		for(ChunkPollution u : wp.getData())
 			if(u != null)
-			if(!(u.getPollution().getAirPollution() == 0 && u.getPollution().getWaterPollution() == 0 && u.getPollution().getSoilPollution() == 0))
-				l.add(u);
+				if(u.getPollution().getAirPollution() != 0 || u.getPollution().getWaterPollution() != 0 || u.getPollution().getSoilPollution() != 0) {
+					boolean add = true;
+					for (ChunkPollution cp : l) {//A bit more expensive but ensures that diffusion works properly by making sure each chunk is only added once
+						if (cp.getX() == u.getX() && cp.getZ() == u.getZ()) {
+							add = false;
+							break;
+						}
+					}
+					if (add)
+						l.add(u);
+				}
 		
 		data.clear();
 		data.addAll(l);
@@ -240,24 +249,25 @@ public class PollutionManager
 	
 	public ChunkPollution setChunkPollution(ChunkPollution cp)
 	{
-		cp = new ChunkPollution(cp.getX(), cp.getZ(), cp.getPollution());
-		
-		PollutionData pd = cp.getPollution();
-		
-		if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
-		if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
-		if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
-		
 		Pair<Integer, Integer> coords = cp.getLeft();
-		
-
 		if(contains(coords))
 		{
-			data.remove(getChunkPollution(coords));
-			data.add(cp);
+			PollutionData pd = cp.getPollution();
+			if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
+			if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
+			if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
+			ChunkPollution old = getChunkPollution(coords);
+			old.setPollution(pd);
 		}
 		else
 		{
+			cp = new ChunkPollution(cp.getX(), cp.getZ(), cp.getPollution());
+
+			PollutionData pd = cp.getPollution();
+
+			if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
+			if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
+			if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
 			data.add(cp);
 		}
 			
@@ -345,7 +355,6 @@ public class PollutionManager
 			return;
 		int i = c.getX();
 		int j = c.getZ();
-		
 		PollutionData to_spread = c.getPollution().clone();
 		
 		to_spread = to_spread.multiplyAll(EMConfig.diffusion_factor * EMConfig.wptcd / 60);
