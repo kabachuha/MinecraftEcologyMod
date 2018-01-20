@@ -1,15 +1,11 @@
 package ecomod.common.tiles.compat;
 
-import org.cyclops.commoncapabilities.api.capability.work.IWorker;
-
-import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
-import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
 public class CommonCapsWorker
 {

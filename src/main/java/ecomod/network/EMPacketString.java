@@ -1,10 +1,7 @@
 package ecomod.network;
 
-import java.nio.charset.Charset;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

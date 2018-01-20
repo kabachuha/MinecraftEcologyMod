@@ -5,25 +5,25 @@ import net.minecraft.util.ResourceLocation;
 
 public interface IAnalyzerPollutionEffect
 {
-	public static final ResourceLocation BLANK_ICON = new ResourceLocation("ecomod:textures/gui/analyzer/icons/null.png");
+	ResourceLocation BLANK_ICON = new ResourceLocation("ecomod:textures/gui/analyzer/icons/null.png");
 	
-	public PollutionData getTriggerringPollution();
+	PollutionData getTriggerringPollution();
 	
-	public TriggeringType getTriggeringType();
+	TriggeringType getTriggeringType();
 	
 	//unique id
-	public String getId();
+	String getId();
 	
-	public String getHeader();
+	String getHeader();
 	
-	public String getDescription();
+	String getDescription();
 	
 	/**
 	 * 50x50 texture
 	 */
-	public ResourceLocation getIcon();
+	ResourceLocation getIcon();
 	
-	public static enum TriggeringType
+	enum TriggeringType
 	{
 		AND,
 		OR

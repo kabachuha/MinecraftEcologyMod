@@ -1,10 +1,8 @@
 package ecomod.api.pollution;
 
 import com.google.gson.annotations.SerializedName;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 public class PollutionData implements Comparable
 {
@@ -219,7 +217,7 @@ public class PollutionData implements Comparable
 	@Override
 	public String toString()
 	{
-		return "{\"air\" : "+air_pollution+", \"water\" : "+water_pollution+", \"soil\" : "+soil_pollution+"}";
+		return "{\"air\" : "+air_pollution+", \"water\" : "+water_pollution+", \"soil\" : "+soil_pollution+ '}';
 	}
 	
 	public static PollutionData getEmpty()
@@ -247,7 +245,7 @@ public class PollutionData implements Comparable
 		if(!(pd instanceof PollutionData))
 			return false;
 		
-		PollutionData d = ((PollutionData)pd);
+		PollutionData d = (PollutionData)pd;
 		
 		return d.getAirPollution() == getAirPollution() && d.getWaterPollution() == getWaterPollution() && d.getSoilPollution() == getSoilPollution();
 	}
@@ -258,7 +256,7 @@ public class PollutionData implements Comparable
 	@Override
 	public int compareTo(Object o)
 	{
-		PollutionData pd = ((PollutionData)o);
+		PollutionData pd = (PollutionData)o;
 		
 		if(air_pollution == pd.getAirPollution() && water_pollution == pd.getWaterPollution() && soil_pollution == pd.getSoilPollution())
 			return 0;

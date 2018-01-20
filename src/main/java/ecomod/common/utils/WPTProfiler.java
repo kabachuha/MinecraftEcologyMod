@@ -1,39 +1,33 @@
 package ecomod.common.utils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.profiler.Profiler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Overriding of the overhardcoded Minecraft Profiler
  * 
- * —making time-out warning configurable(issue #17)
+ * ï¿½making time-out warning configurable(issue #17)
  */
 public class WPTProfiler extends Profiler
 {
 	private static final Logger LOGGER = LogManager.getLogger();
     /** List of parent sections */
-    private final List<String> sectionList = Lists.<String>newArrayList();
+    private final List<String> sectionList = new ArrayList<>();
     /** List of timestamps (System.nanoTime) */
-    private final List<Long> timestampList = Lists.<Long>newArrayList();
+    private final List<Long> timestampList = new ArrayList<>();
     /** Flag profiling enabled */
     public boolean profilingEnabled;
     /** Current profiling section */
     private String profilingSection = "";
     /** Profiling map */
-    private final Map<String, Long> profilingMap = Maps.<String, Long>newHashMap();
+    private final Map<String, Long> profilingMap = new HashMap<>();
 
     /**
      * Clear profiling.
@@ -54,12 +48,12 @@ public class WPTProfiler extends Profiler
         {
             if (!this.profilingSection.isEmpty())
             {
-                this.profilingSection = this.profilingSection + ".";
+                this.profilingSection = this.profilingSection + '.';
             }
 
             this.profilingSection = this.profilingSection + name;
             this.sectionList.add(this.profilingSection);
-            this.timestampList.add(Long.valueOf(System.nanoTime()));
+            this.timestampList.add(System.nanoTime());
         }
     }
 
@@ -79,32 +73,25 @@ public class WPTProfiler extends Profiler
         if (this.profilingEnabled)
         {
             long i = System.nanoTime();
-            long j = ((Long)this.timestampList.remove(this.timestampList.size() - 1)).longValue();
+            long j = this.timestampList.remove(this.timestampList.size() - 1);
             this.sectionList.remove(this.sectionList.size() - 1);
             long k = i - j;
 
-            if (this.profilingMap.containsKey(this.profilingSection))
-            {
-                this.profilingMap.put(this.profilingSection, Long.valueOf(((Long)this.profilingMap.get(this.profilingSection)).longValue() + k));
-            }
-            else
-            {
-                this.profilingMap.put(this.profilingSection, Long.valueOf(k));
-            }
+            this.profilingMap.put(this.profilingSection, this.profilingMap.getOrDefault(this.profilingSection, 0L) + k);
 
             if (k > EMConfig.wpt_profiler_timeout_warning * 1000000L)
             {
-                LOGGER.warn("Something's taking more time than usual! '{}' took aprox {} ms", this.profilingSection, Double.valueOf((double)k / 1000000.0D));
+                LOGGER.warn("Something's taking more time than usual! '{}' took aprox {} ms", this.profilingSection, (double) k / 1000000.0D);
                 LOGGER.warn("(Configured timeout warning triggering delay {} ms)", EMConfig.wpt_profiler_timeout_warning);
             }
             
             if (k > EMConfig.wpt_profiler_critical_timeout_warning * 1000000L)
             {
-                LOGGER.error("Something's taking FAR MORE time than usual! '{}' took aprox {} ms. Please, check the Minecraft performance! Big delays in WPT's work may cause Ecomod and Minecraft to work incoherent!", this.profilingSection, Double.valueOf((double)k / 1000000.0D));
+                LOGGER.error("Something's taking FAR MORE time than usual! '{}' took aprox {} ms. Please, check the Minecraft performance! Big delays in WPT's work may cause Ecomod and Minecraft to work incoherent!", this.profilingSection, (double) k / 1000000.0D);
                 LOGGER.error("(Configured critical timeout warning triggering delay {} ms)", EMConfig.wpt_profiler_critical_timeout_warning);
             }
 
-            this.profilingSection = this.sectionList.isEmpty() ? "" : (String)this.sectionList.get(this.sectionList.size() - 1);
+            this.profilingSection = this.sectionList.isEmpty() ? "" : this.sectionList.get(this.sectionList.size() - 1);
         }
     }
 
@@ -115,26 +102,26 @@ public class WPTProfiler extends Profiler
     {
         if (!this.profilingEnabled)
         {
-            return Collections.<Profiler.Result>emptyList();
+            return Collections.emptyList();
         }
         else
         {
-            long i = this.profilingMap.containsKey("root") ? ((Long)this.profilingMap.get("root")).longValue() : 0L;
-            long j = this.profilingMap.containsKey(profilerName) ? ((Long)this.profilingMap.get(profilerName)).longValue() : -1L;
-            List<Profiler.Result> list = Lists.<Profiler.Result>newArrayList();
+            long i = this.profilingMap.getOrDefault("root", 0L);
+            long j = this.profilingMap.getOrDefault(profilerName, -1L);
+            List<Profiler.Result> list = new ArrayList<>();
 
             if (!profilerName.isEmpty())
             {
-                profilerName = profilerName + ".";
+                profilerName = profilerName + '.';
             }
 
             long k = 0L;
 
             for (String s : this.profilingMap.keySet())
             {
-                if (s.length() > profilerName.length() && s.startsWith(profilerName) && s.indexOf(".", profilerName.length() + 1) < 0)
+                if (s.length() > profilerName.length() && s.startsWith(profilerName) && s.indexOf('.', profilerName.length() + 1) < 0)
                 {
-                    k += ((Long)this.profilingMap.get(s)).longValue();
+                    k += this.profilingMap.get(s);
                 }
             }
 
@@ -152,9 +139,9 @@ public class WPTProfiler extends Profiler
 
             for (String s1 : this.profilingMap.keySet())
             {
-                if (s1.length() > profilerName.length() && s1.startsWith(profilerName) && s1.indexOf(".", profilerName.length() + 1) < 0)
+                if (s1.length() > profilerName.length() && s1.startsWith(profilerName) && s1.indexOf('.', profilerName.length() + 1) < 0)
                 {
-                    long l = ((Long)this.profilingMap.get(s1)).longValue();
+                    long l = this.profilingMap.get(s1);
                     double d0 = (double)l * 100.0D / (double)k;
                     double d1 = (double)l * 100.0D / (double)i;
                     String s2 = s1.substring(profilerName.length());
@@ -164,7 +151,7 @@ public class WPTProfiler extends Profiler
 
             for (String s3 : this.profilingMap.keySet())
             {
-                this.profilingMap.put(s3, Long.valueOf(((Long)this.profilingMap.get(s3)).longValue() * 999L / 1000L));
+                this.profilingMap.put(s3, this.profilingMap.get(s3) * 999L / 1000L);
             }
 
             if ((float)k > f)
@@ -189,7 +176,7 @@ public class WPTProfiler extends Profiler
 
     public String getNameOfLastSection()
     {
-        return this.sectionList.isEmpty() ? "[UNKNOWN]" : (String)this.sectionList.get(this.sectionList.size() - 1);
+        return this.sectionList.isEmpty() ? "[UNKNOWN]" : this.sectionList.get(this.sectionList.size() - 1);
     }
 
     @SideOnly(Side.CLIENT)

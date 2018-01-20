@@ -1,6 +1,8 @@
 package ecomod.core.stuff;
 
-import ecomod.common.tiles.*;
+import ecomod.common.tiles.TileAdvancedFilter;
+import ecomod.common.tiles.TileAnalyzer;
+import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 

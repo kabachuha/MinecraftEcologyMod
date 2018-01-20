@@ -1,11 +1,8 @@
 package ecomod.common.commands;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
@@ -14,8 +11,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class CommandAddPollution extends CommandBase {
 
@@ -33,7 +30,7 @@ public class CommandAddPollution extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		World w = server.getEntityWorld();
 		
-		if(w == null || w.isRemote)return;
+		if(w.isRemote)return;
 		
 		WorldProcessingThread wpt = EcologyMod.ph.getWPT(w);
 			
@@ -56,7 +53,7 @@ public class CommandAddPollution extends CommandBase {
 		}
 		else
 		{
-				throw new WrongUsageException(getUsage(sender), new Object[0]);
+			throw new WrongUsageException(getUsage(sender));
 		}
 			
 		EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Float.parseFloat(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Float.parseFloat(args[1])), true);

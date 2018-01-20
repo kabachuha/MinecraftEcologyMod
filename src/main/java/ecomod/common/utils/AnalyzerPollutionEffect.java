@@ -1,17 +1,15 @@
 package ecomod.common.utils;
 
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import ecomod.api.client.IAnalyzerPollutionEffect;
-import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.util.ResourceLocation;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
 
 public class AnalyzerPollutionEffect implements IAnalyzerPollutionEffect
 {
@@ -86,7 +84,7 @@ public class AnalyzerPollutionEffect implements IAnalyzerPollutionEffect
 
 	@Override
 	public ResourceLocation getIcon() {
-		if(icon == "")
+		if(icon == null || icon.equals(""))
 			return IAnalyzerPollutionEffect.BLANK_ICON;
 		
 		return new ResourceLocation(icon);

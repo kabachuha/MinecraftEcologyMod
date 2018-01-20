@@ -1,7 +1,6 @@
 package ecomod.client.advancements.triggers;
 
 import ecomod.client.advancements.util.SimpleTrigger;
-import ecomod.common.utils.EMUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.ICriterionTrigger;
 

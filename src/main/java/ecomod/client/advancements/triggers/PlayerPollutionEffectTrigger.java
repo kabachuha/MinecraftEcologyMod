@@ -2,7 +2,6 @@ package ecomod.client.advancements.triggers;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-
 import ecomod.client.advancements.predicates.PollutionEffectPredicate;
 import ecomod.client.advancements.util.ITestable;
 import ecomod.client.advancements.util.TriggerBase;

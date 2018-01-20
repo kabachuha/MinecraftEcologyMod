@@ -1,24 +1,17 @@
 package ecomod.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
-import ecomod.api.EcomodItems;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.utils.EMUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderAdvancedFilter extends TileEntitySpecialRenderer<TileAdvancedFilter>
 {
-	public static TextureAtlasSprite vent_s = null;
+	public static TextureAtlasSprite vent_s;
 	
 	@Override
 	public void render(TileAdvancedFilter te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)

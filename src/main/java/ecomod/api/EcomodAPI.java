@@ -1,9 +1,5 @@
 package ecomod.api;
 
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.api.capabilities.IPollution;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.IPollutionGetter;
@@ -15,6 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
 
 public class EcomodAPI
 {
@@ -31,9 +30,9 @@ public class EcomodAPI
 	 * @see net.minecraft.world.chunk.Chunk
 	 * @see ecomod.api.pollution.PollutionData  
 	 */
-	public static boolean emitPollution(World world, Pair<Integer,Integer> chunkLoc, PollutionData emission, boolean scheduled)
+	public static boolean emitPollution(World world, Pair<Integer, Integer> chunkLoc, PollutionData emission, boolean scheduled)
 	{
-		if(emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0)) return false;
+		if(emission == null || emission.compareTo(PollutionData.getEmpty()) == 0) return false;
 		
 		PollutionEmissionEvent em = new PollutionEmissionEvent(world, chunkLoc.getLeft(), chunkLoc.getRight(), emission, scheduled);
 		// less precise calculations - more performance
@@ -42,14 +41,14 @@ public class EcomodAPI
 	
 	public static boolean emitPollutionPositioned(World world, BlockPos pos, PollutionData emission, boolean scheduled)
 	{
-		if(world.isRemote || emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0))return false;
+		if(world.isRemote || emission == null || emission.compareTo(PollutionData.getEmpty()) == 0)return false;
 		
 		PositionedPollutionEmissionEvent event = new PositionedPollutionEmissionEvent(world, pos.getX(), pos.getY(), pos.getZ(), emission, scheduled);
 		// more precise calculations - less performance
 		return MinecraftForge.EVENT_BUS.post(event);
 	}
 	
-	public static IPollutionGetter pollution_getter = null;
+	public static IPollutionGetter pollution_getter;
 	
 	@Nullable
 	public static PollutionData getPollution(World w, int chunkX, int chunkZ)

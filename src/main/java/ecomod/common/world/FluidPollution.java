@@ -3,7 +3,6 @@ package ecomod.common.world;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.stuff.EMConfig;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
 public class FluidPollution extends Fluid

@@ -7,10 +7,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -53,9 +51,9 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId = args[1];
 			
-			float air = 0.0F;
-			float water = 0.0F;
-			float soil = 0.0F;
+			float air;
+			float water;
+			float soil;
 			
 			try
 			{
@@ -167,7 +165,7 @@ public class CommandTEPC extends CommandBase {
 		}
 	}
 
-	private static enum CTMode
+	private enum CTMode
 	{
 		add,
 		remove,

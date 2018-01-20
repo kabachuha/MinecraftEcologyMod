@@ -18,5 +18,5 @@ public interface IRespirator
 	 * @param check_affects should the check affect the respirator(true) and/or its filters, or it's only being simulated(false)?
 	 * @return whether the respirator filters the air.
 	 */
-	public boolean isRespirating(EntityLivingBase entity, ItemStack stack, boolean check_affects);
+    boolean isRespirating(EntityLivingBase entity, ItemStack stack, boolean check_affects);
 }

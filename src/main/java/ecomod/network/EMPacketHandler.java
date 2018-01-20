@@ -2,15 +2,13 @@ package ecomod.network;
 
 import ecomod.core.EMConsts;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class EMPacketHandler
 {
 	public static final SimpleNetworkWrapper WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(EMConsts.modid);
-	public static int id = 0;
+	public static int id;
 	
 	public static void init()
 	{

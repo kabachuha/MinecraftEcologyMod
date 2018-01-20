@@ -1,9 +1,8 @@
 package ecomod.api.pollution;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.ChunkPos;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 {
@@ -59,7 +58,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	}
 
 	/**
-	 * @param chunkY the chunkY to set
+	 * @param chunkZ the chunkZ to set
 	 */
 	public void setZ(int chunkZ) {
 		this.chunkZ = chunkZ;
@@ -86,12 +85,12 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	
 	public static boolean coordEquals(ChunkPollution f, ChunkPollution s)
 	{
-		return (f.getX() == s.getX()) && (f.getZ() == s.getZ());
+		return f.getX() == s.getX() && f.getZ() == s.getZ();
 	}
 	
 	public String toString()
 	{
-		return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+"}";
+		return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+ '}';
 	}
 	
 	public void writeByteBuf(ByteBuf bb)

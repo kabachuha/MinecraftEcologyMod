@@ -1,13 +1,11 @@
 package ecomod.common.world.gen;
 
-import java.awt.Color;
-
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+
+import java.awt.*;
 
 public class BiomeWasteland extends Biome
 {

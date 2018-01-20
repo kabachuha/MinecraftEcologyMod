@@ -1,10 +1,10 @@
 package ecomod.api.pollution;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
+
+import javax.annotation.Nonnull;
 
 @Cancelable
 public class PollutionEmissionEvent extends Event

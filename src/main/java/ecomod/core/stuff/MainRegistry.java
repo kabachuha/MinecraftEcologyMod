@@ -1,7 +1,5 @@
 package ecomod.core.stuff;
 
-import java.util.function.Function;
-
 import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.api.capabilities.IPollution;
@@ -18,7 +16,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -38,10 +35,6 @@ import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryInternal;
-import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.registries.RegistryManager;
 
 public class MainRegistry
 {
@@ -73,7 +66,7 @@ public class MainRegistry
 		
 		EMRecipes.doPreInit();
 		
-		EcomodStuff.custom_te_pollution_determinants = NonNullList.<Function<TileEntity, Object[]>>create();
+		EcomodStuff.custom_te_pollution_determinants = NonNullList.create();
 	}
 	
 	public static void doInit()
@@ -127,7 +120,7 @@ public class MainRegistry
 	@SubscribeEvent
 	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
 	{
-		EcologyMod.log.info("Registring Sounds");
+		EcologyMod.log.info("Registering Sounds");
 		event.getRegistry().register(EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")).setRegistryName(EMUtils.resloc("advanced_filter_working")));
 		event.getRegistry().register(EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")).setRegistryName(EMUtils.resloc("analyzer")));
 	}
@@ -135,7 +128,7 @@ public class MainRegistry
 	@SubscribeEvent
 	public static void registerBiomes(RegistryEvent.Register<Biome> event)
 	{
-		EcologyMod.log.info("Registring Biomes");
+		EcologyMod.log.info("Registering Biomes");
 		event.getRegistry().register(biome_wasteland.setRegistryName(EMUtils.resloc("wasteland")));
 	}
 	

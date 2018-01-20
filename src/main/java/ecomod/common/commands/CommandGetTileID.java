@@ -5,7 +5,6 @@ import ecomod.network.EMPacketString;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -49,7 +48,7 @@ public class CommandGetTileID extends CommandBase {
 			String s = TileEntity.getKey(tile.getClass()).toString();
 			sender.sendMessage(new TextComponentString(s));
 			if(sender instanceof EntityPlayerMP)
-				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("#"+s), getCommandSenderAsPlayer(sender));
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('#' +s), getCommandSenderAsPlayer(sender));
 		}
 		else
 		{

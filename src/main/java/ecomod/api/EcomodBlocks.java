@@ -1,16 +1,15 @@
 package ecomod.api;
 
 import net.minecraft.block.Block;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
 public class EcomodBlocks
 {
-	public static boolean inited = false;
+	public static boolean inited;
 	
-	public static Block FILTER = null;
-	public static Block ADVANCED_FILTER = null;
-	public static Block FLUID_POLLUTION = null;
-	public static Block ANALYZER = null;
-	public static Block FRAME = null;
-	public static Block OC_ANALYZER_ADAPTER = null;
+	public static Block FILTER;
+	public static Block ADVANCED_FILTER;
+	public static Block FLUID_POLLUTION;
+	public static Block ANALYZER;
+	public static Block FRAME;
+	public static Block OC_ANALYZER_ADAPTER;
 }

@@ -1,8 +1,8 @@
 package ecomod.api.pollution;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Used to provide API access to pollution values. For semi-internal usage.
@@ -14,5 +14,5 @@ import net.minecraft.world.World;
 public interface IPollutionGetter
 {
 	@Nullable
-	public PollutionData getPollution(World w, int chunkx, int chunkz);
+    PollutionData getPollution(World w, int chunkx, int chunkz);
 }

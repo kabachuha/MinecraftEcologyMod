@@ -1,13 +1,7 @@
 package ecomod.client.advancements.predicates;
 
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import ecomod.api.EcomodAPI;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.client.advancements.util.ITestable;
@@ -17,6 +11,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
 
 public class PollutionPredicate implements ITestable {
 

@@ -1,7 +1,5 @@
 package ecomod.common.tiles;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import ecomod.common.utils.EMEnergyStorage;
 import ecomod.common.utils.EMUtils;
 import ecomod.network.EMPacketHandler;
@@ -10,8 +8,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.*;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import org.apache.commons.lang3.tuple.Pair;
 
 
 @net.minecraftforge.fml.common.Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = "redstoneflux")
@@ -26,12 +26,8 @@ public class TileEnergy extends TileEntity implements cofh.redstoneflux.api.IEne
 	}
 	
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		if(capability == CapabilityEnergy.ENERGY)
-			return true;
-		
-		return super.hasCapability(capability, facing);
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
 	
 	@Override

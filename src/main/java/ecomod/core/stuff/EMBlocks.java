@@ -1,8 +1,5 @@
 package ecomod.core.stuff;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.common.blocks.*;
@@ -11,33 +8,24 @@ import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.ForgeInternalHandler;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EMBlocks
 {
-	static List<Block> blocks = new ArrayList<Block>();
+	static List<Block> blocks = new ArrayList<>();
 	
 	public static void doPreInit()
 	{
 			blocks.clear();
 			EMItems.items.clear();
 			
-			EcologyMod.log.info("Setuping blocks");
+			EcologyMod.log.info("Setting blocks");
 			
 			EcomodBlocks.inited = true;
 			EcomodBlocks.FILTER = new BlockFilter().setUnlocalizedName(EMConsts.modid+".filter");
@@ -76,7 +64,7 @@ public class EMBlocks
 	
 	public static void regBlock(Block block, String name)
 	{
-		EcologyMod.log.info("Registring block ecomod:"+name);
+		EcologyMod.log.info("Registering block ecomod:"+name);
 		regBlockNoItem(block, name);
 		
 		ItemBlock ib = new ItemBlock(block);
@@ -100,12 +88,12 @@ public class EMBlocks
 		blocks.add(block);
 		
 		if(model)
-			EcologyMod.proxy.putBlockToBeRegistred(block);
+			EcologyMod.proxy.putBlockToBeRegistered(block);
 	}
 	
 	public static void register(RegistryEvent.Register<Block> event)
 	{
-		EcologyMod.log.info("Registring Blocks");
+		EcologyMod.log.info("Registering Blocks");
 		
 		if(blocks.isEmpty())
 			doPreInit();

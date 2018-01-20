@@ -1,12 +1,12 @@
 package ecomod.api.capabilities;
 
-import java.util.concurrent.Callable;
-
 import ecomod.api.pollution.PollutionData;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+
+import java.util.concurrent.Callable;
 
 /**
  * An interface which forms Capability and is used to store PollutionData 
@@ -14,11 +14,11 @@ import net.minecraftforge.common.capabilities.Capability;
  */
 public interface IPollution
 {
-	public PollutionData getPollution();
+	PollutionData getPollution();
 	
-	public void setPollution(PollutionData new_data);
+	void setPollution(PollutionData new_data);
 	
-	public static class Storage implements Capability.IStorage<IPollution>
+	class Storage implements Capability.IStorage<IPollution>
 	{
 
 		@Override
@@ -47,7 +47,7 @@ public interface IPollution
 		
 	}
 	
-	public static class Factory implements Callable<IPollution>
+	class Factory implements Callable<IPollution>
 	{
 		@Override
 		public IPollution call() throws Exception {

@@ -1,30 +1,26 @@
 package ecomod.common.pollution;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 import ecomod.api.pollution.ITEPollutionConfig;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionManager.WorldPollution;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TEPollutionConfig implements ITEPollutionConfig
 {
@@ -34,7 +30,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public TEPollutionConfig()
 	{
-		data = new ArrayList<TEPollution>();
+		data = new ArrayList<>();
 	}
 	
 	public boolean hasTile(ResourceLocation key)
@@ -95,7 +91,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			TEPollutionConfig tepc = new TEPollutionConfig();
 			
-			tepc.data = new ArrayList(Arrays.asList(t.getCfg()));
+			tepc.data = new ArrayList<>(Arrays.asList(t.getCfg()));
 			tepc.version = t.getVersion();
 			
 			return tepc;
@@ -125,7 +121,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid + "/TEPollutionConfig.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid + "/TEPollutionConfig.json";
 		
 		File f = new File(cfg_path);
 		
@@ -153,7 +149,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else
@@ -174,7 +170,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid +"/TEPollutionConfig.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid +"/TEPollutionConfig.json";
 		
 		EcologyMod.log.info("Trying to load TEPC from file");
 		
@@ -199,7 +195,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -233,7 +229,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			return false;
 		
 		this.version = t.getVersion();
-		this.data = new ArrayList(Arrays.asList(t.getCfg()));
+		this.data = new ArrayList<>(Arrays.asList(t.getCfg()));
 		
 		return true;
 	}
@@ -255,7 +251,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+")");
+				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+ ')');
 			}
 		}
 		else
@@ -316,7 +312,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		
 		public String toString()
 		{
-			return "{\"id\" = \""+id+"\", \"emission\" : "+emission.toString()+"}";
+			return "{\"id\" = \""+id+"\", \"emission\" : "+emission.toString()+ '}';
 		}
 		
 		public static TEPollution fromJson(String json)
@@ -325,8 +321,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			try
 			{
-				TEPollution tep = gson.fromJson(json, TEPollution.class);
-				return tep;
+				return gson.fromJson(json, TEPollution.class);
 			}
 			catch (JsonSyntaxException e)
 			{

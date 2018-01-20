@@ -1,7 +1,5 @@
 package ecomod.common.items;
 
-import java.util.List;
-
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.IRespirator;
@@ -24,6 +22,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemRespirator extends ItemArmor implements IRespirator, IRenderableHeadArmor
 {
@@ -56,49 +56,28 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 			
 			if(nbt != null)
 			{
-				int nf;
-			
-				if(nbt.hasKey("filter"))
+				int filter = nbt.getInteger("filter");
+				if(filter > 0)
 				{
-					if(nbt.getInteger("filter") > 0)
-					{
-						if(decr)
-							nbt.setInteger("filter", nbt.getInteger("filter")-((entity.getHealth() >= (entity.getMaxHealth()/2)) ? 1 : 2));
-						
-						return true;
-					}
-					else
-					{
-						int k = getFilterInInventory(player);
-						
-						if(k != -1)
-						{
-							ItemStack stk = player.inventory.getStackInSlot(k);
-							stk.shrink(1);
-							player.inventory.setInventorySlotContents(k, stk);
-							
-							nbt.setInteger("filter", EMConfig.filter_durability);
-							
-							stack.setTagCompound(nbt);
-							
-							return true;
-						}
-					}
+					if(decr)
+						nbt.setInteger("filter", filter-(entity.getHealth() >= entity.getMaxHealth()/2 ? 1 : 2));
+
+					return true;
 				}
 				else
 				{
 					int k = getFilterInInventory(player);
-					
+
 					if(k != -1)
 					{
 						ItemStack stk = player.inventory.getStackInSlot(k);
 						stk.shrink(1);
 						player.inventory.setInventorySlotContents(k, stk);
-						
+
 						nbt.setInteger("filter", EMConfig.filter_durability);
-						
+
 						stack.setTagCompound(nbt);
-						
+
 						return true;
 					}
 				}
@@ -131,11 +110,8 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
         {
             ItemStack itemstack = player.inventory.getStackInSlot(i);
             
-            if(!itemstack.isEmpty())
-            	if(itemstack.getItem() instanceof ItemCore && itemstack.getMetadata() == 0)
-            	{
-            		return i;
-            	}
+            if(!itemstack.isEmpty() && itemstack.getItem() instanceof ItemCore && itemstack.getMetadata() == 0)
+            	return i;
         }
 		
 		return -1;
@@ -148,7 +124,7 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		
 		if(!world.isRemote)
 		{
-			if(player.ticksExisted % (player.getHealth() >= (player.getMaxHealth() / 2) ? 60 : 30) == 0)
+			if(player.ticksExisted % (player.getHealth() >= player.getMaxHealth() / 2 ? 60 : 30) == 0)
 			{
 				if(PollutionUtils.isEntityRespirating(player, false))
 					world.playSound(null, new BlockPos(player.posX, player.posY, player.posZ), SoundEvents.ENTITY_PLAYER_BREATH, SoundCategory.PLAYERS, 1.5F, 0.35F+world.rand.nextInt(35)/100F);
@@ -164,14 +140,14 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 		
 		if(nbt != null && nbt.hasKey("filter"))
 		{
-			int i = (int)(((float)Math.max(nbt.getInteger("filter"), 0))/EMConfig.filter_durability * 100);
+			int i = (int)((float)Math.max(nbt.getInteger("filter"), 0) /EMConfig.filter_durability * 100);
 			if(i == 0)
-				tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter", new Object[0]));
-			tooltip.add(I18n.format("tooltip.ecomod.respirator.filter_capacity", new Object[0]) + ": "+i+"%");
+				tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter"));
+			tooltip.add(I18n.format("tooltip.ecomod.respirator.filter_capacity") + ": "+i+ '%');
 		}
 		else
 		{
-			tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter", new Object[0]));
+			tooltip.add(I18n.format("tooltip.ecomod.respirator.insert_filter"));
 		}
 	}
 	

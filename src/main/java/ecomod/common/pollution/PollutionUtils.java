@@ -1,23 +1,15 @@
 package ecomod.common.pollution;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import buildcraft.api.tiles.IHasWork;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.IRespirator;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,12 +18,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.ModAPIManager;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class PollutionUtils
 {
@@ -42,39 +35,39 @@ public class PollutionUtils
 	
 	public static boolean isTEWorking(World w, TileEntity te)
 	{	
-			//TODO add more checks
-			if(te instanceof TileEntityFurnace)
-			{
-				return ((TileEntityFurnace)te).isBurning();
-			}
-		
-			if(EMConsts.common_caps_compat$IWorker)
-			{
-				if(CommonCapsWorker.CAP_WORKER != null)
-					if(te.hasCapability(CommonCapsWorker.CAP_WORKER, null))
-					{
-						org.cyclops.commoncapabilities.api.capability.work.IWorker work = te.getCapability(CommonCapsWorker.CAP_WORKER, null);
-				
-						return work.hasWork() && work.canWork();
-					}
-			}
-		
-			if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
-			{
-				if(EMIntermod.CAP_HAS_WORK != null)
-					if(te.hasCapability(EMIntermod.CAP_HAS_WORK, null))
-					{
-						IHasWork ihw = te.getCapability(EMIntermod.CAP_HAS_WORK, null);
-						return ihw.hasWork();
-					}
-					else
-					{
-						if(te instanceof IHasWork)
-						{
-							return ((IHasWork)te).hasWork();
-						}
-					}
-			}
+        //TODO add more checks
+        if(te instanceof TileEntityFurnace)
+        {
+            return ((TileEntityFurnace)te).isBurning();
+        }
+
+        if(EMConsts.common_caps_compat$IWorker)
+        {
+            if(CommonCapsWorker.CAP_WORKER != null)
+                if(te.hasCapability(CommonCapsWorker.CAP_WORKER, null))
+                {
+                    org.cyclops.commoncapabilities.api.capability.work.IWorker work = te.getCapability(CommonCapsWorker.CAP_WORKER, null);
+
+                    return work.hasWork() && work.canWork();
+                }
+        }
+
+        if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles"))
+        {
+            if(EMIntermod.CAP_HAS_WORK != null)
+                if(te.hasCapability(EMIntermod.CAP_HAS_WORK, null))
+                {
+                    IHasWork ihw = te.getCapability(EMIntermod.CAP_HAS_WORK, null);
+                    return ihw.hasWork();
+                }
+                else
+                {
+                    if(te instanceof IHasWork)
+                    {
+                        return ((IHasWork)te).hasWork();
+                    }
+                }
+        }
 		
 		return true;
 	}
@@ -91,36 +84,44 @@ public class PollutionUtils
 	}
 	
 	
-	private static boolean hasSurfaceAccess(World w, BlockPos bp, List<BlockPos> was_at)
+	private static boolean hasSurfaceAccess(World w, BlockPos bp, HashMap<Long, HashSet<Integer>> was_at)
 	{
-		if(was_at.contains(bp))
+		long xz = (long)bp.getX() << 32 | bp.getZ() & 0xffffffffL;
+        HashSet<Integer> ys = was_at.get(xz);
+		if(ys != null && ys.contains(bp.getY()))
 			return false;
-		
-		if(w.canSeeSky(bp) && isBlockHollow(w, bp.up(), EnumFacing.UP))
-			return true;
-		
-		if(isBlockHollow(w, bp.up(), EnumFacing.UP))
-			if(hasSurfaceAccess(w, bp.up(), was_at))
+
+		BlockPos bpup = bp.up();
+		if(w.canSeeSky(bp)) {
+			if (isBlockHollow(w, bpup, EnumFacing.UP))
 				return true;
+		} else if(isBlockHollow(w, bpup, EnumFacing.UP) && hasSurfaceAccess(w, bpup, was_at))
+			return true;
 		
 		for(EnumFacing facing : EnumFacing.HORIZONTALS)
 		{
 			BlockPos b = bp.offset(facing);
+            HashSet<Integer> bys = was_at.get((long)b.getX() << 32 | b.getZ() & 0xffffffffL);
+			if (bys != null && bys.contains(b.getY()))
+				continue;
 			if(isBlockHollow(w, b, facing))
 			{
-					if(w.canSeeSky(b))
-					{
+				if(w.canSeeSky(b))
+					return true;
+				else {
+					BlockPos bup = b.up();
+					if (isBlockHollow(w, bup, EnumFacing.UP) && hasSurfaceAccess(w, bup, was_at))
 						return true;
-					}
-					else if(isBlockHollow(w, b.up(), EnumFacing.UP))
-					{
-						if(hasSurfaceAccess(w, b.up(), was_at))
-							return true;
-					}
+				}
 			}
 		}
-			
-		was_at.add(bp);
+
+		if(ys == null) {
+			ys = new HashSet<>();
+			ys.add(bp.getY());
+			was_at.put(xz, ys);
+		} else
+			ys.add(bp.getY());
 		return false;
 	}
 	
@@ -137,28 +138,22 @@ public class PollutionUtils
 		
 		if(aabb == null || aabb == Block.NULL_AABB)
 			return true;
-		
+
 		if(aabb == Block.FULL_BLOCK_AABB)
 			return false;
-		
-		double l = aabb.maxX - aabb.minX;
-        double h = aabb.maxY - aabb.minY;
-        double w = aabb.maxZ - aabb.minZ;
-		
 
 		if(direction.getAxis() == Axis.X)
-		{
-			return h < 0.9D || w < 0.9D;
+        {
+			return aabb.maxY - aabb.minY < 0.9D || aabb.maxZ - aabb.minZ < 0.9D;
 		}
 		else if(direction.getAxis() == Axis.Y)
 		{
-			return l < 0.9D || w < 0.9D;
+			return aabb.maxX - aabb.minX < 0.9D || aabb.maxZ - aabb.minZ < 0.9D;
 		}
 		else if(direction.getAxis() == Axis.Z)
 		{
-			return h < 0.9D || l < 0.9D;
+			return aabb.maxY - aabb.minY < 0.9D || aabb.maxX - aabb.minX < 0.9D;
 		}
-
 		return false;
 	}
 	
@@ -169,36 +164,22 @@ public class PollutionUtils
 	 */
 	public static int isBlockAirPenetratorCFG(IBlockState ibs)
 	{
-		if(ibs == null || ibs.getBlock() == null)
+		if(ibs == null || EcomodStuff.additional_blocks_air_penetrating_state == null)
 			return 0;
-		
 		String searchkey = ibs.getBlock().getRegistryName().toString();
+		Boolean statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey);
+		if(statekey != null)
+			return statekey ? 1 : -1;
 		String searchmeta ="@"+ibs.getBlock().getMetaFromState(ibs);
-		
-		if(EcomodStuff.additional_blocks_air_penetrating_state == null)
-			return 0;
-		
-		if(EcomodStuff.additional_blocks_air_penetrating_state.containsKey(searchkey))
-		{
-			if(EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey))
-				return 1;
-			else
-				return -1;
-		}
-		else if(EcomodStuff.additional_blocks_air_penetrating_state.containsKey(searchkey+searchmeta))
-		{
-			if(EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey+searchmeta))
-				return 1;
-			else
-				return -1;
-		}
-		
+		statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey + searchmeta);
+		if (statekey != null)
+			return statekey ? 1 : -1;
 		return 0;
 	}
 	
 	public static boolean hasSurfaceAccess(World w, BlockPos bp)
-	{	
-		return hasSurfaceAccess(w, bp, new ArrayList<BlockPos>());
+	{
+        return hasSurfaceAccess(w, bp, new HashMap<>());
 	}
 	
 	public static boolean isEntityRespirating(EntityLivingBase entity)
@@ -206,18 +187,8 @@ public class PollutionUtils
 		return isEntityRespirating(entity, true);
 	}
 	
-	public static boolean isEntityRespirating(EntityLivingBase entity, boolean decr)
-	{
+	public static boolean isEntityRespirating(EntityLivingBase entity, boolean decr) {
 		ItemStack is = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-		
-		if(is != null)
-		{
-			if(is.getItem() instanceof IRespirator)
-			{
-				return ((IRespirator)is.getItem()).isRespirating(entity, is, decr);
-			}
-		}
-		
-		return false;
+		return is.getItem() instanceof IRespirator && ((IRespirator) is.getItem()).isRespirating(entity, is, decr);
 	}
 }

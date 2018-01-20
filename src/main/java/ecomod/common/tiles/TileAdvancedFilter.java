@@ -1,9 +1,5 @@
 package ecomod.common.tiles;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import buildcraft.api.tiles.IHasWork;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
@@ -13,30 +9,27 @@ import ecomod.common.pollution.PollutionUtils;
 import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.EMIntermod;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWork
+@net.minecraftforge.fml.common.Optional.Interface(iface = "buildcraft.api.tiles.IHasWork", modid = "buildcraft")
+public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcraft.api.tiles.IHasWork
 {
 	public FluidTank tank;
 	
-	public int ticks = 0;
+	public int ticks;
 	
 	public TileAdvancedFilter()
 	{
@@ -46,23 +39,22 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		tank.setTileEntity(this);
 	}
 
-	@Override
 	public boolean hasWork()
 	{
 		return isWorking();
 	}
 	
-	public boolean was_working = false;
-	private int i1 = 0;
+	public boolean was_working;
+	private int i1;
 	
-	public float vent_rotation = 0F;
+	public float vent_rotation;
 
-	private float rps = 0F;
+	private float rps;
 
 	@Override
 	public void update()
 	{
-		if(ticks > (20 * EMConfig.adv_filter_delay_secs) && (ticks - i1) > 340)
+		if(ticks > 20 * EMConfig.adv_filter_delay_secs && ticks - i1 > 340)
 		{
 			ticks = 0;
 			i1 = 0;
@@ -105,7 +97,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 					
 					if(energy.extractEnergyNotOfficially(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
 					{
-						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_redution"), false);
+						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_reduction"), false);
 					
 						tank.fillInternal(getProduction(), true);
 					
@@ -126,7 +118,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		if(!world.isRemote)
 				if(was_working)
 				{
-					if((ticks - i1) % (340) == 0)//17*20
+					if((ticks - i1) % 340 == 0)//17*20
 						world.playSound(null, getPos(), EcomodStuff.advanced_filter_working, SoundCategory.BLOCKS, 2F, 1F);
 				}
 		
@@ -145,7 +137,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		ret &= world.isBlockPowered(getPos());
 		
 		if(ret)
-		ret &= this.getEnergyStored() >= (EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs);
+		ret &= this.getEnergyStored() >= EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs;
 		
 		if(ret)
 		ret &= getProduction() != null;
@@ -165,24 +157,24 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		
 		FluidStack ret = new FluidStack(EcomodStuff.concentrated_pollution, 0);
 		
-		PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
+		PollutionData adv_filter_reduction = PollutionSourcesConfig.getSource("advanced_filter_reduction");
 		
 		for(PollutionType type : PollutionType.values())
 		{
-			if(pd.get(type) >= adv_filter_redution.get(type))
+			if(pd.get(type) >= adv_filter_reduction.get(type))
 			{
 				switch(type)
 				{
 					case AIR:
-						ret.amount += adv_filter_redution.get(type);
+						ret.amount += adv_filter_reduction.get(type);
 						break;
 						
 					case WATER:
-						ret.amount += adv_filter_redution.get(type) * 2;
+						ret.amount += adv_filter_reduction.get(type) * 2;
 						break;
 						
 					case SOIL:
-						ret.amount += adv_filter_redution.get(type) * 4;
+						ret.amount += adv_filter_reduction.get(type) * 4;
 						break;
 				}
 			}

@@ -1,47 +1,21 @@
 package ecomod.common.pollution.thread;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Function;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
-
-import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.ChunkPollution;
-import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionMultiplier;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionUtils;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
-import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.PositionedEmissionObject;
 import ecomod.common.utils.WPTProfiler;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import ecomod.core.stuff.MainRegistry;
-import ecomod.network.EMPacketHandler;
-import ecomod.network.EMPacketString;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -49,22 +23,29 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WorldProcessingThread extends Thread
 {
 	private PollutionManager manager;
-	private boolean isWorking = false;
+	private boolean isWorking;
 	
-	private List<Pair<Integer, Integer>> loadedChunks = new CopyOnWriteArrayList<Pair<Integer,Integer>>();
+	private List<Pair<Integer, Integer>> loadedChunks = new CopyOnWriteArrayList<>();
 	
-	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<ChunkPollution>();
+	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<>();
 	
-	private List<PositionedEmissionObject> positioned_emissions = new CopyOnWriteArrayList<PositionedEmissionObject>();
+	private List<PositionedEmissionObject> positioned_emissions = new CopyOnWriteArrayList<>();
 	
 	public final WPTProfiler profiler = new WPTProfiler();
 	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
 	
-	public volatile boolean should_update_tiles = false;
+	public volatile boolean should_update_tiles;
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
@@ -111,7 +92,7 @@ public class WorldProcessingThread extends Thread
 			int error_counter = 0;
 			isWorking = true;
 
-			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+")");
+			EcologyMod.log.info("Starting world processing... (dim "+manager.getDim()+ ')');
 			
 			long timestamp = System.currentTimeMillis();
 			
@@ -119,12 +100,12 @@ public class WorldProcessingThread extends Thread
 			
 			World world = manager.getWorld();
 			
-			List<Chunk> chks = new ArrayList<Chunk>();
+			List<Chunk> chks = new ArrayList<>();
 			
 			for(Pair<Integer, Integer> c : loadedChunks)
 				chks.add(PollutionUtils.coordsToChunk(world, c));
 			
-			List<ChunkPollution> temp = /*Collections.synchronizedList(*/new ArrayList<ChunkPollution>()/*)*/;
+			List<ChunkPollution> temp = /*Collections.synchronizedList(*/new ArrayList<>()/*)*/;
 			profiler.endSection();
 			
 			for(Chunk c : chks)
@@ -133,7 +114,7 @@ public class WorldProcessingThread extends Thread
 					continue;
 				try
 				{
-					temp = new ArrayList<ChunkPollution>();
+					temp = new ArrayList<>();
 					PollutionData d = calculateChunkPollution(c);
 					Map<PollutionType, Float> m = calculateMultipliers(c);	
 					
@@ -172,7 +153,7 @@ public class WorldProcessingThread extends Thread
 				}
 				catch (Exception e)
 				{
-					EcologyMod.log.error("Caught an exception while processing chunk ("+c.x+";"+c.z+")!");
+					EcologyMod.log.error("Caught an exception while processing chunk ("+c.x+ ';' +c.z+")!");
 					EcologyMod.log.error(e.toString());
 					e.printStackTrace();
 					
@@ -207,7 +188,7 @@ public class WorldProcessingThread extends Thread
 	
 	public void shutdown()
 	{
-		EcologyMod.log.info("["+this.getName()+"]Carefully shuting down...");
+		EcologyMod.log.info('[' +this.getName()+"]Carefully shutting down...");
 		
 		if(profiler.profilingEnabled)
 		{
@@ -232,7 +213,7 @@ public class WorldProcessingThread extends Thread
 		
 		System.gc();
 		
-		EcologyMod.log.info("["+this.getName()+"]Shutted down.");
+		EcologyMod.log.info('[' +this.getName()+"]Shut down.");
 		
 		//Bye, bye
 		interrupt();
@@ -258,7 +239,7 @@ public class WorldProcessingThread extends Thread
 		return isWorking;
 	}
 	
-	public List<Pair<Integer,Integer>> getLoadedChunks()
+	public List<Pair<Integer, Integer>> getLoadedChunks()
 	{
 		return loadedChunks;
 	}
@@ -310,9 +291,9 @@ public class WorldProcessingThread extends Thread
 	public Map<PollutionType, Float> calculateMultipliers(Chunk c)
 	{
 		profiler.startSection("WPT_CALCULATING_POLLUTION_MULTIPLIERS");
-		List<TileEntity> tes = new CopyOnWriteArrayList<TileEntity>(c.getTileEntityMap().values());
+		List<TileEntity> tes = new CopyOnWriteArrayList<>(c.getTileEntityMap().values());
 		
-		Map<PollutionType, Float> ret = new HashMap<PollutionType, Float>();
+		Map<PollutionType, Float> ret = new HashMap<>();
 		
 		//Multipliers
 		float mA = 1, mW = 1, mS = 1;
@@ -365,16 +346,16 @@ public class WorldProcessingThread extends Thread
 		profiler.startSection("WPT_FORCED_HANDLING_SCHEDULED_EMISSIONS");
 		if(manager!=null)
 		{
-		if(getScheduledEmissions().size() > 0)
-		{
-			for(final ChunkPollution p : getScheduledEmissions())
-				manager.addPollution(p.getKey(), p.getValue());
-		}
-		if(positioned_emissions.size() > 0)
-		{
-			for(final PositionedEmissionObject peo : positioned_emissions)
-				manager.addPollution(peo.getChunkX(), peo.getChunkZ(), peo.getValue());
-		}
+			if(getScheduledEmissions().size() > 0)
+			{
+				for(final ChunkPollution p : getScheduledEmissions())
+					manager.addPollution(p.getKey(), p.getValue());
+			}
+			if(positioned_emissions.size() > 0)
+			{
+				for(final PositionedEmissionObject peo : positioned_emissions)
+					manager.addPollution(peo.getChunkX(), peo.getChunkZ(), peo.getValue());
+			}
 		}
 		profiler.endSection();
 	}
@@ -410,11 +391,8 @@ public class WorldProcessingThread extends Thread
 			return false;
 		WorldProcessingThread other = (WorldProcessingThread) obj;
 		if (manager == null) {
-			if (other.manager != null)
-				return false;
-		} else if (!manager.equals(other.manager))
-			return false;
-		return true;
+			return other.manager == null;
+		} else return manager.equals(other.manager);
 	}
 	
 	

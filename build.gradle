@@ -1,0 +1,103 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+repositories {
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
+    maven {
+        name "BuildCraft"
+        url = "https://mod-buildcraft.com/maven"
+    }
+    maven {
+        name = "HWYLA"
+        url = "http://tehnut.info/maven"
+    }
+    maven {
+        name = "IC2"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven {
+        name = "Cyclops Repo"
+        url = "https://dl.bintray.com/cyclopsmc/dev/"
+    }
+    maven {
+        name = "OpenComputers"
+        url = "http://maven.cil.li/"
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "${minecraft_version}-${mod_version}"
+group= "ecomod"
+archivesBaseName = "ecomod"
+sourceCompatibility = targetCompatibility = "1.8"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+minecraft {
+    version = "${forge_version}"
+    runDir = "run"
+    mappings = "snapshot_20180114"
+    makeObfSourceJar = false
+}
+
+jar {
+    manifest {
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLAT': 'ecomod_at.cfg'
+        attributes 'FMLCorePlugin': 'ecomod.asm.EcomodLoadingPlugin'
+    }
+}
+
+task deobfJar(type: Jar) { // Generate deobfuscated
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+tasks.build.dependsOn('deobfJar')
+artifacts {
+    archives deobfJar
+    archives jar
+}
+
+dependencies {
+    deobfCompile "cofh:RedstoneFlux:${redstoneflux_version}"
+    compileOnly "com.mod-buildcraft:buildcraft-api:${buildcraft_version}"
+    compileOnly "mcp.mobius.waila:Hwyla:${waila_version}"
+    compileOnly "net.industrial-craft:industrialcraft-2:${ic2_version}:dev"
+    compileOnly "li.cil.oc:OpenComputers:${oc_version}:api"
+    compile "org.cyclops.commoncapabilities:CommonCapabilities:${commoncaps_version}"
+}
+
+processResources
+{
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }        
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

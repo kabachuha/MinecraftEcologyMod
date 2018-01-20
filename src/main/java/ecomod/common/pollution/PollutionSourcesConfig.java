@@ -1,23 +1,9 @@
 package ecomod.common.pollution;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.io.FileUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 import ecomod.api.EcomodStuff;
-import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
@@ -26,39 +12,50 @@ import ecomod.core.stuff.EMConfig;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.versioning.ComparableVersion;
-import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class PollutionSourcesConfig
 {
-	public String version = "";
+	public String version;
 	
-	public List<String> blacklisted_items = null;
+	public List<String> blacklisted_items;
 	
-	public Map<String, PollutionData> polluting_items = null;
+	public Map<String, PollutionData> polluting_items;
 	
-	public Map<String, PollutionData> pollution_sources = null;
+	public Map<String, PollutionData> pollution_sources;
 	
-	public Map<String, PollutionData> smelted_items_pollution = null;
+	public Map<String, PollutionData> smelted_items_pollution;
 	
 	public PollutionSourcesConfig()
 	{
 		version = "1.0-"+EMConsts.version;
-		blacklisted_items = new ArrayList<String>();
-		polluting_items = new HashMap<String, PollutionData>();
-		pollution_sources = new HashMap<String, PollutionData>();
-		smelted_items_pollution = new HashMap<String, PollutionData>();
+		blacklisted_items = new ArrayList<>();
+		polluting_items = new HashMap<>();
+		pollution_sources = new HashMap<>();
+		smelted_items_pollution = new HashMap<>();
 	}
 	
 	public void pushToApi()
 	{
 		if(EcomodStuff.blacklisted_items == null)
-			EcomodStuff.blacklisted_items = new ArrayList<String>();
+			EcomodStuff.blacklisted_items = new ArrayList<>();
 		if(EcomodStuff.polluting_items == null)
-			EcomodStuff.polluting_items = new HashMap<String, PollutionData>();
+			EcomodStuff.polluting_items = new HashMap<>();
 		if(EcomodStuff.pollution_sources == null)
-			EcomodStuff.pollution_sources = new HashMap<String, PollutionData>();
+			EcomodStuff.pollution_sources = new HashMap<>();
 		if(EcomodStuff.smelted_items_pollution == null)
-			EcomodStuff.smelted_items_pollution = new HashMap<String, PollutionData>();
+			EcomodStuff.smelted_items_pollution = new HashMap<>();
 		
 		
 		if(blacklisted_items != null)
@@ -191,7 +188,7 @@ public class PollutionSourcesConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid + "/PollutionSources.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid + "/PollutionSources.json";
 		
 		File f = new File(cfg_path);
 		
@@ -217,7 +214,7 @@ public class PollutionSourcesConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else
@@ -286,13 +283,13 @@ public class PollutionSourcesConfig
 			EcologyMod.log.error(e.toString());
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionSources.json";
+		cfg_path = cfg_path + '/' + EMConsts.modid + "/PollutionSources.json";
 		
 		EcologyMod.log.info("Trying to load PollutionSources from file");
 		
@@ -317,7 +314,7 @@ public class PollutionSourcesConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -374,7 +371,7 @@ public class PollutionSourcesConfig
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the PollutionSources for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+")");
+				throw new NullPointerException("Impossible to load the PollutionSources for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+ ')');
 			}
 		}
 		else
@@ -421,10 +418,10 @@ public class PollutionSourcesConfig
 		public Sources()
 		{
 			version = "1.0-"+EMConsts.version;
-			sources = new ArrayList<StrPD>();
-			blacklisted_items = new ArrayList<String>();
-			custom_item_pollution = new ArrayList<StrPD>();
-			smelted_item_pollution = new ArrayList<StrPD>();
+			sources = new ArrayList<>();
+			blacklisted_items = new ArrayList<>();
+			custom_item_pollution = new ArrayList<>();
+			smelted_item_pollution = new ArrayList<>();
 		}
 		
 		public Sources(String v, List<StrPD> src, List<String> blacklisted, List<StrPD> item_pollution, List<StrPD> smelted)
@@ -468,7 +465,7 @@ public class PollutionSourcesConfig
 		
 		static List<StrPD> mapToStrPDList(Map<String, PollutionData> map)
 		{
-			List ret = new ArrayList<StrPD>();
+			List<StrPD> ret = new ArrayList<>();
 			
 			for(Entry<String, PollutionData> e : map.entrySet())
 			{
@@ -480,7 +477,7 @@ public class PollutionSourcesConfig
 		
 		static Map<String, PollutionData> StrPDListToMap(List<StrPD> list)
 		{
-			Map<String, PollutionData> ret = new HashMap<String, PollutionData>();
+			Map<String, PollutionData> ret = new HashMap<>();
 			
 			for(StrPD pd : list)
 			{

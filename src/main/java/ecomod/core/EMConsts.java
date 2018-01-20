@@ -1,6 +1,6 @@
 package ecomod.core;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EMConsts
@@ -17,7 +17,7 @@ public class EMConsts
 	 * 
 	 */
 	public static final String mcversion = "1.12.2";
-	public static final String version = mcversion + "-1.4.1.0";
+	public static final String version = mcversion + "-1.4.2.0";
 	
 	public static final String deps = "required-after:FML";
 	
@@ -34,7 +34,7 @@ public class EMConsts
 	
 	public static final String contributors = "Artem226(author/maintainer), xhz313123(Chinese translation) and all feedbackers.";
 	
-	public static final List<String> authors = Arrays.asList(new String[]{"Artem226"});
+	public static final List<String> authors = Collections.singletonList("Artem226");
 	
 	//Proxies
 	
@@ -45,7 +45,7 @@ public class EMConsts
 	
 	public static final int analyzer_gui_id = 0;
 	
-	public static boolean asm_transformer_inited = false;
+	public static boolean asm_transformer_inited;
 	
-	public static boolean common_caps_compat$IWorker = false;
+	public static boolean common_caps_compat$IWorker;
 }

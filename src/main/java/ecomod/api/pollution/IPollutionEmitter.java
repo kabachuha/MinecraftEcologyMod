@@ -12,5 +12,5 @@ package ecomod.api.pollution;
  */
 public interface IPollutionEmitter
 {
-	public PollutionData pollutionEmission(boolean simulate);
+	PollutionData pollutionEmission(boolean simulate);
 }

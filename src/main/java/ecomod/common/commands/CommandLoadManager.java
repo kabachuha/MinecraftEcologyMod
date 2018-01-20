@@ -22,7 +22,7 @@ public class CommandLoadManager extends CommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		int dim = 0;
+		int dim;
 		
 		if(args.length > 0 && args[0] != null)
 		{
@@ -37,10 +37,7 @@ public class CommandLoadManager extends CommandBase {
 		}
 		else
 		{
-			if(sender != null && sender.getEntityWorld() != null)
-			{
-				dim = sender.getEntityWorld().provider.getDimension();
-			}
+			dim = sender.getEntityWorld().provider.getDimension();
 		}
 		
 		WorldProcessingThread wpt = EcologyMod.ph.getWPT(dim);

@@ -7,16 +7,13 @@ import ecomod.core.stuff.EMConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -32,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockFrame extends Block
 {
 	@ItemStackHolder("opencomputers:adapter")
-	public static ItemStack oc_adapter = null;
+	public static ItemStack oc_adapter;
 	
 	//0 - Basic, 1 - Advanced
 	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 1);
@@ -82,7 +79,7 @@ public class BlockFrame extends Block
 	
 	protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {TYPE});
+        return new BlockStateContainer(this, TYPE);
     }
 	
 	public boolean isOpaqueCube(IBlockState state)
@@ -109,7 +106,7 @@ public class BlockFrame extends Block
 			{
 				ItemStack pi = playerIn.getHeldItem(hand);
 				
-				if(pi != null && !pi.isEmpty())
+				if(!pi.isEmpty())
 				{
 					if(pi.getItem() instanceof ItemCore)
 					{

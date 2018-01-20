@@ -1,27 +1,20 @@
 package ecomod.core.stuff;
 
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gson.*;
-
-import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
-import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.utils.AnalyzerPollutionEffect;
-import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class EMConfig
 {
@@ -30,7 +23,7 @@ public class EMConfig
 	
 	public static int[] allowedDims = new int[]{0};
 	
-	public static boolean wptimm = false;
+	public static boolean wptimm;
 	
 	public static int wptcd = 60;
 	
@@ -38,7 +31,7 @@ public class EMConfig
 	public static String effectsURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionEffects.json";
 	public static String sourcesURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionSources.json";
 	
-	public static float filter_adjacent_tiles_redution = 0.06F;
+	public static float filter_adjacent_tiles_reduction = 0.06F;
 	
 	public static int filter_energy_per_emission = 5000;
 	
@@ -52,7 +45,7 @@ public class EMConfig
 	
 	public static boolean enable_advanced_filter = true;
 	
-	public static List<String> item_blacklist = new ArrayList<String>();
+	public static List<String> item_blacklist = new ArrayList<>();
 	
 	public static int wpr = 1;
 	
@@ -88,7 +81,7 @@ public class EMConfig
 	
 	public static boolean is_oc_analyzer_interface_crafted_by_right_click = true;
 	
-	public static boolean wasteland_spawns_naturally = false;
+	public static boolean wasteland_spawns_naturally;
 	
 	public static float smog_rendering_distance_intensity_exponent = 1.4F; 
 	
@@ -133,7 +126,7 @@ public class EMConfig
 			
 			sourcesURL= config.getString("POLLUTION_SOURCES_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionSources.json", "A URL to the PollutionSourcesConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionSourcesConfig is remotely located you should have a connection to its location! When you are playing on a server you will use its version of PollutionSourcesConfig.");
 			
-			filter_adjacent_tiles_redution = config.getFloat("FilterAdjacentTilesRedution", "POLLUTION", 0.06F, 0, 1, "", lang("pollution.filter"));
+			filter_adjacent_tiles_reduction = config.getFloat("FilterAdjacentTilesReduction", "POLLUTION", 0.06F, 0, 1, "", lang("pollution.filter"));
 			
 			diffusion_factor = config.getFloat("DiffusionFactor", "POLLUTION", 0.01F, 0, 1, "", lang("pollution.diffusion_factor"));
 			
@@ -157,7 +150,7 @@ public class EMConfig
 			
 			isConcentratedPollutionExplosive = config.getBoolean("ConcentratedPollutionExplosive", "POLLUTION", true, "", lang("pollution.concentrated_pollution_explosive"));
 			
-			acid_rain_item_deterioriation_factor = config.getFloat("AcidRainItemDeterioriationFactor", "POLLUTION", 0.05F, 0, 1, "", lang("pollution.acid_rain_item_deterioriation_factor"));
+			acid_rain_item_deterioriation_factor = config.getFloat("AcidRainItemDeteriorationFactor", "POLLUTION", 0.05F, 0, 1, "", lang("pollution.acid_rain_item_deterioriation_factor"));
 			
 			fuel_concentrated_pollution_burn_time = config.getInt("FuelConcentratedPollutionBurnTime", "INTERMOD", 40, 1, Integer.MAX_VALUE, "");
 			
@@ -169,7 +162,7 @@ public class EMConfig
 			
 			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
 			
-			food_polluting_factor = config.getFloat("FoodPollutiingFactor", "POLLUTION", 0.001F, 0, 1, "");
+			food_polluting_factor = config.getFloat("FoodPollutingFactor", "POLLUTION", 0.001F, 0, 1, "");
 			
 			filter_energy_per_emission = config.getInt("FilterEnergyPerNearbyPollutionEmission", "TILES", 5000, 0, Integer.MAX_VALUE, "");
 			
@@ -188,12 +181,12 @@ public class EMConfig
 			}
 			else
 			{
-				EcologyMod.log.error("Unable to read PollutionToFoodPoisonFactors property from the config!!! Using default value"+new double[]{0.001F, 0.01F, 0.03F}.toString());
+				EcologyMod.log.error("Unable to read PollutionToFoodPoisonFactors property from the config!!! Using default value"+ Arrays.toString(new double[]{0.001F, 0.01F, 0.03F}));
 			}
 			
 			
-			EcomodStuff.pollution_effects = new HashMap<String, IAnalyzerPollutionEffect>();
-			EcomodStuff.additional_blocks_air_penetrating_state = new HashMap<String, Boolean>();
+			EcomodStuff.pollution_effects = new HashMap<>();
+			EcomodStuff.additional_blocks_air_penetrating_state = new HashMap<>();
 			
 			for(String s : config.getStringList("AirPenetrators", "AIR", new String[]{"ecomod:frame"}, ""))
 			{
@@ -247,7 +240,7 @@ public class EMConfig
 		
 		PollutionData no_trees_pollution = new PollutionData(200000, 400000, 200000);
 		
-		List<AnalyzerPollutionEffect> defs = new ArrayList<AnalyzerPollutionEffect>();
+		List<AnalyzerPollutionEffect> defs = new ArrayList<>();
 		
 		defs.add(AnalyzerPollutionEffect.createSimple("food_pollution", food_pollution_start, TriggeringType.OR));
 		defs.add(AnalyzerPollutionEffect.createSimpleNull("smog", smog_pollution, TriggeringType.AND));
@@ -276,33 +269,32 @@ public class EMConfig
 	
 	public static void setupSources(String cfg_dir)
 	{
-		PollutionData adv_filter_redution = new PollutionData(-4.5F, -0.5F, -0.5F);
+		PollutionData adv_filter_reduction = new PollutionData(-4.5F, -0.5F, -0.5F);
 		PollutionData item_expire_pollution = new PollutionData(0F, 0.0625F, 0.125F);
 		PollutionData explosion_pollution = new PollutionData(20.5F, 6.25F, 8.25F);
 		PollutionData concentrated_pollution_explosion_pollution = new PollutionData(50F,5F,10F);
 		PollutionData bonemeal_pollution = new PollutionData(1F, 1F, 2F);
 		PollutionData pollution_per_potion_brewed = new PollutionData(6F, 0F, 0F);
 		PollutionData pollution_reduced_by_tree = new PollutionData(-22F, -3F, -17F);
-		PollutionData hoe_plowing_reducion = new PollutionData(0F,0F,-1F);
+		PollutionData hoe_plowing_reduction = new PollutionData(0F,0F,-1F);
 		PollutionData fire_pollution = new PollutionData(3.5F, 0F, 0F);
-		PollutionData leaves_redution = new PollutionData(-20F, 0F, 0F);
+		PollutionData leaves_reduction = new PollutionData(-20F, 0F, 0F);
 		PollutionData smelted_item_pollution = new PollutionData(3F, 0.6F, 1.9F);
-		
-		List<String> item_blacklist = new ArrayList<String>();
-		item_blacklist.addAll(Arrays.asList(new String[]{"minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds"}));
+
+		List<String> item_blacklist = Arrays.asList("minecraft:apple", "minecraft:stick", "minecraft:mushroom_stew", "minecraft:string", "minecraft:feather", "minecraft:gunpowder", "minecraft:wheat", "minecraft:wheat_seeds", "minecraft:porkchop", "minecraft:snowball", "minecraft:leather", "minecraft:reeds", "minecraft:slime_ball", "minecraft:egg", "minecraft:fish", "minecraft:sugar", "minecraft:melon", "minecraft:pumpkin_seeds", "minecraft:melon_seeds", "minecraft:beef", "minecraft:chicken", "minecraft:carrot", "minecraft:potato", "minecraft:rabbit", "minecraft:mutton", "minecraft:chorus_fruit", "minecraft:beetroot", "minecraft:beetroot_seeds");
 		
 		PollutionSourcesConfig psc = new PollutionSourcesConfig();
 		psc.blacklisted_items.addAll(item_blacklist);
-		psc.pollution_sources.put("advanced_filter_redution", adv_filter_redution);
+		psc.pollution_sources.put("advanced_filter_reduction", adv_filter_reduction);
 		psc.pollution_sources.put("expired_item", item_expire_pollution);
 		psc.pollution_sources.put("explosion_pollution_per_power", explosion_pollution);
 		psc.pollution_sources.put("bonemeal_pollution", bonemeal_pollution);
 		psc.pollution_sources.put("fire_pollution", fire_pollution);
 		psc.pollution_sources.put("brewing_potion_pollution", pollution_per_potion_brewed);
-		psc.pollution_sources.put("tree_growing_pollution_redution", pollution_reduced_by_tree);
+		psc.pollution_sources.put("tree_growing_pollution_reduction", pollution_reduced_by_tree);
 		psc.pollution_sources.put("concentrated_pollution_explosion_pollution", concentrated_pollution_explosion_pollution);
-		psc.pollution_sources.put("hoe_plowing_reducion", hoe_plowing_reducion);
-		psc.pollution_sources.put("leaves_redution", leaves_redution);
+		psc.pollution_sources.put("hoe_plowing_reduction", hoe_plowing_reduction);
+		psc.pollution_sources.put("leaves_reduction", leaves_reduction);
 		psc.pollution_sources.put("default_smelted_item_pollution", smelted_item_pollution);
 		
 		psc.save(cfg_dir);
