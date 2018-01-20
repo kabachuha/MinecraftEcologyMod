@@ -1,5 +1,5 @@
 {
-  "version": "1.2",
+  "version": "1.3",
   "config": [
     //Minecraft Furnace is a reference
     {
@@ -10,7 +10,7 @@
         "soil": 25.0
       }
     },
-	{
+    {
       "id": "minecraft:smeltingfactory",
       "emission": {
         "air": 200.0,
@@ -18,7 +18,7 @@
         "soil": 30.0
       }
     },
-	{
+    {
       "id": "minecraft:advancedsmeltingfactory",
       "emission": {
         "air": 300.0,
@@ -26,7 +26,7 @@
         "soil": 60.0
       }
     },
-	{
+    {
       "id": "minecraft:ultimatesmeltingfactory",
       "emission": {
         "air": 400.0,
@@ -34,7 +34,7 @@
         "soil": 120.0
       }
     },
-	{
+    {
       "id": "minecraft:resistiveheater",
       "emission": {
         "air": 50.0,
@@ -42,7 +42,7 @@
         "soil": 15.0
       }
     },
-	{
+    {
       "id": "minecraft:fuelwoodheater",
       "emission": {
         "air": 100.0,
@@ -50,7 +50,7 @@
         "soil": 25.0
       }
     },
-	{
+    {
       "id": "minecraft:osmiumcompressor",
       "emission": {
         "air": 70.0,
@@ -58,7 +58,7 @@
         "soil": 6.0
       }
     },
-	{
+    {
       "id": "minecraft:combiner",
       "emission": {
         "air": 95.0,
@@ -66,7 +66,7 @@
         "soil": 10.0
       }
     },
-	{
+    {
       "id": "minecraft:digitalminer",
       "emission": {
         "air": 150.0,
@@ -74,7 +74,7 @@
         "soil": 250.0
       }
     },
-	{
+    {
       "id": "minecraft:crusher",
       "emission": {
         "air": 135.0,
@@ -82,7 +82,7 @@
         "soil": 10.0
       }
     },
-	{
+    {
       "id": "minecraft:enrichmentchamber",
       "emission": {
         "air": 180.0,
@@ -90,7 +90,7 @@
         "soil": 23.0
       }
     },
-	{
+    {
       "id": "minecraft:metallurgicinfuser",
       "emission": {
         "air": 150.0,
@@ -98,7 +98,7 @@
         "soil": 3.0
       }
     },
-	{
+    {
       "id": "minecraft:purificationchamber",
       "emission": {
         "air": 180.0,
@@ -106,7 +106,7 @@
         "soil": 20.0
       }
     },
-	{
+    {
       "id": "minecraft:energizedsmelter",
       "emission": {
         "air": 73.0,
@@ -114,7 +114,7 @@
         "soil": 4.0
       }
     },
-	{
+    {
       "id": "minecraft:rotarycondensator",
       "emission": {
         "air": 50.0,
@@ -122,7 +122,7 @@
         "soil": 15.0
       }
     },
-	{
+    {
       "id": "minecraft:mekanismteleporter",
       "emission": {
         "air": 10.0,
@@ -130,7 +130,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:electricpump",
       "emission": {
         "air": 5.0,
@@ -138,7 +138,7 @@
         "soil": 5.0
       }
     },
-	{
+    {
       "id": "minecraft:precisionsawmill",
       "emission": {
         "air": 84.0,
@@ -146,7 +146,7 @@
         "soil": 10.0
       }
     },
-	{
+    {
       "id": "minecraft:heatgenerator",
       "emission": {
         "air": 100.0,
@@ -154,7 +154,7 @@
         "soil": 25.0
       }
     },
-	{
+    {
       "id": "minecraft:thermalevaporationcontroller",
       "emission": {
         "air": 10.0,
@@ -162,7 +162,7 @@
         "soil": 5.0
       }
     },
-	{
+    {
       "id": "minecraft:boilercasing",
       "emission": {
         "air": 10.0,
@@ -170,7 +170,7 @@
         "soil": 10.0
       }
     },
-	{
+    {
       "id": "minecraft:reactorcontroller",
       "emission": {
         "air": 300.0,
@@ -178,7 +178,7 @@
         "soil": 300.0
       }
     },
-	{
+    {
       "id": "minecraft:superheatingelement",
       "emission": {
         "air": 150.0,
@@ -186,7 +186,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:advancedboundingblock",
       "emission": {
         "air": 100.0,
@@ -194,7 +194,7 @@
         "soil": 100.0
       }
     },
-	{
+    {
       "id": "minecraft:chemicaloxidizer",
       "emission": {
         "air": 170.0,
@@ -202,7 +202,7 @@
         "soil": 20.0
       }
     },
-	{
+    {
       "id": "minecraft:chemicalinfuser",
       "emission": {
         "air": 160.0,
@@ -210,7 +210,7 @@
         "soil": 16.0
       }
     },
-	{
+    {
       "id": "minecraft:chemicalinjectionchamber",
       "emission": {
         "air": 120.0,
@@ -218,7 +218,7 @@
         "soil": 30.0
       }
     },
-	{
+    {
       "id": "minecraft:chemicaldissolutionchamber",
       "emission": {
         "air": 150.0,
@@ -226,7 +226,7 @@
         "soil": 27.0
       }
     },
-	{
+    {
       "id": "minecraft:chemicalwasher",
       "emission": {
         "air": 42.0,
@@ -234,7 +234,7 @@
         "soil": 30.0
       }
     },
-	{
+    {
       "id": "minecraft:chemicalcrystallizer",
       "emission": {
         "air": 50.0,
@@ -242,7 +242,7 @@
         "soil": 50.0
       }
     },
-	{
+    {
       "id": "minecraft:electrolyticseparator",
       "emission": {
         "air": 5.0,
@@ -250,7 +250,7 @@
         "soil": 5.0
       }
     },
-	{
+    {
       "id": "minecraft:pressurizedreactionchamber",
       "emission": {
         "air": 165.0,
@@ -258,7 +258,7 @@
         "soil": 38.0
       }
     },
-	{
+    {
       "id": "minecraft:laser",
       "emission": {
         "air": 150.0,
@@ -266,7 +266,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:quantumentangloporter",
       "emission": {
         "air": 100.0,
@@ -274,7 +274,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:solarneutronactivator",
       "emission": {
         "air": 50.0,
@@ -282,7 +282,7 @@
         "soil": 100.0
       }
     },
-	{
+    {
       "id": "minecraft:gasgenerator",
       "emission": {
         "air": 150.0,
@@ -290,7 +290,7 @@
         "soil": 50.0
       }
     },
-	{
+    {
       "id": "minecraft:biogenerator",
       "emission": {
         "air": 100.0,
@@ -298,7 +298,7 @@
         "soil": 25.0
       }
     },
-	{
+    {
       "id": "minecraft:relaymk1tile",
       "emission": {
         "air": 75.0,
@@ -306,7 +306,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:relaymk2tile",
       "emission": {
         "air": 150.0,
@@ -314,7 +314,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:relaymk3tile",
       "emission": {
         "air": 300.0,
@@ -322,7 +322,7 @@
         "soil": 0.0
       }
     },
-	{
+    {
       "id": "minecraft:dmfurnacetile",
       "emission": {
         "air": 100.0,
@@ -330,7 +330,7 @@
         "soil": 25.0
       }
     },
-	{
+    {
       "id": "minecraft:rmfurnacetile",
       "emission": {
         "air": 200.0,
@@ -338,7 +338,7 @@
         "soil": 50.0
       }
     },
-	{
+    {
       "id": "minecraft:collectormk1tile",
       "emission": {
         "air": 200.0,
@@ -346,7 +346,7 @@
         "soil": 200.0
       }
     },
-	{
+    {
       "id": "minecraft:collectormk2tile",
       "emission": {
         "air": 400.0,
@@ -354,7 +354,7 @@
         "soil": 400.0
       }
     },
-	{
+    {
       "id": "minecraft:collectormk3tile",
       "emission": {
         "air": 800.0,
@@ -362,7 +362,7 @@
         "soil": 800.0
       }
     },
-	{
+    {
       "id": "minecraft:ec_compressor",
       "emission": {
         "air": 100.0,
@@ -384,6 +384,46 @@
         "air": 10.0,
         "water": 5.0,
         "soil": 5.0
+      }
+    },
+    {
+      "id": "minecraft:tileentityvoidicpowergen",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "minecraft:tileentityvoidinfuser",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "minecraft:tileentityvoidmacerator",
+      "emission": {
+        "air": 125.0,
+        "water": 15.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "minecraft:tileentityvoidblastfurnace",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "minecraft:tileentityrealityteleporter",
+      "emission": {
+        "air": 10.0,
+        "water": 0.0,
+        "soil": 0.0
       }
     },
     {
@@ -562,14 +602,14 @@
         "soil": 50.0
       }
     },
-	{
+    {
       "id": "immersiveengineering:belljar",
       "emission": {
         "air": 55.0,
         "water": 45.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "immersivepetroleum:gasgenerator",
       "emission": {
@@ -813,9 +853,9 @@
     {
       "id": "industrialforegoing:mob_relocator_tile",
       "emission": {
-        "air": 10.0,
-        "water": 0.0,
-        "soil": 0.0
+        "air": 50.0,
+        "water": 20.0,
+        "soil": 20.0
       }
     },
     {
@@ -1459,6 +1499,14 @@
       }
     },
     {
+      "id": "minecraft:rftoolsdim_dimension_builder",
+      "emission": {
+        "air": 500.0,
+        "water": 500.0,
+        "soil": 500.0
+      }
+    },
+    {
       "id": "xu2:tilemine",
       "emission": {
         "air": 110.0,
@@ -1665,7 +1713,7 @@
         "water": 0.0,
         "soil": 0.0
       }
-	},
+    },
     {
       "id": "actuallyadditions:leafgenerator",
       "emission": {
@@ -1673,7 +1721,7 @@
         "water": 50.0,
         "soil": 50.0
       }
-	},
+    },
     {
       "id": "actuallyadditions:xpsolidifier",
       "emission": {
@@ -1681,7 +1729,7 @@
         "water": 5.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "actuallyadditions:canolapress",
       "emission": {
@@ -1689,7 +1737,7 @@
         "water": 10.0,
         "soil": 15.0
       }
-	},
+    },
     {
       "id": "actuallyadditions:compost",
       "emission": {
@@ -1697,7 +1745,7 @@
         "water": 20.0,
         "soil": 40.0
       }
-	},
+    },
     {
       "id": "actuallyadditions:feeder",
       "emission": {
@@ -1705,7 +1753,7 @@
         "water": 20.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:reinforcedfurnace",
       "emission": {
@@ -1713,7 +1761,7 @@
         "water": 5.0,
         "soil": 15.0
       }
-	},
+    },
     {
       "id": "minecraft:stoneseparator",
       "emission": {
@@ -1721,7 +1769,7 @@
         "water": 5.0,
         "soil": 25.0
       }
-	},
+    },
     {
       "id": "minecraft:algorithmseparator",
       "emission": {
@@ -1729,7 +1777,7 @@
         "water": 5.0,
         "soil": 25.0
       }
-	},
+    },
     {
       "id": "minecraft:hungerprocessor",
       "emission": {
@@ -1737,7 +1785,7 @@
         "water": 5.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:healthprocessor",
       "emission": {
@@ -1745,7 +1793,7 @@
         "water": 5.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:extractionchamber",
       "emission": {
@@ -1753,7 +1801,7 @@
         "water": 5.0,
         "soil": 49.0
       }
-	},
+    },
     {
       "id": "minecraft:restorationchamber",
       "emission": {
@@ -1761,7 +1809,7 @@
         "water": 5.0,
         "soil": 49.0
       }
-	},
+    },
     {
       "id": "minecraft:reassemblychamber",
       "emission": {
@@ -1769,7 +1817,7 @@
         "water": 5.0,
         "soil": 40.0
       }
-	},
+    },
     {
       "id": "minecraft:precisionchamber",
       "emission": {
@@ -1777,7 +1825,7 @@
         "water": 5.0,
         "soil": 40.0
       }
-	},
+    },
     {
       "id": "minecraft:processingchamber",
       "emission": {
@@ -1785,7 +1833,7 @@
         "water": 5.0,
         "soil": 40.0
       }
-	},
+    },
     {
       "id": "minecraft:analysingchamber",
       "emission": {
@@ -1793,7 +1841,7 @@
         "water": 0.0,
         "soil": 0.0
       }
-	},
+    },
     {
       "id": "minecraft:fabricationchamber",
       "emission": {
@@ -1801,7 +1849,7 @@
         "water": 5.0,
         "soil": 40.0
       }
-	},
+    },
     {
       "id": "minecraft:basicgreenhouse",
       "emission": {
@@ -1809,7 +1857,7 @@
         "water": 40.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:starchextractor",
       "emission": {
@@ -1817,7 +1865,7 @@
         "water": 15.0,
         "soil": 15.0
       }
-	},
+    },
     {
       "id": "minecraft:redstoneextractor",
       "emission": {
@@ -1825,7 +1873,7 @@
         "water": 20.0,
         "soil": 20.0
       }
-	},
+    },
     {
       "id": "minecraft:glowstoneextractor",
       "emission": {
@@ -1833,7 +1881,7 @@
         "water": 25.0,
         "soil": 25.0
       }
-	},
+    },
     {
       "id": "minecraft:stoneassimilator",
       "emission": {
@@ -1841,7 +1889,7 @@
         "water": 40.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:algorithmassimilator",
       "emission": {
@@ -1849,7 +1897,7 @@
         "water": 40.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:lantern",
       "emission": {
@@ -1857,7 +1905,7 @@
         "water": 0.0,
         "soil": 0.0
       }
-	},
+    },
     {
       "id": "minecraft:flawlessgreenhouse",
       "emission": {
@@ -1865,7 +1913,7 @@
         "water": 50.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "minecraft:atomicmultiplier",
       "emission": {
@@ -1873,7 +1921,7 @@
         "water": 500.0,
         "soil": 500.0
       }
-	},
+    },
     {
       "id": "minecraft:co2generator",
       "emission": {
@@ -1881,7 +1929,7 @@
         "water": 50.0,
         "soil": 50.0
       }
-	},
+    },
     {
       "id": "minecraft:weathercontroller",
       "emission": {
@@ -1889,7 +1937,7 @@
         "water": 250.0,
         "soil": 250.0
       }
-	},
+    },
     {
       "id": "minecraft:advancedgreenhouse",
       "emission": {
@@ -1897,7 +1945,7 @@
         "water": 45.0,
         "soil": 5.0
       }
-	},
+    },
     {
       "id": "nuclearcraft:nuclear_furnace",
       "emission": {
@@ -2042,7 +2090,7 @@
         "soil": 335.0
       }
     },
-	{
+    {
       "id": "nuclearcraft:rtg_californium",
       "emission": {
         "air": 445.0,
