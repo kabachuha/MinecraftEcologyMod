@@ -153,3 +153,13 @@ msg.ecomod.bad_sleep=You are feeling ill. Perhaps the air is not clean enough.
 msg.ecomod.polluted_food=You've eaten polluted food!
 
 msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod is not working correctly! During the loading ASM transformers had failed for the following classes: %s. Look for reasons in the log and try to fix them if possible or send your log to 
+
+#JEI
+gui.jei.ingredient.ecomod.pollution=Environmental Pollution
+gui.jei.desc.ingr.ecomod.pollution=Environmental Pollution
+gui.jei.desc.ecomod.pollution.air=Air
+gui.jei.desc.ecomod.pollution.water=Water
+gui.jei.desc.ecomod.pollution.soil=Soil
+gui.jei.category.ecomod.air_filtration=Air Filtration
+gui.jei.category.ecomod.manually_assembly=Manually Assembly
+gui.jei.category.ecomod.manually_assembly.note=Right-click the first item(set in the world) with the second

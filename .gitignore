@@ -3,8 +3,11 @@ src/main/java/buildcraft/
 src/api/java/ic2/
 src/api/java/mcp/mobius/waila/
 src/api/java/toughasnails/
+src/api/java/mezz/
 src/api/java/org/cyclops/
 src/main/java/ecomod/test/
+
+src/main/resources/META-INF/MANIFEST.MF
 
 #################
 ## Eclipse

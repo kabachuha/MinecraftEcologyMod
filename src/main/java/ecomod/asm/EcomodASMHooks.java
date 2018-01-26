@@ -7,9 +7,9 @@ import ecomod.api.client.IRenderableHeadArmor;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
 import ecomod.client.advancements.triggers.EMTriggers;
-import ecomod.common.pollution.PollutionEffectsConfig;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
@@ -69,7 +69,7 @@ public class EcomodASMHooks
                         {
                             if(worldIn.rand.nextInt(8) == 0)
                                 worldIn.setBlockState(pos, Blocks.CLAY.getDefaultState());
-                            else
+                            else if(worldIn.rand.nextInt(4) == 0)
                                 worldIn.setBlockState(pos, Blocks.SAND.getDefaultState());
                         }
                     }

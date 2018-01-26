@@ -1,7 +1,7 @@
 package ecomod.common.tiles.compat;
 
 import ecomod.api.EcomodStuff;
-import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
 import li.cil.oc.api.Network;

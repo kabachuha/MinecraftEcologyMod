@@ -1,4 +1,4 @@
-package ecomod.common.pollution;
+package ecomod.common.pollution.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +20,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class TEPollutionConfig implements ITEPollutionConfig
@@ -67,10 +68,8 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	}
 	
 	//IO
-	public static TEPollutionConfig get()
+	public static TEPollutionConfig get(String urlstr)
 	{
-		String urlstr = EMConfig.tepcURL;
-		
 		EcologyMod.log.info("Getting TEPC from "+urlstr);
 		
 		urlstr = EMUtils.parseMINECRAFTURL(urlstr);
@@ -80,8 +79,6 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		try
 		{
 			URL url = new URL(urlstr);
-			
-			EcologyMod.log.info(url.toString());
 			
 			json = EMUtils.getString(url);
 			
@@ -121,8 +118,6 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path + '/' + EMConsts.modid + "/TEPollutionConfig.json";
-		
 		File f = new File(cfg_path);
 		
 		EcologyMod.log.info("Saving TEPollutionConfig.json");
@@ -170,8 +165,6 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + '/' + EMConsts.modid +"/TEPollutionConfig.json";
-		
 		EcologyMod.log.info("Trying to load TEPC from file");
 		
 		Gson gson = new GsonBuilder().create();
@@ -236,7 +229,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public String path = "";
 	
-	public void load(String cfg_path)
+	public void load(String cfg_path, String url, boolean keep_entries)
 	{
 		EcologyMod.log.info("Loading TEPC");
 		
@@ -244,25 +237,27 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		
 		boolean loaded_from_file = loadFromFile(cfg_path);
 		
-		TEPollutionConfig tepc = get();
+		TEPollutionConfig tepc = get(url);
 		
 		if(tepc == null)
 		{
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+ ')');
+				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+url+ ')');
 			}
 		}
 		else
 		{
 			if(loaded_from_file)
 			{
-				if(EMUtils.shouldTEPCupdate(version, tepc.version))
+				if(keep_entries)
 				{
-					data = tepc.data;
-					version = tepc.version;
+					EMUtils.mergeLists(tepc.data, data);
 				}
+					
+				data = tepc.data;
+				version = tepc.version;
 			}
 			else
 			{

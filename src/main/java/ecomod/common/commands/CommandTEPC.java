@@ -1,7 +1,7 @@
 package ecomod.common.commands;
 
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -131,7 +131,7 @@ public class CommandTEPC extends CommandBase {
 			
 		case load:
 			sender.sendMessage(new TextComponentTranslation("commands.ecomod.tepc.load"));
-			EcologyMod.instance.tepc.load(EcologyMod.instance.tepc.path);
+			EcologyMod.instance.tepc.loadFromFile(EcologyMod.instance.tepc.path);
 			break;
 			
 		case save:

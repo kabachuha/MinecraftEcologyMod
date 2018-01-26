@@ -147,3 +147,13 @@ msg.ecomod.bad_sleep=Вы плохо себя чувствуете. Похоже
 msg.ecomod.polluted_food=Вы съели загрязненную пищу!
 
 msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod работает не корректно! Во время загрузки ASM трансформеры не сработали правильно для следующих классов: %s. Ищите причину в логах и сообщите её вместе с логом на 
+
+#JEI
+gui.jei.ingredient.ecomod.pollution=Загрязнение Окружающей Среды
+gui.jei.desc.ingr.ecomod.pollution=Загрязнение Окружающей Среды
+gui.jei.desc.ecomod.pollution.air=Воздушное
+gui.jei.desc.ecomod.pollution.water=Водное
+gui.jei.desc.ecomod.pollution.soil=Почвенное
+gui.jei.category.ecomod.air_filtration=Очистка Воздуха
+gui.jei.category.ecomod.manually_assembly=Сборка Вручную
+gui.jei.category.ecomod.manually_assembly.note=Кликните ПКМ левый предмет(установленный в мире) правым

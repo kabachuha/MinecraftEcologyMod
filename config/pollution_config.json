@@ -1,0 +1,16 @@
+{
+  "modversions": [
+    {
+      "version": "1.12.2-1.5.0.0",
+      "TEPollutionConfig": {
+        "1.3.1": "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/config/tiles/TEPollutionConfig-1.3.1.json"
+      },
+      "PollutionSources": {
+        "1.2": "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/config/sources/PollutionSources-1.2.json"
+      },
+      "PollutionEffects": {
+        "1.1": "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/config/effects/PollutionEffects-1.1.json"
+      }
+    }
+  ]
+}

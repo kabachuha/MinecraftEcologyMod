@@ -1,0 +1,133 @@
+{
+  "version": "1.2",
+  "sources": [
+    {
+      "id": "bonemeal_pollution",
+      "pollution": {
+        "air": 1.0,
+        "water": 1.0,
+        "soil": 2.0
+      }
+    },
+    {
+      "id": "expired_item",
+      "pollution": {
+        "air": 0.0,
+        "water": 0.0625,
+        "soil": 0.125
+      }
+    },
+    {
+      "id": "explosion_pollution_per_power",
+      "pollution": {
+        "air": 20.5,
+        "water": 6.25,
+        "soil": 8.25
+      }
+    },
+    {
+      "id": "tree_growing_pollution_reduction",
+      "pollution": {
+        "air": -22.0,
+        "water": -3.0,
+        "soil": -17.0
+      }
+    },
+    {
+      "id": "hoe_plowing_reduction",
+      "pollution": {
+        "air": 0.0,
+        "water": 0.0,
+        "soil": -1.0
+      }
+    },
+    {
+      "id": "leaves_reduction",
+      "pollution": {
+        "air": -14.5,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "fire_pollution",
+      "pollution": {
+        "air": 3.5,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "default_smelted_item_pollution",
+      "pollution": {
+        "air": 3.0,
+        "water": 0.6,
+        "soil": 1.9
+      }
+    },
+    {
+      "id": "concentrated_pollution_explosion_pollution",
+      "pollution": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "advanced_filter_reduction",
+      "pollution": {
+        "air": -4.5,
+        "water": -0.5,
+        "soil": -0.5
+      }
+    },
+    {
+      "id": "brewing_potion_pollution",
+      "pollution": {
+        "air": 6.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "nuclear_explosion_pollution_per_power",
+      "pollution": {
+        "air": 4100.0,
+        "water": 1250.0,
+        "soil": 2050.0
+      }
+    }
+  ],
+  "blacklisted_items": [
+    "minecraft:apple",
+    "minecraft:stick",
+    "minecraft:mushroom_stew",
+    "minecraft:string",
+    "minecraft:feather",
+    "minecraft:gunpowder",
+    "minecraft:wheat",
+    "minecraft:wheat_seeds",
+    "minecraft:porkchop",
+    "minecraft:snowball",
+    "minecraft:leather",
+    "minecraft:reeds",
+    "minecraft:slime_ball",
+    "minecraft:egg",
+    "minecraft:fish",
+    "minecraft:sugar",
+    "minecraft:melon",
+    "minecraft:pumpkin_seeds",
+    "minecraft:melon_seeds",
+    "minecraft:beef",
+    "minecraft:chicken",
+    "minecraft:carrot",
+    "minecraft:potato",
+    "minecraft:rabbit",
+    "minecraft:mutton",
+    "minecraft:chorus_fruit",
+    "minecraft:beetroot",
+    "minecraft:beetroot_seeds"
+  ],
+  "custom_item_pollution": [],
+  "smelted_item_pollution": []
+}

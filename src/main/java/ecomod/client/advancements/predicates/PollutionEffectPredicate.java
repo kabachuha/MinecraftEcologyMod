@@ -2,7 +2,7 @@ package ecomod.client.advancements.predicates;
 
 import com.google.gson.JsonElement;
 import ecomod.client.advancements.util.ITestable;
-import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EcologyMod;
 import net.minecraft.entity.player.EntityPlayerMP;

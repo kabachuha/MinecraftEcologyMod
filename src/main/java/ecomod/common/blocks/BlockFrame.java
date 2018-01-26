@@ -108,7 +108,7 @@ public class BlockFrame extends Block
 				
 				if(!pi.isEmpty())
 				{
-					if(pi.getItem() instanceof ItemCore)
+					if(EMConfig.enable_manually_assembly && pi.getItem() instanceof ItemCore)
 					{
 						if(state.getValue(TYPE) == 0)
 						{

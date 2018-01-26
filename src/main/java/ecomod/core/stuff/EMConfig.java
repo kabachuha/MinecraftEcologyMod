@@ -3,8 +3,8 @@ package ecomod.core.stuff;
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionEffectsConfig;
-import ecomod.common.pollution.PollutionSourcesConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.AnalyzerPollutionEffect;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
@@ -26,10 +26,6 @@ public class EMConfig
 	public static boolean wptimm;
 	
 	public static int wptcd = 60;
-	
-	public static String tepcURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/TEPC.json";
-	public static String effectsURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionEffects.json";
-	public static String sourcesURL = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionSources.json";
 	
 	public static float filter_adjacent_tiles_reduction = 0.06F;
 	
@@ -91,6 +87,8 @@ public class EMConfig
 	
 	public static float pollution_precision = 5.0F;
 	
+	public static boolean enable_manually_assembly = true;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -119,12 +117,6 @@ public class EMConfig
 			wpt_profiler_critical_timeout_warning = config.getInt("criticalTimeoutWarinigMillis", "THREAD", 10000, 1, Integer.MAX_VALUE, "Critical timeout WPT warning(milliseconds).");
 			
 			pollution_precision = config.getFloat("PollutionDataPrecision", "THREAD", 5.0F, 0, 10000F, "Pollution values(full pollution) below this point are rounded to zero for optimization purposes.");
-			
-			tepcURL = config.getString("TEPC_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/TEPC.json", "A URL to the TEPollutionConfig. See format at https://en.wikipedia.org/wiki/URL. If the TEPC is remotely located you should have a connection to its location!  If you point a local file you can type <MINECRAFT> instead of a path to the Minecraft directory (like this 'file:///<MINECRAFT>/tepc.json').  When you are playing on a server you will use its TEPC.", lang("tepc.url"));
-			
-			effectsURL= config.getString("POLLUTION_EFFECTS_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionEffects.json", "A URL to the PollutionEffectsConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionEffectsConfig is remotely located you should have a connection to its location! When you are playing on a server you will receive its version of PollutionEffectsConfig.");
-			
-			sourcesURL= config.getString("POLLUTION_SOURCES_URL", "CONFIG", "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.12/PollutionSources.json", "A URL to the PollutionSourcesConfig. See format at https://en.wikipedia.org/wiki/URL. If the PollutionSourcesConfig is remotely located you should have a connection to its location! When you are playing on a server you will use its version of PollutionSourcesConfig.");
 			
 			filter_adjacent_tiles_reduction = config.getFloat("FilterAdjacentTilesReduction", "POLLUTION", 0.06F, 0, 1, "", lang("pollution.filter"));
 			
@@ -159,6 +151,8 @@ public class EMConfig
 			isConcentratedPollutionIC2Fuel = config.getBoolean("IsConcentratedPollutionIC2Fuel", "INTERMOD", true, "");
 			
 			is_oc_analyzer_interface_crafted_by_right_click = config.getBoolean("is_oc_analyzer_interface_crafted_by_right_click", "INTERMOD", true, "");
+			
+			enable_manually_assembly = config.getBoolean("enable_manually_assembly", "TILES", true, "Are tiles crafted by a right click?");
 			
 			filter_durability = config.getInt("FilterCoreDurability", "ITEMS", 30, 1, Integer.MAX_VALUE, "");
 			

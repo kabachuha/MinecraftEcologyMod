@@ -1,10 +1,11 @@
-package ecomod.common.pollution;
+package ecomod.common.pollution.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
@@ -21,6 +22,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -176,20 +178,8 @@ public class PollutionSourcesConfig
 		return ret;
 	}
 	
-	public boolean shouldUpdate(String other_version)
-	{
-		if(version.toLowerCase().contentEquals("custom"))return false;
-		
-		ComparableVersion ver1 = new ComparableVersion(version);
-		ComparableVersion ver2 = new ComparableVersion(other_version);
-		
-		return ver2.compareTo(ver1) > 0;
-	}
-	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path + '/' + EMConsts.modid + "/PollutionSources.json";
-		
 		File f = new File(cfg_path);
 		
 		EcologyMod.log.info("Saving PollutionSources.json");
@@ -233,10 +223,8 @@ public class PollutionSourcesConfig
 		return false;
 	}
 	
-	public static PollutionSourcesConfig get()
+	public static PollutionSourcesConfig get(String urlstr)
 	{
-		String urlstr = EMConfig.sourcesURL;
-		
 		EcologyMod.log.info("Getting PollutionSources from "+urlstr);
 		
 		urlstr = EMUtils.parseMINECRAFTURL(urlstr);
@@ -288,9 +276,7 @@ public class PollutionSourcesConfig
 	}
 	
 	public boolean loadFromFile(String cfg_path)
-	{
-		cfg_path = cfg_path + '/' + EMConsts.modid + "/PollutionSources.json";
-		
+	{		
 		EcologyMod.log.info("Trying to load PollutionSources from file");
 		
 		Gson gson = new GsonBuilder().create();
@@ -358,34 +344,39 @@ public class PollutionSourcesConfig
 		return true;
 	}
 	
-	public void load(String cfg_path)
+	public void load(String cfg_path, String url, boolean keep_entries)
 	{
 		EcologyMod.log.info("Loading PollutionSources");
 		
 		boolean loaded_from_file = loadFromFile(cfg_path);
 		
-		PollutionSourcesConfig pec = get();
+		PollutionSourcesConfig pec = get(url);
 		
 		if(pec == null)
 		{
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the PollutionSources for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+ ')');
+				throw new NullPointerException("Impossible to load the PollutionSources for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+url+ ')');
 			}
 		}
 		else
 		{
 			if(loaded_from_file)
 			{
-				if(shouldUpdate(pec.version))
+				if(keep_entries)
 				{
-					blacklisted_items = pec.blacklisted_items;
-					polluting_items = pec.polluting_items;
-					pollution_sources = pec.pollution_sources;
-					smelted_items_pollution = pec.smelted_items_pollution;
-					version = pec.version;
+					EMUtils.mergeMaps(pec.polluting_items, polluting_items);
+					EMUtils.mergeMaps(pec.pollution_sources, pollution_sources);
+					EMUtils.mergeMaps(pec.smelted_items_pollution, smelted_items_pollution);
+					EMUtils.mergeLists(pec.blacklisted_items, blacklisted_items);
 				}
+				
+				blacklisted_items = pec.blacklisted_items;
+				polluting_items = pec.polluting_items;
+				pollution_sources = pec.pollution_sources;
+				smelted_items_pollution = pec.smelted_items_pollution;
+				version = pec.version;
 			}
 			else
 			{
@@ -397,6 +388,8 @@ public class PollutionSourcesConfig
 			}
 		}
 		
+		EcologyMod.log.info("Loaded "+pollution_sources.size()+" pollution sources");
+		
 		if(!save(cfg_path))
 		{
 			EcologyMod.log.error("Unable to save PollutionSources as PollutionSources.json in "+cfg_path+"! It will very likely have serious problems later!!");
@@ -404,7 +397,7 @@ public class PollutionSourcesConfig
 		}
 	}
 	
-	static class Sources
+	private static class Sources
 	{
 		String version;
 		

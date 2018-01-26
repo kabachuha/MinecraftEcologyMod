@@ -38,13 +38,15 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.awt.*;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class EMUtils 
 {
@@ -594,5 +596,29 @@ public class EMUtils
         }
 
         return null;
+    }
+    
+    /**
+     * Merge map2 into map1
+     */
+    public static <K, V> void mergeMaps(Map<K, V> map1, Map<K, V> map2)
+    {
+    	for(K k : map1.keySet())
+			if(map2.containsKey(k))
+				map1.remove(k);
+		
+    	map1.putAll(map2);
+    }
+    
+    /**
+     * Merge list2 into list1
+     */
+    public static void mergeLists(List list1, List list2)
+    {
+    	for(Object o : list1)
+    		if(list2.contains(o))
+    			list1.remove(o);
+    	
+    	list1.addAll(list2);
     }
 }

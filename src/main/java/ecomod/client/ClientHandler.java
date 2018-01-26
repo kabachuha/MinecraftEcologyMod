@@ -9,7 +9,7 @@ import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.client.renderer.RenderAdvancedFilter;
 import ecomod.common.blocks.BlockFrame;
-import ecomod.common.pollution.PollutionEffectsConfig.Effects;
+import ecomod.common.pollution.config.PollutionEffectsConfig.Effects;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.core.EcologyMod;
