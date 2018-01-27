@@ -40,6 +40,16 @@ repositories {
         name = "OpenComputers"
         url = "http://maven.cil.li/"
     }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "modmaven.k-4u.nl"
+    }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -84,6 +94,10 @@ dependencies {
     compileOnly "net.industrial-craft:industrialcraft-2:${ic2_version}:dev"
     compileOnly "li.cil.oc:OpenComputers:${oc_version}:api"
     compile "org.cyclops.commoncapabilities:CommonCapabilities:${commoncaps_version}"
+    // compile against the JEI API but do not include it at runtime
+    deobfProvided "mezz.jei:jei_${jei_version}:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_${jei_version}"
 }
 
 processResources

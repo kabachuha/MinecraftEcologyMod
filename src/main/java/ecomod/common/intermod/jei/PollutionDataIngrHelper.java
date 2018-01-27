@@ -1,16 +1,15 @@
 package ecomod.common.intermod.jei;
 
-import java.awt.Color;
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import ecomod.api.pollution.PollutionData;
 import ecomod.core.EMConsts;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nullable;
+import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 
 public class PollutionDataIngrHelper implements IIngredientHelper<PollutionData>
 {
@@ -34,7 +33,7 @@ public class PollutionDataIngrHelper implements IIngredientHelper<PollutionData>
 	@Override
 	public String getDisplayName(PollutionData ingredient)
 	{
-		return I18n.format("gui.jei.ingredient.ecomod.pollution", new Object[] {ingredient.getAirPollution(), ingredient.getWaterPollution(), ingredient.getSoilPollution()});
+		return I18n.format("gui.jei.ingredient.ecomod.pollution", ingredient.getAirPollution(), ingredient.getWaterPollution(), ingredient.getSoilPollution());
 	}
 
 	@Override

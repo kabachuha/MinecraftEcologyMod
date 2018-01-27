@@ -1,33 +1,23 @@
 package ecomod.common.intermod.jei;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
 import ecomod.api.pollution.PollutionData;
 import ecomod.client.EMClientUtils;
 import ecomod.client.renderer.RenderAdvancedFilter;
-import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.stuff.EMConfig;
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiFluidStackGroup;
-import mezz.jei.api.gui.IGuiIngredientGroup;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.config.Constants;
-import mezz.jei.util.Translator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.awt.Color;
 
 public class RecipeCategoryAirFiltration implements IRecipeCategory<RecipeWrapperAirFiltration>
 {
@@ -72,12 +62,12 @@ public class RecipeCategoryAirFiltration implements IRecipeCategory<RecipeWrappe
 				GlStateManager.popMatrix();
 			}
 		};
-		
-		background_arrow = guiHelper.createDrawable(Constants.RECIPE_GUI_VANILLA, 75, 169, 24, 17);
-		IDrawableStatic arrowDrawable = guiHelper.createDrawable(Constants.RECIPE_GUI_VANILLA, 82, 128, 24, 17);
+
+		background_arrow = guiHelper.createDrawable(new ResourceLocation("ecomod", "textures/gui/background_arrow.png"), 0, 0, 24, 17, 24, 17);
+		IDrawableStatic arrowDrawable = guiHelper.createDrawable(new ResourceLocation("ecomod", "textures/gui/fill_arrow.png"), 0, 0, 24, 17, 24, 17);
 		this.arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 100, IDrawableAnimated.StartDirection.LEFT, false);
 		
-		localizedName = Translator.translateToLocal("gui.jei.category.ecomod.air_filtration");
+		localizedName = I18n.format("gui.jei.category.ecomod.air_filtration");
 		
 		tank_frame = new IDrawable() {
 			@Override

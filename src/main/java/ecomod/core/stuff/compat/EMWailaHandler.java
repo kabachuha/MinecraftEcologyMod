@@ -2,7 +2,7 @@ package ecomod.core.stuff.compat;
 
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.TEPollutionConfig;
+import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.tiles.TileEnergy;
 import ecomod.core.EcologyMod;
