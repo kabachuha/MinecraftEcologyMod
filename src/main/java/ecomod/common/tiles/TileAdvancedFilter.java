@@ -97,7 +97,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 					
 					if(energy.extractEnergyNotOfficially(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
 					{
-						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_reduction"), false);
+						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), getSource(), false);
 					
 						tank.fillInternal(getProduction(), true);
 					
@@ -147,6 +147,10 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 		
 		return ret;
 	}
+
+	public PollutionData getSource() {
+		return PollutionSourcesConfig.getSource("advanced_filter_reduction");
+	}
 	
 	public FluidStack getProduction()
 	{
@@ -157,7 +161,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, buildcr
 		
 		FluidStack ret = new FluidStack(EcomodStuff.concentrated_pollution, 0);
 		
-		PollutionData adv_filter_reduction = PollutionSourcesConfig.getSource("advanced_filter_reduction");
+		PollutionData adv_filter_reduction = getSource();
 		
 		for(PollutionType type : PollutionType.values())
 		{
