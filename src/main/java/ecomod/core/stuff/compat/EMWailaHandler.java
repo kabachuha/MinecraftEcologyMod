@@ -51,7 +51,6 @@ public class EMWailaHandler implements IWailaDataProvider
 			}
 			if (data != null) {
 				ArrayList<String> pollutionText = new ArrayList<>();
-				pollutionText.add(I18n.format("gui.jei.ingredient.ecomod.pollution"));
 				float air = data.getAirPollution(), soil = data.getSoilPollution(), water = data.getWaterPollution();
 				if(air <= -0.1D)
 					pollutionText.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.air") + TextFormatting.GREEN + ' ' + Float.toString(air));
@@ -68,9 +67,10 @@ public class EMWailaHandler implements IWailaDataProvider
 				else if(soil >= 0.1D)
 					pollutionText.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.soil") + TextFormatting.RED + " +" + Float.toString(soil));
 				if (!pollutionText.isEmpty()) {
-					if (isCrouching)
+					if (isCrouching) {
+						currentTip.add(I18n.format("gui.jei.ingredient.ecomod.pollution"));
 						currentTip.addAll(pollutionText);
-					else
+					} else
 						currentTip.add(I18n.format("tooltip.ecomod.waila.pollution"));
 				}
 			}
