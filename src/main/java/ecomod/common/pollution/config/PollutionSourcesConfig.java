@@ -184,9 +184,9 @@ public class PollutionSourcesConfig
 		
 		EcologyMod.log.info("Saving PollutionSources.json");
 		
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
-		Sources s = new Sources(version, pollution_sources, blacklisted_items, polluting_items, smelted_items_pollution);
+		Sources s = new Sources(version, pollution_sources, blacklisted_items, polluting_items, smelted_items_pollution, protected_entries);
 		
 		String json = gson.toJson(s, Sources.class);
 		
@@ -275,6 +275,8 @@ public class PollutionSourcesConfig
 		return null;
 	}
 	
+	private List<String> protected_entries = null;
+	
 	public boolean loadFromFile(String cfg_path)
 	{		
 		EcologyMod.log.info("Trying to load PollutionSources from file");
@@ -333,6 +335,12 @@ public class PollutionSourcesConfig
 		if(t == null)
 			return false;
 		
+		protected_entries = new ArrayList<>();
+		
+		for(Sources.StrPD str : t.sources)
+			if(str.keep_entry != null && str.keep_entry == true)
+				protected_entries.add(str.id);
+		
 		blacklisted_items = t.blacklisted_items;
 		polluting_items = Sources.StrPDListToMap(t.custom_item_pollution);
 		pollution_sources = Sources.StrPDListToMap(t.sources);
@@ -364,6 +372,13 @@ public class PollutionSourcesConfig
 		{
 			if(loaded_from_file)
 			{
+				if(protected_entries != null)
+					for(String p : protected_entries)
+						if(pec.pollution_sources.containsKey(p))
+						{
+							pec.pollution_sources.replace(p, pollution_sources.get(p));
+						}
+				
 				if(keep_entries)
 				{
 					EMUtils.mergeMaps(pec.polluting_items, polluting_items);
@@ -426,11 +441,11 @@ public class PollutionSourcesConfig
 			smelted_item_pollution = smelted;
 		}
 		
-		public Sources(String v, Map<String, PollutionData> src, List<String> blacklisted, Map<String, PollutionData> item_pollution, Map<String, PollutionData> smelted)
+		public Sources(String v, Map<String, PollutionData> src, List<String> blacklisted, Map<String, PollutionData> item_pollution, Map<String, PollutionData> smelted, List<String> protected_entries)
 		{
 			version = v;
 			if(src != null)
-				sources = mapToStrPDList(src);
+				sources = mapToStrPDList(src, protected_entries);
 			if(blacklisted != null)
 				blacklisted_items = blacklisted;
 			if(item_pollution != null)
@@ -443,29 +458,38 @@ public class PollutionSourcesConfig
 		{
 			String id;
 			PollutionData pollution;
+			Boolean keep_entry = null;
 			
 			public StrPD()
 			{
 				
 			}
 			
-			public StrPD(String k, PollutionData v)
+			public StrPD(String k, PollutionData v, boolean keep)
 			{
 				id = k;
 				pollution = v;
+				
+				if(keep)
+					keep_entry = new Boolean(true);
 			}
 		}
 		
-		static List<StrPD> mapToStrPDList(Map<String, PollutionData> map)
+		static List<StrPD> mapToStrPDList(Map<String, PollutionData> map, List<String> protected_entries)
 		{
 			List<StrPD> ret = new ArrayList<>();
 			
 			for(Entry<String, PollutionData> e : map.entrySet())
 			{
-				ret.add(new StrPD(e.getKey(), e.getValue()));
+				ret.add(new StrPD(e.getKey(), e.getValue(), protected_entries != null && protected_entries.contains(e.getKey())));
 			}
 			
 			return ret;
+		}
+		
+		static List<StrPD> mapToStrPDList(Map<String, PollutionData> map)
+		{
+			return mapToStrPDList(map, null);
 		}
 		
 		static Map<String, PollutionData> StrPDListToMap(List<StrPD> list)

@@ -140,6 +140,9 @@ tooltip.ecomod.more_information=Нажмите SHIFT для подробност
 tooltip.ecomod.core.filter=Эти фильтры используются противогазом!
 tooltip.ecomod.core.shifted=Кликните ПКМ по '%s' этим предметом to чтобы сделать соответствующий механизм
 tooltip.ecomod.oc.adapter=[EcologyMod]Кликните ПКМ по 'Основе Машины' этим предметом чтобы сделать Компьютерный Интерфейс Анализатора Загрязнения
+tooltip.ecomod.waila.pollution=Пригнитесь для просмотра экологической чистоты
+tooltip.ecomod.waila.working=Работает
+tooltip.ecomod.waila.not_working=Простаивает
 
 #Сообщения
 msg.ecomod.no_eat_with_respirator=Вы не можете есть или пить с надетым противогазом!
