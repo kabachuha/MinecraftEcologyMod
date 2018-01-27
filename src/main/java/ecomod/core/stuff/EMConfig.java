@@ -89,6 +89,8 @@ public class EMConfig
 	
 	public static boolean enable_manually_assembly = true;
 	
+	public static boolean waila_shows_pollution_info = true;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -149,6 +151,8 @@ public class EMConfig
 			fuel_concentrated_pollution_burn_energy = config.getInt("FuelConcentratedPollutionBurnEnergy", "INTERMOD", 600, 1, Integer.MAX_VALUE, "");
 			
 			isConcentratedPollutionIC2Fuel = config.getBoolean("IsConcentratedPollutionIC2Fuel", "INTERMOD", true, "");
+			
+			waila_shows_pollution_info = config.getBoolean("waila_shows_pollution_info", "INTERMOD", true, "Can tile entities pollution production be examined using Waila? This is a server config property, so each of the server clients will use this value.");
 			
 			is_oc_analyzer_interface_crafted_by_right_click = config.getBoolean("is_oc_analyzer_interface_crafted_by_right_click", "INTERMOD", true, "");
 			

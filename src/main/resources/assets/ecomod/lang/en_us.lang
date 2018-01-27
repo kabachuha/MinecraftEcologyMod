@@ -146,6 +146,9 @@ tooltip.ecomod.more_information=Press SHIFT for more information
 tooltip.ecomod.core.filter=These filters are used by Respirator
 tooltip.ecomod.core.shifted=Right Click '%s' with this item to make a corresponding machine
 tooltip.ecomod.oc.adapter=[EcologyMod]Right Click 'Empty Machine Frame' with this item to make a Pollution Analyzer Computer Interface
+tooltip.ecomod.waila.pollution=Sneak to view detailed pollution information.
+tooltip.ecomod.waila.working=Working
+tooltip.ecomod.waila.not_working=Not Working
 
 #Chat messages
 msg.ecomod.no_eat_with_respirator=You are unable to eat or to drink while wearing a respirator!

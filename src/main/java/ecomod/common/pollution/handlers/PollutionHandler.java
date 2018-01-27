@@ -78,6 +78,8 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -702,6 +704,8 @@ public class PollutionHandler implements IPollutionGetter
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("R"+(isPlayerInAcidRainZone((EntityPlayer)event.getEntity()) ? 1 : 0)), (EntityPlayerMP)event.getEntity());
 				
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("W"+ (EMConfig.waila_shows_pollution_info ? 1 : 0)), (EntityPlayerMP)event.getEntity());
+				
 				EcologyMod.log.info("Serializing and sending Pollution Effects Config to the Player: "+ event.getEntity().getName()+ '(' + event.getEntity().getUniqueID() + ')');
 				
 				Effects t = new Effects("", EcomodStuff.pollution_effects.values().toArray(new IAnalyzerPollutionEffect[EcomodStuff.pollution_effects.values().size()]));
@@ -709,6 +713,9 @@ public class PollutionHandler implements IPollutionGetter
 				String json = gson.toJson(t, Effects.class);
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('E' +json), (EntityPlayerMP)event.getEntity());
+				
+				EcologyMod.log.info("Serializing and sending TEPollutionConfig to the Player: "+ event.getEntity().getName()+ '(' + event.getEntity().getUniqueID() + ')');
+				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('T' + EcologyMod.instance.tepc.toJson()), (EntityPlayerMP)event.getEntity());
 			}
 			catch (Exception e)
 			{

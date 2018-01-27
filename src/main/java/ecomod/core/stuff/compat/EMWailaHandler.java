@@ -13,7 +13,7 @@ import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -31,41 +31,47 @@ public class EMWailaHandler implements IWailaDataProvider
 		{
 			boolean isCrouching = accessor.getPlayer().isSneaking();
 			PollutionData data = null;
-			TEPollutionConfig.TEPollution pollution = EcologyMod.instance.tepc.getTEP(tile);
-			if (pollution != null)
-				data = pollution.getEmission();
+			
+			if(EcologyMod.proxy.getClientHandler().waila_shows_pollution_info)
+			{
+				TEPollutionConfig.TEPollution pollution = EcologyMod.proxy.getClientHandler().client_tiles_pollution.getTEP(tile);
+				if (pollution != null)
+					data = pollution.getEmission();
+			}
+			
 			if(tile instanceof TileEnergy)
-				currentTip.add("Energy: " + TextFormatting.YELLOW + ((TileEnergy)tile).getEnergyStored() + " / " + ((TileEnergy)tile).getMaxEnergyStored() + " RF");
+				currentTip.add(I18n.format("gui.ecomod.text.energy") + ' ' + TextFormatting.YELLOW + ((TileEnergy)tile).getEnergyStored() + " / " + ((TileEnergy)tile).getMaxEnergyStored() + " RF");
 			if(tile instanceof TileAdvancedFilter)
 			{
 				TileAdvancedFilter filter = (TileAdvancedFilter)tile;
-				currentTip.add(I18n.translateToLocal(EcomodStuff.concentrated_pollution.getUnlocalizedName()) + ": " + filter.tank.getFluidAmount() + " / " + filter.tank.getCapacity() + " mb");
-				currentTip.add(filter.was_working ? TextFormatting.GREEN + "Working" : TextFormatting.RED + "Not Working");
+				currentTip.add(I18n.format(EcomodStuff.concentrated_pollution.getUnlocalizedName()) + ": " + filter.tank.getFluidAmount() + " / " + filter.tank.getCapacity() + " mb");
+				currentTip.add(filter.was_working ? TextFormatting.GREEN + I18n.format("tooltip.ecomod.waila.working") : TextFormatting.RED + I18n.format("tooltip.ecomod.waila.not_working"));
 				if (filter.was_working) //If it is not working do not show it is reducing pollution
 					data = filter.getSource();
 			}
 			if (data != null) {
 				ArrayList<String> pollutionText = new ArrayList<>();
+				pollutionText.add(I18n.format("gui.jei.ingredient.ecomod.pollution"));
 				float air = data.getAirPollution(), soil = data.getSoilPollution(), water = data.getWaterPollution();
 				if(air <= -0.1D)
-					pollutionText.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "Air Pollution: " + TextFormatting.GREEN + Float.toString(air));
+					pollutionText.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.air") + TextFormatting.GREEN + ' ' + Float.toString(air));
 				else if(air >= 0.1D)
-					pollutionText.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + "Air Pollution: " + TextFormatting.RED + '+' + Float.toString(air));
+					pollutionText.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.air") + TextFormatting.RED + " +" + Float.toString(air));
 
 				if(water <= -0.1D)
-					pollutionText.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + "Water Pollution: " + TextFormatting.GREEN + Float.toString(water));
+					pollutionText.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.water") + TextFormatting.GREEN + ' ' + Float.toString(water));
 				else if(water >= 0.1D)
-					pollutionText.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + "Water Pollution: " + TextFormatting.RED + '+' + Float.toString(water));
+					pollutionText.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.water") + TextFormatting.RED + " +" + Float.toString(water));
 
 				if(soil <= -0.1D)
-					pollutionText.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + "Soil Pollution: " + TextFormatting.GREEN + Float.toString(soil));
+					pollutionText.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.soil") + TextFormatting.GREEN + ' ' + Float.toString(soil));
 				else if(soil >= 0.1D)
-					pollutionText.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + "Soil Pollution: " + TextFormatting.RED + '+' + Float.toString(soil));
+					pollutionText.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.soil") + TextFormatting.RED + " +" + Float.toString(soil));
 				if (!pollutionText.isEmpty()) {
 					if (isCrouching)
 						currentTip.addAll(pollutionText);
 					else
-						currentTip.add("Sneak to view detailed pollution information.");
+						currentTip.add(I18n.format("tooltip.ecomod.waila.pollution"));
 				}
 			}
 		}

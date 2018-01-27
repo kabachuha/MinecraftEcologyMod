@@ -29,17 +29,17 @@ public class PollutionDataIngrRender implements IIngredientRenderer<PollutionDat
 		if(pollution.getAirPollution() < 0.1D)
 			fontRenderer.drawString("0", xPosition+105, yPosition+8, new Color(255, 255, 126).getRGB());
 		else
-			fontRenderer.drawString(fts(pollution.getAirPollution()), xPosition+105, yPosition+8, new Color(255, 255, 126).getRGB());
+			fontRenderer.drawString(Float.toString(pollution.getAirPollution()), xPosition+105, yPosition+8, new Color(255, 255, 126).getRGB());
 
 		if(pollution.getWaterPollution() < 0.1D)
 			fontRenderer.drawString("0", xPosition+105, yPosition+28, new Color(60, 212, 252).getRGB());
 		else
-			fontRenderer.drawString(fts(pollution.getWaterPollution()), xPosition+105, yPosition+28, new Color(60, 212, 252).getRGB());
+			fontRenderer.drawString(Float.toString(pollution.getWaterPollution()), xPosition+105, yPosition+28, new Color(60, 212, 252).getRGB());
 
 		if(pollution.getSoilPollution() < 0.1D)
 			fontRenderer.drawString("0", xPosition+105, yPosition+48, new Color(89, 61, 41).getRGB());
 		else
-			fontRenderer.drawString(fts(pollution.getSoilPollution()), xPosition+105, yPosition+48, new Color(89, 61, 41).getRGB());
+			fontRenderer.drawString(Float.toString(pollution.getSoilPollution()), xPosition+105, yPosition+48, new Color(89, 61, 41).getRGB());
 
 		GlStateManager.color(1, 1, 1, 1);
 
@@ -74,15 +74,10 @@ public class PollutionDataIngrRender implements IIngredientRenderer<PollutionDat
 		List<String> tooltip = new ArrayList<>();
 		
 		tooltip.add(I18n.format("gui.jei.desc.ingr.ecomod.pollution"));
-		tooltip.add(TextFormatting.WHITE+I18n.format("gui.jei.desc.ecomod.pollution.air")+ ' ' +TextFormatting.YELLOW+fts(ingredient.getAirPollution()));
-		tooltip.add(TextFormatting.WHITE+I18n.format("gui.jei.desc.ecomod.pollution.water")+ ' ' +TextFormatting.BLUE+fts(ingredient.getWaterPollution()));
-		tooltip.add(TextFormatting.WHITE+I18n.format("gui.jei.desc.ecomod.pollution.soil")+ ' ' +TextFormatting.GRAY+fts(ingredient.getSoilPollution()));
+		tooltip.add(TextFormatting.YELLOW + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.air") + TextFormatting.RESET + ' ' + Float.toString(ingredient.getAirPollution()));
+		tooltip.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.water") + TextFormatting.RESET + ' ' + Float.toString(ingredient.getWaterPollution()));
+		tooltip.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.soil") + TextFormatting.RESET + ' ' + Float.toString(ingredient.getSoilPollution()));
 		
 		return tooltip;
-	}
-	
-	private String fts(float f)
-	{
-		return Float.toString(f);
 	}
 }

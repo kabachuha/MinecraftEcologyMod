@@ -1,5 +1,8 @@
 package ecomod.client.proxy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ecomod.api.EcomodBlocks;
 import ecomod.client.ClientHandler;
 import ecomod.client.gui.GuiAnalyzer;
@@ -30,9 +33,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class CliProxy extends ComProxy
@@ -187,6 +187,4 @@ public class CliProxy extends ComProxy
 			EcologyMod.log.error("Invalid EMPacketUpdateTileEntity! Wrong nbt format!");
 		}
 	}
-	
-	
 }
