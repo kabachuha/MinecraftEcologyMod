@@ -7,8 +7,7 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
-import mezz.jei.config.Constants;
-import mezz.jei.util.Translator;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class RecipeCategoryManuallyAssembly implements IRecipeCategory<RecipeWrapperManuallyAssembly>
@@ -19,8 +18,8 @@ public class RecipeCategoryManuallyAssembly implements IRecipeCategory<RecipeWra
 
 	public RecipeCategoryManuallyAssembly(IGuiHelper guiHelper)
 	{
-		localizedName = Translator.translateToLocal("gui.jei.category.ecomod.manually_assembly");
-		background = guiHelper.createDrawable(Constants.RECIPE_GUI_VANILLA, 0, 168, 125, 18, 0, 20, 0, 0);
+		localizedName = I18n.format("gui.jei.category.ecomod.manually_assembly");
+		background = guiHelper.createDrawable(new ResourceLocation("ecomod", "textures/gui/manual.png"), 0, 0, 125, 18, 125, 18);
 		icon = guiHelper.createDrawable(new ResourceLocation("minecraft:textures/entity/steve.png"), 8, 8, 8, 8, 64, 64);
 	}
 	

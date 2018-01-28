@@ -1,14 +1,6 @@
 package ecomod.common.intermod.jei;
 
-import java.awt.Color;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
-
 import mezz.jei.api.gui.IGuiIngredient;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -16,12 +8,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 public class RecipeWrapperManuallyAssembly implements IRecipeWrapper
 {
 	private final List<List<ItemStack>> inputs;
 	private final List<List<ItemStack>> output;
 	@Nullable
-	private Map<Integer, ? extends IGuiIngredient<ItemStack>> currentIngredients = null;
+	private Map<Integer, ? extends IGuiIngredient<ItemStack>> currentIngredients;
 	@Nullable
 	private ItemStack lastLeftStack;
 	@Nullable
