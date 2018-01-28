@@ -56,7 +56,7 @@ public class EcomodJEIPlugin implements IModPlugin
 			assembly_recipes.add(new RecipeWrapperManuallyAssembly(frame, Collections.singletonList(new ItemStack(EcomodItems.CORE, 1, 2)), Collections.singletonList(new ItemStack(EcomodBlocks.ANALYZER))));
 			assembly_recipes.add(new RecipeWrapperManuallyAssembly(advanced_frame, Collections.singletonList(new ItemStack(EcomodItems.CORE, 1, 1)), Collections.singletonList(new ItemStack(EcomodBlocks.ADVANCED_FILTER))));
 			
-			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click && !BlockFrame.oc_adapter.isEmpty())
+			if(EMConfig.is_oc_analyzer_interface_crafted_by_right_click && BlockFrame.oc_adapter != null && !BlockFrame.oc_adapter.isEmpty())
 				assembly_recipes.add(new RecipeWrapperManuallyAssembly(frame, Collections.singletonList(BlockFrame.oc_adapter), Collections.singletonList(new ItemStack(EcomodBlocks.OC_ANALYZER_ADAPTER))));
 			
 			registry.addRecipes(assembly_recipes, "ecomod.manually_assembly");

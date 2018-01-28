@@ -6,6 +6,7 @@ import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.tiles.TileEnergy;
 import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMConfig;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -32,7 +33,7 @@ public class EMWailaHandler implements IWailaDataProvider
 			boolean isCrouching = accessor.getPlayer().isSneaking();
 			PollutionData data = null;
 			
-			if(EcologyMod.proxy.getClientHandler().waila_shows_pollution_info)
+			if(EMConfig.waila_shows_pollution_info && EcologyMod.proxy.getClientHandler().waila_shows_pollution_info)
 			{
 				TEPollutionConfig.TEPollution pollution = EcologyMod.proxy.getClientHandler().client_tiles_pollution.getTEP(tile);
 				if (pollution != null)

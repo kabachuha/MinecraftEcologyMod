@@ -19,7 +19,7 @@ public class RecipeCategoryManuallyAssembly implements IRecipeCategory<RecipeWra
 	public RecipeCategoryManuallyAssembly(IGuiHelper guiHelper)
 	{
 		localizedName = I18n.format("gui.jei.category.ecomod.manually_assembly");
-		background = guiHelper.createDrawable(new ResourceLocation("ecomod", "textures/gui/manual.png"), 0, 0, 125, 18, 125, 18);
+		background = guiHelper.createDrawable(new ResourceLocation("minecraft", "textures/gui/container/anvil.png"), 26, 46, 125, 18, 0, 20, 0, 0);
 		icon = guiHelper.createDrawable(new ResourceLocation("minecraft:textures/entity/steve.png"), 8, 8, 8, 8, 64, 64);
 	}
 	

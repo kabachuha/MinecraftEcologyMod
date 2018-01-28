@@ -63,8 +63,8 @@ public class RecipeCategoryAirFiltration implements IRecipeCategory<RecipeWrappe
 			}
 		};
 
-		background_arrow = guiHelper.createDrawable(new ResourceLocation("ecomod", "textures/gui/background_arrow.png"), 0, 0, 24, 17, 24, 17);
-		IDrawableStatic arrowDrawable = guiHelper.createDrawable(new ResourceLocation("ecomod", "textures/gui/fill_arrow.png"), 0, 0, 24, 17, 24, 17);
+		background_arrow = guiHelper.createDrawable(new ResourceLocation("minecraft", "textures/gui/container/furnace.png"), 80, 34, 24, 17);
+		IDrawableStatic arrowDrawable = guiHelper.createDrawable(new ResourceLocation("minecraft", "textures/gui/container/furnace.png"), 176, 14, 24, 17);
 		this.arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 100, IDrawableAnimated.StartDirection.LEFT, false);
 		
 		localizedName = I18n.format("gui.jei.category.ecomod.air_filtration");
