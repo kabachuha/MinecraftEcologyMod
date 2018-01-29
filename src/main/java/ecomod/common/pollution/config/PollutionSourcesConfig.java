@@ -352,7 +352,7 @@ public class PollutionSourcesConfig
 		return true;
 	}
 	
-	public void load(String cfg_path, String url, boolean keep_entries)
+	public void load(String cfg_path, String url, boolean keep_entries, boolean force_update)
 	{
 		EcologyMod.log.info("Loading PollutionSources");
 		
@@ -372,26 +372,29 @@ public class PollutionSourcesConfig
 		{
 			if(loaded_from_file)
 			{
-				if(protected_entries != null)
-					for(String p : protected_entries)
-						if(pec.pollution_sources.containsKey(p))
-						{
-							pec.pollution_sources.replace(p, pollution_sources.get(p));
-						}
-				
-				if(keep_entries)
+				if(force_update || !version.equals(pec.version))
 				{
-					EMUtils.mergeMaps(pec.polluting_items, polluting_items);
-					EMUtils.mergeMaps(pec.pollution_sources, pollution_sources);
-					EMUtils.mergeMaps(pec.smelted_items_pollution, smelted_items_pollution);
-					EMUtils.mergeLists(pec.blacklisted_items, blacklisted_items);
-				}
+					if(protected_entries != null)
+						for(String p : protected_entries)
+							if(pec.pollution_sources.containsKey(p))
+							{
+								pec.pollution_sources.replace(p, pollution_sources.get(p));
+							}
 				
-				blacklisted_items = pec.blacklisted_items;
-				polluting_items = pec.polluting_items;
-				pollution_sources = pec.pollution_sources;
-				smelted_items_pollution = pec.smelted_items_pollution;
-				version = pec.version;
+					if(keep_entries)
+					{
+						EMUtils.mergeMaps(pec.polluting_items, polluting_items);
+						EMUtils.mergeMaps(pec.pollution_sources, pollution_sources);
+						EMUtils.mergeMaps(pec.smelted_items_pollution, smelted_items_pollution);
+						EMUtils.mergeLists(pec.blacklisted_items, blacklisted_items);
+					}
+				
+					blacklisted_items = pec.blacklisted_items;
+					polluting_items = pec.polluting_items;
+					pollution_sources = pec.pollution_sources;
+					smelted_items_pollution = pec.smelted_items_pollution;
+					version = pec.version;
+				}
 			}
 			else
 			{

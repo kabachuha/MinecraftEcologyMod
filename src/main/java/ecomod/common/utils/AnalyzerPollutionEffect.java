@@ -1,5 +1,6 @@
 package ecomod.common.utils;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -120,5 +121,31 @@ public class AnalyzerPollutionEffect implements IAnalyzerPollutionEffect
 	public static List<AnalyzerPollutionEffect> ape_list_fromJSON(String json)
 	{
 		return gson.fromJson(json, typeOfSrc);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((Strings.isNullOrEmpty(description)) ? 0 : description.hashCode());
+		result = prime * result + ((Strings.isNullOrEmpty(header)) ? 0 : header.hashCode());
+		result = prime * result + ((Strings.isNullOrEmpty(icon)) ? 0 : icon.hashCode());
+		result = prime * result + ((Strings.isNullOrEmpty(id)) ? 0 : id.hashCode());
+		result = prime * result + ((triggering_type == null) ? 0 : triggering_type.hashCode());
+		result = prime * result + ((triggerring_pollution == null) ? 0 : triggerring_pollution.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object other)
+	{
+		if(other instanceof IAnalyzerPollutionEffect)
+		{
+			IAnalyzerPollutionEffect effect = (IAnalyzerPollutionEffect)other;
+			
+			return effect.getId().equals(id) && effect.getTriggeringType().equals(triggering_type) && effect.getTriggerringPollution().equals(triggerring_pollution) && effect.getHeader().equals(header) && effect.getDescription().equals(description) && effect.getIcon().equals(getIcon());
+		}
+		
+		return false;
 	}
 }

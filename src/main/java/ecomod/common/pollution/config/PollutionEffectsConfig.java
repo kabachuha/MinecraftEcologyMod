@@ -227,7 +227,7 @@ public class PollutionEffectsConfig
 		return null;
 	}
 	
-	public void load(String cfg_path, String url, boolean keep_entries)
+	public void load(String cfg_path, String url, boolean keep_entries, boolean force_update)
 	{
 		EcologyMod.log.info("Loading PollutionEffects");
 		
@@ -247,13 +247,16 @@ public class PollutionEffectsConfig
 		{
 			if(loaded_from_file)
 			{
-				if(keep_entries)
+				if(force_update || !version.equals(pec.version))
 				{
-					EMUtils.mergeLists(pec.effects, effects);
-				}
+					if(keep_entries)
+					{
+						EMUtils.mergeLists(pec.effects, effects);
+					}
 				
-				effects = pec.effects;
-				version = pec.version;
+					effects = pec.effects;
+					version = pec.version;
+				}
 			}
 			else
 			{

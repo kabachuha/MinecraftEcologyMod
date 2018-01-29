@@ -220,7 +220,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public String path = "";
 	
-	public void load(String cfg_path, String url, boolean keep_entries)
+	public void load(String cfg_path, String url, boolean keep_entries, boolean force_update)
 	{
 		EcologyMod.log.info("Loading TEPC");
 		
@@ -242,22 +242,25 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		{
 			if(loaded_from_file)
 			{
-				for(TEPollution tep : data)
+				if(force_update || !version.equals(tepc.version))
 				{
-					if(tep.keep_entry != null && tep.keep_entry == true)
+					for(TEPollution tep : data)
 					{
-						tepc.removeTilePollution(new ResourceLocation(tep.getId()));
-						tepc.data.add(tep);
+						if(tep.keep_entry != null && tep.keep_entry == true)
+						{
+							tepc.removeTilePollution(new ResourceLocation(tep.getId()));
+							tepc.data.add(tep);
+						}
 					}
-				}
 				
-				if(keep_entries)
-				{
-					EMUtils.mergeLists(tepc.data, data);
-				}
+					if(keep_entries)
+					{
+						EMUtils.mergeLists(tepc.data, data);
+					}
 					
-				data = tepc.data;
-				version = tepc.version;
+					data = tepc.data;
+					version = tepc.version;
+				}
 			}
 			else
 			{

@@ -48,11 +48,9 @@ public class RecipeWrapperManuallyAssembly implements IRecipeWrapper
 	public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 		String text = I18n.format("gui.jei.category.ecomod.manually_assembly.note");
 		
-		int width = minecraft.fontRenderer.getStringWidth(text);
 		int x = -25;
 		int y = 20;
 		
-		//minecraft.fontRenderer.drawString(text, x, y, Color.DARK_GRAY.getRGB());
 		minecraft.fontRenderer.drawSplitString(text, x, y, (int)(recipeWidth*1.5F), Color.DARK_GRAY.getRGB());
 	}
 	

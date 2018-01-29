@@ -19,6 +19,7 @@ import ecomod.common.pollution.config.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.thread.WorldProcessingThread;
 import ecomod.common.tiles.TileAnalyzer;
+import ecomod.common.utils.AnalyzerPollutionEffect;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.common.utils.PositionedEmissionObject;
@@ -708,11 +709,15 @@ public class PollutionHandler implements IPollutionGetter
 				
 				EcologyMod.log.info("Serializing and sending Pollution Effects Config to the Player: "+ event.getEntity().getName()+ '(' + event.getEntity().getUniqueID() + ')');
 				
+				//EcomodStuff.pollution_effects.put("test", AnalyzerPollutionEffect.createSimpleNull("TEST", new PollutionData(2F, 2F, 8F), TriggeringType.OR));
+				
 				Effects t = new Effects("", EcomodStuff.pollution_effects.values().toArray(new IAnalyzerPollutionEffect[EcomodStuff.pollution_effects.values().size()]));
 				
 				String json = gson.toJson(t, Effects.class);
 				
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('E' +json), (EntityPlayerMP)event.getEntity());
+				
+				//EcomodStuff.pollution_effects.remove("test");
 				
 				EcologyMod.log.info("Serializing and sending TEPollutionConfig to the Player: "+ event.getEntity().getName()+ '(' + event.getEntity().getUniqueID() + ')');
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString('T' + EcologyMod.instance.tepc.toJson()), (EntityPlayerMP)event.getEntity());

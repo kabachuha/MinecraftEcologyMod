@@ -9,6 +9,7 @@ import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.client.renderer.RenderAdvancedFilter;
 import ecomod.common.blocks.BlockFrame;
+import ecomod.common.intermod.jei.EcomodJEIPlugin;
 import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.pollution.config.PollutionEffectsConfig.Effects;
 import ecomod.common.utils.EMUtils;
@@ -32,6 +33,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -237,6 +239,9 @@ public class ClientHandler
 				pollution_effects.put(iape.getId(), iape);
 			}
 			EcologyMod.log.info("Pollution Effects Config has been received.");
+			
+			if(Loader.isModLoaded("jei"))
+				Minecraft.getMinecraft().addScheduledTask(EcomodJEIPlugin::updateEffectsCategory);
 		}
 	}
 	

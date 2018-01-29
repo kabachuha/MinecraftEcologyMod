@@ -22,24 +22,26 @@ import java.util.List;
 
 public class PollutionDataIngrRender implements IIngredientRenderer<PollutionData>
 {
+	private boolean round = false;
+	
 	@Override
 	public void render(Minecraft minecraft, int xPosition, int yPosition, PollutionData pollution)
 	{
 		FontRenderer fontRenderer = this.getFontRenderer(minecraft, pollution);
 		if(pollution.getAirPollution() < 0.1D)
-			fontRenderer.drawString("0", xPosition+105, yPosition+8, new Color(255, 255, 126).getRGB());
+			fontRenderer.drawString("0", xPosition+100, yPosition+8, new Color(255, 255, 126).getRGB());
 		else
-			fontRenderer.drawString(Float.toString(pollution.getAirPollution()), xPosition+105, yPosition+8, new Color(255, 255, 126).getRGB());
+			fontRenderer.drawString(round ? Integer.toString((int)pollution.getAirPollution()) : Float.toString(pollution.getAirPollution()), xPosition+100, yPosition+8, new Color(255, 255, 126).getRGB());
 
 		if(pollution.getWaterPollution() < 0.1D)
-			fontRenderer.drawString("0", xPosition+105, yPosition+28, new Color(60, 212, 252).getRGB());
+			fontRenderer.drawString("0", xPosition+100, yPosition+28, new Color(60, 212, 252).getRGB());
 		else
-			fontRenderer.drawString(Float.toString(pollution.getWaterPollution()), xPosition+105, yPosition+28, new Color(60, 212, 252).getRGB());
+			fontRenderer.drawString(round ? Integer.toString((int)pollution.getWaterPollution()) : Float.toString(pollution.getWaterPollution()), xPosition+100, yPosition+28, new Color(60, 212, 252).getRGB());
 
 		if(pollution.getSoilPollution() < 0.1D)
-			fontRenderer.drawString("0", xPosition+105, yPosition+48, new Color(89, 61, 41).getRGB());
+			fontRenderer.drawString("0", xPosition+100, yPosition+48, new Color(89, 61, 41).getRGB());
 		else
-			fontRenderer.drawString(Float.toString(pollution.getSoilPollution()), xPosition+105, yPosition+48, new Color(89, 61, 41).getRGB());
+			fontRenderer.drawString(round ? Integer.toString((int)pollution.getSoilPollution()) : Float.toString(pollution.getSoilPollution()), xPosition+100, yPosition+48, new Color(89, 61, 41).getRGB());
 
 		GlStateManager.color(1, 1, 1, 1);
 
@@ -79,5 +81,11 @@ public class PollutionDataIngrRender implements IIngredientRenderer<PollutionDat
 		tooltip.add(TextFormatting.GOLD + "" + TextFormatting.ITALIC + I18n.format("gui.jei.desc.ecomod.pollution.soil") + TextFormatting.RESET + ' ' + Float.toString(ingredient.getSoilPollution()));
 		
 		return tooltip;
+	}
+	
+	public PollutionDataIngrRender setRoundValues()
+	{
+		round = true;
+		return this;
 	}
 }

@@ -134,7 +134,7 @@ public class RecipeCategoryAirFiltration implements IRecipeCategory<RecipeWrappe
 		arrow.draw(minecraft, tankx-30, tanky+tsy/2-9);
 		background_vent.draw(minecraft, tankx-24, tanky+tsy/2-25);
 		
-		minecraft.fontRenderer.drawString(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs+" RF", tankx-36, tanky+tsy/2+18, Color.RED.getRGB());
-		minecraft.fontRenderer.drawString(EMConfig.adv_filter_delay_secs+" s", tankx-24, tanky+tsy/2-35, Color.BLACK.getRGB());
+		minecraft.fontRenderer.drawString(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs+" RF", tankx-30, tanky+tsy/2+35, Color.RED.getRGB());
+		minecraft.fontRenderer.drawString(EMConfig.adv_filter_delay_secs+" s", tankx-24, tanky+tsy/2+16, Color.BLACK.getRGB());
 	}
 }

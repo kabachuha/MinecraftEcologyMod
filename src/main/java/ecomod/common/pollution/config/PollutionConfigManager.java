@@ -219,7 +219,7 @@ public class PollutionConfigManager
 		
 		if(update.startsWith("url"))
 		{
-			EcologyMod.instance.tepc.load(pollution_tiles.getAbsolutePath(), update.substring(update.indexOf('-')+1, update.indexOf('|') == -1 ? update.length() : update.indexOf('|')), keep_entries(update));
+			EcologyMod.instance.tepc.load(pollution_tiles.getAbsolutePath(), update.substring(update.indexOf('-')+1, update.indexOf('|') == -1 ? update.length() : update.indexOf('|')), keep_entries(update), true);
 			
 			if(EcologyMod.instance.tepc.data.size() == 0)
 			{
@@ -238,11 +238,13 @@ public class PollutionConfigManager
 			if(!filed && json != null)
 			{
 				String req_version = "";
+				boolean force = false;
 				
 				Map<String, String> tepcs = json.getModversionData(ecomod_version).TEPollutionConfig;
 				
 				if(update.startsWith("version"))
 				{
+					force = true;
 					req_version = update.substring("version-".length(), update.indexOf('|') == -1 ? update.length() : update.indexOf('|'));
 					if(!tepcs.containsKey(req_version))
 						throw new IllegalArgumentException("The specified version("+req_version+") of TEPollutionConfig had't been found in the config update json! Change the TEPollutionConfig_update_to in ecomod/update.properties");
@@ -256,7 +258,7 @@ public class PollutionConfigManager
 				
 				EcologyMod.log.warn("Downloading the TEPollutionConfig version "+req_version);
 				
-				EcologyMod.instance.tepc.load(pollution_tiles.getAbsolutePath(), tepcs.get(req_version), keep_entries(update));
+				EcologyMod.instance.tepc.load(pollution_tiles.getAbsolutePath(), tepcs.get(req_version), keep_entries(update), force);
 			}
 		}
 		
@@ -280,7 +282,7 @@ public class PollutionConfigManager
 		
 		if(update.startsWith("url"))
 		{
-			sources_cfg.load(pollution_sources.getAbsolutePath(), update.substring(update.indexOf('-')+1, update.indexOf('|') == -1 ? update.length() : update.indexOf('|')), keep_entries(update));
+			sources_cfg.load(pollution_sources.getAbsolutePath(), update.substring(update.indexOf('-')+1, update.indexOf('|') == -1 ? update.length() : update.indexOf('|')), keep_entries(update), true);
 			
 			if(sources_cfg.pollution_sources.size() == 0)
 			{
@@ -299,11 +301,13 @@ public class PollutionConfigManager
 			if(!filed && json != null)
 			{
 				String req_version = "";
+				boolean force = false;
 				
 				Map<String, String> tepcs = json.getModversionData(ecomod_version).PollutionSources;
 				
 				if(update.startsWith("version"))
 				{
+					force = true;
 					req_version = update.substring("version-".length(), update.indexOf('|') == -1 ? update.length() : update.indexOf('|'));
 					if(!tepcs.containsKey(req_version))
 						throw new IllegalArgumentException("The specified version("+req_version+") of PollutionSourcesConfig had't been found in the config update json! Change the PollutionSources_update_to in ecomod/update.properties");
@@ -317,7 +321,7 @@ public class PollutionConfigManager
 				
 				EcologyMod.log.warn("Downloading the PollutionSourcesConfig version "+req_version);
 				
-				sources_cfg.load(pollution_sources.getAbsolutePath(), tepcs.get(req_version), keep_entries(update));
+				sources_cfg.load(pollution_sources.getAbsolutePath(), tepcs.get(req_version), keep_entries(update), force);
 			}
 		}
 		
@@ -343,7 +347,7 @@ public class PollutionConfigManager
 		
 		if(update.startsWith("url"))
 		{
-			effects_cfg.load(pollution_effects.getAbsolutePath(), update.substring(update.indexOf('-')+1, update.indexOf('|') == -1 ? update.length() : update.indexOf('|')), keep_entries(update));
+			effects_cfg.load(pollution_effects.getAbsolutePath(), update.substring(update.indexOf('-')+1, update.indexOf('|') == -1 ? update.length() : update.indexOf('|')), keep_entries(update), true);
 			
 			if(effects_cfg.effects.size() == 0)
 			{
@@ -362,11 +366,13 @@ public class PollutionConfigManager
 			if(!filed && json != null)
 			{
 				String req_version = "";
+				boolean force = false;
 				
 				Map<String, String> tepcs = json.getModversionData(ecomod_version).PollutionEffects;
 				
 				if(update.startsWith("version"))
 				{
+					force = true;
 					req_version = update.substring("version-".length(), update.indexOf('|') == -1 ? update.length() : update.indexOf('|'));
 					if(!tepcs.containsKey(req_version))
 						throw new IllegalArgumentException("The specified version("+req_version+") of PollutionEffectsConfig had't been found in the config update json! Change the PollutionEffects_update_to in ecomod/update.properties");
@@ -380,7 +386,7 @@ public class PollutionConfigManager
 				
 				EcologyMod.log.warn("Downloading the PollutionSourcesConfig version "+req_version);
 				
-				effects_cfg.load(pollution_effects.getAbsolutePath(), tepcs.get(req_version), keep_entries(update));
+				effects_cfg.load(pollution_effects.getAbsolutePath(), tepcs.get(req_version), keep_entries(update), force);
 			}
 		}
 		

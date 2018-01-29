@@ -91,6 +91,8 @@ public class EMConfig
 	
 	public static boolean waila_shows_pollution_info = true;
 	
+	public static boolean pollution_effects_as_recipe_category = true;
+	
 	public static void sync()
 	{
 		if(config == null)
@@ -109,6 +111,8 @@ public class EMConfig
 			Arrays.sort(allowedDims);
 			
 			allow_acid_rain_render = config.getBoolean("allowAcidRainRender", "CLIENT", true, "", lang("client.rain"));
+			
+			pollution_effects_as_recipe_category = config.getBoolean("pollution_effects_as_jei_recipe_category", "CLIENT", true, "");
 			
 			wptimm = config.getBoolean("ImmediateStart", "THREAD", false, "Whether the thread starts without delay", lang("thread.wptimm"));
 			
