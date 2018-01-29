@@ -7,6 +7,7 @@
     "1.12.1-recommended": "1.12.1-1.2.0.0"
   },
   "1.12.2": {
+    "1.12.2-1.5.0.0": "1.5.0.0:\nMassive optimization and cleanup. [Especially thanks to @pupsnewfster];\nWaila shows blocks pollution values when sneaking. (Can be disabled from the server side);\nNew configuration system. (Backup your previous config files if you had made any change to them!);\nJEI integration: manual assembly, air filtration and pollution effects recipe category;\nOther fixes.",
     "1.12.2-1.4.1.0": "1.4.1.0:\nFixed advanced filter crash(#23);\nSome optimization improvements;\nWaila integration.",
     "1.12.2-1.4.0.0": "1.4.0.0:\nMajor threading fix(in attempt to fix #22, thread concurrency error);\nRemoved a one annoying debug message;\nImproved advanced filter renderer: vents rotate only when working;\nSome API changes.",
     "1.12.2-1.3.0.0": "Optimization update:\nPollution data storage type changed from double (64 bits) to float (32 bits), thus reducing the memory usage;\nOptimized WorldProcessingThread's work;\nSmall pollution values(lower than 5.0, by default) are being cleared from memory, reducing RAM and disk memory usage;\nFixed smog and acid rain renderers when DynamicSurroundings are installed.",
