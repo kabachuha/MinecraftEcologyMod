@@ -33,6 +33,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -111,7 +112,7 @@ public class MainRegistry
 		
 		EMAchievements.setup();
 		
-		//FMLInterModComms.sendFunctionMessage(EMConsts.modid, EMIntermod.key_add_te_pollution_determinant, ecomod.test.TEST_TEPollutionDeterminant.class.getName());
+		FMLInterModComms.sendMessage("Waila", "register", "ecomod.core.stuff.compat.EMWailaHandler.callbackRegister");
 	}
 	
 	public static void doPostInit()
@@ -128,14 +129,14 @@ public class MainRegistry
 	
 	public static void registerSounds()
 	{
-		EcologyMod.log.info("Registring Sounds");
+		EcologyMod.log.info("Registering Sounds");
 		GameRegistry.register(EcomodStuff.advanced_filter_working = new SoundEvent(EMUtils.resloc("advanced_filter_working")).setRegistryName(EMUtils.resloc("advanced_filter_working")));
 		GameRegistry.register(EcomodStuff.analyzer = new SoundEvent(EMUtils.resloc("analyzer")).setRegistryName(EMUtils.resloc("analyzer")));
 	}
 	
 	public static void registerBiomes()
 	{
-		EcologyMod.log.info("Registring Biomes");
+		EcologyMod.log.info("Registering Biomes");
 		GameRegistry.register(biome_wasteland.setRegistryName(EMUtils.resloc("wasteland")));
 	}
 	

@@ -112,7 +112,7 @@ public class BlockFrame extends Block
 				
 				if(pi != null && pi.stackSize > 0)
 				{
-					if(pi.getItem() instanceof ItemCore)
+					if(EMConfig.enable_manually_assembly && pi.getItem() instanceof ItemCore)
 					{
 						if(state.getValue(TYPE) == 0)
 						{
@@ -122,9 +122,7 @@ public class BlockFrame extends Block
 								
 								worldIn.setBlockState(pos, EcomodBlocks.FILTER.getDefaultState());
 								
-								--pi.stackSize;
-								
-								playerIn.setHeldItem(hand, pi);
+								playerIn.setHeldItem(hand, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}
@@ -135,9 +133,7 @@ public class BlockFrame extends Block
 								
 								worldIn.setBlockState(pos, EcomodBlocks.ANALYZER.getDefaultState());
 								
-								--pi.stackSize;
-								
-								playerIn.setHeldItem(hand, pi);
+								playerIn.setHeldItem(hand, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}
@@ -150,9 +146,7 @@ public class BlockFrame extends Block
 								
 								worldIn.setBlockState(pos, EcomodBlocks.ADVANCED_FILTER.getDefaultState());
 								
-								--pi.stackSize;
-								
-								playerIn.setHeldItem(hand, pi);
+								playerIn.setHeldItem(hand, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}
@@ -169,9 +163,7 @@ public class BlockFrame extends Block
 								
 								worldIn.setBlockState(pos, EcomodBlocks.OC_ANALYZER_ADAPTER.getDefaultState());
 								
-								--pi.stackSize;
-								
-								playerIn.setHeldItem(hand, pi);
+								playerIn.setHeldItem(hand, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}

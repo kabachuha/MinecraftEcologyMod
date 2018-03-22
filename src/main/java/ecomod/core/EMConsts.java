@@ -16,9 +16,9 @@ public class EMConsts
 	 * 
 	 */
 	public static final String mcversion = "1.10.2";
-	public static final String version = mcversion + "-1.2.3.0";
+	public static final String version = mcversion + "-1.5.0.0";
 	
-	public static final String deps = "required-after:FML";
+	public static final String deps = "";
 	
 	public static final String json = "https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.10/versions.json";
 	
@@ -30,7 +30,7 @@ public class EMConsts
 	
 	public static final String projectURL = "https://minecraft.curseforge.com/projects/ecology-mod";
 	
-	public static final String contributors = "Artem226(author/maintainer), xhz313123(Chinese translation) and all feedbackers.";
+	public static final String contributors = "Artem226(author/maintainer), pupnewfster, xhz313123(Chinese translation) and all feedbackers.";
 	
 	public static final List<String> authors = java.util.Arrays.asList(new String[]{"Artem226"});
 	

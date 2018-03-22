@@ -45,7 +45,7 @@ public class CommandClearManager extends CommandBase
 			}
 		}
 		
-		WorldProcessingThread wpt = EcologyMod.ph.getWPT(server.getWorldName()+"_"+dim);
+		WorldProcessingThread wpt = EcologyMod.ph.getWPT(dim);
 		
 		if(wpt == null)
 			throw new CommandException("commands.ecomod.wpt_not_found", dim);

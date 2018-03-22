@@ -8,8 +8,8 @@ import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.tiles.compat.CommonCapsWorker;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
@@ -21,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,7 +29,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 
-
+@net.minecraftforge.fml.common.Optional.Interface(iface = "buildcraft.api.tiles.IHasWork", modid = "buildcraft")
 public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWork
 {
 	public FluidTank tank;
@@ -49,12 +50,34 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		return isWorking();
 	}
 	
-	private boolean was_working = false;
+	public boolean was_working = false;
 	private int i1 = 0;
+	
+	public float vent_rotation = 0F;
+	private float rps = 0F;
 
 	@Override
 	public void update()
 	{
+		if(getWorld().isRemote)
+		{
+			if(was_working)
+			{
+				if(rps < EMConfig.advanced_filter_max_rps)
+					rps += 1 / (4F * 20F);
+			}
+			else
+			{
+				if(rps >= 0)
+					rps -= 1 / (2F * 20F);
+			}
+			
+			if(rps < 0)
+				rps = 0;
+			
+			vent_rotation = MathHelper.wrapDegrees(vent_rotation + 360 * rps / 20F);
+		}
+		
 		if(ticks > (20 * EMConfig.adv_filter_delay_secs) && (ticks - i1) > 340)
 		{
 			ticks = 0;
@@ -80,7 +103,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 					
 					if(energy.extractEnergyNotOfficially(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
 					{
-						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_redution"), false);
+						EcomodAPI.emitPollution(getWorld(), getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_reduction"), false);
 					
 						tank.fillInternal(getProduction(), true);
 					
@@ -131,6 +154,10 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		return ret;
 	}
 	
+	public PollutionData getSource() {
+		return PollutionSourcesConfig.getSource("advanced_filter_reduction");
+	}
+	
 	public FluidStack getProduction()
 	{
 		PollutionData pd = EcomodAPI.getPollution(getWorld(), this.getChunkCoords().getLeft(), this.getChunkCoords().getRight());
@@ -140,24 +167,24 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
 		
 		FluidStack ret = new FluidStack(EcomodStuff.concentrated_pollution, 0);
 		
-		PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
+		PollutionData advanced_filter_reduction = getSource();
 		
 		for(PollutionType type : PollutionType.values())
 		{
-			if(pd.get(type) >= adv_filter_redution.get(type))
+			if(pd.get(type) >= advanced_filter_reduction.get(type))
 			{
 				switch(type)
 				{
 					case AIR:
-						ret.amount += adv_filter_redution.get(type);
+						ret.amount += advanced_filter_reduction.get(type);
 						break;
 						
 					case WATER:
-						ret.amount += adv_filter_redution.get(type) * 2;
+						ret.amount += advanced_filter_reduction.get(type) * 2;
 						break;
 						
 					case SOIL:
-						ret.amount += adv_filter_redution.get(type) * 4;
+						ret.amount += advanced_filter_reduction.get(type) * 4;
 						break;
 				}
 			}
@@ -177,6 +204,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
     {
         super.readFromNBT(tag);
         tank.readFromNBT(tag);
+        was_working = tag.getBoolean("was_working");
     }
 	
 	@Override
@@ -184,6 +212,7 @@ public class TileAdvancedFilter extends TileEnergy implements ITickable, IHasWor
     {
         tag = super.writeToNBT(tag);
         tank.writeToNBT(tag);
+        tag.setBoolean("was_working", was_working);
         return tag;
     }
 	

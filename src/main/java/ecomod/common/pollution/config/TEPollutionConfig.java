@@ -1,30 +1,29 @@
-package ecomod.common.pollution;
+package ecomod.common.pollution.config;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.annotations.Expose;
+
+import ecomod.api.pollution.ITEPollutionConfig;
+import ecomod.api.pollution.PollutionData;
+import ecomod.common.utils.EMUtils;
+import ecomod.core.EMConsts;
+import ecomod.core.EcologyMod;
+import ecomod.core.stuff.EMConfig;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-
-import ecomod.api.pollution.ITEPollutionConfig;
-import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionManager.WorldPollution;
-import ecomod.common.utils.EMUtils;
-import ecomod.core.EMConsts;
-import ecomod.core.EcologyMod;
-import ecomod.core.stuff.EMConfig;
-import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 
 public class TEPollutionConfig implements ITEPollutionConfig
 {
@@ -32,9 +31,11 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public String version = EMConsts.version.substring(0, 3);
 	
+	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	
 	public TEPollutionConfig()
 	{
-		data = new ArrayList<TEPollution>();
+		data = new ArrayList<>();
 	}
 	
 	public boolean hasTile(ResourceLocation key)
@@ -62,7 +63,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public TEPollution getTEP(ResourceLocation resloc)
 	{
-		return getTEP(resloc.toString());
+		return getTEP(resloc.toString().toLowerCase());
 	}
 	
 	public TEPollution getTEP(TileEntity te)
@@ -71,10 +72,8 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	}
 	
 	//IO
-	public static TEPollutionConfig get()
+	public static TEPollutionConfig get(String urlstr)
 	{
-		String urlstr = EMConfig.tepcURL;
-		
 		EcologyMod.log.info("Getting TEPC from "+urlstr);
 		
 		urlstr = EMUtils.parseMINECRAFTURL(urlstr);
@@ -85,20 +84,9 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		{
 			URL url = new URL(urlstr);
 			
-			EcologyMod.log.info(url.toString());
-			
 			json = EMUtils.getString(url);
 			
-			Gson gson = new GsonBuilder().create();
-			
-			TEPC t = gson.fromJson(json, TEPC.class);
-			
-			TEPollutionConfig tepc = new TEPollutionConfig();
-			
-			tepc.data = new ArrayList(Arrays.asList(t.getCfg()));
-			tepc.version = t.getVersion();
-			
-			return tepc;
+			return fromJson(json);
 		}
 		catch (MalformedURLException e)
 		{
@@ -125,13 +113,9 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid + "/TEPollutionConfig.json";
-		
 		File f = new File(cfg_path);
 		
 		EcologyMod.log.info("Saving TEPollutionConfig.json");
-		
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 		
 		TEPC t = new TEPC(version, data.toArray(new TEPollution[data.size()]));
 		
@@ -153,7 +137,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else
@@ -174,11 +158,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path +"/"+ EMConsts.modid +"/TEPollutionConfig.json";
-		
 		EcologyMod.log.info("Trying to load TEPC from file");
-		
-		Gson gson = new GsonBuilder().create();
 		
 		String json;
 		
@@ -199,7 +179,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -233,14 +213,14 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			return false;
 		
 		this.version = t.getVersion();
-		this.data = new ArrayList(Arrays.asList(t.getCfg()));
+		this.data = new ArrayList<>(Arrays.asList(t.getCfg()));
 		
 		return true;
 	}
 	
 	public String path = "";
 	
-	public void load(String cfg_path)
+	public void load(String cfg_path, String url, boolean keep_entries, boolean force_update)
 	{
 		EcologyMod.log.info("Loading TEPC");
 		
@@ -248,22 +228,36 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		
 		boolean loaded_from_file = loadFromFile(cfg_path);
 		
-		TEPollutionConfig tepc = get();
+		TEPollutionConfig tepc = get(url);
 		
 		if(tepc == null)
 		{
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+")");
+				throw new NullPointerException("Impossible to load the TEPC for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+url+ ')');
 			}
 		}
 		else
 		{
 			if(loaded_from_file)
 			{
-				if(EMUtils.shouldTEPCupdate(version, tepc.version))
+				if(force_update || !version.equals(tepc.version))
 				{
+					for(TEPollution tep : data)
+					{
+						if(tep.keep_entry != null && tep.keep_entry == true)
+						{
+							tepc.removeTilePollution(new ResourceLocation(tep.getId()));
+							tepc.data.add(tep);
+						}
+					}
+				
+					if(keep_entries)
+					{
+						EMUtils.mergeLists(tepc.data, data);
+					}
+					
 					data = tepc.data;
 					version = tepc.version;
 				}
@@ -284,14 +278,30 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		}
 	}
 	
+	public static TEPollutionConfig fromJson(String json) throws JsonSyntaxException
+	{
+		TEPC t = gson.fromJson(json, TEPC.class);
+		
+		TEPollutionConfig tepc = new TEPollutionConfig();
+		
+		tepc.data = new ArrayList<>(Arrays.asList(t.getCfg()));
+		tepc.version = t.getVersion();
+		
+		return tepc;
+	}
 	
-	
+	public String toJson()
+	{
+		return gson.toJson(new TEPC(version, data.toArray(new TEPollution[data.size()])), TEPC.class);
+	}
 	
 	public static class TEPollution
 	{
 		private String id;
 		
 		private PollutionData emission;
+		
+		private Boolean keep_entry = null;
 		
 		public TEPollution()
 		{
@@ -316,7 +326,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 		
 		public String toString()
 		{
-			return "{\"id\" = \""+id+"\", \"emission\" : "+emission.toString()+"}";
+			return "{\"id\" = \""+id+"\", \"emission\" : "+emission.toString()+ '}';
 		}
 		
 		public static TEPollution fromJson(String json)
@@ -325,8 +335,7 @@ public class TEPollutionConfig implements ITEPollutionConfig
 			
 			try
 			{
-				TEPollution tep = gson.fromJson(json, TEPollution.class);
-				return tep;
+				return gson.fromJson(json, TEPollution.class);
 			}
 			catch (JsonSyntaxException e)
 			{

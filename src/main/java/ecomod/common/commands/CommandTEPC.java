@@ -1,7 +1,7 @@
 package ecomod.common.commands;
 
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -53,13 +53,13 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId = args[1];
 			
-			double air = 0.0D;
-			double water = 0.0D;
-			double soil = 0.0D;
+			float air = 0.0F;
+			float water = 0.0F;
+			float soil = 0.0F;
 			
 			try
 			{
-				air = Double.parseDouble(args[2]);
+				air = Float.parseFloat(args[2]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -68,7 +68,7 @@ public class CommandTEPC extends CommandBase {
 			
 			try
 			{
-				water = Double.parseDouble(args[3]);
+				water = Float.parseFloat(args[3]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -77,7 +77,7 @@ public class CommandTEPC extends CommandBase {
 			
 			try
 			{
-				soil = Double.parseDouble(args[4]);
+				soil = Float.parseFloat(args[4]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -133,7 +133,7 @@ public class CommandTEPC extends CommandBase {
 			
 		case load:
 			sender.addChatMessage(new TextComponentTranslation("commands.ecomod.tepc.load"));
-			EcologyMod.instance.tepc.load(EcologyMod.instance.tepc.path);
+			EcologyMod.instance.tepc.loadFromFile(EcologyMod.instance.tepc.path);
 			break;
 			
 		case save:

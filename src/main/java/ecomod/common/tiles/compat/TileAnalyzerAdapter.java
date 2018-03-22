@@ -9,7 +9,7 @@ import java.util.List;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
 import li.cil.oc.api.Network;

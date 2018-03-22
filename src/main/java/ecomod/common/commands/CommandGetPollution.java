@@ -43,7 +43,7 @@ public class CommandGetPollution extends CommandBase {
 		}
 		else if (args.length == 0)
 		{
-			sender.addChatMessage(new TextComponentString(EcomodAPI.getPollution(w, EMUtils.blockPosToPair(sender.getPosition()).getLeft(), EMUtils.blockPosToPair(sender.getPosition()).getRight()).toString()));
+			sender.addChatMessage(new TextComponentString(EcomodAPI.getPollution(w, sender.getPosition().getX() >> 4, sender.getPosition().getZ() >> 4).toString()));
 		}
 		else
 		{

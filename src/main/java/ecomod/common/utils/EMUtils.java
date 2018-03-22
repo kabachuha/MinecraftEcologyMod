@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -395,17 +397,11 @@ public class EMUtils
 			TileEntity te = w.getTileEntity(pos.offset(ef));
 			if(te != null)
 			{
-				if(ret == null)
-				{
-					if(id == null || getTileEntityId(te.getClass()).toString().equals(id.toString()))
+				if(id == null || TileEntity.classToNameMap.get(te.getClass()).toString().equals(id.toString())) {
+					if (ret == null)
 						ret = te;
-				}
-				else
-				{
-					if(id == null || getTileEntityId(te.getClass()).toString().equals(id.toString()))
-					{
+					else
 						return null;
-					}
 				}
 			}
 		}
@@ -515,4 +511,122 @@ public class EMUtils
 	{
 		return new ResourceLocation(TileEntity.classToNameMap.get(tile_class));
 	}
+	
+	public static void renderItemIn2D(float minU, float minV, float maxU, float maxV, int width, int height, float thickness)
+    {
+    	Tessellator t = Tessellator.getInstance();
+    	VertexBuffer tess = Tessellator.getInstance().getBuffer();
+        tess.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        tess.pos(0.0D, 0.0D, 0.0D).tex((double)minU, (double)maxV).normal(0.0F, 0.0F, 1.0F).endVertex();
+        tess.pos(1.0D, 0.0D, 0.0D).tex((double)maxU, (double)maxV).normal(0.0F, 0.0F, 1.0F).endVertex();
+        tess.pos(1.0D, 1.0D, 0.0D).tex((double)maxU, (double)minV).normal(0.0F, 0.0F, 1.0F).endVertex();
+        tess.pos(0.0D, 1.0D, 0.0D).tex((double)minU, (double)minV).normal(0.0F, 0.0F, 1.0F).endVertex();
+        t.draw();
+        tess.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        tess.pos(0.0D, 1.0D, (double)(0.0F - thickness)).tex((double)minU, (double)minV).normal(0.0F, 0.0F, -1.0F).endVertex();
+        tess.pos(1.0D, 1.0D, (double)(0.0F - thickness)).tex((double)maxU, (double)minV).normal(0.0F, 0.0F, -1.0F).endVertex();
+        tess.pos(1.0D, 0.0D, (double)(0.0F - thickness)).tex((double)maxU, (double)maxV).normal(0.0F, 0.0F, -1.0F).endVertex();
+        tess.pos(0.0D, 0.0D, (double)(0.0F - thickness)).tex((double)minU, (double)maxV).normal(0.0F, 0.0F, -1.0F).endVertex();
+        t.draw();
+        float f5 = 0.5F * (minU - maxU) / (float)width;
+        float f6 = 0.5F * (maxV - minV) / (float)height;
+        tess.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        int k;
+        float f7;
+        float f8;
+
+        for (k = 0; k < width; ++k)
+        {
+            f7 = (float)k / (float)width;
+            f8 = minU + (maxU - minU) * f7 - f5;
+            tess.pos((double)f7, 0.0D, (double)(0.0F - thickness)).tex((double)f8, (double)maxV).normal(-1.0F, 0.0F, 0.0F).endVertex();
+            tess.pos((double)f7, 0.0D, 0.0D).tex((double)f8, (double)maxV).normal(-1.0F, 0.0F, 0.0F).endVertex();
+            tess.pos((double)f7, 1.0D, 0.0D).tex((double)f8, (double)minV).normal(-1.0F, 0.0F, 0.0F).endVertex();
+            tess.pos((double)f7, 1.0D, (double)(0.0F - thickness)).tex((double)f8, (double)minV).normal(-1.0F, 0.0F, 0.0F).endVertex();
+        }
+
+        t.draw();
+        tess.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        float f9;
+
+        for (k = 0; k < width; ++k)
+        {
+            f7 = (float)k / (float)width;
+            f8 = minU + (maxU - minU) * f7 - f5;
+            f9 = f7 + 1.0F / (float)width;
+            tess.pos((double)f9, 1.0D, (double)(0.0F - thickness)).tex((double)f8, (double)minV).normal(1.0F, 0.0F, 0.0F).endVertex();
+            tess.pos((double)f9, 1.0D, 0.0D).tex((double)f8, (double)minV).normal(1.0F, 0.0F, 0.0F).endVertex();
+            tess.pos((double)f9, 0.0D, 0.0D).tex((double)f8, (double)maxV).normal(1.0F, 0.0F, 0.0F).endVertex();
+            tess.pos((double)f9, 0.0D, (double)(0.0F - thickness)).tex((double)f8, (double)maxV).normal(1.0F, 0.0F, 0.0F).endVertex();
+        }
+
+        t.draw();
+        tess.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+
+        for (k = 0; k < height; ++k)
+        {
+            f7 = (float)k / (float)height;
+            f8 = maxV + (minV - maxV) * f7 - f6;
+            f9 = f7 + 1.0F / (float)height;
+            tess.pos(0.0D, (double)f9, 0.0D).tex((double)minU, (double)f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+            tess.pos(1.0D, (double)f9, 0.0D).tex((double)maxU, (double)f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+            tess.pos(1.0D, (double)f9, (double)(0.0F - thickness)).tex((double)maxU, (double)f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+            tess.pos(0.0D, (double)f9, (double)(0.0F - thickness)).tex((double)minU, (double)f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+        }
+
+        t.draw();
+        tess.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+
+        for (k = 0; k < height; ++k)
+        {
+            f7 = (float)k / (float)height;
+            f8 = maxV + (minV - maxV) * f7 - f6;
+            tess.pos(1.0D, (double)f7, 0.0D).tex((double)maxU, (double)f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+            tess.pos(0.0D, (double)f7, 0.0D).tex((double)minU, (double)f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+            tess.pos(0.0D, (double)f7, (double)(0.0F - thickness)).tex((double)minU, (double)f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+            tess.pos(1.0D, (double)f7, (double)(0.0F - thickness)).tex((double)maxU, (double)f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+        }
+
+        t.draw();
+    }
+	
+	@Nullable
+    public static TileEntity getLoadedTileEntityAt(World world, BlockPos pos)
+    {
+        for (int j2 = 0; j2 < world.loadedTileEntityList.size(); ++j2)
+        {
+            TileEntity tileentity2 = world.loadedTileEntityList.get(j2);
+
+            if (!tileentity2.isInvalid() && tileentity2.getPos().equals(pos))
+            {
+                return tileentity2;
+            }
+        }
+
+        return null;
+    }
+	
+	/**
+     * Merge map2 into map1
+     */
+    public static <K, V> void mergeMaps(Map<K, V> map1, Map<K, V> map2)
+    {
+    	for(K k : map1.keySet())
+			if(map2.containsKey(k))
+				map1.remove(k);
+		
+    	map1.putAll(map2);
+    }
+    
+    /**
+     * Merge list2 into list1
+     */
+    public static void mergeLists(List list1, List list2)
+    {
+    	for(Object o : list1)
+    		if(list2.contains(o))
+    			list1.remove(o);
+    	
+    	list1.addAll(list2);
+    }
 }

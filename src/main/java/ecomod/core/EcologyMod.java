@@ -9,9 +9,10 @@ import org.apache.logging.log4j.Logger;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.IPollutionGetter;
-import ecomod.common.pollution.PollutionEffectsConfig;
-import ecomod.common.pollution.PollutionSourcesConfig;
-import ecomod.common.pollution.TEPollutionConfig;
+import ecomod.common.pollution.config.PollutionConfigManager;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
+import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.pollution.handlers.PollutionHandler;
 import ecomod.common.proxy.ComProxy;
 import ecomod.core.stuff.EMCommands;
@@ -71,7 +72,7 @@ public class EcologyMod
 	{
 		log = LogManager.getLogger(EMConsts.name);
 		
-		log.info("Preinitialization");
+		log.info("PreInitialization");
 		
 		if(!EMConsts.asm_transformer_inited)
 		{
@@ -107,34 +108,9 @@ public class EcologyMod
 		
 		proxy.doPreInit();
 		
-		ProgressManager.ProgressBar bar = ProgressManager.push("EcologyMod data", 3, true);
-		
-		bar.step("Loading TEPollution config");
-		
-		tepc = new TEPollutionConfig();
-		
-		tepc.load(event.getModConfigurationDirectory().getAbsolutePath());
-		
-		if(EcomodStuff.tile_entity_pollution != null)
-			log.error("Field 'tile_entity_pollution' in EcomodStuff has been already filled! It should not be like this!!!");
-		EcomodStuff.tile_entity_pollution = tepc;
-		
-		//EMConfig.setupEffects(event.getModConfigurationDirectory().getAbsolutePath());
-		//EMConfig.setupSources(event.getModConfigurationDirectory().getAbsolutePath());
-		
-		bar.step("Loading pollution sources");
-		
-		PollutionSourcesConfig psc = new PollutionSourcesConfig();
-		psc.load(event.getModConfigurationDirectory().getAbsolutePath());
-		psc.pushToApi();
-		
-		bar.step("Loading pollution effects");
-		
-		PollutionEffectsConfig pec = new PollutionEffectsConfig();
-		pec.load(event.getModConfigurationDirectory().getAbsolutePath());
-		pec.pushToApi();
-		
-		ProgressManager.pop(bar);
+		PollutionConfigManager m_cfg = new PollutionConfigManager(new File(event.getModConfigurationDirectory().getAbsolutePath()+'/'+EMConsts.modid));
+		m_cfg.doInitStuff();
+		System.gc();
 		
 		EMPacketHandler.init();
 		
@@ -162,7 +138,7 @@ public class EcologyMod
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		log.info("Postinitialization");
+		log.info("PostInitialization");
 		
 		MainRegistry.doPostInit();
 	}

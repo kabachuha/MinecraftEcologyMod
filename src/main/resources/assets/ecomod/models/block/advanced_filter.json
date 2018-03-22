@@ -2,7 +2,7 @@
     "parent": "ecomod:block/machine_base",
     "textures": {
         "particle": "ecomod:blocks/advanced_filter_core",
-        "0": "ecomod:blocks/advanced_filter_core",
+        "0": "ecomod:blocks/filter_core",
         "1": "ecomod:blocks/advanced_filter_wall"
     }
 }

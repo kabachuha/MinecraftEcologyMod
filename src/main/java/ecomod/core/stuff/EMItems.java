@@ -88,13 +88,13 @@ public class EMItems
 		
 		if(model)
 		{
-			EcologyMod.proxy.putItemToBeRegistred(item);
+			EcologyMod.proxy.putItemToBeRegistered(item);
 		}
 	}
 	
 	public static void register()
 	{
-		EcologyMod.log.info("Registring Items");
+		EcologyMod.log.info("Registering Items");
 		if(items.isEmpty())
 			doPreInit();
 		

@@ -1,30 +1,31 @@
-package ecomod.common.pollution;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
+package ecomod.common.pollution.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.common.utils.AnalyzerPollutionEffect;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
 import ecomod.core.stuff.EMConfig;
 import net.minecraftforge.fml.common.versioning.ComparableVersion;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class PollutionEffectsConfig
 {
@@ -33,7 +34,7 @@ public class PollutionEffectsConfig
 	
 	public String version = "1.0-"+EMConsts.version;
 	
-	public List<IAnalyzerPollutionEffect> effects = new ArrayList<IAnalyzerPollutionEffect>();
+	public List<IAnalyzerPollutionEffect> effects = new ArrayList<>();
 	
 	public void pushToApi()
 	{
@@ -72,8 +73,6 @@ public class PollutionEffectsConfig
 	
 	public boolean loadFromFile(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionEffects.json";
-		
 		EcologyMod.log.info("Trying to load PollutionEffects from file");
 		
 		Gson gson = new GsonBuilder().create();
@@ -97,7 +96,7 @@ public class PollutionEffectsConfig
 			
 			if(f.canRead())
 			{
-				json = FileUtils.readFileToString(f);
+				json = FileUtils.readFileToString(f, Charset.defaultCharset());
 				
 				if(json == null)
 					return false;
@@ -138,8 +137,6 @@ public class PollutionEffectsConfig
 	
 	public boolean save(String cfg_path)
 	{
-		cfg_path = cfg_path + "/"+ EMConsts.modid + "/PollutionEffects.json";
-		
 		File f = new File(cfg_path);
 		
 		EcologyMod.log.info("Saving PollutionEffects.json");
@@ -164,7 +161,7 @@ public class PollutionEffectsConfig
 			
 			if(f.canWrite())
 			{
-				FileUtils.writeStringToFile(f, json);
+				FileUtils.writeStringToFile(f, json, Charset.defaultCharset());
 				return true;
 			}
 			else
@@ -183,10 +180,8 @@ public class PollutionEffectsConfig
 		return false;
 	}
 	
-	public static PollutionEffectsConfig get()
+	public static PollutionEffectsConfig get(String urlstr)
 	{
-		String urlstr = EMConfig.effectsURL;
-		
 		EcologyMod.log.info("Getting PollutionEffects from "+urlstr);
 		
 		urlstr = EMUtils.parseMINECRAFTURL(urlstr);
@@ -196,8 +191,6 @@ public class PollutionEffectsConfig
 		try
 		{
 			URL url = new URL(urlstr);
-			
-			EcologyMod.log.info(url.toString());
 			
 			json = EMUtils.getString(url);
 			
@@ -234,39 +227,33 @@ public class PollutionEffectsConfig
 		return null;
 	}
 	
-	public boolean shouldUpdate(String other_version)
-	{
-		if(version.toLowerCase().contentEquals("custom"))return false;
-		
-		ComparableVersion ver1 = new ComparableVersion(version);
-		
-		ComparableVersion ver2 = new ComparableVersion(other_version);
-		
-		return ver2.compareTo(ver1) > 0;
-	}
-	
-	public void load(String cfg_path)
+	public void load(String cfg_path, String url, boolean keep_entries, boolean force_update)
 	{
 		EcologyMod.log.info("Loading PollutionEffects");
 		
 		boolean loaded_from_file = loadFromFile(cfg_path);
 		
-		PollutionEffectsConfig pec = get();
+		PollutionEffectsConfig pec = get(url);
 		
 		if(pec == null)
 		{
 			if(!loaded_from_file)
 			{
 				//Crash MC
-				throw new NullPointerException("Impossible to load the PollutionEffects for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+EMConfig.tepcURL+")");
+				throw new NullPointerException("Impossible to load the PollutionEffects for the first time! Look for the reason in the log! If TEPC is located remotely make sure you have connection to the resource! URL ("+url+ ')');
 			}
 		}
 		else
 		{
 			if(loaded_from_file)
 			{
-				if(shouldUpdate(pec.version))
+				if(force_update || !version.equals(pec.version))
 				{
+					if(keep_entries)
+					{
+						EMUtils.mergeLists(pec.effects, effects);
+					}
+				
 					effects = pec.effects;
 					version = pec.version;
 				}
@@ -277,6 +264,8 @@ public class PollutionEffectsConfig
 				version = pec.version;
 			}
 		}
+		
+		EcologyMod.log.info("Loaded "+effects.size()+" pollution effects");
 		
 		if(!save(cfg_path))
 		{
@@ -324,4 +313,6 @@ public class PollutionEffectsConfig
 			return version;
 		}
 	}
+	
+	
 }

@@ -18,11 +18,14 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
+import ecomod.client.renderer.RenderAdvancedFilter;
 import ecomod.common.blocks.BlockFrame;
-import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.intermod.jei.EcomodJEIPlugin;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig.Effects;
+import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.core.EcologyMod;
@@ -40,7 +43,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -59,6 +66,10 @@ public class ClientHandler
 	public Percentage required_smog_intensity = Percentage.ZERO;
 	
 	public boolean acid_rain = false;
+	
+	public TEPollutionConfig client_tiles_pollution = EcologyMod.instance.tepc;
+	
+	public boolean waila_shows_pollution_info = EMConfig.waila_shows_pollution_info;
 	
 	public boolean requestForNearbyPollution()
 	{
@@ -143,6 +154,21 @@ public class ClientHandler
 		}
 	}
 	
+	public void setWailaShowPollution(String str)
+	{
+		if(str.length() != 1)
+			return;
+			
+		try
+		{
+			waila_shows_pollution_info = Integer.parseInt(str) != 0;
+		}
+		catch (Exception ex)
+		{
+			waila_shows_pollution_info = EMConfig.waila_shows_pollution_info;
+		}
+	}
+	
 	public boolean setFromJson(String json)
 	{/*
 		polls.clear();
@@ -222,6 +248,30 @@ public class ClientHandler
 				pollution_effects.put(iape.getId(), iape);
 			}
 			EcologyMod.log.info("Pollution Effects Config has been received.");
+			
+			if(Loader.isModLoaded("jei"))
+				Minecraft.getMinecraft().addScheduledTask(EcomodJEIPlugin::updateEffectsCategory);
+		}
+	}
+	
+	public void setTEPollutionConfig(String str)
+	{
+		if(FMLClientHandler.instance().getServer() == null)
+		{
+			try
+			{
+				client_tiles_pollution = TEPollutionConfig.fromJson(str);
+				EcologyMod.log.info("Received TEPollutionConfig from the server! Loaded "+client_tiles_pollution.data.size()+" entries!");
+			}
+			catch(Exception e)
+			{
+				EcologyMod.log.error("Unable to get server TEPollutionConfig json! The default config will be used!");
+				client_tiles_pollution = EcologyMod.instance.tepc;
+			}
+		}
+		else
+		{
+			client_tiles_pollution = EcologyMod.instance.tepc;
 		}
 	}
 	
@@ -230,7 +280,7 @@ public class ClientHandler
 		if(str.isEmpty())
 			return;
 		
-		if(str.indexOf(";") == -1)
+		if(!str.contains(";"))
 			return;
 		
 		String args[] = str.split(";");
@@ -248,8 +298,7 @@ public class ClientHandler
 		Chunk chunk = w.getChunkFromBlockCoords(new BlockPos(x,w.getActualHeight(),z));
 		
 		byte[] biome = chunk.getBiomeArray();
-		int cbiome = biome[(z & 0xf) << 4 | x & 0xf];
-		cbiome = id & 0xff;
+		int cbiome = id & 0xff;
 		biome[(z & 0xf) << 4 | x & 0xf] = (byte) cbiome;
 		
 		chunk.setBiomeArray(biome);
@@ -265,6 +314,8 @@ public class ClientHandler
 	 * > - Set smog<br>
 	 * * - Set biome<br>
 	 * E - Update Effects Cache<br>
+	 * T - Update client TEPollutionConfig<br>
+	 * W - Waila shows pollution info<br>
 	 * ...<br>
 	 * TODO add more cases<br>
 	 * 
@@ -294,11 +345,17 @@ public class ClientHandler
 			case 'R':
 				setAcidRain(str);
 				break;
+			case 'W':
+				setWailaShowPollution(str);
+				break;
 			case '*':
 				setBiome(str);
 				break;
 			case 'E':
 				setEffects(str);
+				break;
+			case 'T':
+				setTEPollutionConfig(str);
 				break;
 			case '#':
 				GuiScreen.setClipboardString(str);
@@ -350,6 +407,7 @@ public class ClientHandler
 				GlStateManager.setFogStart((float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
 				GlStateManager.setFogEnd((float) (e0 * f + (f - e0 * f) * (1 - Math.pow(smog_intensity.floatValue(), EMConfig.smog_rendering_distance_intensity_exponent))));
 				GlStateManager.setFogDensity(smog_intensity.floatValue());
+				event.setResult(Result.ALLOW);
 			}
 		}
 		
@@ -357,10 +415,11 @@ public class ClientHandler
 		{
 			if(event.getEntity().ticksExisted != lasttick)
 			{
-				if(smog_intensity.compareTo(required_smog_intensity) < 0)
+				int compared = smog_intensity.compareTo(required_smog_intensity);
+				if(compared < 0)
 					smog_intensity = smog_intensity.add(2);
 		
-				if(smog_intensity.compareTo(required_smog_intensity) > 0)
+				if(compared > 0)
 					smog_intensity = smog_intensity.add(-2);
 				
 				lasttick = event.getEntity().ticksExisted;
@@ -398,7 +457,14 @@ public class ClientHandler
 			if(BlockFrame.oc_adapter != null)
 				if(event.getItemStack().getItem() == BlockFrame.oc_adapter.getItem())
 					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
+						event.getToolTip().add(I18n.format("tooltip.ecomod.oc.adapter"));
 		}
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(TextureStitchEvent.Pre event)
+	{
+		RenderAdvancedFilter.vent_s = event.getMap().registerSprite(EMUtils.resloc("items/vent_s"));
 	}
 }

@@ -7,9 +7,11 @@ import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.client.ClientHandler;
 import ecomod.client.gui.GuiAnalyzer;
+import ecomod.client.renderer.RenderAdvancedFilter;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.TEPollutionConfig;
+import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
+import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.tiles.TileEnergy;
 import ecomod.common.utils.EMUtils;
@@ -36,6 +38,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -78,16 +81,18 @@ public class CliProxy extends ComProxy
 		
 		blocks.clear();
 		items.clear();
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedFilter.class, new RenderAdvancedFilter());
 	}
 	
 	@Override
-	public void putBlockToBeRegistred(Block b)
+	public void putBlockToBeRegistered(Block b)
 	{
 		blocks.add(b);
 	}
 	
 	@Override
-	public void putItemToBeRegistred(Item item)
+	public void putItemToBeRegistered(Item item)
 	{
 		items.add(item);
 	}
@@ -101,14 +106,7 @@ public class CliProxy extends ComProxy
 		
 		final ModelResourceLocation modelResourceLocation = new ModelResourceLocation(EMConsts.modid+":fluid" ,((IFluidBlock)fluidBlock).getFluid().getName());
 		
-		ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
-        {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack)
-            {
-                return modelResourceLocation;
-            }
-        });
+		ModelLoader.setCustomMeshDefinition(item, stack -> modelResourceLocation);
 
 		ModelLoader.setCustomStateMapper(fluidBlock, new StateMapperBase() {
 			@Override
@@ -190,12 +188,12 @@ public class CliProxy extends ComProxy
 			}
 			else
 			{
-				EcologyMod.log.error("Invalid EMPacketUpdateTileEntity! TileEntity not found!");
+				EcologyMod.log.warn("Invalid EMPacketUpdateTileEntity! TileEntity not found at "+nbt.getInteger("x")+';'+nbt.getInteger("y")+';'+nbt.getInteger("z")+'!');
 			}
 		}
 		else
 		{
-			EcologyMod.log.error("Invalid EMPacketUpdateTileEntity! Wrong nbt format!");
+			EcologyMod.log.warn("Invalid EMPacketUpdateTileEntity! Wrong nbt format!");
 		}
 	}
 	

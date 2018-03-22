@@ -41,63 +41,31 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 			NBTTagCompound nbt = stack.getTagCompound();
 			
 			EntityPlayer player = (EntityPlayer)entity;
-			/*
-			if(player.ticksExisted % 60 == 0)
-			if(player.getHeldItemMainhand().hasCapability(EcomodStuff.CAPABILITY_POLLUTION, null))
-			{
-				//EcologyMod.log.info("Has cap pollution!!!");
-				//player.getHeldItemMainhand().getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).setPollution(player.getHeldItemMainhand().getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution().clone().add(PollutionType.AIR, 50));
-				EcologyMod.log.info(player.getHeldItemMainhand().getCapability(EcomodStuff.CAPABILITY_POLLUTION, null).getPollution());
-				
-				// INVOKEVIRTUAL net/minecraft/item/Item.onEntityItemUpdate (Lnet/minecraft/entity/item/EntityItem;)Z
-				// stack.getItem().onEntityItemUpdate(null);
-			}*/
 			
 			if(nbt != null)
 			{
-				int nf;
-			
-				if(nbt.hasKey("filter"))
+				int filter = nbt.getInteger("filter");
+				if(filter > 0)
 				{
-					if(nbt.getInteger("filter") > 0)
-					{
-						if(decr)
-							nbt.setInteger("filter", nbt.getInteger("filter")-((entity.getHealth() >= (entity.getMaxHealth()/2)) ? 1 : 2));
-						
-						return true;
-					}
-					else
-					{
-						int k = getFilterInInventory(player);
-						
-						if(k != -1)
-						{
-							ItemStack stk = player.inventory.getStackInSlot(k);
-							--stk.stackSize;
-							player.inventory.setInventorySlotContents(k, stk);
-							
-							nbt.setInteger("filter", EMConfig.filter_durability);
-							
-							stack.setTagCompound(nbt);
-							
-							return true;
-						}
-					}
+					if(decr)
+						nbt.setInteger("filter", filter-(entity.getHealth() >= entity.getMaxHealth()/2 ? 1 : 2));
+
+					return true;
 				}
 				else
 				{
 					int k = getFilterInInventory(player);
-					
+
 					if(k != -1)
 					{
 						ItemStack stk = player.inventory.getStackInSlot(k);
-						--stk.stackSize;
-						player.inventory.setInventorySlotContents(k, stk);
-						
+
+						player.inventory.setInventorySlotContents(k, --stk.stackSize < 1 ? null : stk);
+
 						nbt.setInteger("filter", EMConfig.filter_durability);
-						
+
 						stack.setTagCompound(nbt);
-						
+
 						return true;
 					}
 				}
@@ -111,8 +79,8 @@ public class ItemRespirator extends ItemArmor implements IRespirator, IRenderabl
 				if(k != -1)
 				{
 					ItemStack stk = player.inventory.getStackInSlot(k);
-					--stk.stackSize;
-					player.inventory.setInventorySlotContents(k, stk);
+
+					player.inventory.setInventorySlotContents(k, --stk.stackSize < 1 ? null : stk);
 					
 					nbt.setInteger("filter", EMConfig.filter_durability);
 				}

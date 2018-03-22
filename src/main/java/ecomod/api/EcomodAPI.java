@@ -9,7 +9,9 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionEmissionEvent;
+import ecomod.api.pollution.PositionedPollutionEmissionEvent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -35,7 +37,17 @@ public class EcomodAPI
 		
 		PollutionEmissionEvent em = new PollutionEmissionEvent(world, chunkLoc.getLeft(), chunkLoc.getRight(), emission, scheduled);
 		
+		// less precise calculations - more performance
 		return MinecraftForge.EVENT_BUS.post(em);
+	}
+	
+	public static boolean emitPollutionPositioned(World world, BlockPos pos, PollutionData emission, boolean scheduled)
+	{
+		if(world.isRemote || emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0))return false;
+
+		PositionedPollutionEmissionEvent event = new PositionedPollutionEmissionEvent(world, pos.getX(), pos.getY(), pos.getZ(), emission, scheduled);
+		// more precise calculations - less performance
+		return MinecraftForge.EVENT_BUS.post(event);
 	}
 	
 	public static IPollutionGetter pollution_getter = null;

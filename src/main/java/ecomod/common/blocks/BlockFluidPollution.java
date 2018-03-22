@@ -3,8 +3,8 @@ package ecomod.common.blocks;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.stuff.EMAchievements;
@@ -70,13 +70,13 @@ public class BlockFluidPollution extends BlockFluidFinite {
 		BlockPos other = pos.add(0, densityDir, 0);
         if (other.getY() < 0 || other.getY() >= world.getHeight())
         { 
-            PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
-            if(adv_filter_redution != null && adv_filter_redution.compareTo(PollutionData.getEmpty()) != 0)
+            PollutionData advanced_filter_reduction = PollutionSourcesConfig.getSource("advanced_filter_reduction");
+            if(advanced_filter_reduction != null && advanced_filter_reduction.compareTo(PollutionData.getEmpty()) != 0)
             {
             	int amount = this.getQuantaValue(world, pos) * 1000 / this.quantaPerBlock;
             	
             	if(amount > 0)
-            		EcomodAPI.emitPollution(world, EMUtils.blockPosToPair(pos), new PollutionData(-adv_filter_redution.getAirPollution() * amount / 2, -adv_filter_redution.getWaterPollution() * amount / 4, 0), true);
+            		EcomodAPI.emitPollution(world, EMUtils.blockPosToPair(pos), new PollutionData(-advanced_filter_reduction.getAirPollution() * amount / 2, -advanced_filter_reduction.getWaterPollution() * amount / 4, 0), true);
             }
             
             world.setBlockToAir(pos);

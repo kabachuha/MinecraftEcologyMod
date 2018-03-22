@@ -14,8 +14,8 @@ import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.blocks.compat.BlockAnalyzerAdapter;
-import ecomod.common.pollution.TEPollutionConfig;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.config.TEPollutionConfig;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.common.pollution.handlers.IC2Handler;
 import ecomod.common.tiles.compat.TileAnalyzerAdapter;
 import ecomod.common.utils.EMUtils;
@@ -54,7 +54,7 @@ public class EMIntermod
 	
 	public static void OCpreInit()
 	{
-		log.info("Setuping OpenComputers support");
+		log.info("Setting OpenComputers support");
 		EcomodBlocks.OC_ANALYZER_ADAPTER = new BlockAnalyzerAdapter().setUnlocalizedName(EMConsts.modid + ".oc_analyzer_adapter");
 		EMBlocks.regBlock(EcomodBlocks.OC_ANALYZER_ADAPTER, "analyzer_adapter");
 		GameRegistry.registerTileEntity(TileAnalyzerAdapter.class, EMUtils.resloc("analyzer_adapter").toString());
@@ -72,8 +72,10 @@ public class EMIntermod
 		
 		for(IMCMessage m : messages)
 		{
-			log.info("Processing "+m.getSender() + "#" +m.key+"->"+(m.isStringMessage() ? m.getStringValue() : m.isNBTMessage() ? m.getNBTValue().toString() : m.isItemStackMessage() ? m.getItemStackValue().toString() : m.isResourceLocationMessage() ? m.getResourceLocationValue().toString() : "....."));
-			if(m.key.toLowerCase().contentEquals(key_add_tepc))
+			log.info("Processing "+m.getSender() + '#' +m.key+"->"+(m.isStringMessage() ? m.getStringValue() : m.isNBTMessage() ? m.getNBTValue().toString() : m.isItemStackMessage() ? m.getItemStackValue().toString() : m.isResourceLocationMessage() ? m.getResourceLocationValue().toString() : "....."));
+			
+			String lowerKey = m.key.toLowerCase();
+			if(lowerKey.contentEquals(key_add_tepc))
 			{
 				TEPollution tep = null;
 				
@@ -102,9 +104,9 @@ public class EMIntermod
 				{
 					String val[];
 					
-					if(m.getStringValue().lastIndexOf(";") == -1 || (val = m.getStringValue().split(";")).length != 4)
+					if(m.getStringValue().lastIndexOf(';') == -1 || (val = m.getStringValue().split(";")).length != 4)
 					{
-						log.info("Unable to add "+m.getStringValue()+" because of invalid format. The message value has to be splitted by semicolons into 4 parts ('id', 'air', 'water', 'soil')");
+						log.info("Unable to add "+m.getStringValue()+" because of invalid format. The message value has to be split by semicolons into 4 parts ('id', 'air', 'water', 'soil')");
 						continue;
 					}
 					
@@ -117,7 +119,7 @@ public class EMIntermod
 				
 				if(id.length() > 0 && !(air == 0 && water == 0 && soil == 0))
 				{
-					tep = new TEPollution(id, new PollutionData(air, water, soil));
+					tep = new TEPollution(id, new PollutionData((float)air, (float)water, (float)soil));
 				}
 				
 				if(tep != null)
@@ -133,7 +135,7 @@ public class EMIntermod
 				}
 			}
 			
-			if(m.key.toLowerCase().contentEquals(key_remove_tepc) && m.isStringMessage())
+			if(lowerKey.contentEquals(key_remove_tepc) && m.isStringMessage())
 			{
 				if(tepc.hasTile(new ResourceLocation(m.getStringValue())))
 				{
@@ -142,7 +144,7 @@ public class EMIntermod
 				}
 			}
 			
-			if(m.key.toLowerCase().contentEquals(blacklist_dropped_item))
+			if(lowerKey.contentEquals(blacklist_dropped_item))
 			{
 				String item_string = "";
 				
@@ -177,7 +179,7 @@ public class EMIntermod
 					item_string = m.getStringValue();
 				}
 				
-				if(item_string == "")
+				if(item_string.equals(""))
 				{
 					log.error("Unable to Blacklist Polluting On Expire Item.");
 				}
@@ -188,7 +190,7 @@ public class EMIntermod
 				}
 			}
 			
-			if(m.key.toLowerCase().contentEquals(key_add_te_pollution_determinant))
+			if(lowerKey.contentEquals(key_add_te_pollution_determinant))
 			{
 				com.google.common.base.Optional<com.google.common.base.Function<TileEntity, Object[]>> op_func = m.getFunctionValue(TileEntity.class, Object[].class);
 				
@@ -220,7 +222,7 @@ public class EMIntermod
 	
 	public static void setup_ic2_support()
 	{
-		log.info("Setuping IC2 support");
+		log.info("Setting up IC2 integration");
 		if(EMConfig.isConcentratedPollutionIC2Fuel)
 		{
 			ic2.api.recipe.Recipes.fluidHeatGenerator.addFluid(EcomodStuff.concentrated_pollution.getName(), 40, EMConfig.fuel_concentrated_pollution_burn_energy / 15);

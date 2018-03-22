@@ -54,6 +54,10 @@ public class PollutionManager
 	{
 		WorldPollution wp = new WorldPollution();
 		
+		for(ChunkPollution p : data)
+			if(p.getPollution().getAirPollution() < EMConfig.pollution_precision && p.getPollution().getWaterPollution() < EMConfig.pollution_precision && p.getPollution().getSoilPollution() < EMConfig.pollution_precision)
+				data.remove(p);
+		
 		wp.setData(data.toArray(new ChunkPollution[data.size()]));
 		
 		EcologyMod.log.info("Serializing and saving pollution manager for dimension "+dim);
@@ -121,8 +125,6 @@ public class PollutionManager
 		
 		String json;
 		
-		WorldPollution wp = new WorldPollution();
-		
 		File file = world.getSaveHandler().getWorldDirectory();
 		
 		if(file != null)
@@ -143,7 +145,7 @@ public class PollutionManager
 					//A warning message
 					EcologyMod.log.error("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					EcologyMod.log.error("The pollution manager save file (dimension "+world.provider.getDimension()+") has not been found! The world pollution is set to the initial state!");
-					EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost infornation about the world pollution.");
+					EcologyMod.log.error("It's okay, if you were launching Minecraft world for the first time. But otherwise, you seemingly have lost information about the world pollution.");
 					File backup = new File(worldPath +"/PollutionMap_backup.json");
 
 					if(backup.exists())
@@ -161,7 +163,7 @@ public class PollutionManager
 				
 				if(save.canRead())
 				{
-					json = FileUtils.readFileToString(save);
+					json = FileUtils.readFileToString(save, Charset.defaultCharset());
 					
 					if(json == null)
 						return false;
@@ -187,6 +189,7 @@ public class PollutionManager
 			return false;
 		}
 		
+		WorldPollution wp;
 		try
 		{
 			wp = gson.fromJson(json, WorldPollution.class);
@@ -205,8 +208,17 @@ public class PollutionManager
 		
 		for(ChunkPollution u : wp.getData())
 			if(u != null)
-			if(!(u.getPollution().getAirPollution() == 0 && u.getPollution().getWaterPollution() == 0 && u.getPollution().getSoilPollution() == 0))
-				l.add(u);
+				if(u.getPollution().getAirPollution() != 0 || u.getPollution().getWaterPollution() != 0 || u.getPollution().getSoilPollution() != 0) {
+					boolean add = true;
+					for (ChunkPollution cp : l) {//A bit more expensive but ensures that diffusion works properly by making sure each chunk is only added once
+						if (cp.getX() == u.getX() && cp.getZ() == u.getZ()) {
+							add = false;
+							break;
+						}
+					}
+					if (add)
+						l.add(u);
+				}
 		
 		data.clear();
 		data.addAll(l);
@@ -255,24 +267,26 @@ public class PollutionManager
 	
 	public ChunkPollution setChunkPollution(ChunkPollution cp)
 	{
-		cp = new ChunkPollution(cp.getX(), cp.getZ(), cp.getPollution());
-		
-		PollutionData pd = cp.getPollution();
-		
-		if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
-		if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
-		if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
-		
 		Pair<Integer, Integer> coords = cp.getLeft();
-		
 
 		if(contains(coords))
 		{
-			data.remove(getChunkPollution(coords));
-			data.add(cp);
+			PollutionData pd = cp.getPollution();
+			if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
+			if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
+			if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
+			ChunkPollution old = getChunkPollution(coords);
+			old.setPollution(pd);
 		}
 		else
 		{
+			cp = new ChunkPollution(cp.getX(), cp.getZ(), cp.getPollution());
+
+			PollutionData pd = cp.getPollution();
+
+			if(pd.getAirPollution() < 0.00001)pd.setAirPollution(0);
+			if(pd.getWaterPollution() < 0.00001)pd.setWaterPollution(0);
+			if(pd.getSoilPollution() < 0.00001)pd.setSoilPollution(0);
 			data.add(cp);
 		}
 			
@@ -354,6 +368,9 @@ public class PollutionManager
 	
 	public void diffuse(ChunkPollution c)
 	{
+		if(custom_diffuse(c))
+			return;
+		
 		int i = c.getX();
 		int j = c.getZ();
 		
@@ -374,7 +391,36 @@ public class PollutionManager
         addPollutionIfLoaded(i, j, to_spread.multiplyAll(count));
 	}
 	
+	protected boolean custom_diffuse(ChunkPollution c)
+	{
+		return false;//EcomodCompat handler will be injected here
+	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + dim;
+		
+		return prime * result + (world == null ? 0 : world.getWorldInfo().getWorldName().hashCode());
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PollutionManager other = (PollutionManager) obj;
+		if (dim != other.dim)
+			return false;
+		if (world == null) {
+			return other.world == null;
+		} else return world.getWorldInfo().getWorldName().equals(other.world.getWorldInfo().getWorldName());
+	}
 	
 	
 	//Just for serialization
@@ -396,7 +442,4 @@ public class PollutionManager
 				this.data = chunks;
 			}
 		}
-
-		
-		
 }

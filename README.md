@@ -6,11 +6,14 @@ modid - ecomod
 
 ![Logo](https://raw.githubusercontent.com/Artem226/MinecraftEcologyMod/1.11/src/main/resources/emlogo.png)
 
+![https://minecraft.curseforge.com/projects/ecology-mod](http://cf.way2muchnoise.eu/full_ecology-mod_downloads.svg)
+![](http://cf.way2muchnoise.eu/versions/ecology-mod.svg)
+
 ***
 
 Ecology Mod is a Minecraft mod that makes you care about consequences of your technical development.
 
-The mod adds an enviromental pollution system: pollution sources and effects.
+The mod adds an environmental pollution system: pollution sources and effects.
 
 Tile Entities and mechanics from Minecraft produces pollution which accumulates in chunks and diffuses to the neighbours.
 

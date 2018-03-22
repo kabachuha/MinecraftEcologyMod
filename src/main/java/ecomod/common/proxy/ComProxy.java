@@ -2,7 +2,7 @@ package ecomod.common.proxy;
 
 import ecomod.client.ClientHandler;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.TEPollutionConfig;
+import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.core.EMConsts;
 import ecomod.network.EMPacketUpdateTileEntity;
@@ -41,12 +41,12 @@ public class ComProxy
 		
 	}
 	
-	public void putBlockToBeRegistred(Block b)
+	public void putBlockToBeRegistered(Block b)
 	{
 		
 	}
 	
-	public void putItemToBeRegistred(Item item)
+	public void putItemToBeRegistered(Item item)
 	{
 		
 	}
