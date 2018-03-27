@@ -27,7 +27,7 @@ public class EMBlocks
 	
 	public static void doPreInit()
 	{
-			EcologyMod.log.info("Setuping blocks");
+			EcologyMod.log.info("Setting blocks");
 			
 			EcomodBlocks.inited = true;
 			
@@ -46,13 +46,13 @@ public class EMBlocks
 	
 	public static void regBlock(Block block, String name)
 	{
-		EcologyMod.log.info("Registring block ecomod:"+name);
+		EcologyMod.log.info("Registering block - ecomod:"+name);
 		GameRegistry.registerBlock(block, name);
 	}
 	
 	public static void regBlockWithItem(Block block, Class<? extends ItemBlock> item,String name)
 	{
-		EcologyMod.log.info("Registring block ecomod:"+name);
+		EcologyMod.log.info("Registering block - ecomod:"+name);
 		GameRegistry.registerBlock(block, item, name);
 	}
 }

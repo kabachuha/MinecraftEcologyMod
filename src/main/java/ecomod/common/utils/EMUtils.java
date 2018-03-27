@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -139,17 +141,27 @@ public class EMUtils
 		return getBlock(w, pos) == Blocks.water;
 	}
 	
+	public static boolean isBlockWater(World w, int x, int y, int z)
+	{	
+		return w.getBlock(x, y, z) == Blocks.water;
+	}
+	
 	public static int countWaterInRadius(World w, EMBlockPos center, int radius)
 	{
-		Iterator<EMBlockPos> blocks = EMBlockPos.getAllInBox(center.add(-radius, -radius, -radius), center.add(radius, radius, radius)).iterator();
-		
+		return countWaterInRadius(w, center.getX(), center.getY(), center.getZ(), radius);
+	}
+	
+	public static int countWaterInRadius(World w, int x, int y, int z, int radius)
+	{
 		int ret = 0;
 		
-		//while(blocks.hasNext())
-		//	if(isBlockWater(w, blocks.next()))
-		//		ret++;FIXME
+		for(int i = -radius; i < radius; i++)
+			for(int j = -radius; j < radius; j++)
+				for(int k = -radius; k < radius; k++)
+					if(isBlockWater(w, x+i, y+j, z+k))
+						ret++;
 		
-		return ret;
+		return ret; 
 	}
 	
 	public static Chunk getChunkFromBlockCoords(World world, EMBlockPos pos)
@@ -436,26 +448,20 @@ public class EMUtils
         }
 	}
 	
-	public static TileEntity get1NearbyTileEntity(@Nullable String id, World w, EMBlockPos pos)
+	public static TileEntity get1NearbyTileEntity(@Nullable String id, World w, int x, int y, int z)
 	{
 		TileEntity ret = null;
 
-		for(EnumFacing ef : EnumFacing.values())
+		for(ForgeDirection ef : ForgeDirection.VALID_DIRECTIONS)
 		{
-			TileEntity te = getTile(w, pos.offset(ef));
+			TileEntity te = w.getTileEntity(x + ef.offsetX, y + ef.offsetY, z + ef.offsetZ);
 			if(te != null)
 			{
-				if(ret == null)
-				{
-					if(id == null || id == "" || getTileEntityId(te.getClass()).toString().equals(id))
+				if(id == null || TileEntity.classToNameMap.get(te.getClass()).toString().equals(id.toString())) {
+					if (ret == null)
 						ret = te;
-				}
-				else
-				{
-					if(id == null || id == "" || getTileEntityId(te.getClass()).toString().equals(id))
-					{
+					else
 						return null;
-					}
 				}
 			}
 		}
@@ -463,9 +469,9 @@ public class EMUtils
 		return ret;
 	}
 	
-	public static TileEntity get1NearbyTileEntity(World w, EMBlockPos pos)
+	public static TileEntity get1NearbyTileEntity(World w, int x, int y, int z)
 	{
-		return get1NearbyTileEntity(null, w, pos);
+		return get1NearbyTileEntity(null, w, x, y, z);
 	}
 	
 	public static double mean(Number...numbers)
@@ -585,5 +591,51 @@ public class EMUtils
             BiomeGenBase biome = w.getBiomeGenForCoords(pos.getX(), pos.getZ());
             return biome.getEnableSnow() ? false : (w.canSnowAtBody(pos.getX(), pos.getY(), pos.getZ(), false) ? false : biome.rainfall > 0);
         }
+    }
+	
+	@Nullable
+    public static TileEntity getLoadedTileEntityAt(World world, int x, int y, int z)
+    {
+        for (int j2 = 0; j2 < world.loadedTileEntityList.size(); ++j2)
+        {
+            TileEntity tileentity2 = (TileEntity) world.loadedTileEntityList.get(j2);
+
+            if (!tileentity2.isInvalid() && tileentity2.xCoord == x && tileentity2.yCoord == y && tileentity2.zCoord == z)
+            {
+                return tileentity2;
+            }
+        }
+
+        return null;
+    }
+	
+	@Nullable
+    public static TileEntity getLoadedTileEntityAt(World world, EMBlockPos pos)
+    {
+		return getLoadedTileEntityAt(world, pos.getX(), pos.getY(), pos.getZ());
+    }
+	
+	/**
+     * Merge map2 into map1
+     */
+    public static <K, V> void mergeMaps(Map<K, V> map1, Map<K, V> map2)
+    {
+    	for(K k : map1.keySet())
+			if(map2.containsKey(k))
+				map1.remove(k);
+		
+    	map1.putAll(map2);
+    }
+    
+    /**
+     * Merge list2 into list1
+     */
+    public static void mergeLists(List list1, List list2)
+    {
+    	for(Object o : list1)
+    		if(list2.contains(o))
+    			list1.remove(o);
+    	
+    	list1.addAll(list2);
     }
 }

@@ -64,10 +64,10 @@ public class RendererFramedTile extends TileEntitySpecialRenderer
 		
 		GL11.glPushMatrix();
 		
-		GL11.glColor4f(brightness, brightness, brightness, 1.0F);
-		
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
+		GL11.glColor4f(brightness, brightness, brightness, 1.0F);
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		
@@ -172,6 +172,8 @@ public class RendererFramedTile extends TileEntitySpecialRenderer
 		tess.addVertexWithUV(x, y+1F, z+1F, texture_1.getMaxU(), texture_1.getMaxV());
 		tess.addVertexWithUV(x, y, z+1F, texture_1.getMinU(), texture_1.getMaxV());
 		tess.draw();
+		
+		GL11.glDisable(GL11.GL_BLEND);
 		
 		GL11.glPopMatrix();
 	}

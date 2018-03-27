@@ -62,6 +62,10 @@ public class EMRecipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(
 				new ItemStack(EcomodItems.RESPIRATOR, 1, 0), new Object[]{"LHL", "GWG", "FVF", 'L', Items.leather, 'H', Items.leather_helmet, 'G', "paneGlassColorless", 'F', EcomodBlocks.FILTER, 'V', new ItemStack(EcomodItems.CRAFT_INGREDIENT, 1, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)}
 		));
+		
+		//Effects Book
+		//GameRegistry.addShapelessRecipe(new ItemStack(EcomodItems.POLLUTION_EFFECTS_BOOK), new Object[] {new ItemStack(Items.book), new ItemStack(Items.mushroom_stew), new ItemStack(Blocks.red_flower), new ItemStack(Items.reeds)});
+		//GameRegistry.addShapelessRecipe(new ItemStack(EcomodItems.POLLUTION_EFFECTS_BOOK), new Object[] {new ItemStack(Items.book), new ItemStack(Items.mushroom_stew), new ItemStack(Blocks.deadbush)});
 	}
 	
 	public static void doPostInit()

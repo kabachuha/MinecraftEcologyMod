@@ -35,39 +35,33 @@ public class CommandAddPollution extends CommandBase {
 		
 		if(w == null || w.isRemote)return;
 		
-		String key = PollutionUtils.genPMid(w);
+		int dim = w.provider.dimensionId;
 		
-		if(EcologyMod.ph.threads.containsKey(key))
+		WorldProcessingThread wpt = EcologyMod.ph.getWPT(dim);
+		
+		if(wpt == null)
+			throw new CommandException("commands.ecomod.wpt_not_found", w.provider.dimensionId);
+			
+		int x, z;
+			
+		if(args.length == 4)
+		{	
+			x = Integer.parseInt(args[2]);
+			z = Integer.parseInt(args[3]);
+		}
+		else if (args.length == 2)
 		{
-			WorldProcessingThread wpt = EcologyMod.ph.threads.get(key);
-			
-			if(wpt == null)
-				throw new CommandException("commands.ecomod.wpt_not_found", w.provider.dimensionId);
-			
-			int x, z;
-			
-			if(args.length == 4)
-			{	
-				x = Integer.parseInt(args[2]);
-				z = Integer.parseInt(args[3]);
-			}
-			else if (args.length == 2)
-			{
-				Pair<Integer, Integer> pb = EMUtils.blockPosToPair(new EMBlockPos(sender.getPlayerCoordinates()));
+			Pair<Integer, Integer> pb = EMUtils.blockPosToPair(new EMBlockPos(sender.getPlayerCoordinates()));
 				
-				x = pb.getLeft();
-				z = pb.getRight();
-			}
-			else
-			{
-				throw new WrongUsageException(getCommandUsage(sender), new Object[0]);
-			}
-			
-			EcomodAPI.emitPollution(w, Pair.of(x, z), args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Double.parseDouble(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Double.parseDouble(args[1])), true);
+			x = pb.getLeft();
+			z = pb.getRight();
 		}
 		else
-			throw new CommandException("commands.ecomod.wpt_not_found", w.provider.dimensionId);
-
+		{
+			throw new WrongUsageException(getCommandUsage(sender), new Object[0]);
+		}
+			
+		EcomodAPI.emitPollution(w, x, z, args[0].toLowerCase().contentEquals("all") ? new PollutionData().addAll(Float.parseFloat(args[1])) : new PollutionData().add(PollutionType.valueOf(args[0]), Float.parseFloat(args[1])), true);
 	}
 
 }

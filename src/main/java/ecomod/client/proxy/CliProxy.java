@@ -12,13 +12,14 @@ import ecomod.api.EcomodItems;
 import ecomod.api.EcomodStuff;
 import ecomod.client.ClientHandler;
 import ecomod.client.gui.GuiAnalyzer;
+import ecomod.client.gui.GuiPollutionEffectsBook;
 import ecomod.client.renderer.RenderItemCore;
 import ecomod.client.renderer.RendererFramedItem;
 import ecomod.client.renderer.RendererFramedTile;
 import ecomod.client.renderer.RendererItemCraftIngredient;
 import ecomod.client.renderer.RendererItemRespirator;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.TEPollutionConfig;
+import ecomod.common.pollution.config.TEPollutionConfig;
 import ecomod.common.proxy.ComProxy;
 import ecomod.common.tiles.TileAdvancedFilter;
 import ecomod.common.tiles.TileAnalyzer;
@@ -96,6 +97,12 @@ public class CliProxy extends ComProxy
 		{
 			FMLClientHandler.instance().displayGuiScreen(player == null ? Minecraft.getMinecraft().thePlayer : player, new GuiAnalyzer(tile));
 		}
+	}
+	
+	@Override
+	public void openGUIEffectsBook(EntityPlayer player)
+	{
+		FMLClientHandler.instance().displayGuiScreen(player == null ? Minecraft.getMinecraft().thePlayer : player, new GuiPollutionEffectsBook());
 	}
 
 	@Override

@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,10 +25,11 @@ import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.ChunkPollution;
 import ecomod.api.pollution.PollutionData;
 import ecomod.common.blocks.BlockFrame;
-import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
-import ecomod.common.pollution.PollutionEffectsConfig.Effects;
 import ecomod.common.pollution.PollutionManager.WorldPollution;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.TEPollutionConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig.Effects;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.Percentage;
 import ecomod.core.EcologyMod;
@@ -59,6 +62,10 @@ public class ClientHandler
 	
 	public boolean acid_rain = false;
 	
+	public TEPollutionConfig client_tiles_pollution = EcologyMod.instance.tepc;
+	
+	public boolean waila_shows_pollution_info = EMConfig.waila_shows_pollution_info;
+
 	public boolean requestForNearbyPollution()
 	{
 		return false;
@@ -142,6 +149,21 @@ public class ClientHandler
 		}
 	}
 	
+	public void setWailaShowPollution(String str)
+	{
+		if(str.length() != 1)
+			return;
+			
+		try
+		{
+			waila_shows_pollution_info = Integer.parseInt(str) != 0;
+		}
+		catch (Exception ex)
+		{
+			waila_shows_pollution_info = EMConfig.waila_shows_pollution_info;
+		}
+	}
+	
 	public boolean setFromJson(String json)
 	{/*
 		polls.clear();
@@ -199,6 +221,27 @@ public class ClientHandler
 		return false;
 	}
 	
+	public void setTEPollutionConfig(String str)
+	{
+		if(FMLClientHandler.instance().getServer() == null)
+		{
+			try
+			{
+				client_tiles_pollution = TEPollutionConfig.fromJson(str);
+				EcologyMod.log.info("Received TEPollutionConfig from the server! Loaded "+client_tiles_pollution.data.size()+" entries!");
+			}
+			catch(Exception e)
+			{
+				EcologyMod.log.error("Unable to get server TEPollutionConfig json! The default config will be used!");
+				client_tiles_pollution = EcologyMod.instance.tepc;
+			}
+		}
+		else
+		{
+			client_tiles_pollution = EcologyMod.instance.tepc;
+		}
+	}
+	
 	public void setEffects(String str)
 	{
 		pollution_effects.clear();
@@ -229,7 +272,7 @@ public class ClientHandler
 		if(str.isEmpty())
 			return;
 		
-		if(str.indexOf(";") == -1)
+		if(!str.contains(";"))
 			return;
 		
 		String args[] = str.split(";");
@@ -264,6 +307,8 @@ public class ClientHandler
 	 * > - Set smog<br>
 	 * * - Set biome<br>
 	 * E - Update Effects Cache<br>
+	 * T - Update client TEPollutionConfig<br>
+	 * W - Waila shows pollution info<br>
 	 * ...<br>
 	 * TODO add more cases<br>
 	 * 
@@ -290,6 +335,9 @@ public class ClientHandler
 			case '>':
 				setSmog(str);
 				break;
+			case 'W':
+				setWailaShowPollution(str);
+				break;
 			case 'R':
 				setAcidRain(str);
 				break;
@@ -298,6 +346,9 @@ public class ClientHandler
 				break;
 			case 'E':
 				setEffects(str);
+				break;
+			case 'T':
+				setTEPollutionConfig(str);
 				break;
 			case '#':
 				GuiScreen.setClipboardString(str);
@@ -343,6 +394,7 @@ public class ClientHandler
 				GL11.glFogf(GL11.GL_FOG_START, (float) (s0 + (f * 0.75 - s0) * (1 - smog_intensity.floatValue())));
 				GL11.glFogf(GL11.GL_FOG_END, (float) (e0 * f + (f - e0 * f) * (1 - Math.pow(smog_intensity.floatValue(), EMConfig.smog_rendering_distance_intensity_exponent))));
 				GL11.glFogf(GL11.GL_FOG_DENSITY, smog_intensity.floatValue());
+				event.setResult(Result.ALLOW);
 			}
 		}
 		
@@ -350,10 +402,11 @@ public class ClientHandler
 		{
 			if(event.entity.ticksExisted != lasttick)
 			{
-				if(smog_intensity.compareTo(required_smog_intensity) < 0)
+				int compared = smog_intensity.compareTo(required_smog_intensity);
+				if(compared < 0)
 					smog_intensity = smog_intensity.add(2);
 		
-				if(smog_intensity.compareTo(required_smog_intensity) > 0)
+				if(compared > 0)
 					smog_intensity = smog_intensity.add(-2);
 				
 				lasttick = event.entity.ticksExisted;
@@ -391,7 +444,7 @@ public class ClientHandler
 			if(BlockFrame.oc_adapter != null)
 				if(event.itemStack.getItem() == Item.getItemFromBlock(BlockFrame.oc_adapter))
 					if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-						event.toolTip.add(I18n.format("tooltip.ecomod.oc.adapter", new Object[0]));
+						event.toolTip.add(I18n.format("tooltip.ecomod.oc.adapter"));
 		}
 	}
 }

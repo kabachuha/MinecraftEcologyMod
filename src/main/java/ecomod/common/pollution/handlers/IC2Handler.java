@@ -7,8 +7,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ecomod.api.EcomodAPI;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.newmc.EMBlockPos;
 import ecomod.common.utils.newmc.EMChunkPos;
@@ -49,7 +49,7 @@ public class IC2Handler
 		
 		emission.multiplyAll((float) event.power);
 		
-		EcomodAPI.emitPollution(w, Pair.of((int)event.x, (int)event.z), emission, true);
+		EcomodAPI.emitPollution(w, (int)event.x >> 4, (int)event.z >> 4, emission, true);
 		
 		if(PollutionSourcesConfig.hasSource("nuclear_explosion_pollution_per_power"))
 		if((event.power >= 30 && (event.radiationRange >= 67 || event.rangeLimit > 67)) || (event.entity != null && event.entity.getClass() == NUKE_CLASS))
@@ -69,7 +69,7 @@ public class IC2Handler
 				for(int i = pos.chunkXPos - offset; i <= pos.chunkXPos + offset; i++)
 					for(int j = pos.chunkZPos - offset; j <= pos.chunkZPos + offset; j++)
 					{
-						EcomodAPI.emitPollution(w, Pair.of(i, j), emission_nuke.clone().multiplyAll(nuke_rad_mult), true);
+						EcomodAPI.emitPollution(w, i, j, emission_nuke.clone().multiplyAll(nuke_rad_mult), true);
 					}
 				
 				nuke_rad_mult *= 0.75F;

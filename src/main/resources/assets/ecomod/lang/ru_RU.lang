@@ -140,6 +140,9 @@ tooltip.ecomod.more_information=Нажмите SHIFT для подробност
 tooltip.ecomod.core.filter=Эти фильтры используются противогазом!
 tooltip.ecomod.core.shifted=Кликните ПКМ по '%s' этим предметом to чтобы сделать соответствующий механизм
 tooltip.ecomod.oc.adapter=[EcologyMod]Кликните ПКМ по 'Основе Машины' этим предметом чтобы сделать Компьютерный Интерфейс Анализатора Загрязнения
+tooltip.ecomod.waila.pollution=Пригнитесь для просмотра экологической чистоты
+tooltip.ecomod.waila.working=Работает
+tooltip.ecomod.waila.not_working=Простаивает
 
 #Сообщения
 msg.ecomod.no_eat_with_respirator=Вы не можете есть или пить с надетым противогазом!
@@ -147,3 +150,19 @@ msg.ecomod.bad_sleep=Вы плохо себя чувствуете. Похоже
 msg.ecomod.polluted_food=Вы съели загрязненную пищу!
 
 msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod работает не корректно! Во время загрузки ASM трансформеры не сработали правильно для следующих классов: %s. Ищите причину в логах и сообщите её вместе с логом на 
+
+#JEI
+gui.jei.ingredient.ecomod.pollution=Загрязнение Окружающей Среды
+gui.jei.desc.ingr.ecomod.pollution=Загрязнение Окружающей Среды
+gui.jei.desc.ecomod.pollution.air=Воздушное
+gui.jei.desc.ecomod.pollution.water=Водное
+gui.jei.desc.ecomod.pollution.soil=Почвенное
+gui.jei.category.ecomod.air_filtration=Очистка Воздуха
+gui.jei.category.ecomod.manually_assembly=Сборка Вручную
+gui.jei.category.ecomod.manually_assembly.note=Кликните ПКМ левый предмет(установленный в мире) правым
+gui.jei.ingredient.ecomod.pollution_effect.trigger=Тип Срабатывания:
+gui.jei.ingredient.ecomod.pollution_effect.trigger.or=ИЛИ
+gui.jei.ingredient.ecomod.pollution_effect.trigger.and=И
+gui.jei.ingredient.ecomod.pollution_effect.trigger.or.desc=Проявляется, когда хотя бы один тип загрязнения окружающей среды больше этого значения.
+gui.jei.ingredient.ecomod.pollution_effect.trigger.and.desc=Проявляется, когда все типы загрязнения окружающей среды больше этого значения.
+gui.jei.category.ecomod.pollution_effects=Эффекты Загрязнения

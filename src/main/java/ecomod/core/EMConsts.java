@@ -16,9 +16,9 @@ public class EMConsts
 	 * 
 	 */
 	public static final String mcversion = "1.7.10";
-	public static final String version = mcversion + "-1.2.4.0-beta";
+	public static final String version = mcversion + "-1.5.0.0";
 	
-	public static final String deps = "required-after:FML";
+	public static final String deps = "";
 	
 	//
 	
@@ -28,7 +28,7 @@ public class EMConsts
 	
 	public static final String projectURL = "https://minecraft.curseforge.com/projects/ecology-mod";
 	
-	public static final String contributors = "Artem226(author/maintainer), xhz313123(Chinese translation) and all feedbackers.";
+	public static final String contributors = "Artem226(author/maintainer), pupnewfster, xhz313123(Chinese translation) and all feedbackers.";
 	
 	public static final List<String> authors = java.util.Arrays.asList(new String[]{"Artem226"});
 	
@@ -40,6 +40,7 @@ public class EMConsts
 	// Consts and global variables
 	
 	public static final int analyzer_gui_id = 0;
+	public static final int effects_book_gui_id = 1;
 	
 	public static boolean asm_transformer_inited = false;
 }

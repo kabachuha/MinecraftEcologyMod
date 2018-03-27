@@ -47,7 +47,7 @@ public class CommandGetTileID extends CommandBase {
 		
 		if(tile != null)
 		{
-			String s = EMUtils.getTileEntityId(tile.getClass()).toString();
+			String s = EMUtils.getTileEntityId(tile.getClass()).toLowerCase();
 			sender.addChatMessage(new ChatComponentText(s));
 			if(sender instanceof EntityPlayerMP)
 				EMPacketHandler.WRAPPER.sendTo(new EMPacketString("#"+s), getCommandSenderAsPlayer(sender));
@@ -62,6 +62,4 @@ public class CommandGetTileID extends CommandBase {
 	public int getRequiredPermissionLevel() {
 		return 0;
 	}
-
-	
 }

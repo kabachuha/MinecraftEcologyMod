@@ -10,9 +10,9 @@ import ecomod.api.EcomodStuff;
 import ecomod.api.client.IAnalyzerPollutionEffect.TriggeringType;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionEffectsConfig;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.newmc.EMBlockPos;
 import ecomod.core.EcologyMod;
@@ -77,7 +77,7 @@ public class EcomodASMHooks
 							{
 								if(worldIn.rand.nextInt(8) == 0)
 									worldIn.setBlock(x, y, z, Blocks.clay, 0, 1 | 2);
-								else
+								else if(worldIn.rand.nextInt(4) == 0)
 									worldIn.setBlock(x, y, z, Blocks.sand, 0, 1 | 2);
 							}
 						}
@@ -101,7 +101,7 @@ public class EcomodASMHooks
 			{
 				if(worldIn.getGameRules().getGameRuleBooleanValue("doFireTick"))
 				{
-					EcomodAPI.emitPollution(worldIn, Pair.of(x >> 4, z >> 4), PollutionSourcesConfig.getSource("fire_pollution"), true);
+					EcomodAPI.emitPollution(worldIn, x >> 4, z >> 4, PollutionSourcesConfig.getSource("fire_pollution"), true);
 				}
 			}
 		}
@@ -134,7 +134,7 @@ public class EcomodASMHooks
 											worldIn.setBlockToAir(x, y, z);
 									else
 										if(worldIn.rand.nextInt(50)==0)
-											EcomodAPI.emitPollution(worldIn, Pair.of(x >> 4, z >> 4), PollutionSourcesConfig.getSource("leaves_redution"), true);
+											EcomodAPI.emitPollution(worldIn, x >> 4, z >> 4, PollutionSourcesConfig.getSource("leaves_redution"), true);
 							}
 						}
 					}
@@ -364,7 +364,7 @@ public class EcomodASMHooks
 		{
 			if(!furnace.getWorldObj().isRemote)
 			{
-				EcomodAPI.emitPollution(furnace.getWorldObj(), Pair.of(furnace.xCoord >> 4, furnace.zCoord >> 4), PollutionSourcesConfig.getSmeltedItemStackPollution(furnace.getStackInSlot(0)), true);
+				EcomodAPI.emitPollution(furnace.getWorldObj(), furnace.xCoord >> 4, furnace.zCoord >> 4, PollutionSourcesConfig.getSmeltedItemStackPollution(furnace.getStackInSlot(0)), true);
 			}
 		}
 		
@@ -416,7 +416,7 @@ public class EcomodASMHooks
 		
 		public static void entityItemAttackedAddition(EntityItem entity_item, DamageSource dmg_source)
 		{
-			if(entity_item == null || entity_item.worldObj == null || entity_item.worldObj.isRemote || dmg_source == null || entity_item.isDead)
+			if(entity_item == null || entity_item.worldObj == null || entity_item.worldObj.isRemote || dmg_source == null || entity_item.getEntityItem().stackSize < 1)
 				return;
 			
 			if(!PollutionSourcesConfig.hasSource("expired_item"))
@@ -427,12 +427,12 @@ public class EcomodASMHooks
 			if(dmg_source == DamageSource.lava)
 			{
 				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getEntityItem());
-				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.8).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.9D).multiply(PollutionType.WATER, 0.1F).multiply(PollutionType.SOIL, 0.2F);
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.8F).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.9F).multiply(PollutionType.WATER, 0.1F).multiply(PollutionType.SOIL, 0.2F);
 			}
 			else if(dmg_source.isFireDamage())
 			{
 				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getEntityItem());
-				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.7).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.8D).multiply(PollutionType.WATER, 0.2F).multiply(PollutionType.SOIL, 0.3F);
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.7F).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.8F).multiply(PollutionType.WATER, 0.2F).multiply(PollutionType.SOIL, 0.3F);
 				
 				FluidStack fs = null;
 				if(entity_item.getEntityItem().getItem() instanceof IFluidContainerItem)
@@ -450,6 +450,7 @@ public class EcomodASMHooks
 							to_emit.add(PollutionSourcesConfig.getSource("concentrated_pollution_explosion_pollution").multiplyAll(fs.amount / FluidContainerRegistry.BUCKET_VOLUME));
 						}
 						
+						entity_item.getEntityItem().stackSize = 0;
 						entity_item.worldObj.newExplosion(entity_item, entity_item.posX, entity_item.posY, entity_item.posZ, 3F * (fs.amount / FluidContainerRegistry.BUCKET_VOLUME), true, true);
 						entity_item.worldObj.removeEntity(entity_item);
 					}
@@ -458,7 +459,7 @@ public class EcomodASMHooks
 			else if(dmg_source.isExplosion())
 			{
 				to_emit = PollutionSourcesConfig.getItemStackPollution(entity_item.getEntityItem());
-				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.5).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.4D).multiply(PollutionType.WATER, 0.6F).multiply(PollutionType.SOIL, 0.5F);
+				to_emit.add(PollutionType.AIR, to_emit.getSoilPollution() * 0.5F).add(PollutionType.AIR, to_emit.getWaterPollution() * 0.4F).multiply(PollutionType.WATER, 0.6F).multiply(PollutionType.SOIL, 0.5F);
 				
 				FluidStack fs = null;
 				if(entity_item.getEntityItem().getItem() instanceof IFluidContainerItem)
@@ -476,6 +477,7 @@ public class EcomodASMHooks
 							to_emit.add(PollutionSourcesConfig.getSource("concentrated_pollution_explosion_pollution").multiplyAll(fs.amount / FluidContainerRegistry.BUCKET_VOLUME));
 						}
 						
+						entity_item.getEntityItem().stackSize = 0;
 						entity_item.worldObj.newExplosion(dmg_source.getSourceOfDamage() == null ? entity_item : dmg_source.getSourceOfDamage(), entity_item.posX, entity_item.posY, entity_item.posZ, 3F * (fs.amount / FluidContainerRegistry.BUCKET_VOLUME), true, true);
 						entity_item.worldObj.removeEntity(entity_item);
 					}
@@ -488,7 +490,7 @@ public class EcomodASMHooks
 			
 			if(!to_emit.equals(PollutionData.getEmpty()))
 			{
-				EcomodAPI.emitPollution(entity_item.worldObj, Pair.of((int)Math.floor(entity_item.posX) >> 4, (int)Math.floor(entity_item.posZ) >> 4), to_emit, true);
+				EcomodAPI.emitPollution(entity_item.worldObj, (int)Math.floor(entity_item.posX) >> 4, (int)Math.floor(entity_item.posZ) >> 4, to_emit, true);
 			}
 		}
 		
@@ -496,7 +498,7 @@ public class EcomodASMHooks
 		{
 			if(tile != null && !tile.getWorldObj().isRemote)
 			{
-				EcomodAPI.emitPollution(tile.getWorldObj(), Pair.of(tile.xCoord >> 4, tile.zCoord >> 4), PollutionSourcesConfig.getSource("brewing_potion_pollution"), true);
+				EcomodAPI.emitPollution(tile.getWorldObj(), tile.xCoord >> 4, tile.zCoord >> 4, PollutionSourcesConfig.getSource("brewing_potion_pollution"), true);
 			}
 		}
 		

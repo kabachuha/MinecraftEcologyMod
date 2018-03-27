@@ -7,6 +7,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import ecomod.api.EcomodItems;
 import ecomod.common.items.ItemCore;
 import ecomod.common.items.ItemCraftIngredient;
+import ecomod.common.items.ItemPollutionEffectsBook;
 import ecomod.common.items.ItemRespirator;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
@@ -29,7 +30,7 @@ public class EMItems
 	{
 			EcomodItems.inited = true;
 			
-			EcologyMod.log.info("Setuping items");
+			EcologyMod.log.info("Registering items");
 			
 			EcomodItems.CORE = new ItemCore().setUnlocalizedName(EMConsts.modid+".core");
 			
@@ -46,8 +47,11 @@ public class EMItems
 			
 			EcomodItems.RESPIRATOR = new ItemRespirator().setUnlocalizedName(EMConsts.modid+".respirator");
 			
+			EcomodItems.POLLUTION_EFFECTS_BOOK = new ItemPollutionEffectsBook().setUnlocalizedName(EMConsts.modid+".effects_book");
+			
 			GameRegistry.registerItem(EcomodItems.CORE, "core");
 			GameRegistry.registerItem(EcomodItems.CRAFT_INGREDIENT, "craft_ingredient");
 			GameRegistry.registerItem(EcomodItems.RESPIRATOR, "respirator");
+			GameRegistry.registerItem(EcomodItems.POLLUTION_EFFECTS_BOOK, "pollution_effects_book");
 	}
 }

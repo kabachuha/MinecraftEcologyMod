@@ -15,7 +15,7 @@ public class CommandSaveManager extends CommandBase {
 	{
 		return "savePollutionManager";
 	}
-
+	
 	@Override
 	public String getCommandUsage(ICommandSender sender)
 	{
@@ -45,7 +45,7 @@ public class CommandSaveManager extends CommandBase {
 			}
 		}
 		
-		WorldProcessingThread wpt = EcologyMod.ph.getWPT(sender.getEntityWorld().getWorldInfo().getWorldName()+"_"+dim);
+		WorldProcessingThread wpt = EcologyMod.ph.getWPT(dim);
 		
 		if(wpt == null)
 			throw new CommandException("commands.ecomod.wpt_not_found", dim);

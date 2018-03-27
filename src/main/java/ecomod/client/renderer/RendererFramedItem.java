@@ -37,6 +37,8 @@ public class RendererFramedItem implements IItemRenderer {
 		
 		GL11.glPushMatrix();
 		
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		
 		if(type == ItemRenderType.INVENTORY)
 		{
 			GL11.glTranslatef(0F, -0.1F, 0F);

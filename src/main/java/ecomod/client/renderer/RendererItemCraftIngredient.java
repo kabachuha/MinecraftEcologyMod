@@ -187,6 +187,8 @@ public class RendererItemCraftIngredient implements IItemRenderer
 				Tessellator.instance.addVertexWithUV(icon.getIconWidth(), icon.getIconHeight(), 0, icon.getMaxU(), icon.getMaxV());
 				Tessellator.instance.addVertexWithUV(icon.getIconWidth(), 0, 0, icon.getMaxU(), icon.getMinV());
 				Tessellator.instance.draw();
+				
+				GL11.glDisable(GL11.GL_BLEND);
 			}
 			else
 			{

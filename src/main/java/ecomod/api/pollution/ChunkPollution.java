@@ -47,14 +47,14 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	}
 
 	/**
-	 * @return the chunkY
+	 * @return the chunkZ
 	 */
 	public int getZ() {
 		return chunkZ;
 	}
 
 	/**
-	 * @param chunkY the chunkY to set
+	 * @param chunkZ the chunkZ to set
 	 */
 	public void setZ(int chunkZ) {
 		this.chunkZ = chunkZ;
@@ -86,7 +86,7 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	
 	public String toString()
 	{
-		return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+"}";
+		return "{ \"chunkX\" : "+chunkX+", \"chunkZ\" : "+chunkZ+", \"pollution\" : "+pollution.toString()+ '}';
 	}
 	
 	public void writeByteBuf(ByteBuf bb)
@@ -125,5 +125,23 @@ public class ChunkPollution extends Pair<Pair<Integer, Integer>, PollutionData>
 	public PollutionData getRight()
 	{
 		return pollution;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj != null && obj instanceof ChunkPollution)
+		{
+			ChunkPollution p = (ChunkPollution)obj;
+			return chunkX == p.chunkX && chunkZ == p.chunkZ && pollution.equals(p.pollution);
+		}
+		
+		return false;
+	}
+
+	@Override
+	public int compareTo(Pair<Pair<Integer, Integer>, PollutionData> other)
+	{
+		return pollution.compareTo(other.getRight());
 	}
 }

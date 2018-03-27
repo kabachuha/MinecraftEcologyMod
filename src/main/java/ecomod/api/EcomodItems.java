@@ -11,4 +11,6 @@ public class EcomodItems
 	public static Item CRAFT_INGREDIENT = null;
 	
 	public static Item RESPIRATOR = null;
+	
+	public static Item POLLUTION_EFFECTS_BOOK = null;
 }

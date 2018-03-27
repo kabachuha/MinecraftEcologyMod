@@ -10,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 
 public class CommandClearManager extends CommandBase
 {
-	
 	@Override
 	public String getCommandName() {
 		return "clearPollutionManager";
@@ -45,7 +44,7 @@ public class CommandClearManager extends CommandBase
 			}
 		}
 		
-		WorldProcessingThread wpt = EcologyMod.ph.getWPT(sender.getEntityWorld().getWorldInfo().getWorldName()+"_"+dim);
+		WorldProcessingThread wpt = EcologyMod.ph.getWPT(dim);
 		
 		if(wpt == null)
 			throw new CommandException("commands.ecomod.wpt_not_found", dim);

@@ -8,6 +8,7 @@ import ecomod.api.client.IAnalyzerPollutionEffect;
 import ecomod.api.pollution.IPollutionGetter;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionEmissionEvent;
+import ecomod.api.pollution.PositionedPollutionEmissionEvent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,7 +34,41 @@ public class EcomodAPI
 		
 		PollutionEmissionEvent em = new PollutionEmissionEvent(world, chunkLoc.getLeft(), chunkLoc.getRight(), emission, scheduled);
 		
+		// less precise calculations - more performance
 		return MinecraftForge.EVENT_BUS.post(em);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param world The world
+	 * @param chunkX The x location of the chunk
+	 * @param chunkX The z location of the chunk
+	 * @param emission Amount of pollution emitted. If it is negative pollution is reduced
+	 * @param scheduled Determines whether the emission event should be put in queue and handled by the thread on its next run if true or immediately by the PollutionManager if false. It's recommended to use the first option (true).
+	 * @return Whether the event had passed and hadn't been canceled
+	 * 
+	 * @see ecomod.api.pollution.PollutionEmissionEvent
+	 * @see net.minecraft.world.chunk.Chunk
+	 * @see ecomod.api.pollution.PollutionData  
+	 */
+	public static boolean emitPollution(World world, int chunkX, int chunkZ, PollutionData emission, boolean scheduled)
+	{
+		if(emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0)) return false;
+		
+		PollutionEmissionEvent em = new PollutionEmissionEvent(world, chunkX, chunkZ, emission, scheduled);
+		
+		// less precise calculations - more performance
+		return MinecraftForge.EVENT_BUS.post(em);
+	}
+	
+	public static boolean emitPollutionPositioned(World world, int posX, int posY, int posZ, PollutionData emission, boolean scheduled)
+	{
+		if(world.isRemote || emission == null || (emission.compareTo(PollutionData.getEmpty()) == 0))return false;
+
+		PositionedPollutionEmissionEvent event = new PositionedPollutionEmissionEvent(world, posX, posY, posZ, emission, scheduled);
+		// more precise calculations - less performance
+		return MinecraftForge.EVENT_BUS.post(event);
 	}
 	
 	public static IPollutionGetter pollution_getter = null;

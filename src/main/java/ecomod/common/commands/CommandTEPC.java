@@ -1,7 +1,7 @@
 package ecomod.common.commands;
 
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.core.EcologyMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -52,13 +52,13 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId = args[1];
 			
-			double air = 0.0D;
-			double water = 0.0D;
-			double soil = 0.0D;
+			float air = 0.0F;
+			float water = 0.0F;
+			float soil = 0.0F;
 			
 			try
 			{
-				air = Double.parseDouble(args[2]);
+				air = Float.parseFloat(args[2]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -67,7 +67,7 @@ public class CommandTEPC extends CommandBase {
 			
 			try
 			{
-				water = Double.parseDouble(args[3]);
+				water = Float.parseFloat(args[3]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -76,7 +76,7 @@ public class CommandTEPC extends CommandBase {
 			
 			try
 			{
-				soil = Double.parseDouble(args[4]);
+				soil = Float.parseFloat(args[4]);
 			}
 			catch (NumberFormatException e)
 			{
@@ -92,7 +92,7 @@ public class CommandTEPC extends CommandBase {
 			
 			if(tep != null)
 			{
-				if(EcologyMod.instance.tepc.hasTile(new ResourceLocation(tep.getId())))
+				if(EcologyMod.instance.tepc.hasTile(tep.getId()))
 				{
 					EcologyMod.log.warn(tep.getId()+" is already in TEPC. Thus replacing the previous("+EcologyMod.instance.tepc.getTEP(tep.getId()).toString()+").");
 					EcologyMod.instance.tepc.data.remove(EcologyMod.instance.tepc.getTEP(tep.getId()));
@@ -117,7 +117,7 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId1 = args[1];
 			
-			if(EcologyMod.instance.tepc.hasTile(new ResourceLocation(tileId1)))
+			if(EcologyMod.instance.tepc.hasTile(tileId1))
 			{
 				EcologyMod.instance.tepc.data.remove(EcologyMod.instance.tepc.getTEP(tileId1));
 				sender.addChatMessage(new ChatComponentTranslation("commands.ecomod.tepc.remove.success", tileId1));
@@ -132,7 +132,7 @@ public class CommandTEPC extends CommandBase {
 			
 		case load:
 			sender.addChatMessage(new ChatComponentTranslation("commands.ecomod.tepc.load"));
-			EcologyMod.instance.tepc.load(EcologyMod.instance.tepc.path);
+			EcologyMod.instance.tepc.loadFromFile(EcologyMod.instance.tepc.path);
 			break;
 			
 		case save:
@@ -149,7 +149,7 @@ public class CommandTEPC extends CommandBase {
 			
 			String tileId2 = args[1];
 			
-			if(EcologyMod.instance.tepc.hasTile(new ResourceLocation(tileId2)))
+			if(EcologyMod.instance.tepc.hasTile(tileId2))
 			{
 				sender.addChatMessage(new ChatComponentText(EcologyMod.instance.tepc.getTEP(tileId2).toString()));
 			}

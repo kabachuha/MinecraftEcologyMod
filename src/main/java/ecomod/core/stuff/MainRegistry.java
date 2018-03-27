@@ -3,8 +3,10 @@ package ecomod.core.stuff;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -24,11 +26,13 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -93,7 +97,10 @@ public class MainRegistry
 		
 		EMAchievements.setup();
 		
-		//FMLInterModComms.sendFunctionMessage(EMConsts.modid, EMIntermod.key_add_te_pollution_determinant, ecomod.test.TEST_TEPollutionDeterminant.class.getName());
+		EMIntermod.setup_waila();
+		
+		if(EMConfig.pollution_effects_books_gen)
+			setup_book_gen();
 	}
 	
 	public static void doPostInit()
@@ -109,5 +116,11 @@ public class MainRegistry
 		}
 		
 		EMRecipes.doPostInit();
+	}
+	
+	public static void setup_book_gen()
+	{
+		ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(EcomodItems.POLLUTION_EFFECTS_BOOK), 10, 20, 10));
+		ChestGenHooks.addItem(ChestGenHooks.VILLAGE_BLACKSMITH, new WeightedRandomChestContent(new ItemStack(EcomodItems.POLLUTION_EFFECTS_BOOK), 4, 9, 5));
 	}
 }

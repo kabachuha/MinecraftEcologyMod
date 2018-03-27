@@ -39,6 +39,11 @@ public class EMGuiHandler implements IGuiHandler {
 			}
 		}
 		
+		if(ID == EMConsts.effects_book_gui_id)
+		{
+			return new GuiPollutionEffectsBook();
+		}
+		
 		return null;
 	}
 

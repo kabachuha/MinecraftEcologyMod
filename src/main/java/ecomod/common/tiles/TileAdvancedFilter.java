@@ -8,8 +8,8 @@ import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.EcologyMod;
@@ -28,7 +28,7 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-
+@Optional.Interface(iface = "buildcraft.api.tiles.IHasWork", modid = "buildcraft")
 public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHasWork
 {
 	public FluidTank tank;
@@ -48,13 +48,10 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 		return isWorking();
 	}
 	
-	private boolean was_working = false;
+	public  boolean was_working = false;
 	private int i1 = 0;
 	
-	@SideOnly(Side.CLIENT)
 	public float vent_rotation = 0F;
-
-	@SideOnly(Side.CLIENT)
 	private float rps = 0F;
 	
 	@Override
@@ -105,7 +102,7 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 					
 					if(energy.extractEnergyNotOfficially(EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs, false) == EMConfig.advanced_filter_energy_per_second * EMConfig.adv_filter_delay_secs)
 					{
-						EcomodAPI.emitPollution(worldObj, getChunkCoords(), PollutionSourcesConfig.getSource("advanced_filter_redution"), false);
+						EcomodAPI.emitPollution(worldObj, getChunkCoords(), getSource(), false);
 						
 						tank.fill(getProduction(), true);
 					
@@ -133,6 +130,10 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 		++ticks;
 	}
 	
+	public PollutionData getSource() {
+		return PollutionSourcesConfig.getSource("advanced_filter_reduction");
+	}
+	
 	public boolean isWorking()
 	{
 		boolean ret = true;
@@ -158,31 +159,31 @@ public class TileAdvancedFilter extends TileEnergy implements IFluidHandler, IHa
 	
 	public FluidStack getProduction()
 	{
-		PollutionData pd = EcomodAPI.getPollution(worldObj, this.getChunkCoords().getLeft(), this.getChunkCoords().getRight());
+		PollutionData pd = EcomodAPI.getPollution(worldObj, getChunkCoords().getLeft(), getChunkCoords().getRight());
 		
 		if(pd == null || pd == PollutionData.getEmpty())
 			return null;
 		
 		FluidStack ret = new FluidStack(EcomodStuff.concentrated_pollution, 0);
 		
-		PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
+		PollutionData advanced_filter_reduction = getSource();
 		
 		for(PollutionType type : PollutionType.values())
 		{
-			if(pd.get(type) >= adv_filter_redution.get(type))
+			if(pd.get(type) >= advanced_filter_reduction.get(type))
 			{
 				switch(type)
 				{
 					case AIR:
-						ret.amount += adv_filter_redution.get(type);
+						ret.amount += advanced_filter_reduction.get(type);
 						break;
 						
 					case WATER:
-						ret.amount += adv_filter_redution.get(type) * 2;
+						ret.amount += advanced_filter_reduction.get(type) * 2;
 						break;
 						
 					case SOIL:
-						ret.amount += adv_filter_redution.get(type) * 4;
+						ret.amount += advanced_filter_reduction.get(type) * 4;
 						break;
 				}
 			}

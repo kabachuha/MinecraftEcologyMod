@@ -1,25 +1,423 @@
 {
-  "version": "1.1",
+  "version": "1.3",
   "config": [
     //Minecraft Furnace is a reference
     {
-      "id": "minecraft:furnace",
+      "id": "furnace",
       "emission": {
         "air": 100.0,
         "water": 10.0,
         "soil": 25.0
       }
     },
-    //Tinker's Construct
+	{
+      "id": "smeltingfactory",
+      "emission": {
+        "air": 200.0,
+        "water": 30.0,
+        "soil": 30.0
+      }
+    },
+	{
+      "id": "advancedsmeltingfactory",
+      "emission": {
+        "air": 300.0,
+        "water": 60.0,
+        "soil": 60.0
+      }
+    },
+	{
+      "id": "ultimatesmeltingfactory",
+      "emission": {
+        "air": 400.0,
+        "water": 120.0,
+        "soil": 120.0
+      }
+    },
+	{
+      "id": "resistiveheater",
+      "emission": {
+        "air": 50.0,
+        "water": 15.0,
+        "soil": 15.0
+      }
+    },
+	{
+      "id": "fuelwoodheater",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+	{
+      "id": "osmiumcompressor",
+      "emission": {
+        "air": 70.0,
+        "water": 8.0,
+        "soil": 6.0
+      }
+    },
+	{
+      "id": "combiner",
+      "emission": {
+        "air": 95.0,
+        "water": 15.0,
+        "soil": 10.0
+      }
+    },
+	{
+      "id": "digitalminer",
+      "emission": {
+        "air": 150.0,
+        "water": 60.0,
+        "soil": 250.0
+      }
+    },
+	{
+      "id": "crusher",
+      "emission": {
+        "air": 135.0,
+        "water": 27.0,
+        "soil": 10.0
+      }
+    },
+	{
+      "id": "enrichmentchamber",
+      "emission": {
+        "air": 180.0,
+        "water": 12.0,
+        "soil": 23.0
+      }
+    },
+	{
+      "id": "metallurgicinfuser",
+      "emission": {
+        "air": 150.0,
+        "water": 10.0,
+        "soil": 3.0
+      }
+    },
+	{
+      "id": "purificationchamber",
+      "emission": {
+        "air": 180.0,
+        "water": 60.0,
+        "soil": 20.0
+      }
+    },
+	{
+      "id": "energizedsmelter",
+      "emission": {
+        "air": 73.0,
+        "water": 10.0,
+        "soil": 4.0
+      }
+    },
+	{
+      "id": "rotarycondensator",
+      "emission": {
+        "air": 50.0,
+        "water": 15.0,
+        "soil": 15.0
+      }
+    },
+	{
+      "id": "mekanismteleporter",
+      "emission": {
+        "air": 10.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "electricpump",
+      "emission": {
+        "air": 5.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+    },
+	{
+      "id": "precisionsawmill",
+      "emission": {
+        "air": 84.0,
+        "water": 50.0,
+        "soil": 10.0
+      }
+    },
+	{
+      "id": "heatgenerator",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+	{
+      "id": "thermalevaporationcontroller",
+      "emission": {
+        "air": 10.0,
+        "water": 50.0,
+        "soil": 5.0
+      }
+    },
+	{
+      "id": "boilercasing",
+      "emission": {
+        "air": 10.0,
+        "water": 10.0,
+        "soil": 10.0
+      }
+    },
+	{
+      "id": "reactorcontroller",
+      "emission": {
+        "air": 300.0,
+        "water": 300.0,
+        "soil": 300.0
+      }
+    },
+	{
+      "id": "superheatingelement",
+      "emission": {
+        "air": 150.0,
+        "water": 25.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "advancedboundingblock",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 100.0
+      }
+    },
+	{
+      "id": "chemicaloxidizer",
+      "emission": {
+        "air": 170.0,
+        "water": 30.0,
+        "soil": 20.0
+      }
+    },
+	{
+      "id": "chemicalinfuser",
+      "emission": {
+        "air": 160.0,
+        "water": 24.0,
+        "soil": 16.0
+      }
+    },
+	{
+      "id": "chemicalinjectionchamber",
+      "emission": {
+        "air": 120.0,
+        "water": 25.0,
+        "soil": 30.0
+      }
+    },
+	{
+      "id": "chemicaldissolutionchamber",
+      "emission": {
+        "air": 150.0,
+        "water": 33.0,
+        "soil": 27.0
+      }
+    },
+	{
+      "id": "chemicalwasher",
+      "emission": {
+        "air": 42.0,
+        "water": 200.0,
+        "soil": 30.0
+      }
+    },
+	{
+      "id": "chemicalcrystallizer",
+      "emission": {
+        "air": 50.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+	{
+      "id": "electrolyticseparator",
+      "emission": {
+        "air": 5.0,
+        "water": 150.0,
+        "soil": 5.0
+      }
+    },
+	{
+      "id": "pressurizedreactionchamber",
+      "emission": {
+        "air": 165.0,
+        "water": 55.0,
+        "soil": 38.0
+      }
+    },
+	{
+      "id": "laser",
+      "emission": {
+        "air": 150.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "quantumentangloporter",
+      "emission": {
+        "air": 100.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "solarneutronactivator",
+      "emission": {
+        "air": 50.0,
+        "water": 100.0,
+        "soil": 100.0
+      }
+    },
+	{
+      "id": "gasgenerator",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+	{
+      "id": "biogenerator",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 25.0
+      }
+    },
+	{
+      "id": "relaymk1tile",
+      "emission": {
+        "air": 75.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "relaymk2tile",
+      "emission": {
+        "air": 150.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "relaymk3tile",
+      "emission": {
+        "air": 300.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+	{
+      "id": "dmfurnacetile",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 25.0
+      }
+    },
+	{
+      "id": "rmfurnacetile",
+      "emission": {
+        "air": 200.0,
+        "water": 100.0,
+        "soil": 50.0
+      }
+    },
+	{
+      "id": "collectormk1tile",
+      "emission": {
+        "air": 200.0,
+        "water": 200.0,
+        "soil": 200.0
+      }
+    },
+	{
+      "id": "collectormk2tile",
+      "emission": {
+        "air": 400.0,
+        "water": 400.0,
+        "soil": 400.0
+      }
+    },
+	{
+      "id": "collectormk3tile",
+      "emission": {
+        "air": 800.0,
+        "water": 800.0,
+        "soil": 800.0
+      }
+    },
+	{
+      "id": "ec_compressor",
+      "emission": {
+        "air": 100.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
     {
-      "id": "tconstruct:smeltery_controller",
+      "id": "tcomplement.heater",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "tcomplement.melter",
+      "emission": {
+        "air": 10.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "solderer",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "blockinscriber",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "blockquantumlinkchamber",
+      "emission": {
+        "air": 100.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "tconstruct.smeltery",
       "emission": {
         "air": 150.0,
         "water": 12.0,
         "soil": 30.0
       }
     },
-    //Immersive Engineering
     {
       "id": "immersiveengineering:cokeoven",
       "emission": {
@@ -61,14 +459,6 @@
       }
     },
     {
-      "id": "immersiveengineering:excavator",
-      "emission": {
-        "air": 280.0,
-        "water": 50.0,
-        "soil": 200.0
-      }
-    },
-    {
       "id": "immersiveengineering:assembler",
       "emission": {
         "air": 34.0,
@@ -96,8 +486,8 @@
       "id": "immersiveengineering:dieselgenerator",
       "emission": {
         "air": 360.0,
-        "water": 75.0,
-        "soil": 50.0
+        "water": 10.0,
+        "soil": 60.0
       }
     },
     {
@@ -108,9 +498,96 @@
         "soil": 9.0
       }
     },
-    //Draconic Evolotion
     {
-      "id": "draconicevolution:generator",
+      "id": "immersiveengineering:thermoelectricgen",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "immersiveengineering:furnaceheater",
+      "emission": {
+        "air": 15.0,
+        "water": 5.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "immersiveengineering:blastfurnacepreheater",
+      "emission": {
+        "air": 15.0,
+        "water": 5.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "immersiveengineering:turretchem",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+	{
+      "id": "immersiveengineering:belljar",
+      "emission": {
+        "air": 55.0,
+        "water": 45.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "immersivepetroleum:gasgenerator",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "deepresonance_generator_controller",
+      "emission": {
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "deepresonance_generator",
+      "emission": {
+        "air": 100.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "deepresonance_smelter",
+      "emission": {
+        "air": 100.0,
+        "water": 25.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "deepresonance_purifier",
+      "emission": {
+        "air": 50.0,
+        "water": 100.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "deepresonance_laser",
+      "emission": {
+        "air": 150.0,
+        "water": 100.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "draconicevolution:tilegenerator",
       "emission": {
         "air": 120.0,
         "water": 3.0,
@@ -118,16 +595,39 @@
       }
     },
     {
-      "id": "draconicevolution:grinder",
+      "id": "draconicevolution:tilegrinder",
       "emission": {
         "air": 180.0,
         "water": 6.0,
         "soil": 18.0
       }
     },
-    //Thermal Expansion
     {
-      "id": "thermalexpansion:dynamo_steam",
+      "id": "draconicevolution:tiledislocatorreceptacle",
+      "emission": {
+        "air": 10.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "draconicevolution:tileteleporterstand",
+      "emission": {
+        "air": 10.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "draconicevolution:tilecelestialmanipulator",
+      "emission": {
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "thermalexpansion.dynamosteam",
       "emission": {
         "air": 90.0,
         "water": 10.0,
@@ -135,7 +635,7 @@
       }
     },
     {
-      "id": "thermalexpansion:dynamo_reactant",
+      "id": "thermalexpansion.dynamoreactant",
       "emission": {
         "air": 130.0,
         "water": 8.0,
@@ -143,7 +643,23 @@
       }
     },
     {
-      "id": "thermalexpansion:dynamo_numismatic",
+      "id": "thermalexpansion.dynamomagmatic",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "thermalexpansion.dynamoenervation",
+      "emission": {
+        "air": 100.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "thermalexpansion.dynamonumismatic",
       "emission": {
         "air": 80.0,
         "water": 12.0,
@@ -151,7 +667,7 @@
       }
     },
     {
-      "id": "thermalexpansion:dynamo_compression",
+      "id": "thermalexpansion.dynamocompression",
       "emission": {
         "air": 195.0,
         "water": 10.0,
@@ -159,7 +675,7 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_crucible",
+      "id": "thermalexpansion.crucible",
       "emission": {
         "air": 130.0,
         "water": 10.0,
@@ -167,7 +683,7 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_extruder",
+      "id": "thermalexpansion.extruder",
       "emission": {
         "air": 94.0,
         "water": 5.0,
@@ -175,7 +691,39 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_furnace",
+      "id": "thermalexpansion.insolator",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "thermalexpansion.compactor",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "thermalexpansion.refinery",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "thermalexpansion.centrifuge",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "thermalexpansion.furnace",
       "emission": {
         "air": 89.0,
         "water": 6.0,
@@ -183,7 +731,7 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_pulverizer",
+      "id": "thermalexpansion.pulverizer",
       "emission": {
         "air": 160.0,
         "water": 45.0,
@@ -191,7 +739,7 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_refinery",
+      "id": "thermalexpansion.refinery",
       "emission": {
         "air": 200.0,
         "water": 60.0,
@@ -199,7 +747,7 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_sawmill",
+      "id": "thermalexpansion.sawmill",
       "emission": {
         "air": 80.0,
         "water": 60.0,
@@ -207,17 +755,23 @@
       }
     },
     {
-      "id": "thermalexpansion:machine_smelter",
+      "id": "thermalexpansion.smelter",
       "emission": {
         "air": 160.0,
         "water": 30.0,
         "soil": 45.0
       }
-    }
-    //Industrial Craft 2
-    ,
+    },
     {
-      "id": "ic2:generator",
+      "id": "bigreactorstileentityreactorfuelrod",
+      "emission": {
+        "air": 50.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "generator",
       "emission": {
         "air": 110.0,
         "water": 11.0,
@@ -225,23 +779,23 @@
       }
     },
     {
-      "id": "ic2:rt_generator",
+      "id": "radioisotope thermoelectric generator",
       "emission": {
-        "air": 1,
+        "air": 1.0,
         "water": 3.0,
         "soil": 5.0
       }
     },
     {
-      "id": "ic2:rt_heat_generator",
+      "id": "radioisotope thermo heat generator",
       "emission": {
-        "air": 2,
+        "air": 2.0,
         "water": 3.0,
         "soil": 5.0
       }
     },
     {
-      "id": "ic2:semifluid_generator",
+      "id": "semifluid generator",
       "emission": {
         "air": 120.0,
         "water": 20.0,
@@ -249,7 +803,7 @@
       }
     },
     {
-      "id": "ic2:solid_heat_generator",
+      "id": "solid heat generator",
       "emission": {
         "air": 140.0,
         "water": 20.0,
@@ -257,7 +811,7 @@
       }
     },
     {
-      "id": "ic2:fluid_heat_generator",
+      "id": "fluid heat generator",
       "emission": {
         "air": 125.0,
         "water": 30.0,
@@ -265,7 +819,7 @@
       }
     },
     {
-      "id": "ic2:electric_furnace",
+      "id": "electric furnace",
       "emission": {
         "air": 60.0,
         "water": 5.0,
@@ -273,7 +827,7 @@
       }
     },
     {
-      "id": "ic2:blast_furnace",
+      "id": "blast furnace",
       "emission": {
         "air": 210.0,
         "water": 18.0,
@@ -281,7 +835,7 @@
       }
     },
     {
-      "id": "ic2:nuclear_reactor",
+      "id": "nuclear reactor",
       "emission": {
         "air": 100.0,
         "water": 22.0,
@@ -289,7 +843,7 @@
       }
     },
     {
-      "id": "ic2:steam_kinetic_generator",
+      "id": "steam kinetic generator",
       "emission": {
         "air": 120.0,
         "water": 20.0,
@@ -297,7 +851,7 @@
       }
     },
     {
-      "id": "ic2:macerator",
+      "id": "macerator",
       "emission": {
         "air": 125.0,
         "water": 15.0,
@@ -305,7 +859,7 @@
       }
     },
     {
-      "id": "ic2:miner",
+      "id": "miner",
       "emission": {
         "air": 110.0,
         "water": 50.0,
@@ -313,7 +867,7 @@
       }
     },
     {
-      "id": "ic2:advanced_miner",
+      "id": "advanced miner",
       "emission": {
         "air": 90.0,
         "water": 38.0,
@@ -321,17 +875,343 @@
       }
     },
     {
-      "id": "ic2:induction_furnace",
+      "id": "induction furnace",
       "emission": {
         "air": 120.0,
         "water": 20.0,
         "soil": 20.0
       }
-    }
-    //Buildcraft
-    ,
+    },
     {
-      "id": "buildcraftenergy:engine.stone",
+      "id": "nuke",
+      "emission": {
+        "air": 500.0,
+        "water": 500.0,
+        "soil": 500.0
+      }
+    },
+    {
+      "id": "reactor chamber",
+      "emission": {
+        "air": 50.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "terraformer",
+      "emission": {
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "mass fabricator",
+      "emission": {
+        "air": 500.0,
+        "water": 500.0,
+        "soil": 500.0
+      }
+    },
+    {
+      "id": "replicator",
+      "emission": {
+        "air": 500.0,
+        "water": 500.0,
+        "soil": 500.0
+      }
+    },
+    {
+      "id": "geothermal generator",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "thermal centrifuge",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "kinetic generator",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "stirling generator",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "electric heat generator",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "stirling kinetic generator",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "fluid bottler maschine",
+      "emission": {
+        "air": 5.0,
+        "water": 20.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "liquid heat exchanger",
+      "emission": {
+        "air": 5.0,
+        "water": 25.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "teleporter",
+      "emission": {
+        "air": 5.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "canning machine",
+      "emission": {
+        "air": 5.0,
+        "water": 25.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "compressor",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "extractor",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+    },
+    {
+      "id": "iron furnace",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+    },
+    {
+      "id": "recycler",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "solid canner maschine",
+      "emission": {
+        "air": 5.0,
+        "water": 20.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "fermenter",
+      "emission": {
+        "air": 0.0,
+        "water": 20.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "metal former",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "ore washing plant",
+      "emission": {
+        "air": 5.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tilefusioncontrolcomputertr",
+      "emission": {
+        "air": 300.0,
+        "water": 300.0,
+        "soil": 300.0
+      }
+    },
+    {
+      "id": "tilethermalgeneratortr",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "tileindustrialcentrifugetr",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "tileindustrialblastfurnacetr",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "tileimplosioncompressortr",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "tilematterfabricatortr",
+      "emission": {
+        "air": 150.0,
+        "water": 100.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "tiledieselgeneratortr",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "tileindustrialelectrolyzertr",
+      "emission": {
+        "air": 5.0,
+        "water": 150.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tilegasturbinetr",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "tilerollingmachinetr",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tilealloysmaltertr",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+    },
+    {
+      "id": "tileindustrialgrindertr",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tilegrindertr",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tilesemifluidgeneratortr",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tilealloysmaltertr",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+    },
+    {
+      "id": "tileironalloyfurnacetr",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+    },
+    {
+      "id": "tilechemicalreactortr",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "tileindustrialsawmilltr",
+      "emission": {
+        "air": 15.0,
+        "water": 15.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "net.minecraft.src.buildcraft.energy.tileenginestone",
       "emission": {
         "air": 150.0,
         "water": 18.0,
@@ -339,7 +1219,7 @@
       }
     },
     {
-      "id": "buildcraftenergy:engine.iron",
+      "id": "net.minecraft.src.buildcraft.energy.tileengineiron",
       "emission": {
         "air": 130.0,
         "water": 22.0,
@@ -347,7 +1227,7 @@
       }
     },
     {
-      "id": "buildcraftbuilders:quarry",
+      "id": "machine",
       "emission": {
         "air": 500.0,
         "water": 80.0,
@@ -355,7 +1235,7 @@
       }
     },
     {
-      "id": "buildcraftfactory:mining_well",
+      "id": "miningwell",
       "emission": {
         "air": 110.0,
         "water": 50.0,
@@ -363,25 +1243,77 @@
       }
     },
     {
-      "id": "buildcraftfactory:distiller",
+      "id": "net.minecraft.src.buildcraft.factory.refinery",
       "emission": {
         "air": 400.0,
         "water": 50.0,
         "soil": 48.0
       }
-    }
-    //RF Tools
-    ,
+    },
     {
-      "id": "minecraft:rftools_coalgenerator",
+      "id": "rftools_coalgenerator",
       "emission": {
         "air": 110.0,
         "water": 11.0,
         "soil": 27.0
       }
-    }
-    //Extra Utilities 2
-    ,
+    },
+    {
+      "id": "rftools_matter_beamer",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "rftools_matter_transmitter",
+      "emission": {
+        "air": 10.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "rftools_matter_receiver",
+      "emission": {
+        "air": 10.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "rftools_machine_infuser",
+      "emission": {
+        "air": 10.0,
+        "water": 10.0,
+        "soil": 10.0
+      }
+    },
+    {
+      "id": "rftools_environmental_controller",
+      "emission": {
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "rftoolsdim_dimension_builder",
+      "emission": {
+        "air": 50.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "rftools_booster",
+      "emission": {
+        "air": 50.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
     {
       "id": "xu2:tilemine",
       "emission": {
@@ -391,214 +1323,15 @@
       }
     },
     {
-      "id": "xu2:tilemachineprovider",//Argh!!!
+      "id": "xu2:tilemachineprovider",
       "emission": {
         "air": 100.0,
         "water": 20.0,
         "soil": 30.0
       }
-    }
-    //Forestry
-    ,
-    {
-      "id": "minecraft:forestry.fermenter",
-      "emission": {
-        "air": 130.0,
-        "water": 20.0,
-        "soil": 33.0
-      }
     },
     {
-      "id": "minecraft:forestry.still",
-      "emission": {
-        "air": 210.0,
-        "water": 30.0,
-        "soil": 38.0
-      }
-    },
-    {
-      "id": "minecraft:forestry.peat",
-      "emission": {
-        "air": 140.0,
-        "water": 20.0,
-        "soil": 33.0
-      }
-    },
-    {
-      "id": "minecraft:forestry.biogas",
-      "emission": {
-        "air": 115.0,
-        "water": 15.0,
-        "soil": 26.0
-      }
-    }
-    //Advanced Generators
-    ,
-    {
-      "id": "minecraft:advgenerators.turbine",
-      "emission": {
-        "air": 175.0,
-        "water": 35.0,
-        "soil": 40.0
-      }
-    }
-    //Actually Additions
-    ,
-    {
-      "id": "actuallyadditions:bioreactor",
-      "emission": {
-        "air": 140.0,
-        "water": 30.0,
-        "soil": 40.0
-      }
-    },
-    {
-      "id": "actuallyadditions:miner",
-      "emission": {
-        "air": 110.0,
-        "water": 50.0,
-        "soil": 250.0
-      }
-    },
-    {
-      "id": "actuallyadditions:oilgenerator",
-      "emission": {
-        "air": 220.0,
-        "water": 60.0,
-        "soil": 75.0
-      }
-    },
-    {
-      "id": "actuallyadditions:furnacedouble",
-      "emission": {
-        "air": 190.0,
-        "water": 19.0,
-        "soil": 47.0
-      }
-    },
-    {
-      "id": "actuallyadditions:grinderdouble",
-      "emission": {
-        "air": 235.0,
-        "water": 28.0,
-        "soil": 46.0
-      }
-    },
-    //Mekanism
-    {
-      "id": "minecraft:digitalminer",
-      "emission": {
-        "air": 150.0,
-        "water": 60.0,
-        "soil": 250.0
-      }
-    },
-    {
-      "id": "minecraft:crusher",
-      "emission": {
-        "air": 135.0,
-        "water": 27.0,
-        "soil": 10.0
-      }
-    },
-    {
-      "id": "minecraft:metallurgicinfuser",
-      "emission": {
-        "air": 150.0,
-        "water": 10.0,
-        "soil": 3.0
-      }
-    },
-    {
-      "id": "minecraft:enrichmentchamber",
-      "emission": {
-        "air": 180.0,
-        "water": 12.0,
-        "soil": 23.0
-      }
-    },
-    {
-      "id": "minecraft:osmiumcompressor",
-      "emission": {
-        "air": 70.0,
-        "water": 8.0,
-        "soil": 6.0
-      }
-    },
-    {
-      "id": "minecraft:combiner",
-      "emission": {
-        "air": 95.0,
-        "water": 15.0,
-        "soil": 10.0
-      }
-    },
-    {
-      "id": "minecraft:energizedsmelter",
-      "emission": {
-        "air": 73.0,
-        "water": 10.0,
-        "soil": 4.0
-      }
-    },
-    {
-      "id": "minecraft:purificationchamber",
-      "emission": {
-        "air": 180.0,
-        "water": 60.0,
-        "soil": 20.0
-      }
-    },
-    {
-      "id": "minecraft:precisionsawmill",
-      "emission": {
-        "air": 84.0,
-        "water": 50.0,
-        "soil": 10.0
-      }
-    },
-    {
-      "id": "minecraft:chemicalwasher",
-      "emission": {
-        "air": 42.0,
-        "water": 200.0,
-        "soil": 30.0
-      }
-    },
-    {
-      "id": "minecraft:chemicalinjectionchamber",
-      "emission": {
-        "air": 120.0,
-        "water": 25.0,
-        "soil": 30.0
-      }
-    },
-    {
-      "id": "minecraft:chemicaldissolutionchamber",
-      "emission": {
-        "air": 150.0,
-        "water": 33.0,
-        "soil": 27.0
-      }
-    },
-    {
-      "id": "minecraft:chemicaloxidizer",
-      "emission": {
-        "air": 170.0,
-        "water": 30.0,
-        "soil": 20.0
-      }
-    },
-    {
-      "id": "minecraft:chemicalinfuser",
-      "emission": {
-        "air": 160.0,
-        "water": 24.0,
-        "soil": 16.0
-      }
-    },
-    {
-      "id": "minecraft:fuelwoodheater",
+      "id": "xu2:tilemachinereceiver",
       "emission": {
         "air": 100.0,
         "water": 10.0,
@@ -606,11 +1339,571 @@
       }
     },
     {
-      "id": "minecraft:pressurizedreactionchamber",
+      "id": "xu2:tilequarry",
       "emission": {
-        "air": 165.0,
-        "water": 55.0,
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "xu2:tileterraformer",
+      "emission": {
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "forestry.fermenter",
+      "emission": {
+        "air": 130.0,
+        "water": 20.0,
+        "soil": 33.0
+      }
+    },
+    {
+      "id": "forestry.still",
+      "emission": {
+        "air": 210.0,
+        "water": 30.0,
         "soil": 38.0
+      }
+    },
+    {
+      "id": "forestry.peat",
+      "emission": {
+        "air": 140.0,
+        "water": 20.0,
+        "soil": 33.0
+      }
+    },
+    {
+      "id": "forestry.biogas",
+      "emission": {
+        "air": 115.0,
+        "water": 15.0,
+        "soil": 26.0
+      }
+    },
+    {
+      "id": "forestry.generator",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "forestry.greenhousecontroller",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "forestry.farmcontrol",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "forestry.electrical",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+    },
+    {
+      "id": "advgenerators.turbine",
+      "emission": {
+        "air": 175.0,
+        "water": 35.0,
+        "soil": 40.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentitybioreactor",
+      "emission": {
+        "air": 140.0,
+        "water": 30.0,
+        "soil": 40.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentityminer",
+      "emission": {
+        "air": 110.0,
+        "water": 50.0,
+        "soil": 250.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentityoilgenerator",
+      "emission": {
+        "air": 220.0,
+        "water": 60.0,
+        "soil": 75.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentityfurnacedouble",
+      "emission": {
+        "air": 190.0,
+        "water": 19.0,
+        "soil": 47.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentitylavafactorycontroller",
+      "emission": {
+        "air": 150.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentitycoffeemachine",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentitycoalgenerator",
+      "emission": {
+        "air": 100.0,
+        "water": 10.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentitygrinderdouble",
+      "emission": {
+        "air": 235.0,
+        "water": 28.0,
+        "soil": 46.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentitygrinder",
+      "emission": {
+        "air": 20.0,
+        "water": 5.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentityfarmer",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentityempowerer",
+      "emission": {
+        "air": 50.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+    },
+    {
+      "id": "actuallyadditions:tileentityreconstructor",
+      "emission": {
+        "air": 50.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+	},
+    {
+      "id": "actuallyadditions:tileentityleafgenerator",
+      "emission": {
+        "air": 50.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+	},
+    {
+      "id": "actuallyadditions:tileentityxpsolidifier",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "actuallyadditions:tileentitycanolapress",
+      "emission": {
+        "air": 25.0,
+        "water": 10.0,
+        "soil": 15.0
+      }
+	},
+    {
+      "id": "actuallyadditions:tileentitycompost",
+      "emission": {
+        "air": 20.0,
+        "water": 20.0,
+        "soil": 40.0
+      }
+	},
+    {
+      "id": "actuallyadditions:tileentityfeeder",
+      "emission": {
+        "air": 20.0,
+        "water": 20.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "reinforcedfurnace",
+      "emission": {
+        "air": 50.0,
+        "water": 5.0,
+        "soil": 15.0
+      }
+	},
+    {
+      "id": "stoneseparator",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 25.0
+      }
+	},
+    {
+      "id": "algorithmseparator",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 25.0
+      }
+	},
+    {
+      "id": "hungerprocessor",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "healthprocessor",
+      "emission": {
+        "air": 5.0,
+        "water": 5.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "extractionchamber",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 49.0
+      }
+	},
+    {
+      "id": "restorationchamber",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 49.0
+      }
+	},
+    {
+      "id": "reassemblychamber",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 40.0
+      }
+	},
+    {
+      "id": "precisionchamber",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 40.0
+      }
+	},
+    {
+      "id": "processingchamber",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 40.0
+      }
+	},
+    {
+      "id": "analysingchamber",
+      "emission": {
+        "air": 5.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+	},
+    {
+      "id": "fabricationchamber",
+      "emission": {
+        "air": 25.0,
+        "water": 5.0,
+        "soil": 40.0
+      }
+	},
+    {
+      "id": "basicgreenhouse",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "starchextractor",
+      "emission": {
+        "air": 5.0,
+        "water": 15.0,
+        "soil": 15.0
+      }
+	},
+    {
+      "id": "redstoneextractor",
+      "emission": {
+        "air": 50.0,
+        "water": 20.0,
+        "soil": 20.0
+      }
+	},
+    {
+      "id": "glowstoneextractor",
+      "emission": {
+        "air": 60.0,
+        "water": 25.0,
+        "soil": 25.0
+      }
+	},
+    {
+      "id": "stoneassimilator",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "algorithmassimilator",
+      "emission": {
+        "air": 10.0,
+        "water": 40.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "lantern",
+      "emission": {
+        "air": 1.0,
+        "water": 0.0,
+        "soil": 0.0
+      }
+	},
+    {
+      "id": "flawlessgreenhouse",
+      "emission": {
+        "air": 100.0,
+        "water": 50.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "atomicmultiplier",
+      "emission": {
+        "air": 500.0,
+        "water": 500.0,
+        "soil": 500.0
+      }
+	},
+    {
+      "id": "co2generator",
+      "emission": {
+        "air": 500.0,
+        "water": 50.0,
+        "soil": 50.0
+      }
+	},
+    {
+      "id": "weathercontroller",
+      "emission": {
+        "air": 250.0,
+        "water": 250.0,
+        "soil": 250.0
+      }
+	},
+    {
+      "id": "advancedgreenhouse",
+      "emission": {
+        "air": 55.0,
+        "water": 45.0,
+        "soil": 5.0
+      }
+	},
+    {
+      "id": "nuclearfurnacenc",
+      "emission": {
+        "air": 220.0,
+        "water": 30.0,
+        "soil": 75.0
+      }
+    },
+    {
+      "id": "factorync",
+      "emission": {
+        "air": 125.0,
+        "water": 15.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "separatornc",
+      "emission": {
+        "air": 23.0,
+        "water": 125.0,
+        "soil": 123.0
+      }
+    },
+    {
+      "id": "hastenernc",
+      "emission": {
+        "air": 23.0,
+        "water": 125.0,
+        "soil": 123.0
+      }
+    },
+    {
+      "id": "recyclernc",
+      "emission": {
+        "air": 23.0,
+        "water": 125.0,
+        "soil": 123.0
+      }
+    },
+    {
+      "id": "alloyfurnacenc",
+      "emission": {
+        "air": 125.0,
+        "water": 15.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "infusernc",
+      "emission": {
+        "air": 10.0,
+        "water": 125.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "melternc",
+      "emission": {
+        "air": 15.0,
+        "water": 125.0,
+        "soil": 123.0
+      }
+    },
+    {
+      "id": "electrolysernc",
+      "emission": {
+        "air": 25.0,
+        "water": 25.0,
+        "soil": 25.0
+      }
+    },
+    {
+      "id": "irradiatornc",
+      "emission": {
+        "air": 25.0,
+        "water": 25.0,
+        "soil": 323.0
+      }
+    },
+    {
+      "id": "ingotformernc",
+      "emission": {
+        "air": 125.0,
+        "water": 15.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "pressurizernc",
+      "emission": {
+        "air": 75.0,
+        "water": 75.0,
+        "soil": 75.0
+      }
+    },
+    {
+      "id": "reactiongeneratornc",
+      "emission": {
+        "air": 225.0,
+        "water": 15.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "saltmixernc",
+      "emission": {
+        "air": 25.0,
+        "water": 125.0,
+        "soil": 73.0
+      }
+    },
+    {
+      "id": "crystallizernc",
+      "emission": {
+        "air": 25.0,
+        "water": 115.0,
+        "soil": 23.0
+      }
+    },
+    {
+      "id": "wrtgnc",
+      "emission": {
+        "air": 115.0,
+        "water": 115.0,
+        "soil": 115.0
+      }
+    },
+    {
+      "id": "rtgnc",
+      "emission": {
+        "air": 225.0,
+        "water": 225.0,
+        "soil": 225.0
+      }
+    },
+    {
+      "id": "amrtgnc",
+      "emission": {
+        "air": 335.0,
+        "water": 335.0,
+        "soil": 335.0
+      }
+    },
+	{
+      "id": "cfrtgnc",
+      "emission": {
+        "air": 445.0,
+        "water": 445.0,
+        "soil": 445.0
       }
     }
   ]

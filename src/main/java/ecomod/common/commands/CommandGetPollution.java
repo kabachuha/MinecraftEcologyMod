@@ -44,7 +44,7 @@ public class CommandGetPollution extends CommandBase {
 		}
 		else if (args.length == 0)
 		{
-			sender.addChatMessage(new ChatComponentText(EcomodAPI.getPollution(w, EMUtils.blockPosToPair(new EMBlockPos(sender.getPlayerCoordinates())).getLeft(), EMUtils.blockPosToPair(new EMBlockPos(sender.getPlayerCoordinates())).getRight()).toString()));
+			sender.addChatMessage(new ChatComponentText(EcomodAPI.getPollution(w, sender.getPlayerCoordinates().posX >> 4, sender.getPlayerCoordinates().posZ >> 4).toString()));
 		}
 		else
 		{

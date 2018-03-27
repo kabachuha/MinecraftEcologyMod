@@ -31,7 +31,6 @@ public class BlockFrame extends Block implements ITileEntityProvider
 	public static Block oc_adapter = null;
 	
 	//Meta: 0 - Basic, 1 - Advanced
-	
 	public BlockFrame()
 	{
 		super(Material.rock);
@@ -93,7 +92,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 				
 				if(pi != null && pi.stackSize > 0)
 				{
-					if(pi.getItem() instanceof ItemCore)
+					if(EMConfig.enable_manually_assembly && pi.getItem() instanceof ItemCore)
 					{
 						if(meta == 0)
 						{
@@ -105,9 +104,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 								
 								worldIn.notifyBlockChange(x, y, z, EcomodBlocks.FILTER);
 								
-								--pi.stackSize;
-								
-								player.setCurrentItemOrArmor(0, pi.stackSize <= 0 ? null : pi);
+								player.setCurrentItemOrArmor(0, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}
@@ -120,9 +117,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 								
 								worldIn.notifyBlockChange(x, y, z, EcomodBlocks.ANALYZER);
 								
-								--pi.stackSize;
-								
-								player.setCurrentItemOrArmor(0, pi.stackSize <= 0 ? null : pi);
+								player.setCurrentItemOrArmor(0, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}
@@ -137,9 +132,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 								
 								worldIn.notifyBlockChange(x, y, z, EcomodBlocks.ADVANCED_FILTER);
 								
-								--pi.stackSize;
-								
-								player.setCurrentItemOrArmor(0, pi.stackSize <= 0 ? null : pi);
+								player.setCurrentItemOrArmor(0, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}
@@ -158,9 +151,7 @@ public class BlockFrame extends Block implements ITileEntityProvider
 								
 								worldIn.notifyBlockChange(x, y, z, EcomodBlocks.OC_ANALYZER_ADAPTER);
 								
-								--pi.stackSize;
-								
-								player.setCurrentItemOrArmor(0, pi.stackSize <= 0 ? null : pi);
+								player.setCurrentItemOrArmor(0, --pi.stackSize < 1 ? null : pi);
 								
 								return true;
 							}

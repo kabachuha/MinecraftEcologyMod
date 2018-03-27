@@ -7,8 +7,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ecomod.api.EcomodAPI;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionSourcesConfig;
 import ecomod.common.pollution.PollutionUtils;
+import ecomod.common.pollution.config.PollutionSourcesConfig;
 import ecomod.common.utils.EMUtils;
 import ecomod.core.EMConsts;
 import ecomod.core.stuff.EMAchievements;
@@ -47,13 +47,13 @@ public class BlockFluidPollution extends BlockFluidFinite {
 	public int tryToFlowVerticallyInto(World world, int x, int y, int z, int amtToInput) {
         if (y + densityDir < 0 || y + densityDir >= world.getHeight())
         { 
-            PollutionData adv_filter_redution = PollutionSourcesConfig.getSource("advanced_filter_redution");
-            if(adv_filter_redution != null && adv_filter_redution.compareTo(PollutionData.getEmpty()) != 0)
+        	PollutionData advanced_filter_reduction = PollutionSourcesConfig.getSource("advanced_filter_reduction");
+            if(advanced_filter_reduction != null && advanced_filter_reduction.compareTo(PollutionData.getEmpty()) != 0)
             {
             	int amount = this.getQuantaValue(world, x, y, z) * 1000 / this.quantaPerBlock;
             	
             	if(amount > 0)
-            		EcomodAPI.emitPollution(world, Pair.of(x, z), new PollutionData(-adv_filter_redution.getAirPollution() * amount / 2, -adv_filter_redution.getWaterPollution() * amount / 4, 0), true);
+            		EcomodAPI.emitPollution(world, x >> 4, z >> 4, new PollutionData(-advanced_filter_reduction.getAirPollution() * amount / 2, -advanced_filter_reduction.getWaterPollution() * amount / 4, 0), true);
             }
             
             world.setBlockToAir(x, y, z);

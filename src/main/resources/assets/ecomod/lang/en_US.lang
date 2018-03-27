@@ -1,5 +1,4 @@
-﻿
-itemGroup.ecomod=Ecology Mod
+﻿itemGroup.ecomod=Ecology Mod
 
 #Blocks
 tile.ecomod.filter.name=Pollution Filter
@@ -23,6 +22,8 @@ item.ecomod.core.2.name=Analyzer Core
 
 item.ecomod.craft_ingredient.0.name=Array of Pistons
 item.ecomod.craft_ingredient.1.name=Vent
+
+item.ecomod.effects_book.name=Effects of Environmental Pollution
 
 #Effects
 ape.ecomod.food_pollution.name=Food Pollution
@@ -94,6 +95,8 @@ achievement.ecomod.analyzer_core=Forewarned Is Forearmed!
 achievement.ecomod.analyzer_core.desc=Craft Analyzer Core(To make a machine click on a machine frame)
 achievement.ecomod.respirator=True Stalking Experience!
 achievement.ecomod.respirator.desc=Craft A Respirator
+achievement.ecomod.effects_book=Go Green!
+achievement.ecomod.effects_book.desc=Learn about pollution effects from the book.
 
 #Commands
 commands.ecomod.wpt_not_found=WorldProcessingThread for dimension %s was not found!
@@ -146,6 +149,9 @@ tooltip.ecomod.more_information=Press SHIFT for more information
 tooltip.ecomod.core.filter=These filters are used by Respirator
 tooltip.ecomod.core.shifted=Right Click '%s' with this item to make a corresponding machine
 tooltip.ecomod.oc.adapter=[EcologyMod]Right Click 'Empty Machine Frame' with this item to make a Pollution Analyzer Computer Interface
+tooltip.ecomod.waila.pollution=Sneak to view detailed pollution information.
+tooltip.ecomod.waila.working=Working
+tooltip.ecomod.waila.not_working=Not Working
 
 #Chat messages
 msg.ecomod.no_eat_with_respirator=You are unable to eat or to drink while wearing a respirator!
@@ -153,3 +159,20 @@ msg.ecomod.bad_sleep=You are feeling ill. Perhaps the air is not clean enough.
 msg.ecomod.polluted_food=You've eaten polluted food!
 
 msg.ecomod.asm_transformers_failed=[EcologyMod]EcologyMod is not working correctly! During the loading ASM transformers had failed for the following classes: %s. Look for reasons in the log and try to fix them if possible or send your log to 
+
+#JEI
+gui.jei.ingredient.ecomod.pollution=Environmental Pollution
+gui.jei.desc.ingr.ecomod.pollution=Environmental Pollution
+gui.jei.desc.ecomod.pollution.air=Air
+gui.jei.desc.ecomod.pollution.water=Water
+gui.jei.desc.ecomod.pollution.soil=Soil
+gui.jei.category.ecomod.air_filtration=Air Filtration
+gui.jei.category.ecomod.manually_assembly=Manually Assembly
+gui.jei.category.ecomod.manually_assembly.note=Right-click the first item(set in the world) with the second
+gui.jei.ingredient.ecomod.pollution_effect=Pollution Effect:
+gui.jei.ingredient.ecomod.pollution_effect.trigger=Trigger Type:
+gui.jei.ingredient.ecomod.pollution_effect.trigger.or=OR
+gui.jei.ingredient.ecomod.pollution_effect.trigger.and=AND
+gui.jei.ingredient.ecomod.pollution_effect.trigger.or.desc=Triggered when at least one type of environmental pollution is greater than of this value.
+gui.jei.ingredient.ecomod.pollution_effect.trigger.and.desc=Triggered when environmental pollution is greater than this value in all types.
+gui.jei.category.ecomod.pollution_effects=Pollution Effects

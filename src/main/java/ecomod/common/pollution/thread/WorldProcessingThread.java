@@ -21,12 +21,13 @@ import ecomod.api.pollution.IPollutionEmitter;
 import ecomod.api.pollution.IPollutionMultiplier;
 import ecomod.api.pollution.PollutionData;
 import ecomod.api.pollution.PollutionData.PollutionType;
-import ecomod.common.pollution.PollutionEffectsConfig;
 import ecomod.common.pollution.PollutionManager;
 import ecomod.common.pollution.PollutionUtils;
-import ecomod.common.pollution.TEPollutionConfig.TEPollution;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
+import ecomod.common.pollution.config.TEPollutionConfig.TEPollution;
 import ecomod.common.tiles.TileFilter;
 import ecomod.common.utils.EMUtils;
+import ecomod.common.utils.PositionedEmissionObject;
 import ecomod.common.utils.WPTProfiler;
 import ecomod.common.utils.newmc.EMBlockPos;
 import ecomod.core.EcologyMod;
@@ -55,10 +56,12 @@ public class WorldProcessingThread extends Thread
 	
 	private List<ChunkPollution> scheduledEmissions = new CopyOnWriteArrayList<ChunkPollution>();
 	
+	private List<PositionedEmissionObject> positioned_emissions = new CopyOnWriteArrayList<PositionedEmissionObject>();
+	
 	public final WPTProfiler profiler = new WPTProfiler();
 	//private List<ChunkPollution> delta = new ArrayList<ChunkPollution>();
 	
-	public boolean isWorldTicking = false;
+	public volatile boolean should_update_tiles = false;
 	
 	public WorldProcessingThread(PollutionManager pm)
 	{
@@ -85,8 +88,10 @@ public class WorldProcessingThread extends Thread
 		//EcologyMod.log.info(PollutionUtils.genPMid(manager));
 		//EcologyMod.log.info(EcologyMod.ph.threads.containsKey(PollutionUtils.genPMid(manager)));
 		
-		while(!isInterrupted() && manager != null && EcologyMod.ph.threads.containsKey(PollutionUtils.genPMid(manager)) && DimensionManager.getWorld(manager.getDim()) != null && !manager.getWorld().isRemote)
+		while(!isInterrupted() && manager != null && EcologyMod.ph.threads.containsKey(manager.getDim()) && DimensionManager.getWorld(manager.getDim()) != null && !manager.getWorld().isRemote)
 		{
+			should_update_tiles = true;
+			
 			if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
 			while(Minecraft.getMinecraft().isGamePaused())
 				slp(15); //Don't make anything while MC is paused
@@ -111,6 +116,8 @@ public class WorldProcessingThread extends Thread
 			
 			long timestamp = System.currentTimeMillis();
 			
+			waitForTilesUpdate();
+			
 			World world = manager.getWorld();
 			
 			List<Chunk> chks = new ArrayList<Chunk>();
@@ -123,6 +130,9 @@ public class WorldProcessingThread extends Thread
 			
 			for(Chunk c : chks)
 			{
+				if(!c.isChunkLoaded)
+					continue;
+				
 				try
 				{
 					temp = new ArrayList<ChunkPollution>();
@@ -134,16 +144,13 @@ public class WorldProcessingThread extends Thread
 					
 					temp.addAll(scheduledEmissions);
 					
-					//synchronized(temp)
-					//{
-						for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
-							if(cp != null)
-								if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
-								{
-									d.add(cp.getPollution());
-									temp.remove(cp);
-								}
-					//}
+					for(ChunkPollution cp : temp.toArray(new ChunkPollution[temp.size()]))
+						if(cp != null)
+							if(cp.getX() == c.xPosition && cp.getZ() == c.zPosition)
+							{
+								d.add(cp.getPollution());
+								temp.remove(cp);
+							}
 						
 					scheduledEmissions.clear();
 						
@@ -206,7 +213,7 @@ public class WorldProcessingThread extends Thread
 	
 	public void shutdown()
 	{
-		EcologyMod.log.info("["+this.getName()+"]Carefully shuting down...");
+		EcologyMod.log.info("["+this.getName()+"]Carefully shutting down...");
 		
 		if(profiler.profilingEnabled)
 		{
@@ -217,11 +224,10 @@ public class WorldProcessingThread extends Thread
 		
 		isWorking = false;
 		
-		if(EcologyMod.ph.threads.containsKey(PollutionUtils.genPMid(manager)))
-			EcologyMod.ph.threads.remove(PollutionUtils.genPMid(manager));
-		
 		if(manager != null)
 		{
+			if(EcologyMod.ph.threads.containsKey(manager.getDim()))
+				EcologyMod.ph.threads.remove(manager.getDim());
 			manager.save();
 			manager = null;
 		}
@@ -231,7 +237,7 @@ public class WorldProcessingThread extends Thread
 		
 		System.gc();
 		
-		EcologyMod.log.info("["+this.getName()+"]Shutted down.");
+		EcologyMod.log.info("["+this.getName()+"]Shut down.");
 		
 		//Bye, bye
 		interrupt();
@@ -240,6 +246,11 @@ public class WorldProcessingThread extends Thread
 	public PollutionManager getPM()
 	{
 		return manager;
+	}
+	
+	public List<PositionedEmissionObject> getPositionedEmissions()
+	{
+		return positioned_emissions;
 	}
 	
 	public List<ChunkPollution> getScheduledEmissions()
@@ -283,107 +294,22 @@ public class WorldProcessingThread extends Thread
 	{
 		profiler.startSection("WPT_CALCULATING_CHUNK_POLLUTION");
 		
-		waitForTickEnd();
+		World w = manager.getWorld();
 		
-		List<TileEntity> tes = new CopyOnWriteArrayList<TileEntity>(c.chunkTileEntityMap.values());
+		PollutionData ret = PollutionData.getEmpty();
 		
-		PollutionData ret = new PollutionData();
-		
-		for(TileEntity te : tes)
+		for(final PositionedEmissionObject peo : positioned_emissions)
 		{
-			waitForTickEnd();
-			
-			if(te == null || te.isInvalid())
-				continue;
-			
-			int wir = EMUtils.countWaterInRadius(c.worldObj, new EMBlockPos(te), EMConfig.wpr);
-			boolean rain = EMUtils.isRainingAt(c.worldObj, new EMBlockPos(te));
-			
-			boolean overriden_by_func = false;
-			
-			for(Function<TileEntity, Object[]> func : EcomodStuff.custom_te_pollution_determinants)
+			if(peo.getChunkX() == c.xPosition && peo.getChunkZ() == c.zPosition)
 			{
-				Object[] func_result = new Object[0];
+				ret.add(peo.getValue());
 				
-				try
-				{
-					func_result = func.apply(te);
-				}
-				catch(Exception e)
-				{
-					EcologyMod.log.error("Exception while processing a custom TileEntity pollution determining function:");
-					EcologyMod.log.info(e.toString());
-					e.printStackTrace();
-					continue;
-				}
-
-				if(func_result.length < 3)
-					continue;
-				
-				ret.add(PollutionType.AIR, (Double)func_result[0]);
-				ret.add(PollutionType.WATER, (Double)func_result[1]);
-				ret.add(PollutionType.SOIL, (Double)func_result[2]);
-				
-				if(func_result.length > 3)
-				{
-					if(func_result[3] != null && func_result[3] instanceof Boolean)
-						if(!overriden_by_func)
-							overriden_by_func = (Boolean)func_result[3];
-				}
-			}
-			
-			waitForTickEnd();
-			
-			if(!overriden_by_func)
-			if(te instanceof IPollutionEmitter)
-			{
-				IPollutionEmitter ipe = (IPollutionEmitter) te;
-				
-				int filters = 0;
-				
-				for(EnumFacing f : EnumFacing.values())
-				{
-					TileEntity tile = EMUtils.getTile(c.worldObj, new EMBlockPos(te).offset(f));
-					
-					if(tile instanceof TileFilter && ((TileFilter)tile).isWorking())
-						filters++;
-				}
-				
-				ret.add(ipe.pollutionEmission(false).clone()
-						.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
-						.multiply(PollutionType.WATER, rain ? 2 : 1).multiply(PollutionType.SOIL, rain ? 1.2F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
-						);
-			}
-			else
-			{
-				if(EcologyMod.instance.tepc.hasTile(te))
-				{
-					if(PollutionUtils.isTEWorking(c.worldObj, te))
-					{
-						TEPollution tep = EcologyMod.instance.tepc.getTEP(te);
-						if(tep != null)
-						{
-							int filters = 0;
-							
-							for(EnumFacing f : EnumFacing.values())
-							{
-								TileEntity tile = EMUtils.getTile(c.worldObj, new EMBlockPos(te).offset(f));
-								
-								if(tile instanceof TileFilter && ((TileFilter)tile).isWorking())
-									filters++;
-							}
-							
-							ret.add(tep.getEmission().clone()
-									.multiply(PollutionType.AIR, 1 - EMConfig.filter_adjacent_tiles_redution * filters).multiply(PollutionType.WATER, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 2).multiply(PollutionType.SOIL, 1 - EMConfig.filter_adjacent_tiles_redution * filters / 3)
-									.multiply(PollutionType.WATER, rain ? 3 : 1).multiply(PollutionType.SOIL, rain ? 1.5F : 1).multiply(PollutionType.WATER, wir == 0 ? 1 : wir)
-									);
-						}
-					}
-				}
+				positioned_emissions.remove(peo);
 			}
 		}
+		
 		profiler.endSection();
-		return ret.multiplyAll(EMConfig.wptcd/60F);
+		return ret;
 	}
 	
 	public Map<PollutionType, Float> calculateMultipliers(Chunk c)
@@ -460,9 +386,9 @@ public class WorldProcessingThread extends Thread
 		profiler.endSection();
 	}
 	
-	public void waitForTickEnd()
+	public void waitForTilesUpdate()
 	{
-		while(isWorldTicking)
+		while(should_update_tiles)
 		try
 		{
 			sleep(5);
@@ -471,5 +397,30 @@ public class WorldProcessingThread extends Thread
 		{
 			return;
 		}
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + manager.hashCode();
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WorldProcessingThread other = (WorldProcessingThread) obj;
+		if (manager == null) {
+			if (other.manager != null)
+				return false;
+		} else if (!manager.equals(other.manager))
+			return false;
+		return true;
 	}
 }

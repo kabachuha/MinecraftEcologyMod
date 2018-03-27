@@ -1,6 +1,8 @@
 package ecomod.common.pollution;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,16 +31,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class PollutionUtils
 {
-	public static String genPMid(World w)
-	{
-		return w.getWorldInfo().getWorldName()+"_"+w.provider.dimensionId;
-	}
-	
-	public static String genPMid(PollutionManager pm)
-	{
-		return pm == null ? "null" : pm.getWorld().getWorldInfo().getWorldName()+"_"+pm.getWorld().provider.dimensionId;
-	}
-	
 	public static Chunk coordsToChunk(World w, Pair<Integer, Integer> coord)
 	{
 		return w.getChunkFromChunkCoords(coord.getLeft(), coord.getRight());
@@ -46,17 +38,15 @@ public class PollutionUtils
 	
 	public static boolean isTEWorking(World w, TileEntity te)
 	{	
-		TileEntity tile = w.getTileEntity(te.xCoord, te.yCoord, te.zCoord);
-		
 		//TODO add more checks
 		if(te instanceof TileEntityFurnace)
 		{
-			return ((TileEntityFurnace)tile).isBurning();
+			return ((TileEntityFurnace)te).isBurning();
 		}
 		
-		if(tile instanceof IHasWork)
+		if(ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tiles") && te instanceof IHasWork)
 		{
-			return ((IHasWork)tile).hasWork();
+			return ((IHasWork)te).hasWork();
 		}
 		
 		return true;
@@ -75,72 +65,77 @@ public class PollutionUtils
 	
 	public static final ForgeDirection horizontal_facings[] = new ForgeDirection[]{ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.WEST, ForgeDirection.SOUTH};
 	
-	private static boolean hasSurfaceAccess(World w, EMBlockPos bp, List<EMBlockPos> was_at)
+	private static boolean hasSurfaceAccess(World w, int x, int y, int z, HashMap<Long, HashSet<Integer>> was_at)
 	{
-		if(was_at.contains(bp))
+		long xz = (long)x << 32 | z & 0xffffffffL;
+        HashSet<Integer> ys = was_at.get(xz);
+		if(ys != null && ys.contains(y))
 			return false;
-		
-		if(w.canBlockSeeTheSky(bp.getX(), bp.getY(), bp.getZ()) && isBlockHollow(w, bp.up(), ForgeDirection.UP))
-			return true;
-		
-		if(isBlockHollow(w, bp.up(), ForgeDirection.UP))
-			if(hasSurfaceAccess(w, bp.up(), was_at))
+
+		int bpup = y+1;
+		if(w.canBlockSeeTheSky(x, y, z)) {
+			if (isBlockHollow(w, x, bpup, z, ForgeDirection.UP))
 				return true;
+		} else if(isBlockHollow(w, x, bpup, z, ForgeDirection.UP) && hasSurfaceAccess(w, x, bpup, z, was_at))
+			return true;
 		
 		for(ForgeDirection facing : horizontal_facings)
 		{
-			EMBlockPos b = bp.offset(facing);
-			if(isBlockHollow(w, b, facing))
+			int bx = x + facing.offsetX;
+			int by = y + facing.offsetY;
+			int bz = z + facing.offsetZ;
+			
+            HashSet<Integer> bys = was_at.get((long)bx << 32 | bz & 0xffffffffL);
+			if (bys != null && bys.contains(by))
+				continue;
+			if(isBlockHollow(w, bx, by, bz, facing))
 			{
-					if(w.canBlockSeeTheSky(b.getX(), b.getY(), b.getZ()))
-					{
+				if(w.canBlockSeeTheSky(bx, by, bz))
+					return true;
+				else {
+					if (isBlockHollow(w, bx, by+1, bz, ForgeDirection.UP) && hasSurfaceAccess(w, bx, by+1, bz, was_at))
 						return true;
-					}
-					else if(isBlockHollow(w, b.up(), ForgeDirection.UP))
-					{
-						if(hasSurfaceAccess(w, b.up(), was_at))
-							return true;
-					}
+				}
 			}
 		}
-			
-		was_at.add(bp);
+
+		if(ys == null) {
+			ys = new HashSet<Integer>();
+			ys.add(y);
+			was_at.put(xz, ys);
+		} else
+			ys.add(y);
 		return false;
 	}
 	
-	public static boolean isBlockHollow(World world, EMBlockPos pb, ForgeDirection direction)
+	public static boolean isBlockHollow(World world, int x, int y, int z, ForgeDirection direction)
 	{
-		int rv3 = isBlockAirPenetratorCFG(EMUtils.getBlock(world, pb), world.getBlockMetadata(pb.getX(), pb.getY(), pb.getZ()));
+		int rv3 = isBlockAirPenetratorCFG(world.getBlock(x, y, z), world.getBlockMetadata(x, y, z));
 		
 		if(rv3 > 0)
 			return true;
 		else if(rv3 < 0)
 			return false;
 		
-		AxisAlignedBB aabb = world.getBlock(pb.getX(), pb.getY(), pb.getZ()).getCollisionBoundingBoxFromPool(world, pb.getX(), pb.getY(), pb.getZ());
+		AxisAlignedBB aabb = world.getBlock(x, y, z).getCollisionBoundingBoxFromPool(world, x, y, z);
 		
 		if(aabb == null)
 			return true;
 		
 		if(aabb == AxisAlignedBB.getBoundingBox(-1, -1, -1, 1, 1, 1))
 			return false;
-		
-		double l = aabb.maxX - aabb.minX;
-        double h = aabb.maxY - aabb.minY;
-        double w = aabb.maxZ - aabb.minZ;
-		
 
 		if(direction == ForgeDirection.WEST || direction == ForgeDirection.EAST)
 		{
-			return h < 0.9D || w < 0.9D;
+			return aabb.maxY - aabb.minY < 0.9D || aabb.maxZ - aabb.minZ < 0.9D;
 		}
 		else if(direction == ForgeDirection.DOWN || direction == ForgeDirection.UP)
 		{
-			return l < 0.9D || w < 0.9D;
+			return aabb.maxX - aabb.minX < 0.9D || aabb.maxZ - aabb.minZ < 0.9D;
 		}
 		else if(direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
 		{
-			return h < 0.9D || l < 0.9D;
+			return aabb.maxY - aabb.minY < 0.9D || aabb.maxX - aabb.minX < 0.9D;
 		}
 
 		return false;
@@ -152,36 +147,30 @@ public class PollutionUtils
 	 */
 	public static int isBlockAirPenetratorCFG(Block block, int meta)
 	{
-		if(block == null)
+		if(block == null || EcomodStuff.additional_blocks_air_penetrating_state == null)
 			return 0;
 		
 		String searchkey = GameRegistry.findUniqueIdentifierFor(block).toString();
+		Boolean statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey);
+		if(statekey != null)
+			return statekey ? 1 : -1;
 		String searchmeta ="@"+meta;
 		
-		if(EcomodStuff.additional_blocks_air_penetrating_state == null)
-			return 0;
-		
-		if(EcomodStuff.additional_blocks_air_penetrating_state.containsKey(searchkey))
-		{
-			if(EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey))
-				return 1;
-			else
-				return -1;
-		}
-		else if(EcomodStuff.additional_blocks_air_penetrating_state.containsKey(searchkey+searchmeta))
-		{
-			if(EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey+searchmeta))
-				return 1;
-			else
-				return -1;
-		}
+		statekey = EcomodStuff.additional_blocks_air_penetrating_state.get(searchkey + searchmeta);
+		if (statekey != null)
+			return statekey ? 1 : -1;
 		
 		return 0;
 	}
 	
+	public static boolean hasSurfaceAccess(World w, int x, int y, int z)
+	{	
+		return hasSurfaceAccess(w, x, y, z, new HashMap<Long, HashSet<Integer>>());
+	}
+	
 	public static boolean hasSurfaceAccess(World w, EMBlockPos bp)
 	{	
-		return hasSurfaceAccess(w, bp, new ArrayList<EMBlockPos>());
+		return hasSurfaceAccess(w, bp.getX(), bp.getY(), bp.getZ());
 	}
 	
 	public static boolean isEntityRespirating(EntityLivingBase entity)
@@ -193,14 +182,6 @@ public class PollutionUtils
 	{
 		ItemStack is = entity.getEquipmentInSlot(4);
 		
-		if(is != null)
-		{
-			if(is.getItem() instanceof IRespirator)
-			{
-				return ((IRespirator)is.getItem()).isRespirating(entity, is, decr);
-			}
-		}
-		
-		return false;
+		return is != null && is.getItem() instanceof IRespirator && ((IRespirator) is.getItem()).isRespirating(entity, is, decr);
 	}
 }

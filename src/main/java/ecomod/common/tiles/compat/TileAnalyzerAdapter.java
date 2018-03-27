@@ -9,7 +9,7 @@ import java.util.List;
 import ecomod.api.EcomodBlocks;
 import ecomod.api.EcomodStuff;
 import ecomod.api.pollution.PollutionData;
-import ecomod.common.pollution.PollutionEffectsConfig;
+import ecomod.common.pollution.config.PollutionEffectsConfig;
 import ecomod.common.tiles.TileAnalyzer;
 import ecomod.common.utils.EMUtils;
 import ecomod.common.utils.newmc.EMBlockPos;
@@ -39,12 +39,12 @@ public class TileAnalyzerAdapter extends TileEntityEnvironment implements Analyz
 	
 	public boolean attachedToAnalyzer()
 	{
-		return EMUtils.get1NearbyTileEntity(EMUtils.resloc("tile_analyzer").toString(), worldObj, new EMBlockPos(this)) != null;
+		return EMUtils.get1NearbyTileEntity(EMUtils.resloc("tile_analyzer").toString(), worldObj, xCoord, yCoord, zCoord) != null;
 	}
 	
 	public TileAnalyzer getAnalyzer()
 	{
-		return (TileAnalyzer)EMUtils.get1NearbyTileEntity(EMUtils.resloc("tile_analyzer").toString(), worldObj, new EMBlockPos(this));
+		return (TileAnalyzer)EMUtils.get1NearbyTileEntity(EMUtils.resloc("tile_analyzer").toString(), worldObj, xCoord, yCoord, zCoord);
 	}
 	
 	//Callback OC methods

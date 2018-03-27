@@ -47,6 +47,8 @@ public class EMAchievements
 		ach("no_fish", 1, -3, new ItemStack(Items.fish), null);
 		ach("no_bonemeal", 2, -3, new ItemStack(Items.dye, 1, 15), null);
 		
+		ach("effects_book", -1, -1, new ItemStack(EcomodItems.POLLUTION_EFFECTS_BOOK), null);
+		
 		ECOMOD_ACHIEVEMENTS = new AchievementPage(EMConsts.name, ACHS.values().toArray(new Achievement[ACHS.size()]));
 		AchievementPage.registerAchievementPage(ECOMOD_ACHIEVEMENTS);
 	}
