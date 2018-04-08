@@ -145,7 +145,15 @@ public class EcologyMod
 	@EventHandler
 	public void onServerStopping(FMLServerStoppingEvent event)
 	{
-		ph.onServerStopping();
+		try
+		{
+			ph.onServerStopping();
+		}
+		catch(Exception ex)
+		{
+			log.error("Unable to close session properly because of an exception: "+ex.toString());
+			ex.printStackTrace();
+		}
 	}
 	
 	

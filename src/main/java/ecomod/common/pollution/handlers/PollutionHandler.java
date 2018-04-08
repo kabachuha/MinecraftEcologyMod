@@ -86,8 +86,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 
@@ -202,29 +205,28 @@ public class PollutionHandler implements IPollutionGetter
 	public void onServerStopping()
 	{
 		EcologyMod.log.info("Server is stopping... Shutting down WorldProcessingThreads...");
-		for(int dim : threads.keySet())
+		Set<Integer> keys = new LinkedHashSet(threads.keySet());
+		for(int dim : keys)
 		{
-			if(threads.get(dim) != null)
+			WorldProcessingThread t = threads.get(dim);
+			if(t != null)
+			try
 			{
-				WorldProcessingThread t = threads.get(dim);
-				try
+				synchronized(t)
 				{
-					synchronized(t)
-					{
-						t.notify();
+					t.notify();
 				
-						t.forceSE();
-					}
+					t.forceSE();
 				}
-				catch(Exception e)
-				{
-					EcologyMod.log.error("Unable to force scheduled emissions handling for "+t.getName()+" because of " + e);
-					e.printStackTrace();
-				}
-				finally
-				{
-					t.shutdown();
-				}
+			}
+			catch(Exception e)
+			{
+				EcologyMod.log.error("Unable to force scheduled emissions handling for "+t.getName()+" because of " + e);
+				e.printStackTrace();
+			}
+			finally
+			{
+				t.shutdown();
 			}
 		}
 	}
